@@ -1,0 +1,63 @@
+2010-10-18    <guravage@caterpie.sen.cwi.nl>
+
+	* Makefile (Makefile.plugin_test): Removed -makefile qmake option.
+
+2010-06-25    <guravage@caterpie.sen.cwi.nl>
+
+	* plugin_auxingrowth.pro: Added -Wno-write-strings and -Wno-unused-parameter to QMAKE_CXXFLAGS.
+	* plugin_test.pro: Ditto.
+	* plugin_meinhardt.pro: Ditto.
+
+
+2010-06-24    <guravage@caterpie.sen.cwi.nl>
+
+	* plugin_auxingrowth.pro: Use correct library path.
+	* plugin_meinhardt.pro: Ditto.
+	* plugin_test.pro: Ditto.
+
+
+2010-06-23    <guravage@caterpie.sen.cwi.nl>
+
+	* auxingrowthplugin.cpp: Removed NULL assignments to unused variables.
+	* meinhardtplugin.cpp: Ditto.
+	* testplugin.cpp: Ditto.
+
+
+2010-06-22    <guravage@caterpie.sen.cwi.nl>
+
+	* Makefile (clean): Add windows equivalent of UNIX touch.
+
+
+2010-06-18    <guravage@caterpie.sen.cwi.nl>
+
+	* plugin_auxingrowth.pro: Changed default LIBXML2DIR, LIBICONVDIR and LIBZDIR to corresponding distribution lib directories.
+	* plugin_meinhardt.pro: Ditto.
+	* plugin_test.pro: Ditto.
+
+	* Makefile (clean): add if stmt not to `touch` on windows.
+
+
+2010-06-15    <guravage@caterpie.sen.cwi.nl>
+
+
+	* testplugin.cpp (CelltoCellTransport) Use NULL assignment merely to obviate compilation warnings.
+	(WallDynamics): Ditto.
+	(CellDynamics): Ditto.
+	(OnDivide): Ditto.
+
+	* meinhardtplugin.cpp (OnDivide): Use NULL assignment merely to obviate compilation warnings.
+	* (WallDynamics): Ditto.
+
+	* auxingrowthplugin.cpp (OnDivide): Use NULL assignment merely to obviate compilation warnings.
+
+2010-06-03    <guravage@caterpie.sen.cwi.nl>
+
+	* Makefile: Added top-level Makefile.
+
+2010-05-10    <guravage@caterpie.sen.cwi.nl>
+
+	* plugin_test.pro: Added -fPIC option to QMAKE_CXXFLAGS.
+	* plugin_meinhardt.pro: ditto
+	* plugin_auxingrowth.pro: ditto
+
+

@@ -1,0 +1,27 @@
+2010-10-20    <guravage@caterpie.sen.cwi.nl>
+
+	* auxin_growth.xml: Increased storage_slide from 10 to 100.
+
+2010-10-14    <guravage@caterpie.sen.cwi.nl>
+
+	* auxin_growth.xml: Changed export_fn_prefix to 'cell.'
+
+2010-10-08    <guravage@caterpie.sen.cwi.nl>
+
+	* auxin_growth.xml: Added export_interval and export_fn_prefix parameters.
+
+
+2010-06-23    <guravage@caterpie.sen.cwi.nl>
+
+	* Added: tutorial3_init.xml
+	tutorial4_init.xml
+	tutorial5_init.xml
+
+	* Removed: bend.xml
+	circ.xml
+	explant.xml
+	init.xml
+	one_acc_point_van3.xml
+	one_acc_point_van3_growth.xml
+	one_acc_point_van3_growth2.xml
+	tissue.xml

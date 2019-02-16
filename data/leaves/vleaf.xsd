@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+  $Rev$:  Revision of last commit
+  $Author$:  Author of last commit
+  $Source$:  Source file
+  $Date$:  Date of last commit
+
+  This file is part of the Virtual Leaf.
+
+  The Virtual Leaf is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  The Virtual Leaf is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with the Virtual Leaf.  If not, see <http://www.gnu.org/licenses/>.
+
+  Copyright 2010 Michael Guravage.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="vl" targetNamespace="vl"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:annotation>
+        <xs:documentation> Virtual Leaf </xs:documentation>
+    </xs:annotation>
+
+    <!-- A precooked comment element -->
+    <xs:element name="comment" type="xs:string"/>
+
+
+
+    <!-- An element with a integer value named 'v.' -->
+    <xs:complexType name="iValueType">
+        <xs:attribute name="v" type="xs:integer"/>
+    </xs:complexType>
+
+
+
+    <!-- An element with a real value named 'v.' -->
+    <xs:complexType name="rValueType">
+        <xs:attribute name="v" type="xs:float"/>
+    </xs:complexType>
+
+
+
+    <!-- Leaf is the root element -->
+    <xs:element name="leaf">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="comment" minOccurs="0"/>
+                <xs:element name="parameter" type="ParameterType" minOccurs="0"/>
+                <xs:element name="code" type="CodeType" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="nodes" type="NodesType" minOccurs="0"/>
+                <xs:element name="cells" type="CellsType" minOccurs="0"/>
+                <xs:element name="walls" type="WallsType" minOccurs="0"/>
+                <xs:element name="nodesets" type="NodesetsType" minOccurs="0"/>
+                <xs:element name="settings" type="SettingsType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="leafAttrubutes"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- List of leaf attributes -->
+    <xs:attributeGroup name="leafAttrubutes">
+        <xs:attribute name="uri" type="xs:anyURI"/>
+        <xs:attribute name="date" type="xs:dateTime"/>
+        <xs:attribute name="simtime" type="xs:integer"/>
+    </xs:attributeGroup>
+
+
+
+    <!-- Parameters -->
+    <xs:complexType name="ParameterType">
+        <xs:sequence>
+            <xs:element name="comment" minOccurs="0"/>
+            <xs:element name="par" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="valarray" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="val" type="rValueType" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="val" type="xs:string"/>
+                    <xs:anyAttribute processContents="skip"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!-- Code -->
+    <xs:complexType name="CodeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+
+
+    <!-- Nodes -->
+    <xs:complexType name="NodesType">
+        <xs:sequence>
+            <xs:element name="comment" minOccurs="0"/>
+            <xs:element name="node" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attributeGroup ref="nodeAttributes"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attributeGroup ref="nodesAttributes"/>
+    </xs:complexType>
+
+    <!-- A list of node attributes -->
+    <xs:attributeGroup name="nodeAttributes">
+        <xs:attribute name="x" type="xs:float" use="required"/>
+        <xs:attribute name="y" type="xs:float" use="required"/>
+        <xs:attribute name="fixed" type="xs:boolean"/>
+        <xs:attribute name="boundary" type="xs:boolean"/>
+        <xs:attribute name="sam" type="xs:boolean"/>
+    </xs:attributeGroup>
+
+    <!-- A list of nodes attributes -->
+    <xs:attributeGroup name="nodesAttributes">
+        <xs:attribute name="n" type="xs:integer" use="required"/>
+        <xs:attribute name="target_length" type="xs:float" use="required"/>
+    </xs:attributeGroup>
+
+
+
+    <!-- Cells -->
+    <xs:complexType name="CellsType">
+        <xs:sequence>
+            <xs:element name="comment" minOccurs="0"/>
+            <xs:element name="cell" type="CellType" maxOccurs="unbounded"/>
+            <xs:element name="boundary_polygon" type="CellType"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="cellsAttributes"/>
+    </xs:complexType>
+
+    <!-- A list of cells attributes and their types -->
+    <xs:attributeGroup name="cellsAttributes">
+        <xs:attribute name="n" type="xs:integer" use="required"/>
+        <xs:attribute name="offsetx" type="xs:float"/>
+        <xs:attribute name="offsety" type="xs:float"/>
+        <xs:attribute name="magnification" type="xs:float"/>
+        <xs:attribute name="base_area" type="xs:float" use="required"/>
+        <xs:attribute name="nchem" type="xs:integer" use="required"/>
+    </xs:attributeGroup>
+
+    <!-- Cell -->
+    <xs:complexType name="CellType">
+        <xs:sequence>
+            <xs:element name="node" type="CellNodeType"  minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="wall" type="CellWallType"  minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="chem" type="CellChemType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="cellAttributes"/>
+    </xs:complexType>
+
+    <!-- A list of cell attributes and their types. -->
+    <xs:attributeGroup name="cellAttributes">
+        <xs:attribute name="index" type="xs:integer" use="required"/>
+        <xs:attribute name="area" type="xs:float"/>
+        <xs:attribute name="target_area" type="xs:float" use="required"/>
+        <xs:attribute name="target_length" type="xs:float"/>
+        <xs:attribute name="lambda_celllength" type="xs:float"/>
+        <xs:attribute name="stiffness" type="xs:float"/>
+        <xs:attribute name="fixed" type="xs:boolean"/>
+        <xs:attribute name="pin_fixed" type="xs:boolean"/>
+        <xs:attribute name="at_boundary" type="xs:boolean"/>
+        <xs:attribute name="dead" type="xs:boolean"/>
+        <xs:attribute name="source" type="xs:boolean"/>
+        <xs:attribute name="boundary" type="xs:boolean"/>
+        <xs:attribute name="div_counter" type="xs:integer"/>
+        <xs:attribute name="cell_type" type="xs:integer"/>
+    </xs:attributeGroup>
+
+    <!-- Cell Node -->
+    <xs:complexType name="CellNodeType">
+        <xs:attribute name="n" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <!-- Cell Wall -->
+    <xs:complexType name="CellWallType">
+        <xs:attribute name="w" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <!-- Cell Chemical -->
+    <xs:complexType name="CellChemType">
+        <xs:sequence>
+            <xs:element name="val" type="rValueType"  minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="n" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+
+
+    <!-- Walls  -->
+    <xs:complexType name="WallsType">
+        <xs:sequence>
+            <xs:element name="comment" minOccurs="0"/>
+            <xs:element name="wall" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="transporter1" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="val" type="rValueType" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="transporter2" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="val" type="rValueType" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="apoplast" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="val" type="rValueType" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="index" type="xs:integer" use="required"/>
+                    <xs:attribute name="c1" type="xs:integer" use="required"/>
+                    <xs:attribute name="c2" type="xs:integer" use="required"/>
+                    <xs:attribute name="n1" type="xs:integer" use="required"/>
+                    <xs:attribute name="n2" type="xs:integer" use="required"/>
+                    <xs:attribute name="length" type="xs:float"/>
+                    <xs:attribute name="viz_flux" type="xs:integer"/>
+                    <xs:attribute name="wall_type">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:normalizedString">
+                                <xs:enumeration value="normal"/>
+                                <xs:enumeration value="aux_source"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="n" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+
+
+    <!-- Nodesets -->
+    <xs:complexType name="NodesetsType">
+        <xs:attribute name="n" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+
+
+    <!-- Settings -->
+    <xs:complexType name="SettingsType">
+        <xs:sequence>
+            <xs:element name="comment" minOccurs="0"/>
+            <xs:element name="setting" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="val" type="xs:boolean" use="required"/>
+                    <xs:anyAttribute processContents="skip"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,159 @@
+# $Rev$:  Revision of last commit
+# $Author$:  Author of last commit
+# $Source$:  Source file
+# $Date$:  Date of last commit
+#
+#  This file is part of the Virtual Leaf.
+#
+#  The Virtual Leaf is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  The Virtual Leaf is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with the Virtual Leaf.  If not, see <http://www.gnu.org/licenses/>.
+#
+#  Copyright 2010 Michael Guravage.
+#
+
+default namespace = "vl"
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+
+a:documentation [ " Virtual Leaf " ]
+# A precooked comment element
+comment = element comment { xsd:string }
+# An element with a integer value named 'v.'
+iValueType = attribute v { xsd:integer }?
+# An element with a real value named 'v.'
+rValueType = attribute v { xsd:float }?
+# Leaf is the root element
+start = leaf
+leaf =
+    element leaf {
+        element comment { xsd:string }?,
+        element parameter { ParameterType }?,
+        element code { CodeType }*,
+        element nodes { NodesType }?,
+        element cells { CellsType }?,
+        element walls { WallsType }?,
+        element nodesets { NodesetsType }?,
+        element settings { SettingsType }?,
+        leafAttrubutes
+    }
+# List of leaf attributes
+leafAttrubutes =
+    attribute uri { xsd:anyURI }?,
+    attribute date { xsd:dateTime }?,
+    attribute simtime { xsd:integer }?
+# Parameters
+ParameterType =
+    element comment { xsd:string }?,
+    element par {
+        element valarray {
+            element val { rValueType }+
+        }?,
+        attribute name { xsd:string },
+        attribute val { xsd:string }?
+    }*
+# Code
+CodeType =
+    text,
+    attribute name { xsd:string }
+# Nodes
+NodesType =
+    element comment { xsd:string }?,
+    element node { nodeAttributes }*,
+    nodesAttributes
+# A list of node attributes
+nodeAttributes =
+    attribute x { xsd:float },
+    attribute y { xsd:float },
+    attribute fixed { xsd:boolean }?,
+    attribute boundary { xsd:boolean }?,
+    attribute sam { xsd:boolean }?
+# A list of nodes attributes
+nodesAttributes =
+    attribute n { xsd:integer }?,
+    attribute target_length { xsd:float }?
+# Cells
+CellsType =
+    element comment { xsd:string }?,
+    element cell { CellType }+,
+    element boundary_polygon { CellType },
+    cellsAttributes
+# A list of cells attributes and their types
+cellsAttributes =
+    attribute n { xsd:integer },
+    attribute offsetx { xsd:float }?,
+    attribute offsety { xsd:float }?,
+    attribute magnification { xsd:float }?,
+    attribute base_area { xsd:float },
+    attribute nchem { xsd:integer }
+# Cell
+CellType =
+    element node { CellNodeType }*,
+    element wall { CellWallType }*,
+    element chem { CellChemType }?,
+    cellAttributes
+# A list of cell attributes and their types.
+cellAttributes =
+    attribute index { xsd:integer },
+    attribute area { xsd:float }?,
+    attribute target_area { xsd:float },
+    attribute target_length { xsd:float }?,
+    attribute lambda_celllength { xsd:float }?,
+    attribute stiffness { xsd:float }?,
+    attribute fixed { xsd:boolean }?,
+    attribute pin_fixed { xsd:boolean }?,
+    attribute at_boundary { xsd:boolean }?,
+    attribute dead { xsd:boolean }?,
+    attribute source { xsd:boolean }?,
+    attribute boundary { xsd:boolean }?,
+    attribute div_counter { xsd:integer }?,
+    attribute cell_type { xsd:integer }?
+# Cell Node
+CellNodeType = attribute n { xsd:integer }
+# Cell Wall
+CellWallType = attribute w { xsd:integer }
+# Cell Chemical
+CellChemType =
+    element val { rValueType }*,
+    attribute n { xsd:integer }
+# Walls
+WallsType =
+    element comment { xsd:string }?,
+    element wall {
+        element transporter1 {
+            element val { rValueType }*
+        }?,
+        element transporter2 {
+            element val { rValueType }*
+        }?,
+        element apoplast {
+            element val { rValueType }*
+        }?,
+        attribute index { xsd:integer },
+        attribute c1 { xsd:integer },
+        attribute c2 { xsd:integer },
+        attribute n1 { xsd:integer },
+        attribute n2 { xsd:integer },
+        attribute length { xsd:float }?,
+        attribute viz_flux { xsd:float }?,
+        attribute wall_type { "normal" | "aux_source" }?
+    }*,
+    attribute n { xsd:integer }
+# Nodesets
+NodesetsType = attribute n { xsd:integer }
+# Settings
+SettingsType =
+    element comment { xsd:string }?,
+    element setting {
+        attribute name { xsd:string },
+        attribute val { xsd:string }
+    }*

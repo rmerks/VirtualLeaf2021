@@ -1,0 +1,3309 @@
+%PDF-1.3
+%“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
+% 'BasicFonts': class PDFDictionary 
+1 0 obj
+% The standard fonts dictionary
+<< /F1 2 0 R
+ /F2 3 0 R
+ /F3 5 0 R >>
+endobj
+% 'F1': class PDFType1Font 
+2 0 obj
+% Font Helvetica
+<< /BaseFont /Helvetica
+ /Encoding /WinAnsiEncoding
+ /Name /F1
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'F2': class PDFType1Font 
+3 0 obj
+% Font Helvetica-Bold
+<< /BaseFont /Helvetica-Bold
+ /Encoding /WinAnsiEncoding
+ /Name /F2
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'Page1': class PDFPage 
+4 0 obj
+% Page dictionary
+<< /Contents 63 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 62 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'F3': class PDFType1Font 
+5 0 obj
+% Font Courier
+<< /BaseFont /Courier
+ /Encoding /WinAnsiEncoding
+ /Name /F3
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'Page2': class PDFPage 
+6 0 obj
+% Page dictionary
+<< /Contents 64 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 62 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'Annot.NUMBER1': class PDFDictionary 
+7 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://bitbucket.org/dgc/headcount) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 219.1936
+ 236.3429
+ 231.1936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER2': class PDFDictionary 
+8 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://stackoverflow.com/questions/1705921/useful-mercurial-hooks) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 204.1936
+ 384.1429
+ 216.1936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER3': class PDFDictionary 
+9 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://davidherron.com/node/961) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 189.1936
+ 229.6629
+ 201.1936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER4': class PDFDictionary 
+10 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://packages.python.org/RhodeCode) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 212.1929
+ 138.1936
+ 386.1829
+ 150.1936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER5': class PDFDictionary 
+11 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://bitbucket.org/marcinkuzminski/rhodecode) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 123.1936
+ 532.5827
+ 135.1936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER6': class PDFDictionary 
+12 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://packages.python.org/RhodeCode) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 108.1936
+ 259.6829
+ 120.1936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER7': class PDFDictionary 
+13 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://pypi.python.org/pypi/RhodeCode/1.0.0rc3) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 265.2429
+ 108.1936
+ 474.8029
+ 120.1936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Page3': class PDFPage 
+14 0 obj
+% Page dictionary
+<< /Annots [ 7 0 R
+ 8 0 R
+ 9 0 R
+ 10 0 R
+ 11 0 R
+ 12 0 R
+ 13 0 R ]
+ /Contents 65 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 62 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'Annot.NUMBER8': class PDFDictionary 
+15 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://hg.python-works.com) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 741.5936
+ 208.5229
+ 753.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER9': class PDFDictionary 
+16 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://bitbucket.org/bfrog/cutehg) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 726.5936
+ 532.5827
+ 738.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER10': class PDFDictionary 
+17 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://pypi.python.org/pypi/SIP) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 711.5936
+ 219.1029
+ 723.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER11': class PDFDictionary 
+18 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://www.riverbankcomputing.com/hg/sip) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 224.6629
+ 711.5936
+ 412.5029
+ 723.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER12': class PDFDictionary 
+19 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://pypi.python.org/pypi/PyQt) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 696.5936
+ 532.5827
+ 708.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER13': class PDFDictionary 
+20 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://ask.github.com/celery) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 85.69291
+ 681.5936
+ 532.5827
+ 693.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER14': class PDFDictionary 
+21 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://www.riverbankcomputing.com/hg/sip) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 126.2729
+ 321.3694
+ 314.1129
+ 333.3694 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER15': class PDFDictionary 
+22 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://www.riverbankcomputing.com/static/Downloads/PyQt4/PyQt-x11-gpl-4.7.7.tar.gz) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 109.5929
+ 216.3694
+ 491.3929
+ 228.3694 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER16': class PDFDictionary 
+23 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (https://litsol@bitbucket.org/bfrog/cutehg) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 126.2729
+ 111.3694
+ 302.0629
+ 123.3694 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Page4': class PDFPage 
+24 0 obj
+% Page dictionary
+<< /Annots [ 15 0 R
+ 16 0 R
+ 17 0 R
+ 18 0 R
+ 19 0 R
+ 20 0 R
+ 21 0 R
+ 22 0 R
+ 23 0 R ]
+ /Contents 66 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 62 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'Annot.NUMBER17': class PDFDictionary 
+25 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://pypi.python.org/pypi/RhodeCode/1.0.0rc2) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 193.5229
+ 696.5936
+ 403.0829
+ 708.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER18': class PDFDictionary 
+26 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://www.sqlite.org/download.html) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 62.69291
+ 123.5936
+ 219.9729
+ 135.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Page5': class PDFPage 
+27 0 obj
+% Page dictionary
+<< /Annots [ 25 0 R
+ 26 0 R ]
+ /Contents 67 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 62 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'Annot.NUMBER19': class PDFDictionary 
+28 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://packages.python.org/RhodeCode/setup.html#setup) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 62.69291
+ 547.1262
+ 318.3929
+ 559.1262 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Page6': class PDFPage 
+29 0 obj
+% Page dictionary
+<< /Annots [ 28 0 R ]
+ /Contents 68 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 62 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'R30': class PDFCatalog 
+30 0 obj
+% Document Root
+<< /Outlines 32 0 R
+ /PageLabels 69 0 R
+ /PageMode /UseNone
+ /Pages 62 0 R
+ /Type /Catalog >>
+endobj
+% 'R31': class PDFInfo 
+31 0 obj
+<< /Author ()
+ /CreationDate (D:20110216100033-01'00')
+ /Keywords ()
+ /Producer (ReportLab http://www.reportlab.com)
+ /Subject (\(unspecified\))
+ /Title (The Virtual Leaf) >>
+endobj
+% 'R32': class PDFOutlines 
+32 0 obj
+<< /Count 33
+ /First 33 0 R
+ /Last 59 0 R
+ /Type /Outlines >>
+endobj
+% 'Outline.0': class OutlineEntryObject 
+33 0 obj
+<< /Dest [ 4 0 R
+ /XYZ
+ 62.69291
+ 717.0236
+ 0 ]
+ /Next 34 0 R
+ /Parent 32 0 R
+ /Title (Friday 11 June 2010) >>
+endobj
+% 'Outline.1': class OutlineEntryObject 
+34 0 obj
+<< /Dest [ 4 0 R
+ /XYZ
+ 62.69291
+ 393.0236
+ 0 ]
+ /Next 35 0 R
+ /Parent 32 0 R
+ /Prev 33 0 R
+ /Title (Friday 24 September 2010) >>
+endobj
+% 'Outline.2': class OutlineEntryObject 
+35 0 obj
+<< /Dest [ 4 0 R
+ /XYZ
+ 62.69291
+ 273.0236
+ 0 ]
+ /Next 36 0 R
+ /Parent 32 0 R
+ /Prev 34 0 R
+ /Title (Monday 27 September 2010) >>
+endobj
+% 'Outline.3': class OutlineEntryObject 
+36 0 obj
+<< /Count 11
+ /Dest [ 4 0 R
+ /XYZ
+ 62.69291
+ 174.0236
+ 0 ]
+ /First 37 0 R
+ /Last 47 0 R
+ /Next 48 0 R
+ /Parent 32 0 R
+ /Prev 35 0 R
+ /Title (Tuesday 5 October 20010) >>
+endobj
+% 'Outline.30.0': class OutlineEntryObject 
+37 0 obj
+<< /Dest [ 4 0 R
+ /XYZ
+ 62.69291
+ 141.0236
+ 0 ]
+ /Next 38 0 R
+ /Parent 36 0 R
+ /Title (tutorial0.pro) >>
+endobj
+% 'Outline.30.1': class OutlineEntryObject 
+38 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 753.0236
+ 0 ]
+ /Next 39 0 R
+ /Parent 36 0 R
+ /Prev 37 0 R
+ /Title (auxingrowthplugin.h) >>
+endobj
+% 'Outline.30.2': class OutlineEntryObject 
+39 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 693.0236
+ 0 ]
+ /Next 40 0 R
+ /Parent 36 0 R
+ /Prev 38 0 R
+ /Title (VirtualLeaf.cpp) >>
+endobj
+% 'Outline.30.3': class OutlineEntryObject 
+40 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 633.0236
+ 0 ]
+ /Next 41 0 R
+ /Parent 36 0 R
+ /Prev 39 0 R
+ /Title (canvas.h) >>
+endobj
+% 'Outline.30.4': class OutlineEntryObject 
+41 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 585.0236
+ 0 ]
+ /Next 42 0 R
+ /Parent 36 0 R
+ /Prev 40 0 R
+ /Title (canvas.cpp) >>
+endobj
+% 'Outline.30.5': class OutlineEntryObject 
+42 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 395.8236
+ 0 ]
+ /Next 43 0 R
+ /Parent 36 0 R
+ /Prev 41 0 R
+ /Title (mesh.h) >>
+endobj
+% 'Outline.30.6': class OutlineEntryObject 
+43 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 250.4814
+ 0 ]
+ /Next 44 0 R
+ /Parent 36 0 R
+ /Prev 42 0 R
+ /Title (mesh.cpp) >>
+endobj
+% 'Outline.30.7': class OutlineEntryObject 
+44 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 753.0236
+ 0 ]
+ /Next 45 0 R
+ /Parent 36 0 R
+ /Prev 43 0 R
+ /Title (modelcatalogue.cpp) >>
+endobj
+% 'Outline.30.8': class OutlineEntryObject 
+45 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 705.0236
+ 0 ]
+ /Next 46 0 R
+ /Parent 36 0 R
+ /Prev 44 0 R
+ /Title (simplugin.h) >>
+endobj
+% 'Outline.30.9': class OutlineEntryObject 
+46 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 611.8236
+ 0 ]
+ /Next 47 0 R
+ /Parent 36 0 R
+ /Prev 45 0 R
+ /Title (simplugin.cpp) >>
+endobj
+% 'Outline.30.10': class OutlineEntryObject 
+47 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 530.6236
+ 0 ]
+ /Parent 36 0 R
+ /Prev 46 0 R
+ /Title (xmlwrite.cpp) >>
+endobj
+% 'Outline.4': class OutlineEntryObject 
+48 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 482.6236
+ 0 ]
+ /Next 49 0 R
+ /Parent 32 0 R
+ /Prev 36 0 R
+ /Title (Wednesday 6 October 2010) >>
+endobj
+% 'Outline.5': class OutlineEntryObject 
+49 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 431.6236
+ 0 ]
+ /Next 50 0 R
+ /Parent 32 0 R
+ /Prev 48 0 R
+ /Title (Thursday 7 October 2010) >>
+endobj
+% 'Outline.6': class OutlineEntryObject 
+50 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 368.6236
+ 0 ]
+ /Next 51 0 R
+ /Parent 32 0 R
+ /Prev 49 0 R
+ /Title (Friday 8 October 2010) >>
+endobj
+% 'Outline.7': class OutlineEntryObject 
+51 0 obj
+<< /Count 3
+ /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 299.6236
+ 0 ]
+ /First 52 0 R
+ /Last 54 0 R
+ /Next 55 0 R
+ /Parent 32 0 R
+ /Prev 50 0 R
+ /Title (Monday 11 October 2010) >>
+endobj
+% 'Outline.31.0': class OutlineEntryObject 
+52 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 266.6236
+ 0 ]
+ /Next 53 0 R
+ /Parent 51 0 R
+ /Title (Mercurial hooks) >>
+endobj
+% 'Outline.31.1': class OutlineEntryObject 
+53 0 obj
+<< /Dest [ 14 0 R
+ /XYZ
+ 62.69291
+ 170.6236
+ 0 ]
+ /Next 54 0 R
+ /Parent 51 0 R
+ /Prev 52 0 R
+ /Title (Mercurial Repositories) >>
+endobj
+% 'Outline.31.2': class OutlineEntryObject 
+54 0 obj
+<< /Dest [ 24 0 R
+ /XYZ
+ 62.69291
+ 401.7994
+ 0 ]
+ /Parent 51 0 R
+ /Prev 53 0 R
+ /Title (RE-INSTALL) >>
+endobj
+% 'Outline.8': class OutlineEntryObject 
+55 0 obj
+<< /Count 2
+ /Dest [ 27 0 R
+ /XYZ
+ 62.69291
+ 606.0236
+ 0 ]
+ /First 56 0 R
+ /Last 57 0 R
+ /Next 58 0 R
+ /Parent 32 0 R
+ /Prev 51 0 R
+ /Title (Tuesday 12 October 2010) >>
+endobj
+% 'Outline.32.0': class OutlineEntryObject 
+56 0 obj
+<< /Dest [ 27 0 R
+ /XYZ
+ 62.69291
+ 573.0236
+ 0 ]
+ /Next 57 0 R
+ /Parent 55 0 R
+ /Title (RhodeCode) >>
+endobj
+% 'Outline.32.1': class OutlineEntryObject 
+57 0 obj
+<< /Dest [ 27 0 R
+ /XYZ
+ 62.69291
+ 525.0236
+ 0 ]
+ /Parent 55 0 R
+ /Prev 56 0 R
+ /Title (SED-ML L1V1RC1) >>
+endobj
+% 'Outline.9': class OutlineEntryObject 
+58 0 obj
+<< /Dest [ 27 0 R
+ /XYZ
+ 62.69291
+ 441.0236
+ 0 ]
+ /Next 59 0 R
+ /Parent 32 0 R
+ /Prev 55 0 R
+ /Title (Wednesday 13 October 2010) >>
+endobj
+% 'Outline.10': class OutlineEntryObject 
+59 0 obj
+<< /Count 2
+ /Dest [ 27 0 R
+ /XYZ
+ 62.69291
+ 342.0236
+ 0 ]
+ /First 60 0 R
+ /Last 61 0 R
+ /Parent 32 0 R
+ /Prev 58 0 R
+ /Title (Friday 15 October 2010) >>
+endobj
+% 'Outline.33.0': class OutlineEntryObject 
+60 0 obj
+<< /Dest [ 27 0 R
+ /XYZ
+ 62.69291
+ 309.0236
+ 0 ]
+ /Next 61 0 R
+ /Parent 59 0 R
+ /Title (Rhodecode) >>
+endobj
+% 'Outline.33.1': class OutlineEntryObject 
+61 0 obj
+<< /Dest [ 29 0 R
+ /XYZ
+ 62.69291
+ 442.3562
+ 0 ]
+ /Parent 59 0 R
+ /Prev 60 0 R
+ /Title (The Virtual Leaf) >>
+endobj
+% 'R62': class PDFPages 
+62 0 obj
+% page tree
+<< /Count 6
+ /Kids [ 4 0 R
+ 6 0 R
+ 14 0 R
+ 24 0 R
+ 27 0 R
+ 29 0 R ]
+ /Type /Pages >>
+endobj
+% 'R63': class PDFStream 
+63 0 obj
+% page stream
+<< /Length 8921 >>
+stream
+1 0 0 1 0 0 cm BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 729.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 9.64 Tm /F2 20 Tf 24 TL 159.9249 0 Td (The Virtual Leaf) Tj T* -159.9249 0 Td ET
+Q
+Q
+q
+1 0 0 1 62.69291 696.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Friday 11 June 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 678.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Issues:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 672.0236 cm
+Q
+q
+1 0 0 1 62.69291 405.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 0 2 Tm  T* ET
+q
+1 0 0 1 20 267 cm
+Q
+q
+1 0 0 1 20 267 cm
+Q
+q
+1 0 0 1 20 225 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 27 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (1.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 28.82 Tm /F1 10 Tf 12 TL 1.55284 Tw (Every class that has an association or composition eventually will need its own custom view) Tj T* 0 Tw .83436 Tw (page template, e.g. sed_view. For the moment I have set the default view for these classes to) Tj T* 0 Tw (dev_view \( a copy of base_view \).) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 225 cm
+Q
+q
+1 0 0 1 20 228 cm
+Q
+q
+1 0 0 1 20 198 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 15 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (2.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 16.82 Tm /F1 10 Tf 12 TL 1.744651 Tw (An association in UML is cast as a ReferenceField in the resulting class schema. Open the) Tj T* 0 Tw (association and add the widget:label tag to the class that is being associated.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 198 cm
+Q
+q
+1 0 0 1 20 201 cm
+Q
+q
+1 0 0 1 20 171 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 15 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (3.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 16.82 Tm /F1 10 Tf 12 TL .73061 Tw (The default description text for a class should be a informative description of the class, not the) Tj T* 0 Tw (instance, derived from the SED-ML manual.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 171 cm
+Q
+q
+1 0 0 1 20 174 cm
+Q
+q
+1 0 0 1 20 156 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (4.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Apply 'searchable' tags to the appropriate class attributes.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 156 cm
+Q
+q
+1 0 0 1 20 159 cm
+Q
+q
+1 0 0 1 20 141 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (5.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (I choose 'isTidyHtmlWithCleanup' as the MathML validator. Will this work?) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 141 cm
+Q
+q
+1 0 0 1 20 144 cm
+Q
+q
+1 0 0 1 20 0 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 129 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (6.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 117 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 16.82 Tm /F1 10 Tf 12 TL .76811 Tw (What should be added to our implementation of SED-ML to make it more than merely a mirror) Tj T* 0 Tw (image of the SED-ML XML format?) Tj T* ET
+Q
+Q
+q
+1 0 0 1 23 111 cm
+Q
+q
+1 0 0 1 23 3 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 0 2 Tm  T* ET
+q
+1 0 0 1 20 108 cm
+Q
+q
+1 0 0 1 20 108 cm
+Q
+q
+1 0 0 1 20 90 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (a.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (The ability to attach files at various points, e.g. parameter files.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 90 cm
+Q
+q
+1 0 0 1 20 93 cm
+Q
+q
+1 0 0 1 20 75 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (b.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Additional output types, e.g. animations.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 75 cm
+Q
+q
+1 0 0 1 20 78 cm
+Q
+q
+1 0 0 1 20 60 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 6.22 0 Td (c.) Tj T* -6.22 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Custom page templates) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 60 cm
+Q
+q
+1 0 0 1 20 63 cm
+Q
+q
+1 0 0 1 20 45 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (d.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Custom search form) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 45 cm
+Q
+q
+1 0 0 1 20 48 cm
+Q
+q
+1 0 0 1 20 30 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (e.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Custom catalog indexes) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 30 cm
+Q
+q
+1 0 0 1 20 33 cm
+Q
+q
+1 0 0 1 20 15 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 8.44 0 Td (f.) Tj T* -8.44 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Custom portlet\(s\)) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 15 cm
+Q
+q
+1 0 0 1 20 18 cm
+Q
+q
+1 0 0 1 20 0 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (g.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Custom viewlet\(s\)) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 0 cm
+Q
+q
+1 0 0 1 20 0 cm
+Q
+q
+Q
+Q
+q
+1 0 0 1 23 3 cm
+Q
+q
+Q
+Q
+q
+1 0 0 1 20 0 cm
+Q
+q
+1 0 0 1 20 0 cm
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 405.0236 cm
+Q
+q
+1 0 0 1 62.69291 372.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Friday 24 September 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 315.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 0 36 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F2 10 Tf 12 TL (To Do:) Tj T* ET
+Q
+Q
+BT 1 0 0 1 0 23 Tm  T* ET
+q
+1 0 0 1 10 33 cm
+Q
+q
+1 0 0 1 10 33 cm
+Q
+q
+1 0 0 1 10 15 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (1.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Publish our mercurial repositories \(Chris/Martin\). This may mesh with deploying Plone.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 10 15 cm
+Q
+q
+1 0 0 1 10 18 cm
+Q
+q
+1 0 0 1 10 0 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (2.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Create a vleaf mailing list \(Henk\).) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 10 0 cm
+Q
+q
+1 0 0 1 10 0 cm
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 285.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 16.82 Tm /F1 10 Tf 12 TL .602927 Tw (Found an article on SBRML - a markup language for associating systems biology data with models. At a) Tj T* 0 Tw (glance the schema seems bigger than SED-ML's, but SBRML appears to be SBML specific.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 252.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Monday 27 September 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 186.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 52.82 Tm /F1 10 Tf 12 TL 3.993828 Tw (Spoke with Chris about publishing the Mercurial repositories and deploying Plone. Both can be) Tj T* 0 Tw .131567 Tw (accomplished in their own project space on a server in the DMZ. Chris said he would supply me with login) Tj T* 0 Tw 3.871984 Tw (credentials for both accounts. I will install Plone and Chris \(or Maarten\) will help me configure) Tj T* 0 Tw .795318 Tw (Apache/nginx and Varnish. Chris will install the required Mercurial packages; after which I can clone the) Tj T* 0 Tw (repositories to their new home.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 153.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Tuesday 5 October 20010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 123.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (tutorial0.pro) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 105.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Added simplugin.h to list of header files. NB: this is the only tutorial in which simplugin.h appears.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 56.69291 773.1969 cm
+q
+BT 1 0 0 1 0 4.82 Tm 205.6499 0 Td 12 TL /F1 10 Tf 0 0 0 rg (The Virtual Leaf) Tj T* -205.6499 0 Td ET
+Q
+Q
+q
+1 0 0 1 56.69291 56.69291 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 238.1649 0 Td (1) Tj T* -238.1649 0 Td ET
+Q
+Q
+ 
+endstream
+
+endobj
+% 'R64': class PDFStream 
+64 0 obj
+% page stream
+<< /Length 4804 >>
+stream
+1 0 0 1 0 0 cm BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 735.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (auxingrowthplugin.h) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 705.0236 cm
+q
+BT 1 0 0 1 0 16.82 Tm 2.02498 Tw 12 TL /F1 10 Tf 0 0 0 rg (Declared, and defined, a virtual function named ) Tj /F3 10 Tf (DefaultLeafML\(\) ) Tj /F1 10 Tf (which merely returns a QString) Tj T* 0 Tw (naming a LeafML filename sans path.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 675.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (VirtualLeaf.cpp) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 645.0236 cm
+q
+BT 1 0 0 1 0 16.82 Tm 14.41996 Tw 12 TL /F1 10 Tf 0 0 0 rg (Moved ) Tj /F3 10 Tf (Cell::SetMagnification\(\) ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (Cell::SetOffset\(\) ) Tj /F1 10 Tf (from ) Tj /F3 10 Tf (main\(\) ) Tj /F1 10 Tf (to) Tj T* 0 Tw /F3 10 Tf (MainBase::Init\(\)) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 615.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (canvas.h) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 597.0236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Declare ) Tj /F3 10 Tf (exportCellData\(\)) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 567.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (canvas.cpp) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 537.0236 cm
+q
+BT 1 0 0 1 0 16.82 Tm 8.836412 Tw 12 TL /F1 10 Tf 0 0 0 rg (Add an 'Export cell areas' to the file dropdown menu which invokes - surprise -) Tj T* 0 Tw /F3 10 Tf (Main::exportCellData\(\)) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 407.8236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 120 re B*
+Q
+q
+BT 1 0 0 1 0 101.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (void Main::exportCellData\(void\) {) Tj T* (  QFile file\("areas.csv"\);) Tj T* (  if \( file.open\( IO_WriteOnly \) \) {) Tj T* (    QTextStream stream\( ) Tj (&) Tj (file \);) Tj T* (    mesh.CSVExportCellData\(stream\);) Tj T* (    mesh.CSVExportMeshData\(stream\);) Tj T* (    file.close\(\);) Tj T* (  }) Tj T* (}) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 377.8236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (mesh.h) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 359.8236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Include ) Tj /F3 10 Tf (<) Tj (QTextStream) Tj (>) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 329.8236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 16.82 Tm /F1 10 Tf 12 TL .752765 Tw (Set the boundary_poloygon pointer to zero in the class constructor, and delete it, if it exists, in the class) Tj T* 0 Tw (destructor.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 311.8236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Declare ) Tj /F3 10 Tf (Compactness\(\)) Tj /F1 10 Tf (, ) Tj /F3 10 Tf (CSVExportCellData\(\) ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (CSVExportMeshData\(\)) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 262.4814 cm
+q
+q
+.840289 0 0 .840289 0 0 cm
+q
+1 0 0 1 6.6 7.854438 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 558 48 re B*
+Q
+q
+BT 1 0 0 1 0 29.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (double Compactness\(double *res_compactness=0, double *res_area=0, double *res_cell_area=0\);) Tj T* (void CSVExportCellData\(QTextStream ) Tj (&) Tj (csv_stream\) const;) Tj T* (void CSVExportMeshData\(QTextStream ) Tj (&) Tj (csv_stream\);) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 232.4814 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (mesh.cpp) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 214.4814 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (In ) Tj /F3 10 Tf (mesh::clear\(\)) Tj /F1 10 Tf (, delete the boundary_polygon only if the pointer hasn't been assigned:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 145.2814 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 60 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 41.71 Tm /F3 10 Tf 12 TL (if \(boundary_polygon\) {) Tj T* (   delete boundary_polygon;) Tj T* (   boundary_polygon=0;) Tj T* ( }) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 125.2814 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Ditto for ) Tj /F3 10 Tf (mesh::clean\(\)) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 107.2814 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Define the code for ) Tj /F3 10 Tf (Compactness\(\)) Tj /F1 10 Tf (, ) Tj /F3 10 Tf (CSVExportCellData\(\) ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (CSVExportMeshData\(\)) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 56.69291 773.1969 cm
+q
+BT 1 0 0 1 0 4.82 Tm 205.6499 0 Td 12 TL /F1 10 Tf 0 0 0 rg (The Virtual Leaf) Tj T* -205.6499 0 Td ET
+Q
+Q
+q
+1 0 0 1 56.69291 56.69291 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 238.1649 0 Td (2) Tj T* -238.1649 0 Td ET
+Q
+Q
+ 
+endstream
+
+endobj
+% 'R65': class PDFStream 
+65 0 obj
+% page stream
+<< /Length 6652 >>
+stream
+1 0 0 1 0 0 cm BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 735.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (modelcatalogue.cpp) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 717.0236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (In ) Tj /F3 10 Tf (InstallModel\(\)) Tj /F1 10 Tf (, find and load the default LeafML file.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 687.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (simplugin.h) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 669.0236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Declare ) Tj /F3 10 Tf (DefaultLeafML\(\)) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 623.8236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 17.71 Tm /F3 10 Tf 12 TL (// Default LeafML-file to be read after model startup) Tj T* (virtual QString DefaultLeafML\(void\);) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 593.8236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (simplugin.cpp) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 575.8236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Define ) Tj /F3 10 Tf (DefaultLeafML\(\)) Tj /F1 10 Tf (. Returns an empty ) Tj /F3 10 Tf (QString) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 542.6236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 24 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 5.71 Tm /F3 10 Tf 12 TL (QString SimPluginInterface::DefaultLeafML\(void\) { return QString\(\); }) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 512.6236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (xmlwrite.cpp) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 494.6236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (In ) Tj /F3 10 Tf (Mesh::XMLReadCells\(\) ) Tj /F1 10 Tf (- Delete the boundary_ploygon only if its pointer has been assigned.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 461.6236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Wednesday 6 October 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 443.6236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Wrote Simon van Mourik about his missing libiconv-2.dll.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 410.6236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Thursday 7 October 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 380.6236 cm
+q
+BT 1 0 0 1 0 16.82 Tm .566976 Tw 12 TL /F1 10 Tf 0 0 0 rg (Added a Q3FileDialog in ) Tj /F3 10 Tf (canvas.cpp:Main::exportCellData\(void\) ) Tj /F1 10 Tf (to choose where to write the) Tj T* 0 Tw (exported cell data.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 347.6236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Friday 8 October 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 329.6236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Added new parameters to control perodic cell exprt data.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 311.6236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Added code to relize perodic cell export.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 278.6236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Monday 11 October 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 248.6236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (Mercurial hooks) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 230.6236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Tried several alternatives for Mercurial's ) Tj /F3 10 Tf (pretxnchangegroup.forbid_2heads ) Tj /F1 10 Tf (hook.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 230.6236 cm
+Q
+q
+1 0 0 1 62.69291 230.6236 cm
+Q
+q
+1 0 0 1 62.69291 212.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (1.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 .501961 rg (http://bitbucket.org/dgc/headcount) Tj 0 0 0 rg (: ) Tj /F2 10 Tf (Headcount) Tj /F1 10 Tf ( ) Tj /F3 10 Tf (ui ) Tj /F1 10 Tf (complains of a missing data member) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 212.6236 cm
+Q
+q
+1 0 0 1 62.69291 215.6236 cm
+Q
+q
+1 0 0 1 62.69291 197.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (2.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 .501961 rg (http://stackoverflow.com/questions/1705921/useful-mercurial-hooks) Tj 0 0 0 rg (: ) Tj /F2 10 Tf (forbid2_heads.py ) Tj /F1 10 Tf (doesn't load) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 197.6236 cm
+Q
+q
+1 0 0 1 62.69291 200.6236 cm
+Q
+q
+1 0 0 1 62.69291 182.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (3.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 .501961 rg (http://davidherron.com/node/961) Tj 0 0 0 rg (: ) Tj /F2 10 Tf (forbid2_heads.sh ) Tj /F1 10 Tf (works as advertised) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 182.6236 cm
+Q
+q
+1 0 0 1 62.69291 182.6236 cm
+Q
+q
+1 0 0 1 62.69291 152.6236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (Mercurial Repositories) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 134.6236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (Tried to install Rhode Code from: ) Tj 0 0 .501961 rg (http://packages.python.org/RhodeCode) Tj 0 0 0 rg (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 134.6236 cm
+Q
+q
+1 0 0 1 62.69291 134.6236 cm
+Q
+q
+1 0 0 1 62.69291 116.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (1.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 .501961 rg
+0 0 .501961 RG
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (http://bitbucket.org/marcinkuzminski/rhodecode) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 116.6236 cm
+Q
+q
+1 0 0 1 62.69291 119.6236 cm
+Q
+q
+1 0 0 1 62.69291 101.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (2.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 .501961 rg (http://packages.python.org/RhodeCode) Tj 0 0 0 rg (, ) Tj 0 0 .501961 rg (http://pypi.python.org/pypi/RhodeCode/1.0.0rc3) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 101.6236 cm
+Q
+q
+1 0 0 1 62.69291 104.6236 cm
+Q
+q
+1 0 0 1 56.69291 773.1969 cm
+q
+BT 1 0 0 1 0 4.82 Tm 205.6499 0 Td 12 TL /F1 10 Tf 0 0 0 rg (The Virtual Leaf) Tj T* -205.6499 0 Td ET
+Q
+Q
+q
+1 0 0 1 56.69291 56.69291 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 238.1649 0 Td (3) Tj T* -238.1649 0 Td ET
+Q
+Q
+ 
+endstream
+
+endobj
+% 'R66': class PDFStream 
+66 0 obj
+% page stream
+<< /Length 14140 >>
+stream
+1 0 0 1 0 0 cm BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 735.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (3.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 .501961 rg (http://hg.python-works.com ) Tj 0 0 0 rg (\(demo,demo\)) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 735.0236 cm
+Q
+q
+1 0 0 1 62.69291 738.0236 cm
+Q
+q
+1 0 0 1 62.69291 720.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (4.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 .501961 rg
+0 0 .501961 RG
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (http://bitbucket.org/bfrog/cutehg) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 720.0236 cm
+Q
+q
+1 0 0 1 62.69291 723.0236 cm
+Q
+q
+1 0 0 1 62.69291 705.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (5.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 .501961 rg (http://pypi.python.org/pypi/SIP) Tj 0 0 0 rg (, ) Tj 0 0 .501961 rg (http://www.riverbankcomputing.com/hg/sip) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 705.0236 cm
+Q
+q
+1 0 0 1 62.69291 708.0236 cm
+Q
+q
+1 0 0 1 62.69291 690.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (6.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 .501961 rg
+0 0 .501961 RG
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (http://pypi.python.org/pypi/PyQt) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 690.0236 cm
+Q
+q
+1 0 0 1 62.69291 693.0236 cm
+Q
+q
+1 0 0 1 62.69291 675.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (7.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 .501961 rg
+0 0 .501961 RG
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (http://ask.github.com/celery) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 675.0236 cm
+Q
+q
+1 0 0 1 62.69291 675.0236 cm
+Q
+q
+1 0 0 1 62.69291 657.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (All goes tolerably until you tick in the url; at which point RhodeCode complains that:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 413.7994 cm
+q
+q
+.465606 0 0 .465606 0 0 cm
+q
+1 0 0 1 6.6 14.17507 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 1008 504 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 485.71 Tm /F3 10 Tf 12 TL (Exception happened during processing of request from \('127.0.0.1', 35803\)) Tj T* (Traceback \(most recent call last\):) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Paste-1.7.5.1-py2.6.egg/paste/httpserver.py", line 1068, in process_request_in_thread) Tj T* (   self.finish_request\(request, client_address\)) Tj T* ( File "/ufs/guravage/opt/Python-2.6.2/lib/python2.6/SocketServer.py", line 320, in finish_request) Tj T* (   self.RequestHandlerClass\(request, client_address, self\)) Tj T* ( File "/ufs/guravage/opt/Python-2.6.2/lib/python2.6/SocketServer.py", line 615, in __init__) Tj T* (   self.handle\(\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Paste-1.7.5.1-py2.6.egg/paste/httpserver.py", line 442, in handle) Tj T* (   BaseHTTPRequestHandler.handle\(self\)) Tj T* ( File "/ufs/guravage/opt/Python-2.6.2/lib/python2.6/BaseHTTPServer.py", line 329, in handle) Tj T* (   self.handle_one_request\(\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Paste-1.7.5.1-py2.6.egg/paste/httpserver.py", line 437, in handle_one_request) Tj T* (   self.wsgi_execute\(\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Paste-1.7.5.1-py2.6.egg/paste/httpserver.py", line 287, in wsgi_execute) Tj T* (   self.wsgi_start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Paste-1.7.5.1-py2.6.egg/paste/cascade.py", line 130, in __call__) Tj T* (   return self.apps[-1]\(environ, start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Paste-1.7.5.1-py2.6.egg/paste/registry.py", line 379, in __call__) Tj T* (   app_iter = self.application\(environ, start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/RhodeCode-1.0.0rc1-py2.6.egg/rhodecode/lib/middleware/https_fixup.py", line 33, in __call__) Tj T* (   return self.application\(environ, start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Pylons-1.0-py2.6.egg/pylons/middleware.py", line 163, in __call__) Tj T* (   self.app, new_environ, catch_exc_info=True\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Pylons-1.0-py2.6.egg/pylons/util.py", line 48, in call_wsgi_application) Tj T* (   app_iter = application\(environ, start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/WebError-0.10.2-py2.6.egg/weberror/errormiddleware.py", line 156, in __call__) Tj T* (   return self.application\(environ, start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/RhodeCode-1.0.0rc1-py2.6.egg/rhodecode/lib/middleware/simplehg.py", line 55, in __call__) Tj T* (   return self.application\(environ, start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Beaker-1.5.4-py2.6.egg/beaker/middleware.py", line 152, in __call__) Tj T* (   return self.wrap_app\(environ, session_start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Routes-1.12.3-py2.6.egg/routes/middleware.py", line 131, in __call__) Tj T* (   response = self.app\(environ, start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Pylons-1.0-py2.6.egg/pylons/wsgiapp.py", line 98, in __call__) Tj T* (   self.setup_app_env\(environ, start_response\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Pylons-1.0-py2.6.egg/pylons/wsgiapp.py", line 203, in setup_app_env) Tj T* (   pylons_obj.translator = _get_translator\(lang, pylons_config=self.config\)) Tj T* ( File "/ufs/guravage/.archive/mas/mr/rhodecode/lib/python2.6/site-packages/Pylons-1.0-py2.6.egg/pylons/i18n/translation.py", line 165, in _get_translator) Tj T* (   raise LanguageError\('IOError: %s' % ioe\)) Tj T* (LanguageError: IOError: [Errno 2] No translation file found for domain: 'rhodecode') Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 383.7994 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (RE-INSTALL) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 377.7994 cm
+Q
+q
+1 0 0 1 62.69291 377.7994 cm
+Q
+q
+1 0 0 1 62.69291 359.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (1.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (easy_install mercurial) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 359.7994 cm
+Q
+q
+1 0 0 1 62.69291 362.7994 cm
+Q
+q
+1 0 0 1 62.69291 344.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (2.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (mkdir src) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 344.7994 cm
+Q
+q
+1 0 0 1 62.69291 347.7994 cm
+Q
+q
+1 0 0 1 62.69291 329.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (3.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (cd src) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 329.7994 cm
+Q
+q
+1 0 0 1 62.69291 332.7994 cm
+Q
+q
+1 0 0 1 62.69291 314.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (4.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (hg clone ) Tj 0 0 .501961 rg (http://www.riverbankcomputing.com/hg/sip) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 314.7994 cm
+Q
+q
+1 0 0 1 62.69291 317.7994 cm
+Q
+q
+1 0 0 1 62.69291 299.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (5.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (cd sip) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 299.7994 cm
+Q
+q
+1 0 0 1 62.69291 302.7994 cm
+Q
+q
+1 0 0 1 62.69291 284.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (6.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (python build.py prepare) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 284.7994 cm
+Q
+q
+1 0 0 1 62.69291 287.7994 cm
+Q
+q
+1 0 0 1 62.69291 269.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (7.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (python configure.py) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 269.7994 cm
+Q
+q
+1 0 0 1 62.69291 272.7994 cm
+Q
+q
+1 0 0 1 62.69291 254.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (8.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (make) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 254.7994 cm
+Q
+q
+1 0 0 1 62.69291 257.7994 cm
+Q
+q
+1 0 0 1 62.69291 239.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (9.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (make install) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 239.7994 cm
+Q
+q
+1 0 0 1 62.69291 242.7994 cm
+Q
+q
+1 0 0 1 62.69291 224.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (10.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (cd ..) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 224.7994 cm
+Q
+q
+1 0 0 1 62.69291 227.7994 cm
+Q
+q
+1 0 0 1 62.69291 209.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (11.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (wget ) Tj 0 0 .501961 rg (http://www.riverbankcomputing.com/static/Downloads/PyQt4/PyQt-x11-gpl-4.7.7.tar.gz) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 209.7994 cm
+Q
+q
+1 0 0 1 62.69291 212.7994 cm
+Q
+q
+1 0 0 1 62.69291 194.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (12.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (tar xzf PyQt-x11-gpl-4.7.7.tar.gz) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 194.7994 cm
+Q
+q
+1 0 0 1 62.69291 197.7994 cm
+Q
+q
+1 0 0 1 62.69291 179.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (13.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (cd PyQt-x11-gpl-4.7.7) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 179.7994 cm
+Q
+q
+1 0 0 1 62.69291 182.7994 cm
+Q
+q
+1 0 0 1 62.69291 164.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (14.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (python configure.py) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 164.7994 cm
+Q
+q
+1 0 0 1 62.69291 167.7994 cm
+Q
+q
+1 0 0 1 62.69291 149.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (15.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (make) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 149.7994 cm
+Q
+q
+1 0 0 1 62.69291 152.7994 cm
+Q
+q
+1 0 0 1 62.69291 134.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (16.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (make install) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 134.7994 cm
+Q
+q
+1 0 0 1 62.69291 137.7994 cm
+Q
+q
+1 0 0 1 62.69291 119.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (17.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (cd ..) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 119.7994 cm
+Q
+q
+1 0 0 1 62.69291 122.7994 cm
+Q
+q
+1 0 0 1 62.69291 104.7994 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (18.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (hg clone ) Tj 0 0 .501961 rg (https://litsol@bitbucket.org/bfrog/cutehg) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 104.7994 cm
+Q
+q
+1 0 0 1 62.69291 107.7994 cm
+Q
+q
+1 0 0 1 62.69291 89.79938 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (19.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (cd cutehg) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 89.79938 cm
+Q
+q
+1 0 0 1 62.69291 92.79938 cm
+Q
+q
+1 0 0 1 56.69291 773.1969 cm
+q
+BT 1 0 0 1 0 4.82 Tm 205.6499 0 Td 12 TL /F1 10 Tf 0 0 0 rg (The Virtual Leaf) Tj T* -205.6499 0 Td ET
+Q
+Q
+q
+1 0 0 1 56.69291 56.69291 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 238.1649 0 Td (4) Tj T* -238.1649 0 Td ET
+Q
+Q
+ 
+endstream
+
+endobj
+% 'R67': class PDFStream 
+67 0 obj
+% page stream
+<< /Length 7872 >>
+stream
+1 0 0 1 0 0 cm BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 735.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (20.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (python setup.py build) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 735.0236 cm
+Q
+q
+1 0 0 1 62.69291 738.0236 cm
+Q
+q
+1 0 0 1 62.69291 720.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (21.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (python setup.py install) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 720.0236 cm
+Q
+q
+1 0 0 1 62.69291 723.0236 cm
+Q
+q
+1 0 0 1 62.69291 705.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (22.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (cd ..) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 705.0236 cm
+Q
+q
+1 0 0 1 62.69291 708.0236 cm
+Q
+q
+1 0 0 1 62.69291 690.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL .1 0 Td (23.) Tj T* -0.1 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (easy_install rhodecode, ) Tj 0 0 .501961 rg (http://pypi.python.org/pypi/RhodeCode/1.0.0rc2) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 690.0236 cm
+Q
+q
+1 0 0 1 62.69291 690.0236 cm
+Q
+q
+1 0 0 1 62.69291 672.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (This procedure fails as before.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 618.0236 cm
+q
+BT 1 0 0 1 0 40.82 Tm 1.747633 Tw 12 TL /F1 10 Tf 0 0 0 rg (However, upon inspection I saw that the i18n directory was missing from my build but present in the) Tj T* 0 Tw 3.201647 Tw (rhodecode clone from bitbucket. While I think that the ) Tj /F3 10 Tf (easy_install rhodecode ) Tj /F1 10 Tf (invocation is) Tj T* 0 Tw .23152 Tw (necessary to install the various subsidiary packages, moving the cloned rhodecode into the site-packages) Tj T* 0 Tw (directory seems to have made most functionality work. e.g. graphical logs and diff highlighting.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 585.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Tuesday 12 October 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 555.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (RhodeCode) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 537.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (I think that if Chris can install RhodeCode, I can serve individual instance from my home directory.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 507.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (SED-ML L1V1RC1) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 453.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 40.82 Tm /F1 10 Tf 12 TL 1.259318 Tw (Walking through the new SED-ML schema I see that they've dropped the generic simulation class and) Tj T* 0 Tw .36152 Tw (added AddXML and RemoveXML model change classes. Adding several more SED-ML examples for the) Tj T* 0 Tw .223735 Tw (symposium might still be justified - though they become obsolete the moment I introduce the new schema) Tj T* 0 Tw (changes.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 420.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Wednesday 13 October 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 390.0236 cm
+q
+BT 1 0 0 1 0 16.82 Tm .521976 Tw 12 TL /F1 10 Tf 0 0 0 rg (Tweaked ) Tj /F3 10 Tf (.bashrc ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (virtualenvwrapper.sh ) Tj /F1 10 Tf (to facilitate virtualenv and virtualenvwrapper - many) Tj T* 0 Tw (unbound variables!) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 372.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Pushed recent changes to repository from where Roeland can retrieve and test them.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 354.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (OK. RhodeCode RC4 works out of the box, excepting cutehg and PyQt4.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 321.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Friday 15 October 2010) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 291.0236 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (Rhodecode) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 261.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 16.82 Tm /F1 10 Tf 12 TL 4.18186 Tw (Installing RhodeCode locally on the nhypnos is a real pain. In addition to the previous list of) Tj T* 0 Tw (dependencies, for the caterpie, add these for the nhypnos:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 261.0236 cm
+Q
+q
+1 0 0 1 62.69291 261.0236 cm
+Q
+q
+1 0 0 1 62.69291 243.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (1.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Python) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 243.0236 cm
+Q
+q
+1 0 0 1 62.69291 246.0236 cm
+Q
+q
+1 0 0 1 62.69291 228.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (2.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Bison \(for sip\)) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 228.0236 cm
+Q
+q
+1 0 0 1 62.69291 231.0236 cm
+Q
+q
+1 0 0 1 62.69291 213.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (3.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Flex \(for sip\)) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 213.0236 cm
+Q
+q
+1 0 0 1 62.69291 216.0236 cm
+Q
+q
+1 0 0 1 62.69291 198.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (4.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (m4 \(for Bison\)) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 198.0236 cm
+Q
+q
+1 0 0 1 62.69291 201.0236 cm
+Q
+q
+1 0 0 1 62.69291 183.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (5.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Qt \(for PyQt\)) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 183.0236 cm
+Q
+q
+1 0 0 1 62.69291 186.0236 cm
+Q
+q
+1 0 0 1 62.69291 168.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 5.66 0 Td (6.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (GLIBCXX_3.4.9 \(for Qt\) - I draw the line at \(re\)installing GCC!) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 168.0236 cm
+Q
+q
+1 0 0 1 62.69291 168.0236 cm
+Q
+q
+1 0 0 1 62.69291 150.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (OK. Forget sip bison, flex, m4, Qt and the rest. Let's install just the minimum.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 120.0236 cm
+q
+BT 1 0 0 1 0 16.82 Tm 3.99561 Tw 12 TL /F1 10 Tf 0 0 0 rg (First, install sqlite; we'll see in a minute that Python requires it. The sources are available at:) Tj T* 0 Tw 0 0 .501961 rg (http://www.sqlite.org/download.html) Tj 0 0 0 rg (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 102.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Second, install Python. My initial attempt complained it was missing the following bits and pieces:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 56.69291 773.1969 cm
+q
+BT 1 0 0 1 0 4.82 Tm 205.6499 0 Td 12 TL /F1 10 Tf 0 0 0 rg (The Virtual Leaf) Tj T* -205.6499 0 Td ET
+Q
+Q
+q
+1 0 0 1 56.69291 56.69291 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 238.1649 0 Td (5) Tj T* -238.1649 0 Td ET
+Q
+Q
+ 
+endstream
+
+endobj
+% 'R68': class PDFStream 
+68 0 obj
+% page stream
+<< /Length 4572 >>
+stream
+1 0 0 1 0 0 cm BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 688.7562 cm
+q
+q
+.87797 0 0 .87797 0 0 cm
+q
+1 0 0 1 6.6 7.517338 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 534 72 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 53.71 Tm /F3 10 Tf 12 TL (Python build finished, but the necessary bits to build these modules were not found:) Tj T* (_bsddb             _sqlite3           _ssl) Tj T* (_tkinter           bsddb185           dl) Tj T* (imageop            readline           sunaudiodev) Tj T* (To find the necessary bits, look in setup.py in detect_modules\(\) for the module's name.) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 656.7562 cm
+q
+BT 1 0 0 1 0 16.82 Tm 1.528876 Tw 12 TL /F1 10 Tf 0 0 0 rg (So install sqlite first. And, since Python's configure script doesn't have an option for it, I had to tweak) Tj T* 0 Tw /F3 10 Tf (setup.py ) Tj /F1 10 Tf (to enumerate the path where it would find sqlite;) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 626.7562 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 16.82 Tm /F1 10 Tf 12 TL .757318 Tw (Third, install RhodeCode. I first installed it using easy_install, but while the result worked, the changelog) Tj T* 0 Tw (view did not display the branch/merge graphics. I then cloned the code from its bitbucket repository:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 593.5562 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 24 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 5.71 Tm /F3 10 Tf 12 TL (clone https://litsol@bitbucket.org/marcinkuzminski/rhodecode) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 573.5562 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Replacing the egg installed by easy_install by this code does display the branch/merge graphics.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 543.5562 cm
+q
+BT 1 0 0 1 0 16.82 Tm 12.02698 Tw 12 TL /F1 10 Tf 0 0 0 rg (Fourth, setup and serve rhodecode. Following the instructions posted online at:) Tj T* 0 Tw 0 0 .501961 rg (http://packages.python.org/RhodeCode/setup.html#setup ) Tj 0 0 0 rg (works as advertised:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 486.3562 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 48 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 29.71 Tm /F3 10 Tf 12 TL (paster make-config RhodeCode production.ini) Tj T* (paster setup-app production.ini) Tj T* (paster serve production.ini) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 454.3562 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 16.82 Tm /F1 10 Tf 12 TL 3.12229 Tw (All that's left is an apache rewrite rule directing virtualleaf.project.cwi.nl/repository to port 5000, or) Tj T* 0 Tw (whaterver we change it to, on the nhypnos.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 424.3562 cm
+q
+BT 1 0 0 1 0 7.23 Tm 18 TL /F2 15 Tf 0 0 0 rg (The Virtual Leaf) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 382.3562 cm
+q
+BT 1 0 0 1 0 28.82 Tm 7.784252 Tw 12 TL /F1 10 Tf 0 0 0 rg (Added ) Tj /F3 10 Tf (incrementIterations\(\)) Tj /F1 10 Tf (, ) Tj /F3 10 Tf (getIterations\(\) ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (int iterations ) Tj /F1 10 Tf (to mesh.h.) Tj T* 0 Tw .443976 Tw /F3 10 Tf (incrementIterations\(\) ) Tj /F1 10 Tf (is called in TIMESTEP in VirtualLeaf.cpp. The actual counter, ) Tj /F3 10 Tf (iterations) Tj T* 0 Tw /F1 10 Tf (is initalized to zero in the Mesh class constructor.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 340.3562 cm
+q
+BT 1 0 0 1 0 28.82 Tm 7.118443 Tw 12 TL /F1 10 Tf 0 0 0 rg (The iterations are inquired in two places: for the frame count in ) Tj /F3 10 Tf (MainBase::Plot ) Tj /F1 10 Tf (in) Tj T* 0 Tw .209974 Tw /F3 10 Tf (VirtualLeaf.cpp` and for the export cell data interval in ``Main::TimeStepWrap) Tj T* 0 Tw /F1 10 Tf (in ) Tj /F3 10 Tf (canvas.cpp) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 298.3562 cm
+q
+BT 1 0 0 1 0 28.82 Tm 2.41061 Tw 12 TL /F1 10 Tf 0 0 0 rg (The questions remain: Should we use this count, and if yes, where should it be incremented? The) Tj T* 0 Tw 9.067976 Tw (previous count was incremented in ) Tj /F3 10 Tf (Main::TimeStepWrap) Tj /F1 10 Tf (. Or should we simply use) Tj T* 0 Tw /F3 10 Tf (\(int\)mesh.getTime\(\)) Tj /F1 10 Tf (? Since this is not an ordinal count, the results look strange.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 56.69291 773.1969 cm
+q
+BT 1 0 0 1 0 4.82 Tm 205.6499 0 Td 12 TL /F1 10 Tf 0 0 0 rg (The Virtual Leaf) Tj T* -205.6499 0 Td ET
+Q
+Q
+q
+1 0 0 1 56.69291 56.69291 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 238.1649 0 Td (6) Tj T* -238.1649 0 Td ET
+Q
+Q
+ 
+endstream
+
+endobj
+% 'R69': class PDFPageLabels 
+69 0 obj
+% Document Root
+<< /Nums [ 0
+ 70 0 R
+ 1
+ 71 0 R
+ 2
+ 72 0 R
+ 3
+ 73 0 R
+ 4
+ 74 0 R
+ 5
+ 75 0 R ] >>
+endobj
+% 'R70': class PDFPageLabel 
+70 0 obj
+% None
+<< /S /D
+ /St 1 >>
+endobj
+% 'R71': class PDFPageLabel 
+71 0 obj
+% None
+<< /S /D
+ /St 2 >>
+endobj
+% 'R72': class PDFPageLabel 
+72 0 obj
+% None
+<< /S /D
+ /St 3 >>
+endobj
+% 'R73': class PDFPageLabel 
+73 0 obj
+% None
+<< /S /D
+ /St 4 >>
+endobj
+% 'R74': class PDFPageLabel 
+74 0 obj
+% None
+<< /S /D
+ /St 5 >>
+endobj
+% 'R75': class PDFPageLabel 
+75 0 obj
+% None
+<< /S /D
+ /St 6 >>
+endobj
+xref
+0 76
+0000000000 65535 f
+0000000113 00000 n
+0000000233 00000 n
+0000000398 00000 n
+0000000571 00000 n
+0000000852 00000 n
+0000001011 00000 n
+0000001304 00000 n
+0000001556 00000 n
+0000001839 00000 n
+0000002088 00000 n
+0000002343 00000 n
+0000002608 00000 n
+0000002863 00000 n
+0000003114 00000 n
+0000003480 00000 n
+0000003725 00000 n
+0000003978 00000 n
+0000004229 00000 n
+0000004489 00000 n
+0000004741 00000 n
+0000004989 00000 n
+0000005249 00000 n
+0000005551 00000 n
+0000005797 00000 n
+0000006185 00000 n
+0000006451 00000 n
+0000006691 00000 n
+0000007016 00000 n
+0000007274 00000 n
+0000007576 00000 n
+0000007735 00000 n
+0000007963 00000 n
+0000008089 00000 n
+0000008268 00000 n
+0000008467 00000 n
+0000008666 00000 n
+0000008910 00000 n
+0000009086 00000 n
+0000009283 00000 n
+0000009476 00000 n
+0000009662 00000 n
+0000009850 00000 n
+0000010034 00000 n
+0000010220 00000 n
+0000010417 00000 n
+0000010607 00000 n
+0000010800 00000 n
+0000010973 00000 n
+0000011173 00000 n
+0000011372 00000 n
+0000011569 00000 n
+0000011812 00000 n
+0000011991 00000 n
+0000012192 00000 n
+0000012363 00000 n
+0000012607 00000 n
+0000012780 00000 n
+0000012955 00000 n
+0000013157 00000 n
+0000013385 00000 n
+0000013558 00000 n
+0000013719 00000 n
+0000013870 00000 n
+0000022892 00000 n
+0000027797 00000 n
+0000034550 00000 n
+0000048792 00000 n
+0000056765 00000 n
+0000061442 00000 n
+0000061600 00000 n
+0000061677 00000 n
+0000061754 00000 n
+0000061831 00000 n
+0000061908 00000 n
+0000061985 00000 n
+trailer
+<< /ID 
+ % ReportLab generated PDF document -- digest (http://www.reportlab.com) 
+ [(\037\323\227O\300\021\334\027\205\315\374[\264\010]\323) (\037\323\227O\300\021\334\027\205\315\374[\264\010]\323)] 
+
+ /Info 31 0 R
+ /Root 30 0 R
+ /Size 76 >>
+startxref
+62032
+%%EOF

@@ -1,0 +1,353 @@
+2011-10-04    <guravage@petitdru.sen.cwi.nl>
+
+	* canvas.cpp (about): Bumped version number to 1.0.1.
+
+	* VirtualLeaf-install-windows.nsi: Bumped PRODUCT_VERSION  to 1.0.1.
+
+2011-02-28    <guravage@petitdru.sen.cwi.nl>
+
+	* canvas.cpp (about): Correct citation text.
+	Resolves issue #4: http://code.google.com/p/virtualleaf/issues/detail?id=4.
+
+2011-01-13    <guravage@petitdru.sen.cwi.nl>
+
+	* transporterdialog.cpp (TransporterDialog): Use wn to discern
+	which cell a wallitem belongs to.
+
+	* wallitem.cpp (WallItem): Add a comment explaining how
+	wallnumber(wn) can be used to tell which cell a wallitem belongs
+	to.
+
+	* VirtualLeaf-install-windows.nsi: Remove previous change that added icon directory.
+
+	* canvas.cpp: Instead of using a separate icon directory, compile
+	leaficon_small.xpm directly into canvas.cpp.
+
+	* VirtualLeaf-install-windows.nsi: Add new icons directory
+
+	* canvas.cpp (about): Added virtual leaf logo to About message box.
+
+2011-01-12    <guravage@petitdru.sen.cwi.nl>
+
+	* transporterdialog.cpp (TransporterDialog): Add a proper title to
+	the dialog, and place the cell and wall pairs in a seperate labe.
+
+2011-01-10    <guravage@petitdru.sen.cwi.nl>
+
+	* transporterdialog.cpp (TransporterDialog): Start numbering Transporter fields at zero.
+	Resolves issue #1: http://code.google.com/p/virtualleaf/issues/detail?id=1.
+
+	* wallitem.cpp (OnClick): Change dialog modality to Qt::WindowModal.
+	Resolves issue #2: http://code.google.com/p/virtualleaf/issues/detail?id=2.
+
+	* canvas.cpp (about): Add link to Plant Physiology paper.
+	Resolves issue #3: http://code.google.com/p/virtualleaf/issues/detail?id=3.
+
+2010-11-30    <guravage@petitdru.sen.cwi.nl>
+
+	* canvas.cpp (snapshot): Preface each image format extension with
+	an asterisk so files with those extensions to appear in the file
+	dialogue.
+	(snapshot): Forgot to add asterisk before our own pdf format.
+
+	* VirtualLeaf-install-windows.nsi: Include imageformats folder
+	alongside executable.
+
+	* canvas.cpp (snapshot): PNG is the default image format.
+
+2010-11-29    <guravage@petitdru.sen.cwi.nl>
+
+	* canvas.cpp (snapshot): Query and display supported snapshot file
+	formats.
+
+	* VirtualLeaf-install-windows.nsi: To facilitate debugging I added
+	the debug versions of all the windows DLLs.
+
+2010-10-19    <guravage@caterpie.sen.cwi.nl>
+
+	* mainbase.cpp (Save): Use format specified in function prototype.
+
+	* VirtualLeaf.cpp (Plot): Render PNG instead of JPEG. Write image
+	and XML files dependent only on getTime().
+
+2010-10-18    <guravage@caterpie.sen.cwi.nl>
+
+	* mainbase.cpp (Save): QDir::toNativeSeparators(fname). Invoke
+	save with format argument set to zero to force QImage to guess the
+	format by looking at fileName's suffix.
+
+	* VirtualLeaf-install.nsi: Put uninstaller in top directory.
+
+	* modelcatalogue.cpp (InstallModel): For all OS-es. Move from "bin" directory to root application folder.
+
+	* VirtualLeaf.pro: MAXOSX, look for gpl3.txt in the ../doc directory.
+
+	* Makefile (Makefile.libplugin): Removed -makefile qmake option.
+
+	* VirtualLeaf.cpp (TIMESTEP): Removed getIterations().
+
+	* mesh.h (Mesh): Removed {increment,get}Iterations().
+
+	* canvas.cpp (TimeStepWrap): Replaced getIterations() with getTime().
+
+2010-10-15    <guravage@caterpie.sen.cwi.nl>
+
+	* mesh.h (Mesh): Added iterations. incrementIterations() and
+	getIterations().
+
+	* VirtualLeaf.cpp (Plot): Replaced local frame counter with
+	mesh.incrementIterations().
+
+	* canvas.cpp (TimeStepWrap): Replaced local counter with
+	mesh.incrementIterations().
+
+2010-10-14    <guravage@caterpie.sen.cwi.nl>
+
+	* VirtualLeaf.pro: Turned debug off to make all profiles must be
+	consistant.
+
+	* VirtualLeaf-install.nsi: Tweaked paths to coincide with UNIX
+	distribution, i.e. VirtualLeaf.exe, its libraries, models, and the
+	uninstaller all go in the bin directory. And leaves directory
+	placed under data directory.
+
+	* canvas.cpp (exportCellData): Added a check to inquire before
+	overwritting an existing file.
+
+
+2010-10-14    <merks@cwi.nl>
+
+	* mesh.cpp: In response to referees' comments, added new parameter
+	"yield_threshold" instead of fixed parameter '4' for yield
+	threshold.
+
+	* wallitem.cpp: when clicking a wall, both the wall type was
+	cycled and the transporterdialog popped up. Corrected this - for
+	wall type cycling, hold the Control button while left
+	clicking. TransporterDialog only pops up for left click. Also made
+	sure the wall is redrawn after changing the transporter values.
+
+	* cell.cpp (DivideWalls): accomodated for rename of Circumference -> WallCircumference
+
+	* hull.h: added an operator< to sort Points
+
+	* hull.cpp: added an operator< to sort Points
+
+	* cellbase.cpp (ExactCircumference): I added a new function
+	ExactCircumference, yielding the circumference of the cell along
+	its wall_elements
+
+	* VirtualLeaf.cpp: adjust info_string to accomodate for new name
+	of function CellBase::Circumference -> CellBase::WallCircumference
+
+	* mesh.cpp: corrected Mesh::Compactness, the boundary coordinates
+	need to be sorted in x,y order for the convex hull algorithm
+	(thanks Margriet!). I updated CSVExportCellData so it exports the
+	circumferences of hull and boundary_polygon.
+
+
+2010-10-14    <guravage@caterpie.sen.cwi.nl>
+
+	* VirtualLeafpar.tmpl (export_fn_prefix): changed to 'cell.'
+
+	* canvas.cpp (TimeStepWrap): Removed TimeStamp(). Cell data
+	filename now incorporates iteration number.
+
+	* canvas.h (MainBase): Removed TimeStamp().
+
+
+2010-10-08    <guravage@caterpie.sen.cwi.nl>
+
+
+	* pardialog.h:
+	* pardialog.cpp:
+	* parameter.h:
+	* parameter.cpp: Regenerated to include export_interval and export_fn_prefix.
+
+	* VirtualLeafpar.tmpl: Appended export_interval and export_fn_prefix.
+
+	* canvas.h (MainBase): Declared polymorphic exportCellData() functions.
+
+	* canvas.cpp:
+	(TimeStamp): New private TimeStamp() function.
+	(TimeStepWrap): Added invocation of exportCellData().
+	(exportCellData): Created two polymorphic functions: one with a
+	single QString argument, the other with no argument. The former is
+	called from TimeStepWrap() while the latter is called from the
+	"Export cell areas" item in the file menu.
+
+
+2010-10-07    <guravage@caterpie.sen.cwi.nl>
+
+	* canvas.cpp (exportCellData): Added a Q3FileDialog to inquire
+	where to write the exportCellData.
+
+2010-06-28    <guravage@caterpie.sen.cwi.nl>
+
+
+	* VirtualLeaf-install.nsi: Grab gpl3.txt from doc directory.
+
+	* canvas.cpp (gpl): gpl3.txt can be either in an ancestor doc
+	directory (Linux) or a decedent doc directory (Windows, via the
+	binary installer).
+
+	* VirtualLeaf-install.nsi: Add VirtualLeaf doc directory.
+
+2010-06-25    <guravage@caterpie.sen.cwi.nl>
+
+
+	* gpl3.txt: Moved gpl3.txt from doc to src directory.
+
+	* VirtualLeaf.pro: Added -Wno-write-strings and -Wno-unused-parameter to QMAKE_CXXFLAGS.
+
+	* libplugin.pro: Ditto.
+
+	* parameter.cpp: Result of adding datadir changes to make_parameter_source.pl.
+	* parameter.h: Ditto.
+
+	* output.h: Declared new function (AppendHomeDirIfPathRelative).
+
+	* output.cpp (AppendHomeDirIfPathRelative): Added new function.
+
+	* canvas.cpp (gpl): Moving gpl3.txt from doc to src obviates the need to docDir.cd("../doc").
+
+	* VirtualLeaf-install.nsi: Grab gpl3.txt from src directory.
+	Add missing libiconv/bin, libxml2bin and libz/bin directories.
+	Copy libiconv-2.dll, libxml2.dll and zlib1.dll from relative paths.
+
+	* VirtualLeaf.pro: copy gpl3.txt as part of QMAKE_POST_LINK.
+
+2010-06-24    <guravage@caterpie.sen.cwi.nl>
+
+	* libplugin.pro: Use correct library path.
+	* VirtualLeaf.pro: Ditto.
+
+	* VirtualLeaf.cpp (DrawCell): Iterate over NChem to construct info_string.
+
+2010-06-23    <guravage@caterpie.sen.cwi.nl>
+
+	* simitembase.cpp: Removed NULL assignments to unused variables.
+	* VirtualLeaf.cpp: Ditto.
+	* apoplastitem.cpp: Ditto.
+	* canvas.cpp: Ditto.
+	* cell.cpp: Ditto.
+	* cellbase.h: Ditto.
+	* forwardeuler.cpp: Ditto.
+	* mainbase.h: Ditto.
+	* nodeitem.cpp: Ditto.
+	* qcanvasarrow.h: Ditto.
+	* simitembase.cpp: Ditto.
+
+
+	* Makefile (clean): Add -f Makefile argument to each make invocation.
+
+	* VirtualLeaf-install.nsi: New gpl license text.
+
+	* VirtualLeaf.pro: Disabled console mode.
+
+	* mesh.cpp (Clear): Added parentheses to qDebug statments.
+	(TestIllegalWalls): Replaced qDebug().
+
+	* canvas.cpp (mouseReleaseEvent): Replaced qDebug() with cerr since qDebug complains about *node_set.
+
+	* wall.cpp (CorrectWall): Rplaced gDebug() with cerr in transform call and when printing *this.
+
+2010-06-22    <guravage@caterpie.sen.cwi.nl>
+
+	* Makefile (tutorials): Add tutorials target.
+
+2010-06-21    <guravage@caterpie.sen.cwi.nl>
+
+	* parameter.cpp: Added particular reassignment of datadir.
+
+	* canvas.cpp (gpl): Added GPL3 License text. Display detail text only if the source text file exists.
+
+2010-06-18    <guravage@caterpie.sen.cwi.nl>
+
+	* canvas.cpp (gpl): Added gpl slot to display GPL license.
+
+	* VirtualLeaf.pro: Changed default LIBXML2DIR, LIBICONVDIR and LIBZDIR to corresponding distribution lib directories.
+	* libplugin.pro: Ditto.
+
+	* Makefile (clean): add if stmt not to `touch` on windows.
+
+2010-06-17    <guravage@caterpie.sen.cwi.nl>
+
+	* VirtualLeaf.pro: Removed perl references.
+	* libplugin.pro: Ditto.
+
+2010-06-15    <guravage@caterpie.sen.cwi.nl>
+
+	* VirtualLeaf.pro: Removed xmlwritecode.cpp from SOURCES list.
+
+	* xmlwrite.cpp (XMLSave): Removed references to XMLWriteLeafSourceCode and XMLWriteReactionsCode.
+	* xmlwrite.h (XMLIO): Ditto!
+
+	* mesh.cpp (findNextBoundaryNode): Initialize Node *next_boundary_node = NULL;
+
+	* xmlwrite.cpp (XMLReadSimtime): Removed unused variable cur
+	(XMLReadWalls): viz_flux need not be declared twice; default value of 0.0.
+	(XMLReadCells): Removed unused count variable.
+	(XMLReadSimtime): Removed unused cur variable.
+	(XMLRead): Removed unused v_str variable.
+
+	* simitembase.cpp (userMove): Use assignment merely to obviate compilation warning.
+	(SimItemBase) Ditto.
+
+	* qcanvasarrow.h (QGraphicsLineItem): Use assignment merely to obviate compilation warning.
+
+	* output.cpp (OpenWriteFile): Removed unused par variable.
+
+	* nodeitem.cpp (paint): Use assignment merely to obviate compilation warning.
+
+	* forwardeuler.cpp (odeint): Use assignment merely to obviate compilation warning.
+
+	* cell.cpp (DivideOverGivenLine): Use assignment merely to obviate compilation warning.
+
+	* canvas.cpp (FigureEditor): Use assignments merely to obviate compilation errors.
+	(mousePressEvent): Removed unused item variable.
+
+	* apoplastitem.cpp
+	(ApoplastItem): Removed unused par variable.
+	(OnClick): Use NULL assignment merely to obviate compilation warning.
+
+	* mainbase.h (MainBase): Use assignment merely to obviate compilation warning.
+
+	* cellbase.h (CellsStaticDatamembers): Use assignment merely to obviate compilation warning.
+
+
+	* cell.cpp: Wrapped diagnostic output in QDEBUG blocks.
+	* VirtualLeaf.cpp ditto.
+	* canvas.cpp ditto.
+	* cell.cpp ditto.
+	* data_plot.cpp ditto.
+	* forwardeuler.cpp ditto.
+	* mesh.cpp ditto.
+	* mesh.h
+	* random.cpp ditto.
+	* wall.cpp ditto.
+	* wallbase.cpp ditto.
+	* wallitem.cpp ditto.
+
+
+2010-06-07    <guravage@caterpie.sen.cwi.nl>
+
+	* VirtualLeaf.pro: Removed explicit perl invocation to regerenerate parameter files.
+	* libplugin.pro: ditto.
+
+2010-06-03    <guravage@caterpie.sen.cwi.nl>
+
+	* pardialog.h: Added default versions of this automatically generated file.
+	* pardialog.cpp: ditto.
+	* parameter.h: ditto.
+	* parameter.cpp: ditto.
+
+	* VirtualLeaf.pro: delete/generate  parameter.{h,cpp}and pardialog.{h,cpp} only if perl is installed.
+ 	* libplugin.pro: dito.
+
+	* Makefile: Added top-level Makefile
+
+2010-05-10    <guravage@caterpie.sen.cwi.nl>
+
+	* VirtualLeaf.pro: Added -fPIC option to QMAKE_CXXFLAGS.
+

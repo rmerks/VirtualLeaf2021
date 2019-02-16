@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+  $Rev$:  Revision of last commit
+  $Author$:  Author of last commit
+  $Source$:  Source file
+  $Date$:  Date of last commit
+
+  This file is part of the Virtual Leaf.
+
+  The Virtual Leaf is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  The Virtual Leaf is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with the Virtual Leaf.  If not, see <http://www.gnu.org/licenses/>.
+
+  Copyright 2010 Michael Guravage.
+-->
+
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0" ns="vl"
+  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+  <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"> Virtual Leaf </a:documentation>
+
+  <!-- A precooked comment element -->
+  <rng:define name="comment">
+    <rng:element name="comment">
+      <rng:data type="string"/>
+    </rng:element>
+  </rng:define>
+
+
+
+  <!-- An element with a integer value named 'v.' -->
+  <rng:define name="iValueType">
+    <rng:optional>
+      <rng:attribute name="v">
+        <rng:data type="integer"/>
+      </rng:attribute>
+    </rng:optional>
+  </rng:define>
+
+
+
+  <!-- An element with a real value named 'v.' -->
+  <rng:define name="rValueType">
+    <rng:optional>
+      <rng:attribute name="v">
+        <rng:data type="float"/>
+      </rng:attribute>
+    </rng:optional>
+  </rng:define>
+
+
+  <!-- Leaf is the root element -->
+  <rng:start>
+    <rng:ref name="leaf"/>
+  </rng:start>
+
+  <rng:define name="leaf">
+    <rng:element name="leaf">
+      <rng:optional>
+        <rng:element name="comment">
+          <rng:data type="string"/>
+        </rng:element>
+      </rng:optional>
+      <rng:optional>
+      <rng:element name="parameter">
+        <rng:ref name="ParameterType"/>
+      </rng:element>
+      </rng:optional>
+      <rng:zeroOrMore>
+        <rng:element name="code">
+          <rng:ref name="CodeType"/>
+        </rng:element>
+      </rng:zeroOrMore>
+      <rng:optional><rng:element name="nodes">
+        <rng:ref name="NodesType"/>
+      </rng:element></rng:optional>
+      <rng:optional><rng:element name="cells">
+        <rng:ref name="CellsType"/>
+      </rng:element></rng:optional>
+      <rng:optional><rng:element name="walls">
+        <rng:ref name="WallsType"/>
+      </rng:element></rng:optional>
+      <rng:optional><rng:element name="nodesets">
+        <rng:ref name="NodesetsType"/>
+      </rng:element></rng:optional>
+      <rng:optional><rng:element name="settings">
+        <rng:ref name="SettingsType"/>
+      </rng:element></rng:optional>
+      <rng:ref name="leafAttrubutes"/>
+    </rng:element>
+  </rng:define>
+
+  <!-- List of leaf attributes -->
+  <rng:define name="leafAttrubutes">
+    <rng:optional>
+      <rng:attribute name="uri">
+        <rng:data type="anyURI"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="date">
+        <rng:data type="dateTime"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="simtime">
+        <rng:data type="integer"/>
+      </rng:attribute>
+    </rng:optional>
+  </rng:define>
+
+
+
+  <!-- Parameters -->
+  <rng:define name="ParameterType">
+    <rng:optional>
+      <rng:element name="comment">
+        <rng:data type="string"/>
+      </rng:element>
+    </rng:optional>
+    <rng:zeroOrMore>
+      <rng:element name="par">
+        <rng:optional>
+          <rng:element name="valarray">
+            <rng:oneOrMore>
+              <rng:element name="val">
+                <rng:ref name="rValueType"/>
+              </rng:element>
+            </rng:oneOrMore>
+          </rng:element>
+        </rng:optional>
+          <rng:attribute name="name">
+            <rng:data type="string"/>
+          </rng:attribute>
+        <rng:optional>
+          <rng:attribute name="val">
+            <rng:data type="string"/>
+          </rng:attribute>
+        </rng:optional>
+      </rng:element>
+    </rng:zeroOrMore>
+
+  </rng:define>
+
+
+
+  <!-- Code -->
+  <rng:define name="CodeType">
+    <rng:text/>
+    <rng:attribute name="name">
+      <rng:data type="string"/>
+    </rng:attribute>
+  </rng:define>
+
+
+
+  <!-- Nodes -->
+  <rng:define name="NodesType">
+    <rng:optional>
+      <rng:element name="comment">
+        <rng:data type="string"/>
+      </rng:element>
+    </rng:optional>
+    <rng:zeroOrMore>
+      <rng:element name="node">
+        <rng:ref name="nodeAttributes"/>
+      </rng:element>
+    </rng:zeroOrMore>
+    <rng:ref name="nodesAttributes"/>
+  </rng:define>
+
+  <!-- A list of node attributes -->
+  <rng:define name="nodeAttributes">
+      <rng:attribute name="x">
+        <rng:data type="float"/>
+      </rng:attribute>
+      <rng:attribute name="y">
+        <rng:data type="float"/>
+      </rng:attribute>
+    <rng:optional>
+      <rng:attribute name="fixed">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="boundary">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="sam">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+  </rng:define>
+
+  <!-- A list of nodes attributes -->
+  <rng:define name="nodesAttributes">
+    <rng:optional>
+      <rng:attribute name="n">
+        <rng:data type="integer"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="target_length">
+        <rng:data type="float"/>
+      </rng:attribute>
+    </rng:optional>
+  </rng:define>
+
+
+
+  <!-- Cells -->
+  <rng:define name="CellsType">
+    <rng:optional>
+      <rng:element name="comment">
+        <rng:data type="string"/>
+      </rng:element>
+    </rng:optional>
+    <rng:oneOrMore>
+      <rng:element name="cell">
+        <rng:ref name="CellType"/>
+      </rng:element>
+    </rng:oneOrMore>
+    <rng:element name="boundary_polygon">
+      <rng:ref name="CellType"/>
+    </rng:element>
+    <rng:ref name="cellsAttributes"/>
+  </rng:define>
+
+  <!-- A list of cells attributes and their types -->
+  <rng:define name="cellsAttributes">
+      <rng:attribute name="n">
+        <rng:data type="integer"/>
+      </rng:attribute>
+      <rng:optional><rng:attribute name="offsetx">
+        <rng:data type="float"/>
+      </rng:attribute></rng:optional>
+    <rng:optional>
+      <rng:attribute name="offsety">
+        <rng:data type="float"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="magnification">
+        <rng:data type="float"/>
+      </rng:attribute>
+    </rng:optional>
+      <rng:attribute name="base_area">
+        <rng:data type="float"/>
+      </rng:attribute>
+      <rng:attribute name="nchem">
+        <rng:data type="integer"/>
+      </rng:attribute>
+  </rng:define>
+
+  <!-- Cell -->
+  <rng:define name="CellType">
+    <rng:zeroOrMore>
+      <rng:element name="node">
+        <rng:ref name="CellNodeType"/>
+      </rng:element>
+    </rng:zeroOrMore>
+    <rng:zeroOrMore>
+      <rng:element name="wall">
+        <rng:ref name="CellWallType"/>
+      </rng:element>
+    </rng:zeroOrMore>
+    <rng:optional><rng:element name="chem">
+      <rng:ref name="CellChemType"/>
+    </rng:element></rng:optional>
+    <rng:ref name="cellAttributes"/>
+  </rng:define>
+
+  <!-- A list of cell attributes and their types. -->
+  <rng:define name="cellAttributes">
+      <rng:attribute name="index">
+        <rng:data type="integer"/>
+      </rng:attribute>
+    <rng:optional>
+      <rng:attribute name="area">
+        <rng:data type="float"/>
+      </rng:attribute>
+    </rng:optional>
+      <rng:attribute name="target_area">
+        <rng:data type="float"/>
+      </rng:attribute>
+    <rng:optional>
+      <rng:attribute name="target_length">
+        <rng:data type="float"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="lambda_celllength">
+        <rng:data type="float"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="stiffness">
+        <rng:data type="float"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="fixed">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="pin_fixed">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="at_boundary">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="dead">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="source">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="boundary">
+        <rng:data type="boolean"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="div_counter">
+        <rng:data type="integer"/>
+      </rng:attribute>
+    </rng:optional>
+    <rng:optional>
+      <rng:attribute name="cell_type">
+        <rng:data type="integer"/>
+      </rng:attribute>
+    </rng:optional>
+  </rng:define>
+
+  <!-- Cell Node -->
+  <rng:define name="CellNodeType">
+      <rng:attribute name="n">
+        <rng:data type="integer"/>
+      </rng:attribute>
+  </rng:define>
+
+  <!-- Cell Wall -->
+  <rng:define name="CellWallType">
+      <rng:attribute name="w">
+        <rng:data type="integer"/>
+      </rng:attribute>
+  </rng:define>
+
+  <!-- Cell Chemical -->
+  <rng:define name="CellChemType">
+    <rng:zeroOrMore>
+      <rng:element name="val">
+        <rng:ref name="rValueType"/>
+      </rng:element>
+    </rng:zeroOrMore>
+      <rng:attribute name="n">
+        <rng:data type="integer"/>
+      </rng:attribute>
+  </rng:define>
+
+
+
+  <!-- Walls  -->
+  <rng:define name="WallsType">
+    <rng:optional>
+      <rng:element name="comment">
+        <rng:data type="string"/>
+      </rng:element>
+    </rng:optional>
+    <rng:zeroOrMore>
+      <rng:element name="wall">
+        <rng:optional><rng:element name="transporter1">
+          <rng:zeroOrMore>
+            <rng:element name="val">
+              <rng:ref name="rValueType"/>
+            </rng:element>
+          </rng:zeroOrMore>
+        </rng:element></rng:optional>
+        <rng:optional><rng:element name="transporter2">
+          <rng:zeroOrMore>
+            <rng:element name="val">
+              <rng:ref name="rValueType"/>
+            </rng:element>
+          </rng:zeroOrMore>
+        </rng:element></rng:optional>
+        <rng:optional><rng:element name="apoplast">
+          <rng:zeroOrMore>
+            <rng:element name="val">
+              <rng:ref name="rValueType"/>
+            </rng:element>
+          </rng:zeroOrMore>
+        </rng:element></rng:optional>
+          <rng:attribute name="index">
+            <rng:data type="integer"/>
+          </rng:attribute>
+          <rng:attribute name="c1">
+            <rng:data type="integer"/>
+          </rng:attribute>
+          <rng:attribute name="c2">
+            <rng:data type="integer"/>
+          </rng:attribute>
+          <rng:attribute name="n1">
+            <rng:data type="integer"/>
+          </rng:attribute>
+          <rng:attribute name="n2">
+            <rng:data type="integer"/>
+          </rng:attribute>
+        <rng:optional>
+          <rng:attribute name="length">
+            <rng:data type="float"/>
+          </rng:attribute>
+        </rng:optional>
+        <rng:optional>
+          <rng:attribute name="viz_flux">
+            <rng:data type="float"/>
+          </rng:attribute>
+        </rng:optional>
+        <rng:optional>
+          <rng:attribute name="wall_type">
+            <rng:choice>
+              <rng:value>normal</rng:value>
+              <rng:value>aux_source</rng:value>
+            </rng:choice>
+          </rng:attribute>
+        </rng:optional>
+      </rng:element>
+    </rng:zeroOrMore>
+      <rng:attribute name="n">
+        <rng:data type="integer"/>
+      </rng:attribute>
+  </rng:define>
+
+
+
+  <!-- Nodesets -->
+  <rng:define name="NodesetsType">
+      <rng:attribute name="n">
+        <rng:data type="integer"/>
+      </rng:attribute>
+  </rng:define>
+
+
+
+  <!-- Settings -->
+  <rng:define name="SettingsType">
+    <rng:optional>
+      <rng:element name="comment">
+        <rng:data type="string"/>
+      </rng:element>
+    </rng:optional>
+    <rng:zeroOrMore>
+      <rng:element name="setting">
+          <rng:attribute name="name">
+            <rng:data type="string"/>
+          </rng:attribute>
+          <rng:attribute name="val">
+            <rng:data type="string"/>
+          </rng:attribute>
+      </rng:element>
+    </rng:zeroOrMore>
+
+  </rng:define>
+
+</rng:grammar>

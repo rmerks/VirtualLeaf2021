@@ -1,0 +1,15 @@
+2010-10-08    <guravage@caterpie.sen.cwi.nl>
+
+	* make_pardialog_source.pl:
+	* make_parameter_source.pl: Added GPL boilerplate and mercurial keywords.
+
+2010-06-25    <guravage@caterpie.sen.cwi.nl>
+
+	* make_parameter_source.pl: Added datadir changes.
+
+2010-06-21    <guravage@caterpie.sen.cwi.nl>
+
+	* make_pardialog_source.pl: Reformatted. If datadir is relative append it to the user's home directory.
+	* make_parameter_source.pl: Ditto.
+	* make_xmlwritecode.pl: Ditto.
+

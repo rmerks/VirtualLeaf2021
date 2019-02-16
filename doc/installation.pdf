@@ -1,0 +1,579 @@
+%PDF-1.3
+%“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
+% 'BasicFonts': class PDFDictionary 
+1 0 obj
+% The standard fonts dictionary
+<< /F1 2 0 R
+ /F2 3 0 R
+ /F3 5 0 R
+ /F4 7 0 R >>
+endobj
+% 'F1': class PDFType1Font 
+2 0 obj
+% Font Helvetica
+<< /BaseFont /Helvetica
+ /Encoding /WinAnsiEncoding
+ /Name /F1
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'F2': class PDFType1Font 
+3 0 obj
+% Font Helvetica-Bold
+<< /BaseFont /Helvetica-Bold
+ /Encoding /WinAnsiEncoding
+ /Name /F2
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'Annot.NUMBER1': class PDFDictionary 
+4 0 obj
+<< /A << /S /URI
+ /Type /Action
+ /URI (http://qt.nokia.com/downloads/downloads) >>
+ /Border [ 0
+ 0
+ 0 ]
+ /Rect [ 406.3656
+ 657.5936
+ 487.547
+ 669.5936 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'F3': class PDFType1Font 
+5 0 obj
+% Font Courier
+<< /BaseFont /Courier
+ /Encoding /WinAnsiEncoding
+ /Name /F3
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'Page1': class PDFPage 
+6 0 obj
+% Page dictionary
+<< /Annots [ 4 0 R ]
+ /Contents 18 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 17 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'F4': class PDFType1Font 
+7 0 obj
+% Font Helvetica-Oblique
+<< /BaseFont /Helvetica-Oblique
+ /Encoding /WinAnsiEncoding
+ /Name /F4
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'Page2': class PDFPage 
+8 0 obj
+% Page dictionary
+<< /Contents 19 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 17 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'R9': class PDFCatalog 
+9 0 obj
+% Document Root
+<< /Outlines 11 0 R
+ /PageLabels 20 0 R
+ /PageMode /UseNone
+ /Pages 17 0 R
+ /Type /Catalog >>
+endobj
+% 'R10': class PDFInfo 
+10 0 obj
+<< /Author ()
+ /CreationDate (D:20110216100041-01'00')
+ /Keywords ()
+ /Producer (ReportLab http://www.reportlab.com)
+ /Subject (\(unspecified\))
+ /Title (Installation Instructions) >>
+endobj
+% 'R11': class PDFOutlines 
+11 0 obj
+<< /Count 5
+ /First 12 0 R
+ /Last 16 0 R
+ /Type /Outlines >>
+endobj
+% 'Outline.0': class OutlineEntryObject 
+12 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 717.0236
+ 0 ]
+ /Next 13 0 R
+ /Parent 11 0 R
+ /Title (Requirements) >>
+endobj
+% 'Outline.1': class OutlineEntryObject 
+13 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 618.0236
+ 0 ]
+ /Next 14 0 R
+ /Parent 11 0 R
+ /Prev 12 0 R
+ /Title (All Platforms) >>
+endobj
+% 'Outline.2': class OutlineEntryObject 
+14 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 507.0236
+ 0 ]
+ /Next 15 0 R
+ /Parent 11 0 R
+ /Prev 13 0 R
+ /Title (Linux) >>
+endobj
+% 'Outline.3': class OutlineEntryObject 
+15 0 obj
+<< /Dest [ 6 0 R
+ /XYZ
+ 62.69291
+ 183.2236
+ 0 ]
+ /Next 16 0 R
+ /Parent 11 0 R
+ /Prev 14 0 R
+ /Title (Windows) >>
+endobj
+% 'Outline.4': class OutlineEntryObject 
+16 0 obj
+<< /Dest [ 8 0 R
+ /XYZ
+ 62.69291
+ 465.8236
+ 0 ]
+ /Parent 11 0 R
+ /Prev 15 0 R
+ /Title (MacOS) >>
+endobj
+% 'R17': class PDFPages 
+17 0 obj
+% page tree
+<< /Count 2
+ /Kids [ 6 0 R
+ 8 0 R ]
+ /Type /Pages >>
+endobj
+% 'R18': class PDFStream 
+18 0 obj
+% page stream
+<< /Length 6382 >>
+stream
+1 0 0 1 0 0 cm BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 729.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 9.64 Tm /F2 20 Tf 24 TL 122.1449 0 Td (Installation Instructions) Tj T* -122.1449 0 Td ET
+Q
+Q
+q
+1 0 0 1 62.69291 696.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Requirements) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 630.0236 cm
+q
+BT 1 0 0 1 0 52.82 Tm .244104 Tw 12 TL /F1 10 Tf 0 0 0 rg (The VirtualLeaf is written with the QT Cross platform application and UI framework, and can run on Linux,) Tj T* 0 Tw .684651 Tw (Apple Macintosh and Windows machines. To compile the VirtualLeaf from source you will need to install) Tj T* 0 Tw 1.685697 Tw (the QT software development kit\(SDK\) which you can download from the ) Tj 0 0 .501961 rg (QT download site) Tj 0 0 0 rg (. Whether) Tj T* 0 Tw 1.454692 Tw (installed globally by a system administrator our locally in your own user space, make sure the QT bin) Tj T* 0 Tw (directory containing qmake is in your execution path. Platform specific instructions follow.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 597.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (All Platforms) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 519.0236 cm
+q
+BT 1 0 0 1 0 64.82 Tm .005984 Tw 12 TL /F1 10 Tf 0 0 0 rg (Compilation is effected with make, either the native ) Tj /F3 10 Tf (make ) Tj /F1 10 Tf (on UNIX and MAC systems or ) Tj /F3 10 Tf (mingw32-make) Tj T* 0 Tw .192927 Tw /F1 10 Tf (distributed with the windows version of QT. In the VirtualLeaf ) Tj /F3 10 Tf (src ) Tj /F1 10 Tf (directory you will find a ) Tj /F3 10 Tf (Makefile) Tj /F1 10 Tf (, the) Tj T* 0 Tw 3.275984 Tw (root of a hierarchy of makefiles, that will guide the compilation and installation of the VirtualLeaf) Tj T* 0 Tw 1.899982 Tw (executable, its default plugins and the tutorial examples. To facilitate cross platform compatibility, the) Tj T* 0 Tw 2.09284 Tw (makefiles use two environment variables: ) Tj /F3 10 Tf (MAKE ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (QMAKE ) Tj /F1 10 Tf (to name the make and QT-make utility) Tj T* 0 Tw (respectively. The fallback defaults are ) Tj /F3 10 Tf (make ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (qmake) Tj /F1 10 Tf (. Platform specific instructions follow.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 486.0236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Linux) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 468.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL (Open the terminal window and unpack the VirtualLeaf source package into your home folder, by typing:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 422.8236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+BT 1 0 0 1 0 17.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (>) Tj ( cd) Tj T* (>) Tj ( tar xzf VirtualLeaf-V1.0.tgz) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 402.8236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (So the Makefiles can find ) Tj /F3 10 Tf (qmake) Tj /F1 10 Tf (, prepend the QT bin directory to your execution path, for example:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 369.6236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 24 re B*
+Q
+q
+BT 1 0 0 1 0 5.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (>) Tj ( PATH=/opt/QT/qt/bin:$PATH) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 337.6236 cm
+q
+BT 1 0 0 1 0 16.82 Tm 1.09936 Tw 12 TL /F1 10 Tf 0 0 0 rg (If you wish to use some other ) Tj /F3 10 Tf (make ) Tj /F1 10 Tf (or ) Tj /F3 10 Tf (qmake ) Tj /F1 10 Tf (utilities other than the defaults, instantiate environment) Tj T* 0 Tw (variables named ) Tj /F3 10 Tf (MAKE ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (QMAKE) Tj /F1 10 Tf (, for example:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 292.4236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+BT 1 0 0 1 0 17.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (>) Tj ( export MAKE=gmake) Tj T* (>) Tj ( export QMAKE=/home/michael/MyQT/qt/bin/qmake) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 272.4236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (To compile the VirtualLeaf, go to the VirtualLeaf ) Tj /F3 10 Tf (src ) Tj /F1 10 Tf (directory and invoke ) Tj /F3 10 Tf (make) Tj /F1 10 Tf (, for example:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 227.2236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+BT 1 0 0 1 0 17.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (>) Tj ( cd /home/michael/VirtualLeaf/v1.0/src) Tj T* (>) Tj ( make -f Makefile) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 195.2236 cm
+q
+BT 1 0 0 1 0 16.82 Tm .059985 Tw 12 TL /F1 10 Tf 0 0 0 rg (Once the compilation is complete, you will find the ) Tj /F3 10 Tf (VirtualLeaf ) Tj /F1 10 Tf (binary in ) Tj /F3 10 Tf (v1.0/bin ) Tj /F1 10 Tf (and the plugins in) Tj T* 0 Tw /F3 10 Tf (v1.0/bin/models) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 162.2236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Windows) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 132.2236 cm
+q
+BT 1 0 0 1 0 16.82 Tm 1.165318 Tw 12 TL /F1 10 Tf 0 0 0 rg (Unpack the VirtualLeaf source package somewhere in your folder hierarchy. The result might be in, for) Tj T* 0 Tw (example: ) Tj /F3 10 Tf (c:\\Documents and Settings\\michael\\VirtualLeaf\\v1.0) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 90.22362 cm
+q
+BT 1 0 0 1 0 28.82 Tm 3.219979 Tw 12 TL /F1 10 Tf 0 0 0 rg (For convenience sake, three required development libraries: ) Tj /F3 10 Tf (libiconv) Tj /F1 10 Tf (, ) Tj /F3 10 Tf (libxml2 ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (libz ) Tj /F1 10 Tf (are ) Tj T* 0 Tw .387318 Tw (distributed with the VirtualLeaf code, and the VirtualLeaf will compile correctly with them. If, however, you ) Tj T* 0 Tw .590651 Tw (wish to use other versions of these libraries, you will need to reassign the ) Tj /F3 10 Tf (LIBICONVDIR) Tj /F1 10 Tf (, ) Tj /F3 10 Tf (LIBZML2DIR) Tj T* 0 Tw ET
+Q
+Q
+q
+1 0 0 1 56.69291 773.1969 cm
+q
+BT 1 0 0 1 0 4.82 Tm 160.0749 0 Td 12 TL /F1 10 Tf 0 0 0 rg (Installation Instructions - 2011-02-16) Tj T* -160.0749 0 Td ET
+Q
+Q
+q
+1 0 0 1 56.69291 56.69291 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 238.1649 0 Td (1) Tj T* -238.1649 0 Td ET
+Q
+Q
+ 
+endstream
+
+endobj
+% 'R19': class PDFStream 
+19 0 obj
+% page stream
+<< /Length 5804 >>
+stream
+1 0 0 1 0 0 cm BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 741.0236 cm
+q
+BT 1 0 0 1 0 4.82 Tm 12 TL /F1 10 Tf 0 0 0 rg (and ) Tj /F3 10 Tf (LIBZDIR ) Tj /F1 10 Tf (variables in all the project files.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 699.0236 cm
+q
+BT 1 0 0 1 0 28.82 Tm 3.513555 Tw 12 TL /F1 10 Tf 0 0 0 rg (As stated earlier, the Makefiles rely on two environment variables: ) Tj /F3 10 Tf (MAKE ) Tj /F1 10 Tf (and ) Tj /F3 10 Tf (QMAKE) Tj /F1 10 Tf (. Since QT) Tj T* 0 Tw 1.479147 Tw (executable names are consistent across platforms, the ) Tj /F3 10 Tf (QMAKE ) Tj /F1 10 Tf (default value, ) Tj /F3 10 Tf (QMAKE=qmake) Tj /F1 10 Tf (, will work) Tj T* 0 Tw (fine. You will have to create an environment named ) Tj /F3 10 Tf (MAKE ) Tj /F1 10 Tf (though.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 609.0236 cm
+q
+BT 1 0 0 1 0 76.82 Tm .928488 Tw 12 TL /F1 10 Tf 0 0 0 rg (To add an environment variable call up the ) Tj /F4 10 Tf (system tool) Tj /F1 10 Tf (, either with a left click on the ) Tj /F4 10 Tf (start menu ) Tj /F1 10 Tf (then a) Tj T* 0 Tw .439986 Tw (right click on ) Tj /F4 10 Tf (My Computer ) Tj /F1 10 Tf (and choosing ) Tj /F4 10 Tf (properties ) Tj /F1 10 Tf (from the drop down list, or by choosing ) Tj /F4 10 Tf (control panel) Tj T* 0 Tw .069988 Tw /F1 10 Tf (from the ) Tj /F4 10 Tf (start menu ) Tj /F1 10 Tf (and then double clicking on the ) Tj /F4 10 Tf (system tool ) Tj /F1 10 Tf (itself. Once in the ) Tj /F4 10 Tf (system tool) Tj /F1 10 Tf (, choose the) Tj T* 0 Tw .052651 Tw /F4 10 Tf (advanced ) Tj /F1 10 Tf (tab and then click the ) Tj /F4 10 Tf (environment variables ) Tj /F1 10 Tf (button. The environment variables screen is split in) Tj T* 0 Tw .503735 Tw (two with ) Tj /F4 10 Tf (User ) Tj /F1 10 Tf (variables above and ) Tj /F4 10 Tf (System ) Tj /F1 10 Tf (variables below. Add a new users variable named ) Tj /F3 10 Tf (MAKE ) Tj /F1 10 Tf (with) Tj T* 0 Tw .939213 Tw (the value, e.g. ) Tj /F3 10 Tf (mingw32-make) Tj /F1 10 Tf (. the QT\(SDK\) contains the ) Tj /F4 10 Tf (minimum gnu for windows ) Tj /F1 10 Tf (\(mingw\) compiler;) Tj T* 0 Tw (commonly installed in: ) Tj /F3 10 Tf (c:\\QT\\qt-version\\mingw\\bin) Tj /F1 10 Tf (. Look there for the ) Tj /F3 10 Tf (MAKE ) Tj /F1 10 Tf (utility name.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 555.0236 cm
+q
+BT 1 0 0 1 0 40.82 Tm 2.446235 Tw 12 TL /F1 10 Tf 0 0 0 rg (After installing QT and setting the ) Tj /F3 10 Tf (MAKE ) Tj /F1 10 Tf (environment variable, you should be able to invoke a QT) Tj T* 0 Tw .648651 Tw (command window from the ) Tj /F4 10 Tf (start menu) Tj /F1 10 Tf (. This shell automatically includes the necessary QT folder in your) Tj T* 0 Tw 1.380651 Tw (execution PATH. Within this command window, go to the VirtualLeaf ) Tj /F3 10 Tf (src ) Tj /F1 10 Tf (folder and invoke make, for) Tj T* 0 Tw (example:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 509.8236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+BT 1 0 0 1 0 17.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (>) Tj ( c:\\Documents and Settings\\michael\\VirtualLeaf\\v1.0\\src) Tj T* (>) Tj ( mingw32-make -f Makefile) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 477.8236 cm
+q
+BT 1 0 0 1 0 16.82 Tm 4.213059 Tw 12 TL /F1 10 Tf 0 0 0 rg (When complete, you will find the ) Tj /F3 10 Tf (VirtualLeaf.exe ) Tj /F1 10 Tf (binary in ) Tj /F3 10 Tf (v1.0/bin ) Tj /F1 10 Tf (and the plugins in) Tj T* 0 Tw /F3 10 Tf (v1.0/bin/models) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 444.8236 cm
+q
+BT 1 0 0 1 0 8.435 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (MacOS) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 414.8236 cm
+q
+BT 1 0 0 1 0 16.82 Tm .918443 Tw 12 TL /F1 10 Tf 0 0 0 rg (Make sure that XCode development environment is installed from the MacOSX installations DVDs. Also) Tj T* 0 Tw (download and install a recent version of Qt as described above \(version >) Tj (4.4\).) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 384.8236 cm
+q
+BT 1 0 0 1 0 16.82 Tm .297976 Tw 12 TL /F1 10 Tf 0 0 0 rg (Open the Terminal program \(in ) Tj /F3 10 Tf (/Applications/Utilities/) Tj /F1 10 Tf (\). Unpack the VirtualLeaf source package) Tj T* 0 Tw (into your home folder, by typing:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 339.6236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+BT 1 0 0 1 0 17.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (>) Tj ( cd) Tj T* (>) Tj ( tar xzf VirtualLeaf-V1.0.tgz) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 307.6236 cm
+q
+BT 1 0 0 1 0 16.82 Tm .469987 Tw 12 TL /F1 10 Tf 0 0 0 rg (Now go to the VirtualLeaf ) Tj /F3 10 Tf (src ) Tj /F1 10 Tf (directory, set the right options for qmake, and invoke make, by typing, for) Tj T* 0 Tw (example:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 250.4236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 48 re B*
+Q
+q
+BT 1 0 0 1 0 29.71 Tm 12 TL /F3 10 Tf 0 0 0 rg (>) Tj ( cd) Tj T* (>) Tj ( cd VirtualLeaf/v1.0/src) Tj T* (>) Tj ( export QMAKESPEC=macx-g++; make -f Makefile) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 218.4236 cm
+q
+BT 1 0 0 1 0 16.82 Tm 6.059213 Tw 12 TL /F1 10 Tf 0 0 0 rg (When complete, you will find the ) Tj /F3 10 Tf (VirtualLeaf ) Tj /F1 10 Tf (binary in ) Tj /F3 10 Tf (v1.0/bin ) Tj /F1 10 Tf (and the plugins in) Tj T* 0 Tw /F3 10 Tf (v1.0/bin/models) Tj /F1 10 Tf (.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 56.69291 773.1969 cm
+q
+BT 1 0 0 1 0 4.82 Tm 160.0749 0 Td 12 TL /F1 10 Tf 0 0 0 rg (Installation Instructions - 2011-02-16) Tj T* -160.0749 0 Td ET
+Q
+Q
+q
+1 0 0 1 56.69291 56.69291 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4.82 Tm /F1 10 Tf 12 TL 238.1649 0 Td (2) Tj T* -238.1649 0 Td ET
+Q
+Q
+ 
+endstream
+
+endobj
+% 'R20': class PDFPageLabels 
+20 0 obj
+% Document Root
+<< /Nums [ 0
+ 21 0 R
+ 1
+ 22 0 R ] >>
+endobj
+% 'R21': class PDFPageLabel 
+21 0 obj
+% None
+<< /S /D
+ /St 1 >>
+endobj
+% 'R22': class PDFPageLabel 
+22 0 obj
+% None
+<< /S /D
+ /St 2 >>
+endobj
+xref
+0 23
+0000000000 65535 f
+0000000113 00000 n
+0000000245 00000 n
+0000000410 00000 n
+0000000597 00000 n
+0000000841 00000 n
+0000001000 00000 n
+0000001301 00000 n
+0000001480 00000 n
+0000001759 00000 n
+0000001917 00000 n
+0000002154 00000 n
+0000002279 00000 n
+0000002451 00000 n
+0000002639 00000 n
+0000002819 00000 n
+0000003001 00000 n
+0000003150 00000 n
+0000003265 00000 n
+0000009748 00000 n
+0000015657 00000 n
+0000015763 00000 n
+0000015840 00000 n
+trailer
+<< /ID 
+ % ReportLab generated PDF document -- digest (http://www.reportlab.com) 
+ [(&q\332\037\311\250\223EgHo\314\021\224\013\364) (&q\332\037\311\250\223EgHo\314\021\224\013\364)] 
+
+ /Info 10 0 R
+ /Root 9 0 R
+ /Size 23 >>
+startxref
+15887
+%%EOF

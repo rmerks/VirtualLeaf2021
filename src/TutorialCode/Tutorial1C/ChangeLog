@@ -1,0 +1,12 @@
+2010-10-18    <guravage@caterpie.sen.cwi.nl>
+
+	* Makefile (Makefile.tutorial1C): Removed -makefile qmake option.
+
+2010-06-25    <guravage@caterpie.sen.cwi.nl>
+
+	* tutorial1C.pro: Added -Wno-write-strings and -Wno-unused-parameter to QMAKE_CXXFLAGS.
+
+2010-06-23    <guravage@caterpie.sen.cwi.nl>
+
+	* tutorial1C.pro: Corrected windows library path.
+

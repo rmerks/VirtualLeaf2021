@@ -1,0 +1,17 @@
+RM - 01 dec 2010
+
+Deploying VirtualLeaf for Mac
+1. Build the package: cd src; export QMAKESPEC=macx-g++; make;
+2. Run "deploymodel.pl" as follows:
+> cd ../bin; perl ../src/perl/deploymodel.pl VirtualLeaf
+3. Run "macdeployqt" as follows
+> macdeployqt VirtualLeaf.app
+4. Build the installer using PackageMaker:
+- cd ../src; open VirtualLeaf-install-macosx.pmdoc
+- Under "Contents->VirtualLeaf, click on VirtualLeaf
+- Choose tab "Components"
+- Deselect "Allow relocation"
+- Click "Build"
+
+... I know it's quite a hassle, but if you follow these steps carefully the package and model plugins should work on a Mac without Qt installed... Good luck!
+
