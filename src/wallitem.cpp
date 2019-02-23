@@ -32,7 +32,7 @@
 static const std::string _module_id("$Id$");
 
 WallItem::WallItem( Wall *w, int wallnumber, QGraphicsScene *canvas )
-  : QGraphicsLineItem( 0, canvas ), SimItemBase( w, canvas){
+  : QGraphicsLineItem( 0), SimItemBase( w, canvas){
 
   /* wn == 1 -> C1; wn == 2 -> C2. This way we can tell which cell a wallitem belongs to. */
   wn = wallnumber;

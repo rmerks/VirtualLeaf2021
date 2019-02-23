@@ -116,6 +116,7 @@ class Cell : public CellBase
   double Energy(void) const;
   bool SelfIntersect(void);
   bool MoveSelfIntersectsP(Node *nid, Vector new_pos);
+  bool LinePieceIntersectsP(const Vector v1, const Vector v2) const;
   bool IntersectsWithLineP(const Vector v1, const Vector v2);
 
   void XMLAdd(xmlNodePtr cells_node) const;

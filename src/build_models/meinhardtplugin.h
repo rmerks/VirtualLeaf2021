@@ -32,6 +32,7 @@
 class MeinhardtPlugin : public QObject, SimPluginInterface {
   Q_OBJECT
     Q_INTERFACES(SimPluginInterface);
+    Q_PLUGIN_METADATA(IID "org.virtualleaf.meinhardtplugin")
 
  public:
   virtual QString ModelID(void) { return QString( "Meinhardt 1976, with growth" ); }

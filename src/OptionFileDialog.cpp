@@ -23,28 +23,38 @@
 #include "OptionFileDialog.h"
 #include <QCheckBox>
 #include <iostream>
+#include <QGridLayout>
+
 using namespace  std; 
 
 static const std::string _module_id("$Id$");
 
-OptionFileDialog::OptionFileDialog(QWidget *parent, const char *name, bool modal) : Q3FileDialog(parent, name, modal)
+OptionFileDialog::OptionFileDialog(QWidget *parent, const char *name, bool modal) : QFileDialog(parent, QString(name), QString("."), QString("*"))
 {
-  //cerr << "This is an OptionFileDialog\n";
-  geometrycheck = new QCheckBox("geometry",this);
+    // in order to derive from the QFileDialog, we need the system to use Qt's dialog
+    setOption(QFileDialog::DontUseNativeDialog);
+   geometrycheck = new QCheckBox("geometry",this);
   geometrycheck -> setCheckState(Qt::Checked);
 
   parcheck = new QCheckBox("parameters", this);
   parcheck -> setCheckState(Qt::Checked);
 
-  addToolButton(geometrycheck);
-  addToolButton(parcheck);
-};
+  //addToolButton(geometrycheck);
+  //addToolButton(parcheck);
+    QGridLayout *layout = (QGridLayout*)this->layout();
+    if (layout) {
+    int row=layout->rowCount();
+    
+    layout->addWidget(geometrycheck, row,0);
+    layout->addWidget(parcheck, row,1);
+    }
+    };
 
-OptionFileDialog::OptionFileDialog ( const QString & dirName, const QString & filter , 
+OptionFileDialog::OptionFileDialog ( const QString & dirName, const QString & filter ,
 				     QWidget * parent, const char * name , bool modal  ) :
-  Q3FileDialog(dirName, filter, parent, name, modal) {
+  QFileDialog(this, name, dirName, filter) {
 
-  cerr << "This is an OptionFileDialog\n";
+  
 };
 
 /* finis */

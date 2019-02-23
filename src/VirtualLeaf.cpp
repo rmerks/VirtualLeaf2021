@@ -35,7 +35,6 @@
 #include "cell.h"
 #include "output.h"
 #include <qwidget.h>
-#include <q3process.h>
 #include <qapplication.h>
 #include <QDesktopWidget>
 #include <QGraphicsScene>
@@ -44,7 +43,7 @@
 #include <QMouseEvent>
 
 #include <unistd.h>
-#include <q3textstream.h> 
+//#include <q3textstream.h>
 
 #ifdef HAVE_QWT
 #include "data_plot.h"
@@ -62,6 +61,7 @@ static const std::string _module_id("$Id$");
 extern Parameter par;
 
 MainBase *main_window = 0;
+bool useGUI;
 
 #ifdef XFIGGRAPHICS
 #define TIMESTEP double Graphics::TimeStep(void)
@@ -180,34 +180,44 @@ void MainBase::Plot(int resize_stride)
     mesh.DrawBoundary(&canvas);
 
   if ( ( batch || MovieFramesP() )) {
-    if (!(count%par.storage_stride) ) {
-      stringstream fname;
-      fname << par.datadir << "/leaf.";
-      fname.fill('0');
-      fname.width(6);
-      fname << count << ".png";
+    //if (!(count%par.storage_stride) ) {
+      stringstream PNGname;
+      PNGname << par.datadir << "/leaf.";
+      PNGname.fill('0');
+      PNGname.width(6);
+      PNGname << count << ".png";
       // Write high-res PNG snapshot every plot step
-      Save(fname.str().c_str(), "PNG", 1024, 768);
+      Save(PNGname.str().c_str(), "PNG", 1024, 768);
+    //}
     }
 
     if (!(count%par.xml_storage_stride)) {
-      stringstream fname;
-      fname << par.datadir << "/leaf.";
-      fname.fill('0');
-      fname.width(6);
-      fname << count << ".xml";
+      stringstream XMLname;
+      XMLname << par.datadir << "/leaf.";
+      XMLname.fill('0');
+      XMLname.width(6);
+      XMLname << count << ".xml";
       // Write XML file every ten plot steps
-      mesh.XMLSave(fname.str().c_str(), XMLSettingsTree());
+      mesh.XMLSave(XMLname.str().c_str(), XMLSettingsTree());
+
+      // add PDF
+      stringstream PDFname;
+      PDFname << par.datadir << "/leaf.";
+      PDFname.fill('0');
+      PDFname.width(6);
+      PDFname << count << ".pdf";
+      // Write PDF snapshot with every xml file
+      Save(PDFname.str().c_str(), "PDF", 1024, 768);
     }
-  }
+  
 }
 
 
 INIT {
 
   //mesh.SetSimPlugin(plugin);
-  if (leaffile) { 
-    if (qApp->type()==QApplication::Tty) {
+  if (leaffile) {
+    /* if (useGUI) {
       
       xmlNode *settings;
       mesh.XMLRead(leaffile, &settings);
@@ -217,8 +227,17 @@ INIT {
       main_window->UserMessage(QString("Ready. Time is %1").arg(mesh.getTimeHours().c_str()));
     } else {
       ((Main *)main_window)->readStateXML(leaffile);
-    }
-    
+    } */
+      
+      
+       xmlNode *settings;
+       mesh.XMLRead(leaffile, &settings);
+       
+       main_window->XMLReadSettings(settings);
+       xmlFree(settings);
+       if (useGUI) main_window->UserMessage(QString("Ready. Time is %1").arg(mesh.getTimeHours().c_str()));
+      
+
   } else {
     mesh.StandardInit();
   }
@@ -281,27 +300,50 @@ TIMESTEP {
 void Cell::OnClick(QMouseEvent *e){}
 
 
-  /* Custom message handler - Default appends a newline character to the end of each line. */ 
-void vlMessageOutput(QtMsgType type, const char *msg)
+
+/* Custom message handler - Default appends a newline character to the end of each line. */
+void vlMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-  switch (type) {
+    QByteArray localMsg = msg.toLocal8Bit();
+    switch (type) {
+        case QtDebugMsg:
+            fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+        case QtInfoMsg:
+            fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+        case QtWarningMsg:
+            fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+        case QtCriticalMsg:
+            fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+        case QtFatalMsg:
+            fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+    }
+
+    
+  /*switch (type) {
   case QtDebugMsg:
     //fprintf(stderr, "Debug: %s\n", msg);
-    cerr << msg << flush;
+          cerr << localMsg.constData() << flush;
     break;
   case QtWarningMsg:
     //fprintf(stderr, "Warning: %s\n", msg);
-    cerr << "Warning: " << msg << flush;
+    cerr << "Warning: " << localMsg.constData() << flush;
     break;
   case QtCriticalMsg:
     fprintf(stderr, "Critical: %s\n", msg);
-    cerr << "Critical: " << msg << flush;
+    cerr << "Critical: " << localMsg.constData() << flush;
     break;
   case QtFatalMsg:
     //fprintf(stderr, "Fatal: %s\n", msg);
-    cerr << "Fatal: " << msg << flush;
+    cerr << "Fatal: " << localMsg.constData() << flush;
     abort();
-  }
+  }*/
+   
+
 }
 
 
@@ -378,10 +420,11 @@ int main(int argc,char **argv) {
       printf ("\n");
     }
 
-    bool useGUI = !batch;
-    qInstallMsgHandler(vlMessageOutput); // custom message handler
-    QApplication app(argc,argv,useGUI);
-
+    useGUI = !batch;
+    qInstallMessageHandler(vlMessageOutput); // custom message handler
+      QApplication app(argc,argv);
+       //QApplication app(argc,argv,useGUI);
+      if (!useGUI) { cerr << "Managed to start up QCoreApplication.\n"; }
 
 
     QPalette tooltippalette = QToolTip::palette();
@@ -425,6 +468,10 @@ int main(int argc,char **argv) {
       model_catalogue.PopulateModelMenu();
     model_catalogue.InstallFirstModel();
     
+    if (leaffile) {
+      cerr << "Reinitializing for " << leaffile << endl;
+      main_window->Init(leaffile);
+    }
     
 
     /*    Cell::SetMagnification(1);

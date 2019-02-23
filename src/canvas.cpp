@@ -19,45 +19,45 @@
  *
  */
 
-#include <time.h>
+#include <ctime>
 #include <string>
 #include <fstream>
 #include <streambuf>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QMenu>
 #include <qdatetime.h>
-#include <q3mainwindow.h>
+#include <qmainwindow.h>
 #include <qstatusbar.h>
 #include <qmessagebox.h>
 #include <qmenubar.h>
 #include <qapplication.h>
-#include <qpainter.h>
-#include <qprinter.h>
+#include <QPainter>
+#include <QPrinter>
 #include <qlabel.h>
 #include <qimage.h>
-#include <q3progressdialog.h>
+
 #include <qtimer.h>
 #include <qslider.h>
 #include <qpixmap.h>
 #include <qfile.h>
 #include <qdir.h>
-#include <q3filedialog.h>
 #include <QGraphicsItem>
 #include <QList>
 #include <QDir>
 #include <QFileInfo>
 #include <QDebug>
 #include <QImageWriter>
+#include <QFileDialog>
+#include <QPrintDialog>
+#include <QGraphicsLineItem>
 
 #include <set>
 
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3PopupMenu>
+#include <QDialogButtonBox>
 #include <QMouseEvent>
 #include <typeinfo>
 #include <cstring>
-#include <q3process.h>
 #include <qlayout.h>
 #include <qspinbox.h>
 #include <fstream>
@@ -78,6 +78,7 @@
 #include "modelcatalogue.h"
 
 #include <algorithm>
+#include <iostream>
 
 // Include PSB, CWI and vleaf logos
 #include "psb.xpm"
@@ -177,10 +178,12 @@ void FigureEditor::mousePressEvent(QMouseEvent* e)
   if (e->button()==Qt::RightButton || l.size()==0) {
 
     //cerr << "Drawing an intersection line from " << p.x() << ", " << p.y() << endl;
-    intersection_line = new QGraphicsLineItem( 0, scene() );
+    intersection_line = new QGraphicsLineItem( QLineF(p,p), 0 );
     intersection_line->setPen( QPen( QColor("red"), 3, Qt::DashLine ) );
-    intersection_line->setLine( QLineF(p,p) );
-    intersection_line->setZValue( 100 );
+    //intersection_line->setLine( QLineF(p,p) );
+      
+      intersection_line->setZValue( 100 );
+      scene()->addItem(intersection_line);
     intersection_line->show();
   }
 
@@ -276,7 +279,7 @@ void FigureEditor::mouseReleaseEvent(QMouseEvent* e)
   emit MouseReleased();
   // intersection line for leaf was finished now.
 
-  if (e->button()==Qt::LeftButton) { 
+/*  if (e->button()==Qt::LeftButton) {
     if (intersection_line ) {
 #ifdef QDEBUG
       qDebug() << "Trying to cut leaf" << endl;
@@ -374,17 +377,17 @@ void FigureEditor::mouseReleaseEvent(QMouseEvent* e)
       cerr << "NodeSet of cutting line: " << *node_set << endl;
 #endif
     }
-  } else 
+  } */ /* else
     if (e->button()==Qt::RightButton) {
 
-      if (intersection_line /* && !angle_line*/) {
+      if (intersection_line) { // && !angle_line
 
 	QPointF p = mapToScene(e->pos());
 	QPointF sp = intersection_line->line().p1();
 
-	viewport()->setMouseTracking( TRUE );
+	viewport()->setMouseTracking( true );
       } 
-    }
+    }*/
 }
 
 
@@ -456,7 +459,7 @@ void FigureEditor::insertNode(QPointF p)
 static uint mainCount = 0;
 
 Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::WindowFlags f) :
-  Q3MainWindow(parent,name,f),
+  QMainWindow(parent,f),
   MainBase(c,m),
   mesh(m)
 {
@@ -471,103 +474,139 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
   QObject::connect( editor, SIGNAL(MouseReleased()), this, SLOT(ContIfRunning()));
   QMenuBar* menu = menuBar();
 
-  Q3PopupMenu* file = new Q3PopupMenu( menu );
+    file = menu->addMenu("&File");
 
-  file->insertItem("&Read leaf", this, SLOT(readStateXML()));
-  file->insertItem("&Save leaf", this, SLOT(saveStateXML()));
-  file->insertItem("Snapshot", this, SLOT(snapshot()), Qt::CTRL+Qt::SHIFT+Qt::Key_S);
+  file->addAction("&Read leaf", this, SLOT(readStateXML()));
+  file->addAction("&Save leaf", this, SLOT(saveStateXML()));
+  file->addAction("Snapshot", this, SLOT(snapshot()), Qt::CTRL+Qt::SHIFT+Qt::Key_S);
 
-  file->insertSeparator();
-  file->insertItem("Read next leaf", this, SLOT(readNextStateXML()), Qt::Key_PageDown);
-  file->insertItem("Read previous leaf", this, SLOT(readPrevStateXML()), Qt::Key_PageUp);
-  file->insertItem("Read last leaf", this, SLOT(readLastStateXML()), Qt::Key_End);
-  file->insertItem("Read first leaf", this, SLOT(readFirstStateXML()), Qt::Key_Home);
-  file->insertItem("Export cell data", this, SLOT(exportCellData()));
+  file->addSeparator();
+  file->addAction("Read next leaf", this, SLOT(readNextStateXML()), Qt::Key_PageDown);
+  file->addAction("Read previous leaf", this, SLOT(readPrevStateXML()), Qt::Key_PageUp);
+  file->addAction("Read last leaf", this, SLOT(readLastStateXML()), Qt::Key_End);
+  file->addAction("Read first leaf", this, SLOT(readFirstStateXML()), Qt::Key_Home);
+  file->addAction("Export cell data", this, SLOT(exportCellData()));
 
-  file->insertSeparator();
-  file->insertItem("&Print...", this, SLOT(print()), Qt::CTRL+Qt::Key_P);
-  file->insertSeparator();
-  file->insertItem("E&xit", qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
-  menu->insertItem("&File", file);
+  file->addSeparator();
+  file->addAction("&Print...", this, SLOT(print()), Qt::CTRL+Qt::Key_P);
+  file->addSeparator();
+  file->addAction("E&xit", qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
+  //menu->addAction("&File", file);
 
-  Q3PopupMenu* edit = new Q3PopupMenu( menu );
-  edit->insertItem("Reset Chemicals and Transporters", this, SLOT( CleanMesh()), Qt::CTRL+Qt::Key_R );
-  edit->insertItem("Reset Chemicals", this, SLOT( CleanMeshChemicals()) );
-  edit->insertItem("Reset Transporters", this, SLOT( CleanMeshTransporters()) );
-  edit->insertItem("Randomize PIN1 Transporters", this, SLOT( RandomizeMesh()) );
-  edit->insertItem("Cut away SAM", this, SLOT( CutSAM() ));
-  menu->insertItem("&Edit", edit);
-
-  run = new Q3PopupMenu( menu );
+    edit = menu->addMenu("&Edit");
+    
+  edit->addAction("Reset Chemicals and Transporters", this, SLOT( CleanMesh()), Qt::CTRL+Qt::Key_R );
+  edit->addAction("Reset Chemicals", this, SLOT( CleanMeshChemicals()) );
+  edit->addAction("Reset Transporters", this, SLOT( CleanMeshTransporters()) );
+  edit->addAction("Randomize PIN1 Transporters", this, SLOT( RandomizeMesh()) );
+  edit->addAction("Cut away SAM", this, SLOT( CutSAM() ));
+ 
+    run = menu->addMenu("&Run");
   running = false;
-  paused_id = run->insertItem("&Simulation paused", this, SLOT(togglePaused()), Qt::Key_S);
-  run->setItemChecked(paused_id, FALSE);
+  paused_act = run->addAction("&Simulation paused", this, SLOT(togglePaused()), Qt::Key_S);
+    paused_act->setCheckable(true);
+    paused_act->setChecked(true);
 
-  menu->insertItem("&Run", run);
+    view = menu->addMenu("&View");
+    view->addAction("&Zoom in", this, SLOT(zoomIn()), Qt::CTRL+Qt::Key_Equal);
+    view->addAction("Zoom &out", this, SLOT(zoomOut()), Qt::CTRL+Qt::Key_Minus);
+    view->addSeparator();
+    com_act = view->addAction("Show cell &centers", this, SLOT(toggleShowCellCenters()));
+    com_act->setCheckable(true);
+    
+    mesh_act = view->addAction("Show &nodes", this, SLOT(toggleShowNodes()), Qt::CTRL+Qt::SHIFT+Qt::Key_N);
+    mesh_act->setCheckable(true);
+    
+    node_number_act = view->addAction("Show node numbers", this, SLOT(toggleNodeNumbers()), Qt::CTRL+Qt::SHIFT+Qt::Key_M);
+    node_number_act->setCheckable(true);
+    
+    cell_number_act = view->addAction("Show cell numbers", this, SLOT(toggleCellNumbers()));
+    cell_number_act->setCheckable(true);
+    cell_number_act->setChecked(false);
+    
+    hide_cells_act = view->addAction("Hide cells", this, SLOT(toggleHideCells()));
+    hide_cells_act->setCheckable(false);
+    hide_cells_act->setChecked(false);
+    border_act = view->addAction("Show &border cells", this, SLOT(toggleShowBorderCells()));
+    border_act->setCheckable(true);
+    border_act->setChecked(false);
+    
+    cell_axes_act = view->addAction("Show cell &axes", this, SLOT(toggleCellAxes()));
+    cell_axes_act->setCheckable(true);
+    cell_axes_act->setChecked(false);
+    
+    cell_strain_act = view->addAction("Show cell &strain", this, SLOT(toggleCellStrain()));
+    cell_strain_act->setCheckable(true);
+    cell_strain_act->setChecked(false);
+    
+    fluxes_act = view->addAction("Show &fluxes", this, SLOT(toggleShowFluxes()));
+    fluxes_act->setCheckable(true);
+    fluxes_act->setChecked(false);
+    
+    cell_walls_act = view->addAction("Show transporters", this, SLOT(toggleShowWalls()));
+    cell_walls_act->setCheckable(true);
+    cell_walls_act->setChecked(false);
+    
+    
+    // apoplasts_act = view->addAction("Show apoplasts", this, SLOT(toggleShowApoplasts()));
+    // view->setItemChecked(apoplasts_act, false);
+    view->addSeparator();
+    
+    only_boundary_act = view->addAction("Show only leaf &boundary", this, SLOT(toggleLeafBoundary()));
+    only_boundary_act->setCheckable(true);
+    only_boundary_act->setChecked(false);
+    
+    view->addSeparator();
 
-  view = new Q3PopupMenu( menu );
-  view->insertItem("&Zoom in", this, SLOT(zoomIn()), Qt::CTRL+Qt::Key_Equal);
-  view->insertItem("Zoom &out", this, SLOT(zoomOut()), Qt::CTRL+Qt::Key_Minus);
-  view->insertSeparator();
-  com_id = view->insertItem("Show cell &centers", this, SLOT(toggleShowCellCenters()));
-  view->setItemChecked(com_id, FALSE);
+    output = menu->addMenu("&Output");
+    
+    output->addAction("Snapshot", this, SLOT(snapshot()), Qt::CTRL+Qt::SHIFT+Qt::Key_S);
+    output->addAction("Export cell data", this, SLOT(exportCellData()));
+    //output->addAction("Export Cell in DXF format", this, SLOT(exportDXF()));
+    
+    output->addSeparator();
+    
+    movie_frames_act = output->addAction("Start saving movie &frames", this, SLOT(toggleMovieFrames()));
+    movie_frames_act->setCheckable(true);
+    movie_frames_act->setChecked(par.movie);
+    
+    /*export_data_act = output->addAction("Export cell data over time", this, SLOT(exportOverTime()));
+    export_data_act->setCheckable(true);
+    export_data_act->setChecked(false);*/
+    
+   /* ignore_boundary_act = output->addAction("Ignore cells at boundary", this, SLOT(toggleIgnore()));
+    ignore_boundary_act->setCheckable(true);
+    ignore_boundary_act->setChecked(false);*/
+    
+    options = menu->addMenu("&Options");
+    
+    dyn_cells_act = options->addAction("Cell growth", this, SLOT(toggleDynCells()));
+    dyn_cells_act->setCheckable(true);
+    dyn_cells_act->setChecked(true);
 
-  mesh_id = view->insertItem("Show &nodes", this, SLOT(toggleShowNodes()), Qt::CTRL+Qt::SHIFT+Qt::Key_N);
-  view->setItemChecked(mesh_id, TRUE);
-  node_number_id = view->insertItem("Show node numbers", this, SLOT(toggleNodeNumbers()), Qt::CTRL+Qt::SHIFT+Qt::Key_M);
-  view->setItemChecked(node_number_id, FALSE);
-  cell_number_id = view->insertItem("Show cell numbers", this, SLOT(toggleCellNumbers()));
-  view->setItemChecked(cell_number_id, FALSE);
-  hide_cells_id = view->insertItem("Hide cells", this, SLOT(toggleHideCells()));
-  view->setItemChecked(hide_cells_id, FALSE);
-  border_id = view->insertItem("Show &border cells", this, SLOT(toggleShowBorderCells()));
-  view->setItemChecked(border_id, FALSE);
-  cell_axes_id = view->insertItem("Show cell &axes", this, SLOT(toggleCellAxes()));
-  cell_strain_id = view->insertItem("Show cell &strain", this, SLOT(toggleCellStrain()));
-  view->setItemChecked(cell_axes_id, FALSE);
-  fluxes_id = view->insertItem("Show &fluxes", this, SLOT(toggleShowFluxes()));
-  view->setItemChecked(fluxes_id, FALSE);
-  cell_walls_id = view->insertItem("Show transporters", this, SLOT(toggleShowWalls()));
-  view->setItemChecked(cell_walls_id, FALSE);
- // apoplasts_id = view->insertItem("Show apoplasts", this, SLOT(toggleShowApoplasts()));
- // view->setItemChecked(apoplasts_id, FALSE);
-  view->insertSeparator();
-  only_boundary_id = view->insertItem("Show only leaf &boundary", this, SLOT(toggleLeafBoundary()));
-  view->insertSeparator();
-  movie_frames_id = view->insertItem("Start saving movie &frames", this, SLOT(toggleMovieFrames()));
-  view->setItemChecked(movie_frames_id, par.movie);
-
-  view->setItemChecked(only_boundary_id, FALSE);
-  menu->insertItem("&View", view);
-
-
-  options = new Q3PopupMenu( menu );
-  dyn_cells_id = options->insertItem("Cell growth", this, SLOT(toggleDynCells()));
-  options->setItemChecked(dyn_cells_id, true);
-
-  options->insertItem("Edit &parameters", this, SLOT(EditParameters()), Qt::CTRL+Qt::Key_E);
-
-  rotation_mode_id = options->insertItem("Rotate leaf", this, SLOT(EnterRotationMode()), Qt::CTRL + Qt::SHIFT + Qt::Key_R);
-  options->setItemChecked(rotation_mode_id, false);
-
-  menu->insertItem("&Options",options);
+    options->addSeparator();
+    options->addAction("Edit &parameters", this, SLOT(EditParameters()), Qt::CTRL+Qt::Key_E);
+    
+    rotation_mode_act = options->addAction("Rotate leaf", this, SLOT(EnterRotationMode()), Qt::CTRL + Qt::SHIFT + Qt::Key_R);
+    rotation_mode_act->setCheckable(true);
+    rotation_mode_act->setChecked(false);
 
   // Menu of models
-  modelmenu = new QMenu( menu );
-  menu->insertItem("&Models", modelmenu);
+    modelmenu = menu->addMenu("&Models");
+ 
 
+  menu->addSeparator();
 
-  menu->insertSeparator();
-
-  helpmenu = new Q3PopupMenu( menu );
-  tooltips_id = helpmenu->insertItem("Show Cell&Info", this, SLOT(Refresh()));
-  helpmenu->setItemChecked(tooltips_id, true);
-  helpmenu->insertSeparator();
-    //helpmenu->insertSeparator();
-  helpmenu->insertItem("&LICENSE", this, SLOT(gpl()) );
-  helpmenu->insertItem("About", this, SLOT(about()) ); //, Key_F1);
+    helpmenu =  menu->addMenu("&Help");
+    tooltips_act = helpmenu->addAction("Show Cell&Info", this, SLOT(Refresh()));
+    tooltips_act->setCheckable(true);
+    tooltips_act->setChecked(true);
+    
+    helpmenu->addSeparator();
+    //helpmenu->addSeparator();
+    helpmenu->addAction("&LICENSE", this, SLOT(gpl()) );
+    helpmenu->addAction("About", this, SLOT(about()) ); //, Key_F1);
 	
-	menu->insertItem("&Help",helpmenu);
   statusBar();
   setCentralWidget(editor);
   printer = 0;
@@ -580,11 +619,11 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
 
   stopSimulation();
   statusBar()->addWidget(new QLabel("Ready."));
-  setCaption(caption);
+  setWindowTitle(caption);
   gifanim = 0;
 
   infobar = new InfoBar();
-  addDockWindow(infobar);
+  addDockWidget(Qt::BottomDockWidgetArea, infobar);
 
 }
 
@@ -618,20 +657,20 @@ Main::~Main()
   //EndGifAnim();
 }
 
-void Main::newView()
+/*void Main::newView()
 {
   // Open a new view... have it delete when closed.
-  Main *m = new Main(canvas, mesh, 0, 0, Qt::WDestructiveClose);
-  qApp->setMainWidget(m);
+  Main *m = new Main(canvas, mesh, 0, 0, Qt::WA_DeleteOnClose);
+  //qApp->setMainWidget(m); // not needed anymore in Qt4?
   m->show();
-  qApp->setMainWidget(0);
+  //qApp->setMainWidget(0);
 }
-
+*/
 
 void Main::EditParameters()
 {
 
-  ParameterDialog *pardial = new ParameterDialog(this, "stridediag");
+  ParameterDialog *pardial = new ParameterDialog(this);
 
   // Make sure the values in the parameter dialog are updated after a file is read 
   // each method changing the parameters (reading XML or PAR files) should
@@ -644,15 +683,18 @@ void Main::savePars()
 
   stopSimulation();
 
-  Q3FileDialog *fd = new Q3FileDialog( this, "file dialog", TRUE );
-  fd->setMode( Q3FileDialog::AnyFile );
-  fd->setFilter( "Parameter files (*.par)");
-  fd->setDir(par.datadir);
+  QFileDialog *fd = new QFileDialog( this, "Save Parameters", QString(par.datadir), QString("Parameter files (*.par)"));
+  fd->setFileMode( QFileDialog::AnyFile );
+ 
 
   QString fileName;
   if ( fd->exec() == QDialog::Accepted ) {
-    fileName = fd->selectedFile();
-    ofstream parfile((const char *)fileName);
+    //fileName = fd->selectedFile();
+      QStringList files = fd->selectedFiles();
+      if (!files.isEmpty())
+          fileName = files[0];
+      
+    ofstream parfile(fileName.toLatin1());
     par.Write(parfile);
   }
 
@@ -664,15 +706,19 @@ void Main::readPars()
 
   stopSimulation();
 
-  Q3FileDialog *fd = new Q3FileDialog( this, "file dialog", TRUE );
-  fd->setMode( Q3FileDialog::ExistingFile );
-  fd->setFilter( "Parameter files (*.par)");
-  fd->setDir(par.datadir);
+  QFileDialog *fd = new QFileDialog( this, "Read Parameters", QString(par.datadir), QString("Parameter files (*.par)"));
+  fd->setFileMode( QFileDialog::ExistingFile );
+  //fd->setFilter( "Parameter files (*.par)");
+  //fd->setDir(par.datadir);
 
   QString fileName;
   if ( fd->exec() == QDialog::Accepted ) {
-    fileName = fd->selectedFile();
-    par.Read((const char *)fileName);
+    //fileName = fd->selectedFile();
+      QStringList files = fd->selectedFiles();
+      if (!files.isEmpty())
+          fileName = files[0];
+
+    par.Read(fileName.toLatin1());
   }
 
   emit ParsChanged();
@@ -683,14 +729,16 @@ void Main::saveStateXML()
 {
 
   stopSimulation();
-  Q3FileDialog *fd = new Q3FileDialog( this, "file dialog", TRUE );
-  fd->setMode( Q3FileDialog::AnyFile );
-  fd->setFilter( "LeafML files (*.xml)");
-  fd->setDir(par.datadir);
+QFileDialog *fd = new QFileDialog( this, "Save State as LeafML", QString(par.datadir), QString("LeafML files (*.xml)"));
+fd->setFileMode( QFileDialog::AnyFile );
+ 
   QString fileName;
 
   if ( fd->exec() == QDialog::Accepted ) {
-    fileName = fd->selectedFile();
+    //fileName = fd->selectedFile();
+      QStringList files = fd->selectedFiles();
+      if (!files.isEmpty())
+          fileName = files[0];
 
     // extract extension from filename
     QFileInfo fi(fileName);
@@ -716,10 +764,10 @@ void Main::saveStateXML()
 
     } else {
 
-      mesh.XMLSave((const char *)fileName, XMLSettingsTree());
+      mesh.XMLSave(fileName.toLatin1(), XMLSettingsTree());
       QString status_message;
       status_message = QString("Wrote LeafML to %1").arg(fileName);
-      cerr << status_message.toStdString().c_str() << endl;
+        cerr << status_message.toStdString().c_str() << endl;
       statusBar()->showMessage(status_message);
     }
   }
@@ -735,21 +783,26 @@ void Main::snapshot()
 #endif
 
   stopSimulation();
-  Q3FileDialog *fd = new Q3FileDialog( this, "Save snapshot", TRUE );
-  fd->setDir(par.datadir);
-  fd->setMode( Q3FileDialog::AnyFile );
+  QFileDialog *fd = new QFileDialog( this, "Save snapshot", QString(par.datadir), QString("*") );
+  
+    fd->setFileMode( QFileDialog::AnyFile );
 
   QString supported_file_formats = " *.pdf";
   foreach (QString format, QImageWriter::supportedImageFormats()){
     supported_file_formats += (" *." + format);
   }
 
-  fd->setFilter("Image files (" + supported_file_formats + " )");
+  fd->setNameFilter("Image files (" + supported_file_formats + " )");
 
   QString fileName;
   if ( fd->exec() == QDialog::Accepted ) {
-    fileName = fd->selectedFile();
+    //fileName = fd->selectedFile();
+      QStringList files = fd->selectedFiles();
     
+      if (!files.isEmpty())
+          fileName = files[0];
+      
+      
     // extract extension from filename
     QFileInfo fi(fileName);
     QString extension = fi.suffix();
@@ -777,7 +830,7 @@ void Main::snapshot()
 
       // Save bitmaps at 1024x768
       QString status_message;
-      if (Save((const char *)fileName, extension, 1024, 768)==0) {
+      if (Save(fileName.toLatin1(), extension.toLatin1(), 1024, 768)==0) {
 	status_message = QString("Wrote snapshot to %1").arg(fileName);
       } else {
 	status_message = QString("Error writing snapshot to %1").arg(fileName);
@@ -798,17 +851,20 @@ void Main::readPrevStateXML()
   if (!currentFile.isEmpty() && working_dir) {
     QString next_file;
 
-    QStringList xml_files = working_dir->entryList("*.xml");
+    QStringList xml_files = working_dir->entryList(QStringList("*.xml"));
     QString currentFile_nopath = currentFile.section( '/', -1 );
     QString currentFile_path = currentFile.section( '/', 0, -2 );
 
-    QList<QString>::iterator f = xml_files.find( currentFile_nopath );
+    //QList<QString>::iterator f = xml_files.indexOf( currentFile_nopath );
+      int f = xml_files.indexOf( currentFile_nopath );
 
-    if (f == xml_files.end()) {
+  //  if (f == xml_files.end()) {
+       if (f == -1) {
       return;
     }
 
-    if (f==xml_files.begin()) {
+   // if (f==xml_files.begin()) {
+      if (f==0) {
       QMessageBox mb( "Read previous leaf",
 		      "No more files",
 		      QMessageBox::Information,
@@ -818,10 +874,12 @@ void Main::readPrevStateXML()
       mb.exec();
       return;
     }
-    next_file = *(--f);
+      
+    //next_file = *(--f);
+      QString nextfile = xml_files[--f];
     next_file = currentFile_path+"/"+next_file;
 
-    readStateXML((const char *)next_file);
+    readStateXML(next_file.toLatin1());
 
   }
 }
@@ -847,8 +905,8 @@ int Main::readStateXML(const char *filename, bool geometry, bool pars, bool simt
     Plot();
     QString status_message = QString("Successfully read leaf from file %1. Time is %2 h.").arg(currentFile).arg(mesh.getTimeHours().c_str());
     cerr << status_message.toStdString().c_str() << endl;
-    setCaption(caption_with_file.arg(filename));
-    statusBar()->message(status_message);
+    setWindowTitle(caption_with_file.arg(filename));
+    statusBar()->showMessage(status_message);
     emit ParsChanged();
 #ifdef QDEBUG
     qDebug() << "Done. Returning 0." << endl;
@@ -874,19 +932,20 @@ void Main::readNextStateXML()
   if (!currentFile.isEmpty() && working_dir) {
     QString next_file;
 
-    QStringList xml_files = working_dir->entryList("*.xml");
+    QStringList xml_files = working_dir->entryList(QStringList("*.xml"));
     QString currentFile_nopath = currentFile.section( '/', -1 );
     QString currentFile_path = currentFile.section( '/', 0, -2 );
 
 
-    QList<QString>::iterator f = xml_files.find( currentFile_nopath );
+      //   QList<QString>::iterator f = xml_files.find( currentFile_nopath );
+      int f = xml_files.indexOf( currentFile_nopath );
 
-    if (f == xml_files.end()) {
+    if (f == -1) {
       return;
     }
 
     ++f;
-    if (f==xml_files.end()) {
+    if (f==-1) {
       QMessageBox mb( "Read next leaf",
 		      "No more files",
 		      QMessageBox::Information,
@@ -896,10 +955,10 @@ void Main::readNextStateXML()
       mb.exec();
       return;
     }
-    next_file = *f;
+      next_file = xml_files[f];
     next_file = currentFile_path+"/"+next_file;
 
-    readStateXML((const char*)next_file);
+    readStateXML(next_file.toLatin1());
   }
 }
 
@@ -910,7 +969,7 @@ void Main::readLastStateXML()
   if (!currentFile.isEmpty() && working_dir) {
     QString next_file;
 
-    QStringList xml_files = working_dir->entryList("*.xml");
+    QStringList xml_files = working_dir->entryList(QStringList("*.xml"));
     QString currentFile_nopath = currentFile.section( '/', -1 );
     QString currentFile_path = currentFile.section( '/', 0, -2 );
 
@@ -919,7 +978,7 @@ void Main::readLastStateXML()
 
     next_file = currentFile_path+"/"+next_file;
 
-    readStateXML((const char*)next_file);
+    readStateXML(next_file.toLatin1());
   }
 }
 
@@ -931,7 +990,7 @@ void Main::readFirstStateXML()
   if (!currentFile.isEmpty() && working_dir) {
     QString next_file;
 
-    QStringList xml_files = working_dir->entryList("*.xml");
+    QStringList xml_files = working_dir->entryList(QStringList("*.xml"));
     QString currentFile_nopath = currentFile.section( '/', -1 );
     QString currentFile_path = currentFile.section( '/', 0, -2 );
 
@@ -940,7 +999,7 @@ void Main::readFirstStateXML()
 
     next_file = currentFile_path+"/"+next_file;
 
-    readStateXML((const char*)next_file);
+    readStateXML(next_file.toLatin1());
   }
 }
 
@@ -990,24 +1049,29 @@ void Main::readStateXML()
 #ifdef QDEBUG
   qDebug() << "Trying to open an OptionFileDialog" << endl;
 #endif
-  OptionFileDialog *fd = new OptionFileDialog( this, "read dialog", TRUE );
-  fd->setMode( OptionFileDialog::ExistingFile );
-  fd->setFilter( "LeafML files (*.xml)");
+  OptionFileDialog *fd = new OptionFileDialog( this, "Read LeafML file", true );
+  fd->setFileMode( QFileDialog::ExistingFile );
+  fd->setNameFilter( "LeafML files (*.xml)");
   if (working_dir) {
-    fd->setDir(*working_dir);
+    fd->setDirectory(*working_dir);
   } else {
-    fd->setDir(par.datadir);
+    fd->setDirectory(par.datadir);
   }
   QString fileName;
   if ( fd->exec() == QDialog::Accepted ) {
 
-    fileName = fd->selectedFile();
-    if (working_dir) {
+   // fileName = fd->selectedFile();
+      QStringList files = fd->selectedFiles();
+     
+      if (!files.isEmpty())
+          fileName = files[0];
+   
+      if (working_dir) {
       delete working_dir;
     }
-    working_dir = fd->dir();
+    working_dir = new QDir(fd->directory());
 
-    if (readStateXML((const char *)fileName,fd->readGeometryP(), fd->readParametersP()) )
+    if (readStateXML(fileName.toLatin1(),fd->readGeometryP(), fd->readParametersP()) )
       return readStateXML(); // user can try again
   }
 }
@@ -1020,9 +1084,10 @@ void Main::clear()
 
 void Main::about()
 {
-  static QMessageBox* about = new QMessageBox
-    ( "VirtualLeaf V1.0.2",
-      "<h3>VirtualLeaf V1.0.2</h3>\
+    QMessageBox::about(this,
+                       QString("VirtualLeaf V1.0.3"),
+                       QString(
+      "<h3>VirtualLeaf V1.0.3</h3>\
        <p>\
          An Open Source framework for cell-based modeling of plant\
          tissue growth and development.\
@@ -1054,18 +1119,15 @@ void Main::about()
        <p>\
          Please share your model plugins and extensions at\
          <a href=\"http://virtualleaf.googlecode.com\">http://virtualleaf.googlecode.com</a>.\
-       </p>",
-      QMessageBox::Information, 1, 0, 0, this, 0, FALSE );
-  about->setButtonText( 1, "Dismiss" );
-  about->setIconPixmap(QPixmap( leaficon_small ));
-  about->show();
+                               </p>"));
 }
 
 
 void Main::gpl()
 {
-  static QMessageBox* gpl = new QMessageBox ( "GPL License", "", 
-      QMessageBox::Information, 1, 0, 0, this, 0, FALSE );
+    static QMessageBox* gpl = new QMessageBox ( QMessageBox::Information,
+                                               "GPL License", "",
+      QMessageBox::Ok);
 
   QDir docDir(QApplication::applicationDirPath());
   docDir.cd("../doc"); // Where Linux expects gpl3.txt
@@ -1175,7 +1237,7 @@ void Main::toggleDynCells() {}
 void Main::startSimulation(void)
 {
   timer->start( 0 );
-  statusBar()->message("Simulation started");
+  statusBar()->showMessage("Simulation started");
   running = true;
 }
 
@@ -1183,14 +1245,13 @@ void Main::stopSimulation(void)
 {
   timer->stop();
   cerr << "Stopping simulation" << endl;
-  statusBar()->message("Simulation paused");
+  statusBar()->showMessage("Simulation paused");
   running = false;
 }
 
 void Main::togglePaused()
 {
-  bool s = run->isItemChecked(paused_id);
-  if (s) {
+    if (!paused_act->isChecked()) {
     cerr << "Calling start simulation" << endl;
     startSimulation();
   } else {
@@ -1242,8 +1303,10 @@ void Main::print()
 {
   if ( !printer ) printer = new QPrinter;
 
-  if ( printer->setup(this) ) {
-
+  //if ( printer->setup(this) ) {
+    QPrintDialog dialog(printer, this);
+    if (dialog.exec()) {
+        
     //    extern Mesh mesh;
     Vector bbll,bbur;
     mesh.BoundingBox(bbll,bbur);
@@ -1448,44 +1511,54 @@ void Main::XMLReadSettings(xmlNode *settings)
 
   MainBase::XMLReadSettings(settings);
   
-  view->setItemChecked(com_id, showcentersp);
-  view->setItemChecked(mesh_id, showmeshp);
-  view->setItemChecked(border_id, showbordercellp);
-  view->setItemChecked(node_number_id, shownodenumbersp);
-  view->setItemChecked(cell_number_id, showcellnumbersp);
-  view->setItemChecked(cell_axes_id, showcellsaxesp);
-  view->setItemChecked(cell_strain_id, showcellstrainp);
-  view->setItemChecked(movie_frames_id, movieframesp);
-  view->setItemChecked(only_boundary_id, showboundaryonlyp);
-  view->setItemChecked(fluxes_id, showfluxesp);
-  view->setItemChecked(hide_cells_id, hidecellsp);
-  options->setItemChecked(dyn_cells_id, dynamicscellsp);
-  view->setItemChecked( cell_walls_id, showwallsp);
- // view->setItemChecked( apoplasts_id, showapoplastsp);
-  
+  com_act->setChecked(showcentersp);
+  mesh_act->setChecked(showmeshp);
+  border_act->setChecked(showbordercellp);
+  node_number_act->setChecked(shownodenumbersp);
+  cell_number_act->setChecked(showcellnumbersp);
+  cell_axes_act->setChecked(showcellsaxesp);
+  cell_strain_act->setChecked(showcellstrainp);
+  movie_frames_act->setChecked(movieframesp);
+  only_boundary_act->setChecked(showboundaryonlyp);
+  fluxes_act->setChecked(showfluxesp);
+  hide_cells_act->setChecked(hidecellsp);
+  dyn_cells_act->setChecked(dynamicscellsp);
+  cell_walls_act->setChecked(showwallsp);
+ // apoplasts_act->setChecked(showapoplastsp);
+    
   editor->setTransform(viewport);
 }
 
 xmlNode *Main::XMLSettingsTree(void) 
 {
 
-  showcentersp = view->isItemChecked(com_id);
-  showmeshp = view->isItemChecked(mesh_id);
-  showbordercellp =  view->isItemChecked(border_id);
-  shownodenumbersp =  view->isItemChecked(node_number_id);
-  showcellnumbersp =  view->isItemChecked(cell_number_id);
-  showcellsaxesp = view->isItemChecked( cell_axes_id );
-  showcellstrainp = view->isItemChecked( cell_strain_id );
-  movieframesp = view->isItemChecked(movie_frames_id);;
-  showboundaryonlyp =  view->isItemChecked(only_boundary_id);
-  showfluxesp = view->isItemChecked(fluxes_id);
-  dynamicscellsp = options->isItemChecked(dyn_cells_id);
-  showwallsp = view->isItemChecked( cell_walls_id);
-  //showapoplastsp = view->isItemChecked( apoplasts_id);
-  hidecellsp = view->isItemChecked( hide_cells_id);
-
-  xmlNode *settings = MainBase::XMLSettingsTree();
-  QTransform viewport(editor->transform());
+    showcentersp = com_act->isChecked();
+    showmeshp = mesh_act->isChecked();
+    showbordercellp =  border_act->isChecked();
+    shownodenumbersp =  node_number_act->isChecked();
+    showcellnumbersp =  cell_number_act->isChecked();
+    showcellsaxesp = cell_axes_act->isChecked(  );
+    showcellstrainp = cell_strain_act->isChecked(  );
+    movieframesp = movie_frames_act->isChecked();
+    //exportdatap = export_data_act->isChecked();
+    //ignorep = ignore_boundary_act->isChecked();
+    showboundaryonlyp =  only_boundary_act->isChecked();
+    showfluxesp = fluxes_act->isChecked();
+    //MonteCp = MonteC_act->isChecked();
+   // metrop = metro_act->isChecked();
+    dynamicscellsp = dyn_cells_act->isChecked();
+    //rigidp = rigid_act->isChecked();
+    //remodp = remod_act->isChecked();
+    //vertexp = vertex_act->isChecked();
+    //duplip = dupli_act->isChecked();
+    //removep = remove_act->isChecked();
+    showwallsp = cell_walls_act->isChecked( );
+    //showapoplastsp = apoplasts_act->isChecked( );
+    hidecellsp = hide_cells_act->isChecked( );
+    
+    xmlNode *settings = MainBase::XMLSettingsTree();
+    QTransform viewport(editor->transform());
+ 
   xmlAddChild(settings, XMLViewportTree(viewport));
   return settings;
 }
@@ -1498,7 +1571,7 @@ void Main::exportCellData(QString fileName) {
 #endif
 
   QFile file(fileName);
-  if ( file.open( IO_WriteOnly ) ) {
+  if ( file.open( QFile::WriteOnly ) ) {
     QTextStream stream( &file );
     mesh.CSVExportCellData(stream);
     mesh.CSVExportWallData(stream);
@@ -1510,13 +1583,17 @@ void Main::exportCellData(QString fileName) {
 
 void Main::exportCellData() {
   QString fileName;
-  Q3FileDialog *fd = new Q3FileDialog( this, "file dialog", TRUE );
-  fd->setDir(par.datadir); 
+    QFileDialog *fd = new QFileDialog( this, "file dialog", QString(par.datadir), QString("*") );
+     fd->setAcceptMode(QFileDialog::AcceptSave);
+  fd->setDirectory(par.datadir);
   stopSimulation();
-  fd->setMode( Q3FileDialog::AnyFile );
+  fd->setFileMode( QFileDialog::AnyFile );
   if ( fd->exec() == QDialog::Accepted ) {
-    fileName = fd->selectedFile();
-
+    //fileName = fd->selectedFile();
+      QStringList files = fd->selectedFiles();
+      if (!files.isEmpty())
+          fileName = files[0];
+      
     // extract extension from filename
     QFileInfo fi(fileName);
     QString extension = fi.suffix();

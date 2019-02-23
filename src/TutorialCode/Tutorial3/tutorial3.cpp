@@ -128,6 +128,3 @@ void Tutorial3::CellDynamics(CellBase *c, double *dchem) {
 		dchem[0] = par->leaf_tip_source;
 	}
 }
-
-
-Q_EXPORT_PLUGIN2(tutorial3, Tutorial3)

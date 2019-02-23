@@ -22,6 +22,7 @@
 CONFIG += release
 CONFIG -= debug
 CONFIG += plugin
+QT += widgets
 
 BINDIR = ../../bin
 LIBDIR = ../../lib
@@ -35,7 +36,6 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
 
-QT += qt3support
 SOURCES = $${TARGET}plugin.cpp
 TEMPLATE = lib 
 

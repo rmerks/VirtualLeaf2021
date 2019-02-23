@@ -22,6 +22,8 @@
 CONFIG += release
 CONFIG -= debug
 CONFIG += staticlib
+QT += widgets
+QT += core
 
 QMAKE_CXXFLAGS += -fexceptions
 QMAKE_CXXFLAGS += -Wall
@@ -36,7 +38,6 @@ DEFINES = QTGRAPHICS # VLEAFPLUGIN
 DESTDIR = ../lib
 LIBDIR = ../lib
 PARTMPL = VirtualLeafpar.tmpl
-QT += qt3support
 TARGET = vleaf
 TEMPLATE = lib
 

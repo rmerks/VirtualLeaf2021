@@ -32,6 +32,8 @@
 class AuxinGrowthPlugin : public QObject, SimPluginInterface {
   Q_OBJECT
   Q_INTERFACES(SimPluginInterface);
+    Q_PLUGIN_METADATA(IID "org.virtualleaf.auxingrowthplugin")
+
 
  public:
   virtual QString ModelID(void) { return QString( "Auxin accumulation and growth" ); }

@@ -158,6 +158,7 @@ void Wall::Draw(QGraphicsScene *c) {
 
   WallItem *wi1 = new WallItem(this, 1, c);
   WallItem *wi2 = new WallItem(this, 2, c);
+    c->addItem(wi1); c->addItem(wi2);
   wi1->show();
   wi2->show();
 }
@@ -181,15 +182,16 @@ void Wall::ShowStructure(QGraphicsScene *c) {
   Vector textpos1 = midline + 100 * perpvec;
   Vector textpos2 = midline - 100 * perpvec;
 
-  QGraphicsLineItem *line = new QGraphicsLineItem(0,c);
+  QGraphicsLineItem *line = new QGraphicsLineItem(0);
 
   line->setPen( QPen(QColor(par.arrowcolor),2) );
   line->setLine(startpoint.x, startpoint.y, endpoint.x, endpoint.y );
   line->setZValue(10);
+    c->addItem(line);
   line->show();
 
-  QGraphicsSimpleTextItem *text1 = new QGraphicsSimpleTextItem( QString("%1").arg(c2->Index()),0,c);
-  QGraphicsSimpleTextItem *text2 = new QGraphicsSimpleTextItem( QString("%1").arg(c1->Index()),0,c);
+  QGraphicsSimpleTextItem *text1 = new QGraphicsSimpleTextItem( QString("%1").arg(c2->Index()),0);
+  QGraphicsSimpleTextItem *text2 = new QGraphicsSimpleTextItem( QString("%1").arg(c1->Index()),0);
 
   text1 -> setPos( textpos1.x, textpos1.y );
   text2 -> setPos( textpos2.x, textpos2.y );
@@ -198,8 +200,9 @@ void Wall::ShowStructure(QGraphicsScene *c) {
   text1->setFont( QFont( "Helvetica", par.nodenumsize, QFont::Bold) );
   text2->setFont( QFont( "Helvetica", par.nodenumsize, QFont::Bold) );
 
-  text1->setPen ( QColor(par.textcolor) );
-  text2->setPen ( text1->pen() );
+    text1->setBrush ( QBrush(QColor(par.textcolor)) ); text1->setPen(Qt::NoPen);
+    text2->setBrush ( text1->brush() ); text2->setPen(Qt::NoPen);
+    c->addItem(text1); c->addItem(text2);
   text1->show(); text2->show();
 }
 string Wall::WallTypetoStr(const WallType &wt) const {

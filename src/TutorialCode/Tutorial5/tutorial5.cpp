@@ -134,6 +134,3 @@ void Tutorial5::CellDynamics(CellBase *c, double *dchem) {
 	
 	
 }
-
-
-Q_EXPORT_PLUGIN2(tutorial5, Tutorial5)

@@ -22,8 +22,10 @@
 #include <string>
 #include "modelcatalogue.h"
 #include <QVariant>
+#include <QApplication>
 
 static const std::string _module_id("$Id$");
+extern bool useGUI;
 
 ModelCatalogue::ModelCatalogue(Mesh *_mesh, MainBase *_mainwin, const char *model=0) {
   mesh = _mesh;
@@ -39,7 +41,7 @@ ModelCatalogue::ModelCatalogue(Mesh *_mesh, MainBase *_mainwin, const char *mode
 
 void ModelCatalogue::LoadPlugins() {
 
-  QDir pluginDir(QApplication::applicationDirPath()); 
+  QDir pluginDir(QApplication::applicationDirPath());
   QStringList plugin_filters; // filter for plugins, i.e "*.dll", "*.dylib"
 #if defined(Q_OS_WIN) 
   if (pluginDir.dirName().toLower() =="debug" 
@@ -63,7 +65,7 @@ void ModelCatalogue::LoadPlugins() {
 
   //QVector<SimPluginInterface *> plugins;
   foreach (QString fileName, pluginDir.entryList(QDir::Files)){ 
-    QPluginLoader loader(pluginDir.absoluteFilePath(fileName)); 
+    QPluginLoader loader(pluginDir.absoluteFilePath(fileName));
     if (SimPluginInterface *plugin = 
 	qobject_cast<SimPluginInterface *>(loader.instance())) {
       models.append(plugin); 
@@ -158,7 +160,7 @@ void ModelCatalogue::InstallModel(SimPluginInterface *plugin) {
   
   if (mainwin) {
     
-    if (!qApp->type()==QApplication::Tty)  // only do this if we are running a GUI
+    if (useGUI)  // only do this if we are running a GUI
       ((Main *)mainwin)->RefreshInfoBar();
     
     if (plugin->DefaultLeafML().isEmpty()) {
@@ -200,7 +202,7 @@ void ModelCatalogue::InstallModel(SimPluginInterface *plugin) {
 	  // Initialize simulation using default LeafML file referenced in plugin.
 	  //mainwin->Init(0);
 	  cerr << "Default LeafML: " << plugin->DefaultLeafML().toStdString().c_str() << endl;
-	  mainwin->Init(pluginDir.absFilePath(plugin->DefaultLeafML()).toStdString().c_str());
+	  mainwin->Init(pluginDir.absoluteFilePath(plugin->DefaultLeafML()).toStdString().c_str());
 	}
       }
     }

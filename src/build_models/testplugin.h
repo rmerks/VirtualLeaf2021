@@ -32,6 +32,8 @@
 class TestPlugin : public QObject, SimPluginInterface {
   Q_OBJECT
   Q_INTERFACES(SimPluginInterface);
+    Q_PLUGIN_METADATA(IID "org.virtualleaf.testplugin")
+
 
  public:
   virtual QString ModelID(void) { return QString( "Test model" ); }

@@ -24,11 +24,11 @@
 #ifndef _CANVAS_H_
 #define _CANVAS_H_
 
-#include <q3popupmenu.h>
-#include <q3mainwindow.h>
-#include <q3intdict.h>
+
+#include <qmainwindow.h>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QMenu>
 #include <QList>
 #include <QDir>
 
@@ -70,7 +70,7 @@ class FigureEditor : public QGraphicsView {
 
     friend class Main;
  public:
-  FigureEditor(QGraphicsScene&, Mesh&, QWidget* parent=0, const char* name=0, Qt::WFlags f=0);
+  FigureEditor(QGraphicsScene&, Mesh&, QWidget* parent=0, const char* name=0, Qt::WindowFlags f=0);
   void clear();
   void Save(const char *fname, const char *format, int sizex=640, int sizey=480);
   void FullRedraw(void);
@@ -104,30 +104,30 @@ class FigureEditor : public QGraphicsView {
   double rot_angle;
 };
 
-class Main : public Q3MainWindow, public MainBase {
+class Main : public QMainWindow, public MainBase {
   Q_OBJECT
     friend class ModelCatalogue; // needs to populate menu item models
  public:
-  Main(QGraphicsScene&, Mesh&, QWidget* parent=0, const char* name=0, Qt::WFlags f=0);
+  Main(QGraphicsScene&, Mesh&, QWidget* parent=0, const char* name=0, Qt::WindowFlags f=0);
   ~Main();
-  virtual bool ShowCentersP(void) {return view->isItemChecked(com_id);}
-  virtual bool ShowMeshP(void) {return view->isItemChecked(mesh_id);}
-  virtual bool ShowBorderCellsP(void) {return view->isItemChecked(border_id);}
-  virtual bool PausedP(void) {return run->isItemChecked(paused_id);}
-  virtual bool ShowNodeNumbersP(void) {return view->isItemChecked(node_number_id);}
-  virtual bool ShowCellNumbersP(void) {return view->isItemChecked(cell_number_id);}
-  virtual bool ShowCellAxesP(void) {return view->isItemChecked(cell_axes_id);}
-  virtual bool ShowCellStrainP(void) {return view->isItemChecked(cell_strain_id);}
-  virtual bool MovieFramesP(void) {return view->isItemChecked(movie_frames_id);}
-  virtual bool ShowBoundaryOnlyP(void) {return view->isItemChecked(only_boundary_id);}
-  virtual bool ShowWallsP(void) {return view->isItemChecked(cell_walls_id);}
- // virtual bool ShowApoplastsP(void) { return view->isItemChecked(apoplasts_id);}
-  virtual bool ShowFluxesP(void) { return view->isItemChecked(fluxes_id); }
-  virtual bool DynamicCellsP(void) { return options->isItemChecked(dyn_cells_id); }
-  virtual bool RotationModeP(void) { return options->isItemChecked(rotation_mode_id); }
-  virtual bool InsertModeP(void) { return options->isItemChecked(insert_mode_id); }
-  virtual bool ShowToolTipsP(void) { return helpmenu->isItemChecked(tooltips_id); }
-  virtual bool HideCellsP(void) { return view->isItemChecked(hide_cells_id); }
+  virtual bool ShowCentersP(void) {return com_act->isChecked();}
+  virtual bool ShowMeshP(void) {return mesh_act->isChecked();}
+  virtual bool ShowBorderCellsP(void) {border_act->isChecked();}
+  virtual bool PausedP(void) {return paused_act->isChecked();}
+  virtual bool ShowNodeNumbersP(void) {return node_number_act->isChecked();}
+  virtual bool ShowCellNumbersP(void) {return cell_number_act->isChecked();}
+  virtual bool ShowCellAxesP(void) {return cell_axes_act->isChecked();}
+  virtual bool ShowCellStrainP(void) {return cell_strain_act->isChecked();}
+  virtual bool MovieFramesP(void) {return movie_frames_act->isChecked();}
+  virtual bool ShowBoundaryOnlyP(void) {return only_boundary_act->isChecked();}
+  virtual bool ShowWallsP(void) {return cell_walls_act->isChecked();}
+ // virtual bool ShowApoplastsP(void) { return apoplasts_act->isChecked();}
+  virtual bool ShowFluxesP(void) { return fluxes_act->isChecked(); }
+  virtual bool DynamicCellsP(void) { return dyn_cells_act->isChecked(); }
+  virtual bool RotationModeP(void) { return rotation_mode_act->isChecked(); }
+  virtual bool InsertModeP(void) { return insert_mode_act->isChecked(); }
+  virtual bool ShowToolTipsP(void) { return tooltips_act->isChecked(); }
+    virtual bool HideCellsP(void) { return hide_cells_act->isChecked(); }
   void scale(double factor); 
   virtual double getFluxArrowsize(void)
   {
@@ -184,7 +184,7 @@ class Main : public Q3MainWindow, public MainBase {
   { 
     UserMessage("Exited rotation mode.",2000);
 
-    options->setItemChecked(rotation_mode_id, false); 
+      rotation_mode_act->setChecked(false);
     if (editor)
       disconnect(editor, SIGNAL(MousePressed()), this, SLOT(ExitRotationMode()));
     editor->setMouseTracking(false);
@@ -199,7 +199,7 @@ class Main : public Q3MainWindow, public MainBase {
 
   private slots:
   void aboutQt();
-  void newView();
+  //void newView();
   void EditParameters();
   QDir GetLeafDir(void);
   void readStateXML();
@@ -238,36 +238,39 @@ class Main : public Q3MainWindow, public MainBase {
  private:
   NodeSet *node_set;
   FigureEditor *editor;
-  Q3PopupMenu* options;
-  Q3PopupMenu *view;
-  Q3PopupMenu *run;
+  QMenu *file;
+    QMenu *edit;
+  QMenu* options;
+  QMenu* output;
+  QMenu *view;
+  QMenu *run;
   QMenu *modelmenu;
-  Q3PopupMenu *helpmenu;
+  QMenu *helpmenu;
 
   QPrinter* printer;
   const QDir *working_dir;
   QString currentFile;
   //  toggle item states 
-  int dbf_id; // options->Double Buffer
-  int com_id; // view->Show centers
-  int mesh_id; // view->Show mesh
-  int node_number_id; // view->Show Node numbers
-  int cell_number_id; // view->Show Cell numbers
-  int border_id; // view->Show border cells
-  int paused_id; // run->Simulation paused
-  int cell_axes_id; // view->Show cell axes
-  int cell_strain_id; // view->Show cell strain
-  int only_boundary_id; // view ->Show only leaf boundary
-  int cell_walls_id; // view -> Show transporters
-  //int apoplasts_id; // view -> Show apoplasts
-  int tooltips_id; // help -> Show Cell Info
-  int hide_cells_id; // view->Hide Cells
+  QAction *dbf_act; // options->Double Buffer
+  QAction *com_act; // view->Show centers
+  QAction *mesh_act; // view->Show mesh
+  QAction *node_number_act; // view->Show Node numbers
+  QAction *cell_number_act; // view->Show Cell numbers
+  QAction *border_act; // view->Show border cells
+  QAction *paused_act; // run->Simulation paused
+  QAction *cell_axes_act; // view->Show cell axes
+  QAction *cell_strain_act; // view->Show cell strain
+  QAction *only_boundary_act; // view ->Show only leaf boundary
+  QAction *cell_walls_act; // view -> Show transporters
+  //QAction *apoplasts_act; // view -> Show apoplasts
+  QAction *tooltips_act; // help -> Show Cell Info
+  QAction *hide_cells_act; // view->Hide Cells
   double flux_arrow_size;
-  int movie_frames_id;
-  int fluxes_id;
-  int dyn_cells_id;
-  int rotation_mode_id;
-  int insert_mode_id;
+  QAction *movie_frames_act;
+  QAction *fluxes_act;
+  QAction *dyn_cells_act;
+  QAction *rotation_mode_act;
+  QAction *insert_mode_act;
   QTimer *timer;
   QFile *gifanim;
   bool running;

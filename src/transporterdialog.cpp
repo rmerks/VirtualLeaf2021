@@ -22,6 +22,7 @@
 #include <QtGui>
 #include <QDoubleValidator>
 #include <sstream>
+#include <QPushButton>
 #include "canvas.h"
 #include "transporterdialog.h"
 

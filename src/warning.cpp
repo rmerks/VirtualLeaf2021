@@ -31,6 +31,7 @@
 #endif
 #include <QMessageBox>
 
+extern bool useGUI;
 static const std::string _module_id("$Id$");
 
 int Quiet=0;
@@ -66,7 +67,7 @@ void MyWarning::error(const char *fmt, ...)
 
   QString qmess(message);
 
-  if (qApp->type()==QApplication::Tty) {
+  if (!useGUI) {
     // batch mode: print the message to stderr
     fprintf(stderr, "Fatal error: %s\n",qmess.toStdString().c_str());
     exit(1);
@@ -122,7 +123,7 @@ void MyWarning::warning(const char *fmt, ...)
 
   //  bool batch = false;
 
-  if (qApp->type()==QApplication::Tty) {
+  if (!useGUI) {
     // batch mode: print the message to stderr
     fprintf(stderr, "Warning: %s\n",qmess.toStdString().c_str());
   } else { // issue a dialog box

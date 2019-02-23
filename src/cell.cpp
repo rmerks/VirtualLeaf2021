@@ -622,7 +622,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 	if ((it = find_if (edge_owners.begin(), edge_owners.end(), bind2nd(mem_fun_ref(&Neighbor::CellEquals), -1)))
 	    != edge_owners.end()) {
 #ifdef QDEBUG
-	  qDebug() << "deleating: " << it->cell->Index() << " from the list of edge owners." << endl;
+      qDebug() << "deleting: " << it->cell->Index() << " from the list of edge owners." << endl;
 #endif
 	  edge_owners.erase(it);
 	}
@@ -1184,6 +1184,7 @@ bool Cell::SelfIntersect(void)
 }
 
 
+/*
 bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
 {
 
@@ -1250,6 +1251,182 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
     }
   }
   return false;
+}
+
+
+
+*/
+
+bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
+{
+    
+    // Check whether the polygon will self-intersect if moving_node_ind
+    // were displaced to new_pos
+    
+    // Compare the two new edges against each other edge
+    
+    // O(2*N)
+    
+    // method used for segment intersection:
+    // http://astronomy.swin.edu.au/~pbourke/geometry/lineline2d/
+    
+    Vector neighbor_of_moving_node[2];
+    
+    //cerr << "list<Node *>::const_iterator moving_node_ind_pos = find (nodes.begin(),nodes.end(),moving_node_ind);\n";
+    list<Node *>::const_iterator moving_node_ind_pos = find (nodes.begin(),nodes.end(),moving_node_ind);
+    
+    list<Node *>::const_iterator nb = moving_node_ind_pos;
+    //cerr << "Done\n";
+    nb++;
+    if (nb == nodes.end()) {
+        nb = nodes.begin();
+    }
+    
+    neighbor_of_moving_node[0]=*(*nb);
+    
+    nb=moving_node_ind_pos;
+    if (nb == nodes.begin()) {
+        nb = nodes.end();
+    }
+    nb--;
+    
+    neighbor_of_moving_node[1]=*( *nb );
+    
+    
+    for (list<Node *>::const_iterator i=nodes.begin(); i!=nodes.end(); i++) {
+        for (int j=0;j<2;j++) { // loop over the two neighbors of moving node
+            list<Node *>::const_iterator nb=i;
+            nb++;
+            if (nb == nodes.end()) {
+                nb = nodes.begin();
+            }
+            if (*i == moving_node_ind || *nb == moving_node_ind) {
+                // do not compare to self
+                continue;
+            }
+            
+            Vector v3 = *(*i);
+            Vector v4 = *(*nb);
+            
+            double denominator =
+            (v4.y - v3.y)*(neighbor_of_moving_node[j].x - new_pos.x) - (v4.x - v3.x)*(neighbor_of_moving_node[j].y - new_pos.y);
+            
+           //  double ua =
+           //  ((v4.x - v3.x)*(new_pos.y - v3.y) - (v4.y - v3.y)*(new_pos.x -v3.x))/denominator;
+           //  double ub =
+           //  ((neighbor_of_moving_node[j].x - new_pos.x)*(new_pos.y-v3.y) - (neighbor_of_moving_node[j].y- new_pos.y)*(new_pos.x - v3.x))/denominator;
+
+            double numera = ((v4.x - v3.x)*(new_pos.y - v3.y) - (v4.y - v3.y)*(new_pos.x -v3.x));
+            double numerb = ((neighbor_of_moving_node[j].x - new_pos.x)*(new_pos.y-v3.y) - (neighbor_of_moving_node[j].y- new_pos.y)*(new_pos.x - v3.x));
+            
+            // Are the wall elements coincident?
+            if (fabs(numera) < TINY && fabs(numerb) < TINY && fabs(denominator) < TINY) {
+                return true;
+            }
+            
+            // Are the wall elements parallel?
+            if (fabs(denominator) < TINY) {
+                continue;
+            }
+            double ua = numera / denominator;
+            double ub = numerb / denominator;
+            
+            
+            //if ( ( TINY < ua && ua < 1.-TINY ) && ( TINY < ub && ub < 1.-TINY ) ) {
+            if ( ( 0 < ua && ua < 1. ) && ( 0 < ub && ub < 1.) ) {
+                //cerr << "ua = " << ua << ", ub = " << ub << endl;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+
+
+bool Cell::LinePieceIntersectsP(const Vector n1, const Vector n2) const
+{
+    
+    // Check whether the polygon will self-intersect if moving_node_ind
+    // were displaced to new_pos
+    
+    // Compare the two new edges against each other edge
+    
+    // O(2*N)
+    
+    // method used for segment intersection:
+    // http://astronomy.swin.edu.au/~pbourke/geometry/lineline2d/
+    
+    /*Vector neighbor_of_moving_node[2];
+    
+    //cerr << "list<Node *>::const_iterator moving_node_ind_pos = find (nodes.begin(),nodes.end(),moving_node_ind);\n";
+    list<Node *>::const_iterator moving_node_ind_pos = find (nodes.begin(),nodes.end(),moving_node_ind);
+    
+    list<Node *>::const_iterator nb = moving_node_ind_pos;
+    //cerr << "Done\n";
+    nb++;
+    if (nb == nodes.end()) {
+        nb = nodes.begin();
+    }
+    
+    neighbor_of_moving_node[0]=*(*nb);
+    
+    nb=moving_node_ind_pos;
+    if (nb == nodes.begin()) {
+        nb = nodes.end();
+    }
+    nb--;
+    
+    neighbor_of_moving_node[1]=*( *nb );
+    */
+    
+    for (list<Node *>::const_iterator i=nodes.begin(); i!=nodes.end(); i++) {
+        list<Node *>::const_iterator nb=i;
+        nb++;
+        if (nb == nodes.end()) {
+            nb = nodes.begin();
+        }
+        
+       /* if (*i == moving_node_ind || *nb == moving_node_ind) {
+            // do not compare to self
+            continue;
+        }*/
+        
+        Vector v3 = *(*i);
+        Vector v4 = *(*nb);
+        
+        double denominator =
+        (v4.y - v3.y)*(n1.x - n2.x) - (v4.x - v3.x)*(n1.y - n2.y);
+        
+        /* double ua =
+         ((v4.x - v3.x)*(new_pos.y - v3.y) - (v4.y - v3.y)*(new_pos.x -v3.x))/denominator;
+         double ub =
+         ((neighbor_of_moving_node[j].x - new_pos.x)*(new_pos.y-v3.y) - (neighbor_of_moving_node[j].y- new_pos.y)*(new_pos.x - v3.x))/denominator;*/
+        double numera = ((v4.x - v3.x)*(n1.y - v3.y) - (v4.y - v3.y)*(n1.x -v3.x));
+        double numerb = ((n2.x - n1.x)*(n1.y-v3.y) - (n2.y- n1.y)*(n1.x - v3.x));
+        
+        /* Are the wall elements coincident? */
+        if (fabs(numera) < TINY && fabs(numerb) < TINY && fabs(denominator) < TINY) {
+            return true;
+        }
+        
+        /* Are the wall elements parallel? */
+        if (fabs(denominator) < TINY) {
+            continue;
+        }
+        double ua = numera / denominator;
+        double ub = numerb / denominator;
+        
+        
+        //if ( ( TINY < ua && ua < 1.-TINY ) && ( TINY < ub && ub < 1.-TINY ) ) {
+        if ( ( 0 < ua && ua < 1. ) && ( 0 < ub && ub < 1.) ) {
+            //cerr << "ua = " << ua << ", ub = " << ub << endl;
+            return true;
+        }
+        
+    }
+    return false;
 }
 
 /*! \brief Test if this cell intersects with the given line.
@@ -1388,7 +1565,7 @@ void BoundaryPolygon::Draw(QGraphicsScene *c, QString tooltip)
 
   for (list<Node *>::const_iterator n=nodes.begin(); n!=nodes.end(); n++) {
     Node *i=*n;
-    pa[cc++] = QPoint((int)((Offset().x+i->x)*Factor()), (int)((Offset().y+i->y)*Factor()) );
+    pa[cc++] = QPoint((qreal)((Offset().x+i->x)*Factor()), (qreal)((Offset().y+i->y)*Factor()) );
   }
 
   p->setPolygon(pa);
@@ -1399,6 +1576,7 @@ void BoundaryPolygon::Draw(QGraphicsScene *c, QString tooltip)
   if (!tooltip.isEmpty())
     p->setToolTip(tooltip);
 
+    c->addItem(p);
   p->show();
 }
 
@@ -1456,8 +1634,8 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
   for (list<Node *>::const_iterator n=nodes.begin(); n!=nodes.end(); n++) {
     Node *i=*n;
 
-    pa[cc++] = QPoint((int)((offset[0]+i->x)*factor),
-		      (int)((offset[1]+i->y)*factor) );
+    pa[cc++] = QPointF((qreal)((offset[0]+i->x)*factor),
+              (qreal)((offset[1]+i->y)*factor) );
   }
 
 
@@ -1473,6 +1651,7 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
   if (!tooltip.isEmpty())
     p->setToolTip(tooltip);
 
+    c->addItem(p);
   p->show();
 }
 
@@ -1483,12 +1662,13 @@ void Cell::DrawCenter(QGraphicsScene *c) const {
   const double mag = par.node_mag;
 
   // construct an ellipse
-  QGraphicsEllipseItem *disk = new QGraphicsEllipseItem ( -1*mag, -1*mag, 2*mag, 2*mag, 0, c );
+  QGraphicsEllipseItem *disk = new QGraphicsEllipseItem ( -1*mag, -1*mag, 2*mag, 2*mag, 0);
   disk->setBrush( QColor("forest green") );
   disk->setZValue(5);
-  disk->show();
   Vector centroid=Centroid();
   disk -> setPos((offset[0]+centroid.x)*factor,(offset[1]+centroid.y)*factor);
+    c->addItem(disk);
+      disk->show();
 }
 
 void Cell::DrawNodes(QGraphicsScene *c) const {
@@ -1499,8 +1679,10 @@ void Cell::DrawNodes(QGraphicsScene *c) const {
     NodeItem *item = new NodeItem ( &(*i), c );
     item->setColor();
     item->setZValue(5);
-    item->show();
     item ->setPos(((offset[0]+i->x)*factor), ((offset[1]+i->y)*factor) );
+      c->addItem(item);
+          item->show();
+      
   }
 }
 
@@ -1511,15 +1693,19 @@ void Cell::DrawIndex(QGraphicsScene *c) const {
 
 // Draw any text in the cell's center
 void Cell::DrawText(QGraphicsScene *c, const QString &text) const {
-
-  Vector centroid = Centroid();
-  QGraphicsSimpleTextItem *ctext = new QGraphicsSimpleTextItem ( text, 0, c );
-  ctext->setPen( QPen(QColor(par.textcolor)) );
-  ctext->setZValue(20);
-  ctext->setFont( QFont( "Helvetica", par.cellnumsize, QFont::Bold) );
-  ctext->show();
-  ctext ->setPos(((offset[0]+centroid.x)*factor),
-		 ((offset[1]+centroid.y)*factor) );
+    
+    Vector centroid = Centroid();
+    QGraphicsSimpleTextItem *ctext = new QGraphicsSimpleTextItem ( text, 0);
+   // ctext->setPen( QPen(QColor(par.textcolor)) );
+    ctext->setBrush( QBrush(QColor(par.textcolor)) );
+    ctext->setZValue(20);
+    ctext->setFont( QFont( "Helvetica", par.cellnumsize, QFont::Normal) );
+    
+    ctext ->setPos(((offset[0]+centroid.x)*factor),
+                   ((offset[1]+centroid.y)*factor) );
+    c->addItem(ctext);
+    ctext->show();
+    
 }
 
 
@@ -1539,7 +1725,7 @@ void Cell::DrawAxis(QGraphicsScene *c) const {
   Vector to = centroid + 0.5 * width *short_axis;
 
 
-  QGraphicsLineItem *line = new QGraphicsLineItem(0, c);
+  QGraphicsLineItem *line = new QGraphicsLineItem(0);
   line->setPen( QPen(QColor(par.arrowcolor),2) );
   line->setZValue(2);
 
@@ -1548,7 +1734,9 @@ void Cell::DrawAxis(QGraphicsScene *c) const {
 		 ( (offset[0]+to.x)*factor ),
 		 ( (offset[1]+to.y)*factor ) );
   line->setZValue(10);
+    c->addItem(line);
   line->show();
+    
 }
 
 void Cell::DrawStrain(QGraphicsScene *c) const {
@@ -1566,7 +1754,7 @@ void Cell::DrawFluxes(QGraphicsScene *c, double arrowsize)
 
   vec_flux *= arrowsize;
 
-  QGraphicsArrowItem *arrow = new QGraphicsArrowItem(0,c);
+  QGraphicsArrowItem *arrow = new QGraphicsArrowItem(0);
 
   Vector centroid = Centroid();
   Vector from = centroid - vec_flux/2.;
@@ -1581,6 +1769,7 @@ void Cell::DrawFluxes(QGraphicsScene *c, double arrowsize)
 		  ( (offset[0]+to.x)*factor ),
 		  ( (offset[1]+to.y)*factor ) );
   arrow->setZValue(10);
+    c->addItem(arrow);
   arrow->show();
 }
 

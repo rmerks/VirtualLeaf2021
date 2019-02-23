@@ -31,8 +31,7 @@
 #include <qcolor.h>
 #include <qfont.h>
 #include <qwidget.h>
-//Added by qt3to4:
-#include <Q3PointArray>
+
 #include <fstream>
 #include "nodeitem.h"
 #include "cellitem.h"

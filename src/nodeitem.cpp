@@ -33,7 +33,7 @@ static const std::string _module_id("$Id$");
 extern Parameter par;
 
 NodeItem::NodeItem( Node *n, QGraphicsScene *canvas )
-  : QGraphicsItem( 0, canvas ), SimItemBase( n, canvas) {
+  : QGraphicsItem( 0 ), SimItemBase( n, canvas) {
 
   brush = Qt::darkGray;
 

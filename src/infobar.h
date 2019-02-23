@@ -26,24 +26,25 @@
 #define _INFOBAR_H_
 
 
-#include <q3mainwindow.h>
+#include <qmainwindow.h>
 #include <QLabel>
 #include <QBoxLayout>
+#include <QDockWidget>
 
-class InfoBar : public Q3DockWindow {
+class InfoBar : public QDockWidget {
 
   Q_OBJECT
     public:
 
-  InfoBar(void) : Q3DockWindow() { 
+  InfoBar(void) : QDockWidget() {
 
     virtleaf = new QLabel();
     SetText("undefined");
 
-    setHorizontalStretchable(true);
-    boxLayout()->addStretch();
-    boxLayout()->addWidget(virtleaf);//, Qt::AlignHCenter);
-    boxLayout()->addStretch();
+    //setHorizontalStretchable(true);
+      //boxLayout()->addStretch();
+    //boxLayout()->addWidget(virtleaf);//, Qt::AlignHCenter);
+    //boxLayout()->addStretch();
   }
 
   void SetText(QString text) {

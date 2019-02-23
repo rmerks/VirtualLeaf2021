@@ -30,7 +30,7 @@
 #include "simplugin.h"
 #include "canvas.h"
 #include <QPluginLoader>
-#include <Q3PopupMenu>
+//#include <Q3PopupMenu>
 #include <QAction>
 #include <QDir>
 #include <QApplication>
@@ -41,7 +41,7 @@
 class ModelCatalogue : public QObject {
   Q_OBJECT
     public:
-  ModelCatalogue(Mesh *mesh, MainBase *mainwin, const char *model); 	
+  ModelCatalogue(Mesh *mesh, MainBase *mainwin, const char *model);
   void LoadPlugins(); 
   void LoadPlugin(const char *model);
 

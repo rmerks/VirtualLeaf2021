@@ -388,7 +388,7 @@ void Parameter::Write(ostream &os) const {
   os << " xml_storage_stride = " << xml_storage_stride << endl;
   if (datadir) {
                                      QDir dataDir = QDir::home().relativeFilePath(datadir);
-                                     os << " datadir = " << dataDir.dirName().toStdString().c_str() << endl;
+                                     os << " datadir = " << dataDir.dirName().toStdString() << endl;
                                  }
                                  else {
                                      os << "datadir = ." << endl;
@@ -600,7 +600,7 @@ xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
 
   if (datadir) {
                                      QDir dataDir = QDir::home().relativeFilePath(datadir);
-                                     text << dataDir.dirName().toStdString().c_str();
+                                     text << dataDir.dirName().toStdString();
                                    }
 xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
 }

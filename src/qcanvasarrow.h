@@ -30,7 +30,7 @@
 class QGraphicsArrowItem : public QGraphicsLineItem {
 
  public:
- QGraphicsArrowItem(QGraphicsItem *parent, QGraphicsScene *c) : QGraphicsLineItem(parent, c) {};
+ QGraphicsArrowItem(QGraphicsItem *parent) : QGraphicsLineItem(parent) {};
 
   void paint ( QPainter *p, const QStyleOptionGraphicsItem *option,
 	       QWidget *widget ) {

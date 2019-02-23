@@ -35,7 +35,7 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
 
-QT += qt3support
+QT += widgets
 SOURCES = $${TARGET}plugin.cpp
 TEMPLATE = lib 
 

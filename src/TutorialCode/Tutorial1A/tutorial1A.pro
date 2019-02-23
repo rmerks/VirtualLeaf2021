@@ -40,7 +40,7 @@ QMAKE_CXXFLAGS += -Wno-write-strings
 QMAKE_CXXFLAGS += -Wno-unused-parameter
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
-QT += qt3support
+QT += widgets
 SOURCES = $${TARGET}.cpp
 TEMPLATE = lib 
 

@@ -70,4 +70,4 @@ void Tutorial1B::CellDynamics(CellBase *c, double *dchem) {
 }
 
 
-Q_EXPORT_PLUGIN2(tutorial1B, Tutorial1B)
+//Q_EXPORT_PLUGIN2(tutorial1B, Tutorial1B)

@@ -27,7 +27,6 @@
 
 #include <QGraphicsScene>
 #include <qpixmap.h>
-#include <q3picture.h>
 #include <qpainter.h>
 #include <qwidget.h>
 #include <iostream>
@@ -53,10 +52,19 @@ class MainBase  {
     showcellsaxesp = false;
     showcellstrainp =  false;
     movieframesp = true;
+    exportdatap = false;
+    ignorep = false;
     showboundaryonlyp =  false;
     showwallsp =  false;
     showfluxesp = false;
+    MonteCp = true;
+    metrop = true;
     dynamicscellsp = true;
+    rigidp = false;
+    remodp = false;
+    vertexp = false;
+    duplip = false;
+    removep = false;
     showtooltipsp = false;
     hidecellsp = false;
   }
@@ -74,12 +82,21 @@ class MainBase  {
   virtual bool ShowCellAxesP(void) {return showcellsaxesp;}
   virtual bool ShowCellStrainP(void) {return showcellstrainp;}
   virtual bool MovieFramesP(void) {return movieframesp;}
+  virtual bool ExportDataP(void) {return exportdatap;}
+  virtual bool IgnoreP(void) {return ignorep;}
   virtual bool ShowBoundaryOnlyP(void) {return showboundaryonlyp;}
   virtual bool ShowToolTipsP(void) {return showtooltipsp;}
   virtual bool ShowWallsP(void) {return showwallsp;}
- // virtual bool ShowApoplastsP(void) { return showapoplastsp;}
+  // virtual bool ShowApoplastsP(void) { return showapoplastsp;}
   virtual bool ShowFluxesP(void) { return showfluxesp; }
+  virtual bool MonteCarloP(void) { return MonteCp; }
+  virtual bool MetroP(void) { return metrop; }
   virtual bool DynamicCellsP(void) { return dynamicscellsp; }
+  virtual bool RigidityP(void) { return rigidp; }
+  virtual bool RemodP(void) { return remodp; }
+  virtual bool VertexP(void) { return vertexp; }
+  virtual bool DupliP(void) { return duplip; }
+  virtual bool RemoveP(void) { return removep; }
   virtual void FitCanvasToWindow() {};
   virtual void FitLeafToCanvas() {};
   virtual bool HideCellsP(void) { return hidecellsp; }
@@ -102,7 +119,7 @@ class MainBase  {
   void Plot(int resize_stride=10);
 
   virtual void UserMessage(QString message, int timeout = 0) {
-    cerr << message.toAscii().constData() << endl;
+    cerr << message.toLatin1().constData() << endl;
   }
 
   Mesh &mesh;
@@ -125,11 +142,20 @@ class MainBase  {
   bool showcellsaxesp;
   bool showcellstrainp;
   bool movieframesp;
+  bool exportdatap;
+  bool ignorep;
   bool showboundaryonlyp;
   bool showwallsp;
 //  bool showapoplastsp;
   bool showfluxesp;
+  bool MonteCp;
+  bool metrop;
   bool dynamicscellsp;
+  bool rigidp;
+  bool remodp;
+  bool vertexp;
+  bool duplip;
+  bool removep;
   bool showtooltipsp;
   bool hidecellsp;
 };

@@ -58,6 +58,6 @@ void TestPlugin::WallDynamics(Wall *w, double *dw1, double *dw2) {}
 
 void TestPlugin::CellDynamics(CellBase *c, double *dchem) {}
 
-Q_EXPORT_PLUGIN2(testplugin, TestPlugin)
+//Q_EXPORT_PLUGIN2(testplugin, TestPlugin)
 
 /* finis */

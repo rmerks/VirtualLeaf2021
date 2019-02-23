@@ -41,12 +41,13 @@ void MeinhardtPlugin::SetCellColor(CellBase *c, QColor *color) {
   if (fpclassify(c->Chemical(0))==FP_NAN) {
     // somehow the function isnan doesn't work properly on my system... SuSE Linux
     // 10.0 64-bits (isnan seems not be implemented using fpclassify).
-    MyWarning::warning("Whoops! Numerical instability!!");
+   
+      //MyWarning::warning("Whoops! Numerical instability!!");
     color->setNamedColor("red");
   } else {
     double range_min = 0.;//, range_max = 1.;
     if (c->Chemical(0)<range_min) {
-      MyWarning::warning("Whoops! Numerical instability!!");
+     // MyWarning::warning("Whoops! Numerical instability!!");
       color->setNamedColor("blue");
     } else {
       color->setRgb(c->Chemical(1)/(1+c->Chemical(1)) * 255.,(c->Chemical(0)/(1+c->Chemical(0)) * 255.),(c->Chemical(3)/(1+c->Chemical(3)) *255.) );
@@ -117,6 +118,6 @@ void MeinhardtPlugin::CellDynamics(CellBase *c, double *dchem) {
 }
 
 
-Q_EXPORT_PLUGIN2(meinhardtplugin, MeinhardtPlugin)
+//Q_EXPORT_PLUGIN2(meinhardtplugin, MeinhardtPlugin)
 
 /* finis */

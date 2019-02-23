@@ -122,7 +122,7 @@ print cppfile <<END_HEADER;
 
 static const std::string _module_id("\$Id\$");
 
-ParameterDialog::ParameterDialog(QWidget *parent, const char *name, Qt::WindowFlags f) : QDialog(parent,name,false,f) {
+ParameterDialog::ParameterDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(parent,f) {
     extern Parameter par;
 END_HEADER
 
@@ -142,12 +142,12 @@ for ($i=0;$i<$lines;$i++) {
 	    print cppfile ".arg(par.$param[$i]\[$j\])";
 	}
 	print cppfile ";\n";
-	print cppfile "  $param[$i]_edit = new QLineEdit( $param[$i]_string, this, \"$param[$i]_edit\" );\n";
+	print cppfile "  $param[$i]_edit = new QLineEdit( $param[$i]_string, this );\n";
     } else {
 	if ($convtype[$i] eq "bool") {
-	    print cppfile "  $param[$i]_edit = new QLineEdit( QString(\"%1\").arg(sbool(par.$param[$i])), this, \"$param[$i]_edit\" );\n";
+	    print cppfile "  $param[$i]_edit = new QLineEdit( QString(\"%1\").arg(sbool(par.$param[$i])), this );\n";
 	} else {
-	    print cppfile "  $param[$i]_edit = new QLineEdit( QString(\"%1\").arg(par.$param[$i]), this, \"$param[$i]_edit\" );\n";
+	    print cppfile "  $param[$i]_edit = new QLineEdit( QString(\"%1\").arg(par.$param[$i]), this );\n";
 	}
     }
 }
@@ -155,7 +155,7 @@ for ($i=0;$i<$lines;$i++) {
 
 print cppfile <<END_HEADER3;
 // make a 1x1 grid; it will auto-expand
-QGridLayout *grid = new QGridLayout( this, 1, 1 );
+QGridLayout *grid = new QGridLayout( this);
     
 // add the first four widgets with (row, column) addressing
 END_HEADER3
@@ -164,6 +164,7 @@ $numrows = 30;
 $c = 0;
 for ($i=0;$i<$lines;$i++) {
     $col = 2*int($c/($numrows-3));
+    $colplus1 = $col+1;
     $row = $c % ($numrows-3) + $ntitles * 3;
     if ($convtype[$i] eq "label") {
 	print cppfile "  grid->addWidget( new QLabel( \"$value[$i]\", this), $row, $col, 1, 2 );\n";
@@ -180,9 +181,12 @@ for ($i=0;$i<$lines;$i++) {
 	    $ntitles++;
 	} else {
 	    print cppfile "  grid->addWidget( new QLabel( \"$param[$i]\", this ),$row, $col );\n";
-	    print cppfile "  grid->addWidget( $param[$i]_edit, $row, $col+1  );\n";
+	    print cppfile "  grid->addWidget( $param[$i]_edit, $row, $colplus1 );\n";
 	    $c++;
-	}
+    }
+    }
+    if (int(($c-1)%($numrows-3))==0) {
+        print cppfile "  grid->setColumnMinimumWidth($colplus1, 80);\n";
     }
 }
 
@@ -231,7 +235,7 @@ END_HEADER4
 	    }
 	} else {
 	    if ($convtype[$i] eq "bool") {
-		print cppfile "  tmpval = $param[$i]_edit->text().stripWhiteSpace();\n";
+		print cppfile "  tmpval = $param[$i]_edit->text().trimmed();\n";
 		print cppfile "  if (tmpval == \"true\" || tmpval == \"yes\" ) par.$param[$i] = true;\n";
 		print cppfile "  else if (tmpval == \"false\" || tmpval == \"no\") par.$param[$i] = false;\n";
 		print cppfile "  else {\n";
@@ -240,7 +244,7 @@ END_HEADER4
 		print cppfile "  }\n";
 	    } else {
 		if ($convtype[$i] eq "char *") {
-		    print cppfile "  par.$param[$i] = strdup((const char *)$param[$i]_edit->text());\n";
+		    print cppfile "  par.$param[$i] = strdup($param[$i]_edit->text().toLatin1());\n";
 		} else {
 		    print cppfile "  par.$param[$i] = $param[$i]_edit->text().$funname{$convtype[$i]}();\n";
 		}
@@ -330,7 +334,7 @@ class ParameterDialog : public QDialog {
     Q_OBJECT
 	
       public:
-	ParameterDialog(QWidget *parent=0, const char *name = 0, Qt::WindowFlags f = 0);
+	ParameterDialog(QWidget *parent=0, Qt::WindowFlags f = 0);
     virtual ~ParameterDialog(void);
     public slots:
     void Reset(void);

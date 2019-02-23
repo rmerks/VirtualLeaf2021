@@ -23,10 +23,10 @@
 #ifndef _OPTIONFILEDIALOG_H_
 #define _OPTIONFILEDIALOG_H_
 
-#include <Q3FileDialog>
+#include <QFileDialog>
 #include <QCheckBox>
 
-class OptionFileDialog : public Q3FileDialog {
+class OptionFileDialog : public QFileDialog {
   Q_OBJECT
  public:
   OptionFileDialog(QWidget *parent = 0, const char *name = 0, bool modal = false);

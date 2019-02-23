@@ -142,15 +142,17 @@ void Node::DrawIndex(QGraphicsScene *c) const {
   //return DrawOwners(c);
   stringstream text;
   text << index;
-  QGraphicsSimpleTextItem *number = new QGraphicsSimpleTextItem ( QString (text.str().c_str()), 0, c );
-  number->setFont( QFont( "Helvetica", par.nodenumsize, QFont::Bold) );
-  number->setPen( QPen (par.textcolor) );
+  QGraphicsSimpleTextItem *number = new QGraphicsSimpleTextItem ( QString (text.str().c_str()), 0);
+  number->setFont( QFont( "Helvetica", par.nodenumsize, QFont::Normal) );
+  number->setBrush( QBrush (par.textcolor) );
   number->setZValue(20);
-  number->show();
   Vector offs=Cell::Offset();
   number -> setPos(
 		   ((offs.x+x)*Cell::Factor()),
 		   ((offs.y+y)*Cell::Factor()) );
+    c->addItem(number);
+    number->show();
+
 }
 
 void Node::DrawOwners(QGraphicsScene *c) const {
@@ -158,15 +160,17 @@ void Node::DrawOwners(QGraphicsScene *c) const {
   stringstream text;
   text << owners.size();
 
-  QGraphicsSimpleTextItem *number = new QGraphicsSimpleTextItem ( QString (text.str().c_str()), 0, c );
+  QGraphicsSimpleTextItem *number = new QGraphicsSimpleTextItem ( QString (text.str().c_str()), 0);
   number->setFont( QFont( "Helvetica", par.nodenumsize, QFont::Bold) );
   number->setPen( QPen(par.textcolor) );
   number->setZValue(20);
-  number->show();
-  Vector offs=Cell::Offset();
+   Vector offs=Cell::Offset();
 
   number ->setPos(((offs.x+x)*Cell::Factor()),
 		  ((offs.y+y)*Cell::Factor()) );
+    c->addItem(number);
+    number->show();
+
 }
 
 

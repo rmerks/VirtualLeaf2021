@@ -30,6 +30,7 @@
 class Tutorial1D : public QObject, SimPluginInterface {
 	Q_OBJECT
 	Q_INTERFACES(SimPluginInterface);
+     Q_PLUGIN_METADATA(IID "org.virtualleaf.tutorial1d")
 
 public:
 	virtual QString ModelID(void);

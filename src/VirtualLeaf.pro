@@ -19,16 +19,20 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG += release
-CONFIG -= debug
+CONFIG -= release
+CONFIG += debug
 CONFIG += qt
 
+#QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.10.5
 QMAKE_CXXFLAGS += -fexceptions
 QMAKE_CXXFLAGS += -Wall
 QMAKE_CXXFLAGS += -Wno-write-strings
-QMAKE_CXXFLAGS += -Wno-unused-parameter
+#QMAKE_CXXFLAGS += -Wno-unused-parameter
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
+
+QT += widgets
+QT += printsupport
 
 #REACTIONS = reactions_auxin_growth.h 
 #REACTIONS = reactions_meinhardt.h
@@ -46,7 +50,8 @@ TEMPLATE = app
 PARTMPL = $${TARGET}par.tmpl
 MAINSRC = $${TARGET}.cpp
 QT -= network sql xml
-QT += qt3support
+#QT += widgets printsupport core Qt3Support
+#QT += qt3support
 
 !win32 {
  GRAPHICS = qt #qwt
@@ -54,6 +59,7 @@ QT += qt3support
 
 win32 {
  CONFIG -= console
+ CONFIG += windows
  LIBXML2DIR = $${LIBDIR}\libxml2
  LIBICONVDIR = $${LIBDIR}\libiconv
  LIBZDIR = $${LIBDIR}\libz
@@ -61,7 +67,7 @@ win32 {
  RC_FILE = VirtualLeaf.rc
  QMAKE_CXXFLAGS += -DLIBXML_STATIC
  QMAKE_CXXFLAGS += -I$${LIBXML2DIR}\include -I$${LIBICONVDIR}\include -I$${LIBZDIR}\include
- LIBS += -L$${LIBXML2DIR}\lib -lxml2 -L$${LIBICONVDIR}\lib -L$${LIBZDIR}\lib  -lz -lm -lwsock32 -liconv
+ LIBS += -L$${LIBXML2DIR}\lib -lxml2 -L$${LIBICONVDIR}\lib -liconv -L$${LIBZDIR}\lib -lz -lm -lwsock32
 }
 
 
@@ -86,7 +92,7 @@ HEADERS += \
  cell.h \
  cellitem.h \
  forwardeuler.h \
-       hull.h \ 
+ hull.h \
  infobar.h \
  mainbase.h \
  mainbase.h \
@@ -204,3 +210,4 @@ QMAKE_POST_LINK = "cp leaficon.icns $${DESTDIR}/$${TARGET}.app; \
 
 # cd $${BINDIR}; perl ../src/perl/deployapp.pl $${TARGET};"
 # finis
+
