@@ -1,4 +1,0 @@
-2010-06-23    <guravage@caterpie.sen.cwi.nl>
-
-	* Makefile: Add -f Makefile argument to each make invocation.
-
