@@ -52,7 +52,7 @@ HEADERS = \
  cellbase.h \
  matrix.h \
  output.h \
- parameter.h \
+ #parameter.h \
  parse.h \
  random.h \
  simplugin.h \
@@ -65,7 +65,7 @@ SOURCES = \
  cellbase.cpp \
  matrix.cpp \
  output.cpp \
- parameter.cpp \
+ #parameter.cpp \
  parse.cpp \
  random.cpp \
  simplugin.cpp \
