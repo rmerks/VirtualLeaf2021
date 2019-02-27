@@ -1089,15 +1089,22 @@ void Main::about()
          An Open Source framework for cell-based modeling of plant\
          tissue growth and development.\
        </p>\
+                           <p>(c) 2014-2019,\
+                               Roeland Merks <i>et al.</i></a>\
+                            Mathematical Institute (MI) and\
+                            Institute of Biology Leiden (IBL),\
+                             <a href=\"www.leidenuniv.nl\">Leiden University</a> \
+                                Leiden, The Netherlands.\
+                                 </p>\
+                           <p>(c) 2008-2018,\
+                             <a href=\"http://biomodel.project.cwi.nl\">Roeland Merks <i>et al.</i></a>\
+                             <a href=\"http://www.cwi.nl\">Centrum Wiskunde & Informatica (CWI)</a> and\
+                             Netherlands Consortium for Systems Biology (NCSB),\
+                             Amsterdam, the Netherlands.\
+                           </p>\
        <p>(c) 2005-2008, Roeland Merks <i>et al.</i>\
          <a href=\"http://www.psb.vib-ugent.be\">VIB Department Plant Systems Biology</a>,\
          Ghent, Belgium.\
-       </p>\
-       <p>(c) 2008-2014,\
-         <a href=\"http://www.cwi.nl/~merks\">Roeland Merks <i>et al.</i></a>\
-         <a href=\"http://www.cwi.nl\">Centrum Wiskunde & Informatica (CWI)</a> and\
-         <a href=\"http://www.ncsb.nl\"> Netherlands Consortium for Systems Biology (NCSB)</a>,\
-         Amsterdam, the Netherlands.\
        </p>\
        <p>\
          VirtualLeaf is free software: you can redistribute it and/or\
@@ -1107,15 +1114,19 @@ void Main::about()
        </p>\
        <p>\
          If you use this code for your projects, please cite our paper in\
-         <a href=\"http://www.plantphysiol.org\">Plant Physiology</a>, &lsquo;\
+         <a href=\"http://www.plantphysiol.org\">Plant Physiology</a>,\
          Roeland M. H. Merks, Michael Guravage, Dirk Inz&eacute;, and Gerrit T.S. Beemster,\
          <a href=\"http://www.plantphysiol.org/cgi/reprint/155/2/656.pdf\">\
          VirtualLeaf: an Open Source framework for cell-based modeling of plant tissue growth and development</a>,<br>\
-         Plant Physiology 2011: 155:656-666.\
+         Plant Physiology 2011: 155:656-666.</p> \
+        <p>To learn how to use VirtualLeaf for your projects, see the tutorial at\
+        Merks, R. M. H., & Guravage, M. A. (2012). Building Simulation Models of Developing Plant Organs Using VirtualLeaf. \
+        In I. De Smet (Ed.), Methods in Molecular Biology (Vol. 959, pp. 333–352). Totowa, NJ: Humana Press.\
+        <a href=\"http://doi.org/10.1007/978-1-62703-221-6_23\">doi:10.1007/978-1-62703-221-6_23</a> \
        </p>\
        <p>\
          Please share your model plugins and extensions at\
-         <a href=\"http://virtualleaf.googlecode.com\">http://virtualleaf.googlecode.com</a>.\
+         <a href=\"https://github.com/rmerks/VirtualLeaf.git\">https://github.com/rmerks/VirtualLeaf.git</a>.\
                                </p>"));
 }
 

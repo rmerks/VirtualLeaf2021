@@ -448,7 +448,7 @@ int main(int argc,char **argv) {
       }
       
       // show "About" window at start up
-      ((Main *)main_window)->about();
+     // ((Main *)main_window)->about();
     } else {
       main_window=new MainBase(canvas, mesh);
     }
