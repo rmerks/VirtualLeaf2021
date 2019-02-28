@@ -423,6 +423,9 @@ int main(int argc,char **argv) {
     useGUI = !batch;
     qInstallMessageHandler(vlMessageOutput); // custom message handler
       QApplication app(argc,argv);
+      QCoreApplication::setOrganizationName("LeidenUniversity");
+      QCoreApplication::setOrganizationDomain("leidenuniv.com");
+      QCoreApplication::setApplicationName("VirtualLeaf");
        //QApplication app(argc,argv,useGUI);
       if (!useGUI) { cerr << "Managed to start up QCoreApplication.\n"; }
 
@@ -434,6 +437,7 @@ int main(int argc,char **argv) {
     QToolTip::setPalette( tooltippalette );
 
     QGraphicsScene canvas(0,0,8000,6000);
+
 
 
     if (useGUI) {

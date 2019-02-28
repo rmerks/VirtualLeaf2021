@@ -495,12 +495,12 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
   edit->addAction("Reset Chemicals and Transporters", this, SLOT( CleanMesh()), Qt::CTRL+Qt::Key_R );
   edit->addAction("Reset Chemicals", this, SLOT( CleanMeshChemicals()) );
   edit->addAction("Reset Transporters", this, SLOT( CleanMeshTransporters()) );
-  edit->addAction("Randomize PIN1 Transporters", this, SLOT( RandomizeMesh()) );
+  edit->addAction("Randomize Chemicals and Transporters", this, SLOT( RandomizeMesh()) );
   edit->addAction("Cut away SAM", this, SLOT( CutSAM() ));
  
     run = menu->addMenu("&Run");
   running = false;
-  paused_act = run->addAction("&Simulation paused", this, SLOT(togglePaused()), Qt::Key_S);
+  paused_act = run->addAction("&Start Simulation", this, SLOT(togglePaused()), Qt::Key_Space);
     paused_act->setCheckable(true);
     paused_act->setChecked(true);
 
@@ -1081,6 +1081,26 @@ void Main::clear()
 
 void Main::about()
 {
+
+    /* if (this->showMsgBox) {
+        QCheckBox *cb = new QCheckBox("Okay I understand");
+        QMessageBox msgbox;
+        msgbox.setText("Am I nerve-wrecking?");
+        msgbox.setIcon(QMessageBox::Icon::Question);
+        msgbox.addButton(QMessageBox::Ok);
+        msgbox.addButton(QMessageBox::Cancel);
+        msgbox.setDefaultButton(QMessageBox::Cancel);
+        msgbox.setCheckBox(cb);
+
+        QObject::connect(cb, &QCheckBox::stateChanged, [this](int state){
+            if (static_cast<Qt::CheckState>(state) == Qt::CheckState::Checked) {
+                this->showMsgBox = false;
+            }
+        });
+
+        msgbox.exec();
+    }*/
+
     QMessageBox::about(this,
                        QString("VirtualLeaf V1.0.3"),
                        QString(

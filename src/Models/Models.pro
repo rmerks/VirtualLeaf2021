@@ -3,6 +3,7 @@ TEMPLATE = subdirs
 SUBDIRS = \
 Meinhardt \
 AuxinGrowth \
+Turing \
 Test \
 Tutorial0 \
 Tutorial1A \
