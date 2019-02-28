@@ -25,6 +25,7 @@ BINDIR = ../../../bin
 LIBDIR = ../../../lib
 INCLUDEPATH += ../../Library
 INCLUDEPATH += ../../GUI
+INCLUDEPATH += ../../../include
 
 DEFINES = QTGRAPHICS
 DESTDIR = $${BINDIR}/models

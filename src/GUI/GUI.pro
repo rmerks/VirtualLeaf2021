@@ -19,19 +19,20 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG -= release
-CONFIG += debug
+CONFIG += release
+CONFIG -= debug
 CONFIG += qt
 CONFIG+=sdk_no_version_check
 
 
 VLEAFLIBDIR = ../Library
-PERLDIR = ../Perl
+PERLDIR = $$top_srcdir/Perl
 
 QT += widgets
 QT += printsupport
 
 INCLUDEPATH += ../Library
+INCLUDEPATH += ../../include
 
 #REACTIONS = reactions_auxin_growth.h 
 #REACTIONS = reactions_meinhardt.h
@@ -43,6 +44,7 @@ DEFINES += FLEMING
 
 BINDIR = ../../bin
 LIBDIR = ../../lib
+
 DESTDIR = $$BINDIR
 TARGET = VirtualLeaf
 TEMPLATE = app
@@ -104,6 +106,7 @@ $${VLEAFLIBDIR}/cellbase.h \
  OptionFileDialog.h \
  $${VLEAFLIBDIR}/output.h \
  $${VLEAFLIBDIR}/parameter.h \
+ pardialog.h \
  $${VLEAFLIBDIR}/parse.h \
  pi.h \
  qcanvasarrow.h \
@@ -142,6 +145,7 @@ $${VLEAFLIBDIR}/cellbase.cpp \
  $${VLEAFLIBDIR}/output.cpp \
  OptionFileDialog.cpp \
  $${VLEAFLIBDIR}/parameter.cpp \
+ pardialog.cpp \
  $${VLEAFLIBDIR}/parse.cpp \
 $${VLEAFLIBDIR}/random.cpp \
  rungekutta.cpp \
@@ -161,30 +165,30 @@ contains( TARGET, leaf_fleming ) {
 }
 
 # Create pardialog.cpp from *.tmpl file
-TMPL_FILES = $${VLEAFLIBDIR}/$${PARTMPL}
-tmpl_compiler.output = pardialog.cpp
-tmpl_compiler.commands = perl $${PERLDIR}/make_pardialog_source.pl ${QMAKE_FILE_NAME}
-tmpl_compiler.input = TMPL_FILES
-tmpl_compiler.variable_out = SOURCES
-tmpl_compiler.clean = 
-QMAKE_EXTRA_COMPILERS += tmpl_compiler
+#TMPL_FILES = $${VLEAFLIBDIR}/$${PARTMPL}
+#tmpl_compiler.output = pardialog.cpp
+#tmpl_compiler.commands = perl $${PERLDIR}/make_pardialog_source.pl ${QMAKE_FILE_NAME}
+#tmpl_compiler.input = TMPL_FILES
+#tmpl_compiler.variable_out = SOURCES
+#tmpl_compiler.clean =
+#QMAKE_EXTRA_COMPILERS += tmpl_compiler
 
 # Create pardialog.h from *.tmpl file
-tmplh_compiler.output = pardialog.h
-tmplh_compiler.commands = perl $${PERLDIR}/make_pardialog_source.pl ${QMAKE_FILE_NAME}
-tmplh_compiler.input = TMPL_FILES
-tmplh_compiler.variable_out = HEADERS
-tmplh_compiler.config += moc_verify
+#tmplh_compiler.output = pardialog.h
+#tmplh_compiler.commands = perl $${PERLDIR}/make_pardialog_source.pl ${QMAKE_FILE_NAME}
+#tmplh_compiler.input = TMPL_FILES
+#tmplh_compiler.variable_out = HEADERS
+#tmplh_compiler.config += moc_verify
 # tmplh_compiler.clean = 
-QMAKE_EXTRA_COMPILERS += tmplh_compiler
+#QMAKE_EXTRA_COMPILERS += tmplh_compiler
 
 # See https://forum.qt.io/topic/64160/qmake_extra_compilers-and-moc/2
-PARDIALOG_H = pardialog.h
-new_moc.commands = moc $(DEFINES) $(INCPATH) canbus.h -o ${QMAKE_FILE_OUT}
-new_moc.input = "PARDIALOG_H"
-new_moc.output = moc_pardialog.cpp
-new_moc.variable_out = SOURCES
-QMAKE_EXTRA_COMPILERS += new_moc
+#PARDIALOG_H = pardialog.h
+#new_moc.commands = moc $(DEFINES) $(INCPATH) pardialog.h -o ${QMAKE_FILE_OUT}
+#new_moc.input = "PARDIALOG_H"
+#new_moc.output = moc_pardialog.cpp
+#new_moc.variable_out = SOURCES
+#QMAKE_EXTRA_COMPILERS += new_moc
 
 contains(GRAPHICS, qwt) {
  #macx:LIBS += -L$$QWTDIR/lib -lqwt

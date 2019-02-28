@@ -19,14 +19,15 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG -= release
-CONFIG += debug
+CONFIG += release
+CONFIG -= debug
 CONFIG += staticlib
 
 QT += widgets
 QT += core
 QT += printsupport
 INCLUDEPATH += ../GUI
+INCLUDEPATH += ../../include
 
 #QMAKE_CXXFLAGS += -fexceptions
 #QMAKE_CXXFLAGS += -Wall
@@ -52,7 +53,7 @@ HEADERS = \
  cellbase.h \
  matrix.h \
  output.h \
- #parameter.h \
+ parameter.h \
  parse.h \
  random.h \
  simplugin.h \
@@ -65,7 +66,7 @@ SOURCES = \
  cellbase.cpp \
  matrix.cpp \
  output.cpp \
- #parameter.cpp \
+ parameter.cpp \
  parse.cpp \
  random.cpp \
  simplugin.cpp \
@@ -75,21 +76,21 @@ SOURCES = \
  warning.cpp
 
 # Create parameter.cpp from *.tmpl file
-TMPL_FILES = $${PARTMPL}
-tmpl_compiler.output = parameter.cpp
-tmpl_compiler.commands = perl $${PERLDIR}/make_parameter_source.pl ${QMAKE_FILE_NAME}
-tmpl_compiler.input = TMPL_FILES
-tmpl_compiler.variable_out = SOURCES
-tmpl_compiler.clean = ${QMAKE_FILE_OUT}
-QMAKE_EXTRA_COMPILERS += tmpl_compiler
+#TMPL_FILES = $${PARTMPL}
+#tmpl_compiler.output = parameter.cpp
+#tmpl_compiler.commands = perl $${PERLDIR}/make_parameter_source.pl ${QMAKE_FILE_NAME}
+#tmpl_compiler.input = TMPL_FILES
+#tmpl_compiler.variable_out = SOURCES
+#tmpl_compiler.clean = ${QMAKE_FILE_OUT}
+#QMAKE_EXTRA_COMPILERS += tmpl_compiler
 
 # Create parameter.h from *.tmpl file
-tmplh_compiler.output = parameter.h
-tmplh_compiler.commands = perl $${PERLDIR}/make_parameter_source.pl ${QMAKE_FILE_NAME}
-tmplh_compiler.input = TMPL_FILES
-tmplh_compiler.variable_out = HEADERS
-tmplh_compiler.clean = ${QMAKE_FILE_OUT}
-QMAKE_EXTRA_COMPILERS += tmplh_compiler
+#tmplh_compiler.output = parameter.h
+#tmplh_compiler.commands = perl $${PERLDIR}/make_parameter_source.pl ${QMAKE_FILE_NAME}
+#tmplh_compiler.input = TMPL_FILES
+#tmplh_compiler.variable_out = HEADERS
+#tmplh_compiler.clean = ${QMAKE_FILE_OUT}
+#QMAKE_EXTRA_COMPILERS += tmplh_compiler
 
 
 unix {
