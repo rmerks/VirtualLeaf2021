@@ -1142,67 +1142,16 @@ void Main::about()
             </p>"));
             msgbox.setIcon(QMessageBox::Icon::Question);
             msgbox.addButton(QMessageBox::Ok);
-    //msgbox.addButton(QMessageBox::Cancel);
     msgbox.setDefaultButton(QMessageBox::Ok);
     msgbox.setCheckBox(cb);
     msgbox.setIconPixmap(QPixmap(leaficon_small));
-   // msgbox.setMinimumWidth(5000);
     QObject::connect(cb, &QCheckBox::stateChanged, [this](int state){
-            this->setAbout(state);
-        });
+        this->setAbout(state);
+    });
 
     msgbox.exec();
 
 
-
-    /*  QMessageBox::about(this,
-                       QString("VirtualLeaf V1.0.3"),
-                       QString(
-      "<h3>VirtualLeaf V1.0.3</h3>\
-       <p>\
-         An Open Source framework for cell-based modeling of plant\
-         tissue growth and development.\
-       </p>\
-                           <p>(c) 2014-2019,\
-                               Roeland Merks <i>et al.</i></a>\
-                            Mathematical Institute (MI) and\
-                            Institute of Biology Leiden (IBL),\
-                             <a href=\"www.leidenuniv.nl\">Leiden University</a> \
-                                Leiden, The Netherlands.\
-                                 </p>\
-                           <p>(c) 2008-2018,\
-                             <a href=\"http://biomodel.project.cwi.nl\">Roeland Merks <i>et al.</i></a>\
-                             <a href=\"http://www.cwi.nl\">Centrum Wiskunde & Informatica (CWI)</a> and\
-                             Netherlands Consortium for Systems Biology (NCSB),\
-                             Amsterdam, the Netherlands.\
-                           </p>\
-       <p>(c) 2005-2008, Roeland Merks <i>et al.</i>\
-         <a href=\"http://www.psb.vib-ugent.be\">VIB Department Plant Systems Biology</a>,\
-         Ghent, Belgium.\
-       </p>\
-       <p>\
-         VirtualLeaf is free software: you can redistribute it and/or\
-         modify it under the terms of the GNU General Public License as\
-         published by the Free Software Foundation, either version 3 of the\
-         License, or (at your option) any later version.\
-       </p>\
-       <p>\
-         If you use this code for your projects, please cite our paper in\
-         <a href=\"http://www.plantphysiol.org\">Plant Physiology</a>,\
-         Roeland M. H. Merks, Michael Guravage, Dirk Inz&eacute;, and Gerrit T.S. Beemster,\
-         <a href=\"http://www.plantphysiol.org/cgi/reprint/155/2/656.pdf\">\
-         VirtualLeaf: an Open Source framework for cell-based modeling of plant tissue growth and development</a>,<br>\
-         Plant Physiology 2011: 155:656-666.</p> \
-        <p>To learn how to use VirtualLeaf for your projects, see the tutorial at\
-        Merks, R. M. H., & Guravage, M. A. (2012). Building Simulation Models of Developing Plant Organs Using VirtualLeaf. \
-        In I. De Smet (Ed.), Methods in Molecular Biology (Vol. 959, pp. 333–352). Totowa, NJ: Humana Press.\
-        <a href=\"http://doi.org/10.1007/978-1-62703-221-6_23\">doi:10.1007/978-1-62703-221-6_23</a> \
-       </p>\
-       <p>\
-         Please share your model plugins and extensions at\
-         <a href=\"https://github.com/rmerks/VirtualLeaf.git\">https://github.com/rmerks/VirtualLeaf.git</a>.\
-                               </p>"));
-                               */
 }
 
 
