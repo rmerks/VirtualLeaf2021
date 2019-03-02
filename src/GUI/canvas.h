@@ -138,7 +138,7 @@ class Main : public QMainWindow, public MainBase {
   void FitLeafToCanvas(void);
 
   public slots:
-
+    void setAbout(int state);
   void about();
   void gpl();
   void TimeStepWrap();

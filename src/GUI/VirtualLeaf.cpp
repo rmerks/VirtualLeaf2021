@@ -39,8 +39,8 @@
 #include <QDesktopWidget>
 #include <QGraphicsScene>
 #include <QMessageBox>
-//Added by qt3to4:
 #include <QMouseEvent>
+#include <QSettings>
 
 #include <unistd.h>
 //#include <q3textstream.h>
@@ -451,8 +451,15 @@ int main(int argc,char **argv) {
 	((Main *)main_window)->showMaximized();
       }
       
-      // show "About" window at start up
-     // ((Main *)main_window)->about();
+      // show "About" window at first time of start up
+     QSettings settings;
+     if (!settings.contains("main/showAbout")) {
+             settings.setValue("main/showAbout",1);
+     }
+
+    if (settings.value("main/showAbout").toInt()) {
+            ((Main *)main_window)->about();
+        }
     } else {
       main_window=new MainBase(canvas, mesh);
     }
