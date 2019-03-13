@@ -277,7 +277,7 @@ void FigureEditor::mouseReleaseEvent(QMouseEvent* e)
     emit MouseReleased();
     // intersection line for leaf was finished now.
 
-    /*  if (e->button()==Qt::LeftButton) {
+if (e->button()==Qt::LeftButton) {
     if (intersection_line ) {
 #ifdef QDEBUG
       qDebug() << "Trying to cut leaf" << endl;
@@ -375,7 +375,7 @@ void FigureEditor::mouseReleaseEvent(QMouseEvent* e)
       cerr << "NodeSet of cutting line: " << *node_set << endl;
 #endif
     }
-  } */ /* else
+  } /* else
     if (e->button()==Qt::RightButton) {
 
       if (intersection_line) { // && !angle_line
@@ -684,6 +684,7 @@ void Main::savePars()
 
     QFileDialog *fd = new QFileDialog( this, "Save Parameters", QString(par.datadir), QString("Parameter files (*.par)"));
     fd->setFileMode( QFileDialog::AnyFile );
+    fd->setAcceptMode(QFileDialog::AcceptSave);
 
 
     QString fileName;
@@ -730,6 +731,7 @@ void Main::saveStateXML()
     stopSimulation();
     QFileDialog *fd = new QFileDialog( this, "Save State as LeafML", QString(par.datadir), QString("LeafML files (*.xml)"));
     fd->setFileMode( QFileDialog::AnyFile );
+    fd->setAcceptMode(QFileDialog::AcceptSave);
 
     QString fileName;
 
@@ -785,6 +787,7 @@ void Main::snapshot()
     QFileDialog *fd = new QFileDialog( this, "Save snapshot", QString(par.datadir), QString("*") );
 
     fd->setFileMode( QFileDialog::AnyFile );
+    fd->setAcceptMode(QFileDialog::AcceptSave);
 
     QString supported_file_formats = " *.pdf";
     foreach (QString format, QImageWriter::supportedImageFormats()){
