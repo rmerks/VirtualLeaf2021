@@ -266,14 +266,35 @@ class CellBase :  public QObject, public Vector
     return marked;
   }
 
+  //! Returns the number of neighbors excluding the BoundaryPolygon
+  int CountNeighbors(void) {
+      int n=0;
+     // for (list<Wall *>::const_iterator w=walls.begin();
+      for (auto w=walls.begin();
+       w!=walls.end();
+       w++) {
+          if ((*w)->c1==this) {
+              // only count actual neighbors
+              if (!(*w)->c2->BoundaryPolP()) {
+                  n++;
+              }
+          } else {
+              if (!(*w)->c1->BoundaryPolP()) {
+                  n++;
+              }
+          }
+      }
+      return n;
+  }
+
   //! Returns the sum of chemical "chem" of this CellBase's neighbors
   double SumChemicalsOfNeighbors(int chem)
   {
     double sum=0.;
-    for (list<Wall *>::const_iterator w=walls.begin();
+    for (auto w=walls.begin();
 	 w!=walls.end();
 	 w++) {
-      sum +=  (*w)->Length() * ( (*w)->c1!=this ? (*w)->c1->Chemical(chem) : (*w)->c2->Chemical(chem) );
+      sum +=  (*w)->c1!=this ? (*w)->c1->Chemical(chem) : (*w)->c2->Chemical(chem) ;
     }
     return sum;
   }

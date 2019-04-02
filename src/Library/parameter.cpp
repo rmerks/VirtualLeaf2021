@@ -159,36 +159,13 @@ Parameter::Parameter() {
   c0 = 0.;
   gamma = 0.;
   eps = 0.;
-  k = new double[15];
-  k[0] = 0.;
-  k[1] = 0.0;
-  k[2] = 0.0;
-  k[3] = 0.;
-  k[4] = 0.;
-  k[5] = 0.;
-  k[6] = 0.;
-  k[7] = 0.;
-  k[8] = 0.;
-  k[9] = 0.;
-  k[10] = 0.;
-  k[11] = 0.;
-  k[12] = 0.;
-  k[13] = 0.;
-  k[14] = 0.;
+  kc = 0.;
+  krs = 0.;
+  betaN = 0.;
+  betaD = 0.;
+  betaR = 0.;
   i1 = 0;
   i2 = 0;
-  i3 = 0;
-  i4 = 0;
-  i5 = 0;
-  s1 = strdup("");
-  s2 = strdup("");
-  s3 = strdup("");
-  b1 = false;
-  b2 = false;
-  b3 = false;
-  b4 = false;
-  dir1 = strdup(".");
-  dir2 = strdup(".");
 }
 
 Parameter::~Parameter() {
@@ -213,18 +190,6 @@ void Parameter::CleanUp(void) {
      free(D);
   if (initval) 
      free(initval);
-  if (k) 
-     free(k);
-  if (s1) 
-     free(s1);
-  if (s2) 
-     free(s2);
-  if (s3) 
-     free(s3);
-  if (dir1) 
-     free(dir1);
-  if (dir2) 
-     free(dir2);
 
 }
 
@@ -332,25 +297,13 @@ void Parameter::Read(const char *filename) {
   c0 = fgetpar(fp, "c0", 0., true);
   gamma = fgetpar(fp, "gamma", 0., true);
   eps = fgetpar(fp, "eps", 0., true);
-  k = dgetparlist(fp, "k", 15, true);
+  kc = fgetpar(fp, "kc", 0., true);
+  krs = fgetpar(fp, "krs", 0., true);
+  betaN = fgetpar(fp, "betaN", 0., true);
+  betaD = fgetpar(fp, "betaD", 0., true);
+  betaR = fgetpar(fp, "betaR", 0., true);
   i1 = igetpar(fp, "i1", 0, true);
   i2 = igetpar(fp, "i2", 0, true);
-  i3 = igetpar(fp, "i3", 0, true);
-  i4 = igetpar(fp, "i4", 0, true);
-  i5 = igetpar(fp, "i5", 0, true);
-  s1 = sgetpar(fp, "s1", "", true);
-  s2 = sgetpar(fp, "s2", "", true);
-  s3 = sgetpar(fp, "s3", "", true);
-  b1 = bgetpar(fp, "b1", false, true);
-  b2 = bgetpar(fp, "b2", false, true);
-  b3 = bgetpar(fp, "b3", false, true);
-  b4 = bgetpar(fp, "b4", false, true);
-  dir1 = sgetpar(fp, "dir1", ".", true);
-  if (strcmp(dir1, "."))
-    MakeDir(dir1);
-  dir2 = sgetpar(fp, "dir2", ".", true);
-  if (strcmp(dir2, "."))
-    MakeDir(dir2);
 }
 
 const char *sbool(const bool &p) {
@@ -465,31 +418,13 @@ void Parameter::Write(ostream &os) const {
   os << " c0 = " << c0 << endl;
   os << " gamma = " << gamma << endl;
   os << " eps = " << eps << endl;
-  os << " k = "<< k[0] << ", " << k[1] << ", " << k[2] << ", " << k[3] << ", " << k[4] << ", " << k[5] << ", " << k[6] << ", " << k[7] << ", " << k[8] << ", " << k[9] << ", " << k[10] << ", " << k[11] << ", " << k[12] << ", " << k[13] << ", " << k[14] << endl;
+  os << " kc = " << kc << endl;
+  os << " krs = " << krs << endl;
+  os << " betaN = " << betaN << endl;
+  os << " betaD = " << betaD << endl;
+  os << " betaR = " << betaR << endl;
   os << " i1 = " << i1 << endl;
   os << " i2 = " << i2 << endl;
-  os << " i3 = " << i3 << endl;
-  os << " i4 = " << i4 << endl;
-  os << " i5 = " << i5 << endl;
-
-  if (s1) 
-  os << " s1 = " << s1 << endl;
-
-  if (s2) 
-  os << " s2 = " << s2 << endl;
-
-  if (s3) 
-  os << " s3 = " << s3 << endl;
-  os << " b1 = " << sbool(b1) << endl;
-  os << " b2 = " << sbool(b2) << endl;
-  os << " b3 = " << sbool(b3) << endl;
-  os << " b4 = " << sbool(b4) << endl;
-
-  if (dir1) 
-  os << " dir1 = " << dir1 << endl;
-
-  if (dir2) 
-  os << " dir2 = " << dir2 << endl;
 }
 
 void Parameter::XMLAdd(xmlNode *root) const {
@@ -1286,98 +1221,38 @@ xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
 }
 {
   xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "k" );
-  xmlNode *xmlvalarray = xmlNewChild(xmlpar, NULL, BAD_CAST "valarray", NULL);
-  {
-    ostringstream text;
-    text << k[0];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[1];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[2];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[3];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[4];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[5];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[6];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[7];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[8];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[9];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[10];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[11];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[12];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[13];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
-  {
-    ostringstream text;
-    text << k[14];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
-  }
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "kc" );
+  ostringstream text;
+    text << kc;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "krs" );
+  ostringstream text;
+    text << krs;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaN" );
+  ostringstream text;
+    text << betaN;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaD" );
+  ostringstream text;
+    text << betaD;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaR" );
+  ostringstream text;
+    text << betaR;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
 }
 {
   xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
@@ -1391,100 +1266,6 @@ xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
   xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "i2" );
   ostringstream text;
     text << i2;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "i3" );
-  ostringstream text;
-    text << i3;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "i4" );
-  ostringstream text;
-    text << i4;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "i5" );
-  ostringstream text;
-    text << i5;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "s1" );
-  ostringstream text;
-
-  if (s1) 
-    text << s1;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "s2" );
-  ostringstream text;
-
-  if (s2) 
-    text << s2;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "s3" );
-  ostringstream text;
-
-  if (s3) 
-    text << s3;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "b1" );
-  ostringstream text;
-text << sbool(b1);
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "b2" );
-  ostringstream text;
-text << sbool(b2);
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "b3" );
-  ostringstream text;
-text << sbool(b3);
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "b4" );
-  ostringstream text;
-text << sbool(b4);
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "dir1" );
-  ostringstream text;
-
-  if (dir1) 
-    text << dir1;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "dir2" );
-  ostringstream text;
-
-  if (dir2) 
-    text << dir2;
 xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
 }
 }
@@ -1825,6 +1606,26 @@ if (!strcmp(namec, "eps")) {
   eps = standardlocale.toDouble(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'eps' from XML file.",valc); }
 }
+if (!strcmp(namec, "kc")) {
+  kc = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'kc' from XML file.",valc); }
+}
+if (!strcmp(namec, "krs")) {
+  krs = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'krs' from XML file.",valc); }
+}
+if (!strcmp(namec, "betaN")) {
+  betaN = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaN' from XML file.",valc); }
+}
+if (!strcmp(namec, "betaD")) {
+  betaD = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaD' from XML file.",valc); }
+}
+if (!strcmp(namec, "betaR")) {
+  betaR = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaR' from XML file.",valc); }
+}
 if (!strcmp(namec, "i1")) {
   i1 = standardlocale.toInt(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'i1' from XML file.",valc); }
@@ -1832,50 +1633,6 @@ if (!strcmp(namec, "i1")) {
 if (!strcmp(namec, "i2")) {
   i2 = standardlocale.toInt(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'i2' from XML file.",valc); }
-}
-if (!strcmp(namec, "i3")) {
-  i3 = standardlocale.toInt(valc, &ok);
-  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'i3' from XML file.",valc); }
-}
-if (!strcmp(namec, "i4")) {
-  i4 = standardlocale.toInt(valc, &ok);
-  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'i4' from XML file.",valc); }
-}
-if (!strcmp(namec, "i5")) {
-  i5 = standardlocale.toInt(valc, &ok);
-  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'i5' from XML file.",valc); }
-}
-if (!strcmp(namec, "s1")) {
-  if (s1) { free(s1); }
-  s1=strdup(valc);
-}
-if (!strcmp(namec, "s2")) {
-  if (s2) { free(s2); }
-  s2=strdup(valc);
-}
-if (!strcmp(namec, "s3")) {
-  if (s3) { free(s3); }
-  s3=strdup(valc);
-}
-if (!strcmp(namec, "b1")) {
-b1 = strtobool(valc);
-}
-if (!strcmp(namec, "b2")) {
-b2 = strtobool(valc);
-}
-if (!strcmp(namec, "b3")) {
-b3 = strtobool(valc);
-}
-if (!strcmp(namec, "b4")) {
-b4 = strtobool(valc);
-}
-if (!strcmp(namec, "dir1")) {
-  if (dir1) { free(dir1); }
-  dir1=strdup(valc);
-}
-if (!strcmp(namec, "dir2")) {
-  if (dir2) { free(dir2); }
-  dir2=strdup(valc);
 }
 }
 void Parameter::AssignValArrayToPar(const char *namec, vector<double> valarray) {
@@ -1891,13 +1648,6 @@ if (!strcmp(namec, "initval")) {
   vector<double>::const_iterator v=valarray.begin();
   while (v!=valarray.end() && i <= 14 ) {
      initval[i++]=*(v++);
-  }
-}
-if (!strcmp(namec, "k")) {
-  int i=0;
-  vector<double>::const_iterator v=valarray.begin();
-  while (v!=valarray.end() && i <= 14 ) {
-     k[i++]=*(v++);
   }
 }
 }
