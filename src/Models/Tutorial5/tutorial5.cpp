@@ -127,8 +127,8 @@ void Tutorial5::CellDynamics(CellBase *c, double *dchem) {
 	// add biochemical networks for intracellular reactions here
 	
 	// sum all incoming fluxes of PINs
-	dchem[1] =  - SumFluxFromWalls( c, Tutorial5::PINflux );
-	
+    dchem[1] =  - SumFluxFromWalls( c, Tutorial5::PINflux );
+
 	// auxin degradation
 	dchem[0] = - par->aux_breakdown * c->Chemical(0); 
 	

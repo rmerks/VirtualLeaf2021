@@ -60,7 +60,9 @@ HEADERS = \
  UniqueMessage.h \
  vector.h \
  wallbase.h \
- warning.h
+ warning.h \
+vleafmodel.h \
+flux_function.h
 
 SOURCES = \
  cellbase.cpp \

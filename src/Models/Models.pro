@@ -2,9 +2,13 @@ TEMPLATE = subdirs
 
 SUBDIRS = \
 Meinhardt \
+MyModel \
 AuxinGrowth \
 Turing \
 Test \
+Collier \
+Sprinzak \
+Tutorial \
 Tutorial0 \
 Tutorial1A \
 Tutorial1B \
