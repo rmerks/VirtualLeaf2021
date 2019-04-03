@@ -159,13 +159,21 @@ Parameter::Parameter() {
   c0 = 0.;
   gamma = 0.;
   eps = 0.;
+  betaN = 0.;
+  gammaN = 0.;
+  betaD = 0.;
+  gammaD = 0.;
+  betaR = 0.;
+  gammaR = 0.;
+  tau = 0.;
+  kt = 0.;
   kc = 0.;
   krs = 0.;
-  betaN = 0.;
-  betaD = 0.;
-  betaR = 0.;
   i1 = 0;
   i2 = 0;
+  b4 = false;
+  dir1 = strdup(".");
+  dir2 = strdup(".");
 }
 
 Parameter::~Parameter() {
@@ -190,6 +198,10 @@ void Parameter::CleanUp(void) {
      free(D);
   if (initval) 
      free(initval);
+  if (dir1) 
+     free(dir1);
+  if (dir2) 
+     free(dir2);
 
 }
 
@@ -297,13 +309,25 @@ void Parameter::Read(const char *filename) {
   c0 = fgetpar(fp, "c0", 0., true);
   gamma = fgetpar(fp, "gamma", 0., true);
   eps = fgetpar(fp, "eps", 0., true);
+  betaN = fgetpar(fp, "betaN", 0., true);
+  gammaN = fgetpar(fp, "gammaN", 0., true);
+  betaD = fgetpar(fp, "betaD", 0., true);
+  gammaD = fgetpar(fp, "gammaD", 0., true);
+  betaR = fgetpar(fp, "betaR", 0., true);
+  gammaR = fgetpar(fp, "gammaR", 0., true);
+  tau = fgetpar(fp, "tau", 0., true);
+  kt = fgetpar(fp, "kt", 0., true);
   kc = fgetpar(fp, "kc", 0., true);
   krs = fgetpar(fp, "krs", 0., true);
-  betaN = fgetpar(fp, "betaN", 0., true);
-  betaD = fgetpar(fp, "betaD", 0., true);
-  betaR = fgetpar(fp, "betaR", 0., true);
   i1 = igetpar(fp, "i1", 0, true);
   i2 = igetpar(fp, "i2", 0, true);
+  b4 = bgetpar(fp, "b4", false, true);
+  dir1 = sgetpar(fp, "dir1", ".", true);
+  if (strcmp(dir1, "."))
+    MakeDir(dir1);
+  dir2 = sgetpar(fp, "dir2", ".", true);
+  if (strcmp(dir2, "."))
+    MakeDir(dir2);
 }
 
 const char *sbool(const bool &p) {
@@ -418,13 +442,25 @@ void Parameter::Write(ostream &os) const {
   os << " c0 = " << c0 << endl;
   os << " gamma = " << gamma << endl;
   os << " eps = " << eps << endl;
+  os << " betaN = " << betaN << endl;
+  os << " gammaN = " << gammaN << endl;
+  os << " betaD = " << betaD << endl;
+  os << " gammaD = " << gammaD << endl;
+  os << " betaR = " << betaR << endl;
+  os << " gammaR = " << gammaR << endl;
+  os << " tau = " << tau << endl;
+  os << " kt = " << kt << endl;
   os << " kc = " << kc << endl;
   os << " krs = " << krs << endl;
-  os << " betaN = " << betaN << endl;
-  os << " betaD = " << betaD << endl;
-  os << " betaR = " << betaR << endl;
   os << " i1 = " << i1 << endl;
   os << " i2 = " << i2 << endl;
+  os << " b4 = " << sbool(b4) << endl;
+
+  if (dir1) 
+  os << " dir1 = " << dir1 << endl;
+
+  if (dir2) 
+  os << " dir2 = " << dir2 << endl;
 }
 
 void Parameter::XMLAdd(xmlNode *root) const {
@@ -1221,6 +1257,62 @@ xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
 }
 {
   xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaN" );
+  ostringstream text;
+    text << betaN;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "gammaN" );
+  ostringstream text;
+    text << gammaN;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaD" );
+  ostringstream text;
+    text << betaD;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "gammaD" );
+  ostringstream text;
+    text << gammaD;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaR" );
+  ostringstream text;
+    text << betaR;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "gammaR" );
+  ostringstream text;
+    text << gammaR;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "tau" );
+  ostringstream text;
+    text << tau;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "kt" );
+  ostringstream text;
+    text << kt;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
   xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "kc" );
   ostringstream text;
     text << kc;
@@ -1235,27 +1327,6 @@ xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
 }
 {
   xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaN" );
-  ostringstream text;
-    text << betaN;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaD" );
-  ostringstream text;
-    text << betaD;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaR" );
-  ostringstream text;
-    text << betaR;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
-}
-{
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
   xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "i1" );
   ostringstream text;
     text << i1;
@@ -1266,6 +1337,31 @@ xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
   xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "i2" );
   ostringstream text;
     text << i2;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "b4" );
+  ostringstream text;
+text << sbool(b4);
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "dir1" );
+  ostringstream text;
+
+  if (dir1) 
+    text << dir1;
+xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+}
+{
+  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
+  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "dir2" );
+  ostringstream text;
+
+  if (dir2) 
+    text << dir2;
 xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
 }
 }
@@ -1606,6 +1702,38 @@ if (!strcmp(namec, "eps")) {
   eps = standardlocale.toDouble(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'eps' from XML file.",valc); }
 }
+if (!strcmp(namec, "betaN")) {
+  betaN = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaN' from XML file.",valc); }
+}
+if (!strcmp(namec, "gammaN")) {
+  gammaN = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'gammaN' from XML file.",valc); }
+}
+if (!strcmp(namec, "betaD")) {
+  betaD = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaD' from XML file.",valc); }
+}
+if (!strcmp(namec, "gammaD")) {
+  gammaD = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'gammaD' from XML file.",valc); }
+}
+if (!strcmp(namec, "betaR")) {
+  betaR = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaR' from XML file.",valc); }
+}
+if (!strcmp(namec, "gammaR")) {
+  gammaR = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'gammaR' from XML file.",valc); }
+}
+if (!strcmp(namec, "tau")) {
+  tau = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'tau' from XML file.",valc); }
+}
+if (!strcmp(namec, "kt")) {
+  kt = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'kt' from XML file.",valc); }
+}
 if (!strcmp(namec, "kc")) {
   kc = standardlocale.toDouble(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'kc' from XML file.",valc); }
@@ -1614,18 +1742,6 @@ if (!strcmp(namec, "krs")) {
   krs = standardlocale.toDouble(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'krs' from XML file.",valc); }
 }
-if (!strcmp(namec, "betaN")) {
-  betaN = standardlocale.toDouble(valc, &ok);
-  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaN' from XML file.",valc); }
-}
-if (!strcmp(namec, "betaD")) {
-  betaD = standardlocale.toDouble(valc, &ok);
-  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaD' from XML file.",valc); }
-}
-if (!strcmp(namec, "betaR")) {
-  betaR = standardlocale.toDouble(valc, &ok);
-  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'betaR' from XML file.",valc); }
-}
 if (!strcmp(namec, "i1")) {
   i1 = standardlocale.toInt(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'i1' from XML file.",valc); }
@@ -1633,6 +1749,17 @@ if (!strcmp(namec, "i1")) {
 if (!strcmp(namec, "i2")) {
   i2 = standardlocale.toInt(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'i2' from XML file.",valc); }
+}
+if (!strcmp(namec, "b4")) {
+b4 = strtobool(valc);
+}
+if (!strcmp(namec, "dir1")) {
+  if (dir1) { free(dir1); }
+  dir1=strdup(valc);
+}
+if (!strcmp(namec, "dir2")) {
+  if (dir2) { free(dir2); }
+  dir2=strdup(valc);
 }
 }
 void Parameter::AssignValArrayToPar(const char *namec, vector<double> valarray) {

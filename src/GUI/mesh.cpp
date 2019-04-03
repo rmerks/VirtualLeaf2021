@@ -41,6 +41,7 @@
 #include "nodeset.h"
 #include "nodeitem.h"
 #include "simplugin.h"
+#include "forwardeuler.h"
 
 #include <QDebug>
 #include <set>
@@ -1516,8 +1517,8 @@ void Mesh::PrintWallList( void ) {
 //#include "forwardeuler.h"
 #include "rungekutta.h"
 
-class SolveMesh : public RungeKutta {
-
+//class SolveMesh : public ForwardEuler{
+class SolveMesh : public RungeKutta{
 private:
   SolveMesh(void);
 
@@ -1674,6 +1675,8 @@ void Mesh::RandomizeChemicals(const vector<double> &max_chem, const vector<doubl
   for (vector<Cell *>::iterator c=cells.begin(); c!=cells.end(); c++) {
     for (int i=0;i<Cell::NChem();i++) {
       (*c)->SetChemical(i,max_chem[i]*RANDOM());
+     //(*c)->SetChemical(i,RANDOM()*max_chem[i]*0.1+0.9*max_chem[i]);
+        //(*c)->SetChemical(i,RANDOM()*max_chem[i]*(par -> range)+(1 - par -> range)*max_chem[i]); // must be a number between 0 and 0.99
     }
     (*c)->SetNewChemToChem();
   }

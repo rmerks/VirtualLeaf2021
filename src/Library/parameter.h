@@ -130,13 +130,21 @@
   double c0;
   double gamma;
   double eps;
+  double betaN;
+  double gammaN;
+  double betaD;
+  double gammaD;
+  double betaR;
+  double gammaR;
+  double tau;
+  double kt;
   double kc;
   double krs;
-  double betaN;
-  double betaD;
-  double betaR;
   int i1;
   int i2;
+  bool b4;
+  char * dir1;
+  char * dir2;
  private:
  };
 
