@@ -8,7 +8,6 @@ Turing \
 Test \
 Collier \
 Sprinzak \
-Tutorial \
 Tutorial0 \
 Tutorial1A \
 Tutorial1B \
