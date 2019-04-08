@@ -210,6 +210,7 @@ class Main : public QMainWindow, public MainBase {
   void exportCellData();
   void exportCellData(QString);
   void saveStateXML();
+  void GenerateNewTissue();
   void snapshot();
   void savePars();
   void readPars();

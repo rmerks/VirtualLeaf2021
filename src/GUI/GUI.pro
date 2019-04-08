@@ -116,6 +116,7 @@ $${VLEAFLIBDIR}/cellbase.h \
  $${VLEAFLIBDIR}/simplugin.h \
  sqr.h \
  tiny.h \
+ tissuegenerator.h \
  transporterdialog.h \
  $${VLEAFLIBDIR}/UniqueMessage.h \
  $${VLEAFLIBDIR}/vector.h \
@@ -150,6 +151,7 @@ $${VLEAFLIBDIR}/cellbase.cpp \
 $${VLEAFLIBDIR}/random.cpp \
  rungekutta.cpp \
  simitembase.cpp \
+ tissuegenerator.cpp \
  transporterdialog.cpp \
 $${VLEAFLIBDIR}/UniqueMessage.cpp \
 $${VLEAFLIBDIR}/vector.cpp \

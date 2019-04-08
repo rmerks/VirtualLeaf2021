@@ -74,6 +74,7 @@
 #include "mesh.h"
 #include "xmlwrite.h"
 #include "OptionFileDialog.h"
+#include "tissuegenerator.h"
 #include <cstdlib>
 #include <cstdio>
 #include "modelcatalogue.h"
@@ -476,6 +477,7 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
 
     file->addAction("&Read leaf", this, SLOT(readStateXML()));
     file->addAction("&Save leaf", this, SLOT(saveStateXML()));
+    file->addAction("Generate new tissue", this, SLOT(GenerateNewTissue()));
     file->addAction("Snapshot", this, SLOT(snapshot()), Qt::CTRL+Qt::SHIFT+Qt::Key_S);
 
     file->addSeparator();
@@ -1674,5 +1676,22 @@ void Main::exportCellData() {
     }
 }
 
+void Main::GenerateNewTissue()
+{
 
+    stopSimulation();
+
+    QString filename = GenerateTissue();
+    if (filename.isEmpty()) {
+        QString status_message;
+        status_message = QString("failed to generate tissue").arg(filename);
+        cerr << status_message.toStdString().c_str() << endl;
+        statusBar()->showMessage(status_message);
+    } else {
+        QString status_message;
+        status_message = QString("Generated new tissue in %1").arg(filename);
+        cerr << status_message.toStdString().c_str() << endl;
+        statusBar()->showMessage(status_message);
+    }
+}
 /* finis */
