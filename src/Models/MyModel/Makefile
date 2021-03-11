@@ -835,7 +835,7 @@ moc_MyModel.cpp: MyModel.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QDebug \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/qdebug.h \
 		../../Library/vector.h \
-		../../GUI/sqr.h \
+		../../Library/sqr.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QPointF \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/qpoint.h \
 		../../Library/parameter.h \
@@ -975,7 +975,7 @@ MyModel.o: MyModel.cpp /opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QObj
 		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers/qtguiversion.h \
 		../../Library/parameter.h \
 		../../Library/vector.h \
-		../../GUI/sqr.h \
+		../../Library/sqr.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QPointF \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/qpoint.h \
 		../../Library/wallbase.h \
@@ -994,7 +994,8 @@ MyModel.o: MyModel.cpp /opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QObj
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/qplugin.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
-		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers/QColor
+		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers/QColor \
+		../../Library/random.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MyModel.o MyModel.cpp
 
 moc_MyModel.o: moc_MyModel.cpp 
