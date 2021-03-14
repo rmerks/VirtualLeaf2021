@@ -892,13 +892,13 @@ int Main::readStateXML(const char *filename, bool geometry, bool pars, bool simt
 {
 
     try {
-        xmlNode *settings;
-        mesh.XMLRead((const char *)filename, &settings, geometry, pars, simtime);
+        QDomElement settings;
+        mesh.XMLRead((const char *)filename, settings, geometry, pars, simtime);
 #ifdef QDEBUG
         qDebug() << "Reading done."<< endl;
 #endif
         XMLReadSettings(settings);
-        xmlFree(settings);
+        //xmlFree(settings);
         Cell::SetMagnification(1);
         Cell::setOffset(0,0);
 
@@ -1543,7 +1543,7 @@ void Main::RandomizeMesh(void)
     Plot();
 }
 
-void Main::XMLReadSettings(xmlNode *settings) 
+void Main::XMLReadSettings(QDomElement &settings)
 {
 
     MainBase::XMLReadSettings(settings);

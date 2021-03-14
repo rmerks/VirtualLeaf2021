@@ -26,12 +26,12 @@
 #define _XML_WRITE_H_
 
 #include <vector>
-#include <libxml/tree.h>
 #include <cstring>
+#include <QtXml>
 
 namespace XMLIO {
 
-  std::vector <double> XMLReadValArray(xmlNode *cur);
+  std::vector <double> XMLReadValArray(QDomElement &cur);
   template<class For, class E> long list_index (For beg, For end, E *elem) {
 
     long n = 0;

@@ -32,6 +32,7 @@
 #include <iostream>
 #include <QGraphicsItem>
 #include <QPrinter>
+#include <QtXml>
 #include "mesh.h"
 #include "warning.h"
 
@@ -108,7 +109,7 @@ class MainBase  {
 	delete *it;
     }
   };
-  virtual void XMLReadSettings(xmlNode *settings);
+  virtual void XMLReadSettings(QDomElement &settings);
   virtual void XMLReadViewport(xmlNode *viewport);
 
   virtual double getFluxArrowsize(void) { return 10.;}

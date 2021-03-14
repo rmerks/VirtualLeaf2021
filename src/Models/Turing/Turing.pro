@@ -39,7 +39,7 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
 
-QT += widgets
+QT += widgets xml
 SOURCES = $${TARGET}.cpp
 TEMPLATE = lib 
 

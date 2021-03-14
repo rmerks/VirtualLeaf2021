@@ -28,7 +28,7 @@ CONFIG+=sdk_no_version_check
 VLEAFLIBDIR = ../Library
 PERLDIR = $$top_srcdir/Perl
 
-QT += widgets
+QT += widgets xml
 QT += printsupport
 
 INCLUDEPATH += ../Library
@@ -50,7 +50,7 @@ TARGET = VirtualLeaf
 TEMPLATE = app
 PARTMPL = $${TARGET}par.tmpl
 MAINSRC = $${TARGET}.cpp
-QT -= network sql xml
+QT -= network sql
 
 LIBS += -L$${LIBDIR}
 !win32 {
@@ -149,6 +149,7 @@ $${VLEAFLIBDIR}/cellbase.cpp \
  pardialog.cpp \
  $${VLEAFLIBDIR}/parse.cpp \
 $${VLEAFLIBDIR}/random.cpp \
+    qtxmlwrite.cpp \
  rungekutta.cpp \
  simitembase.cpp \
  tissuegenerator.cpp \
@@ -159,7 +160,6 @@ $${VLEAFLIBDIR}/vector.cpp \
 $${VLEAFLIBDIR}/wallbase.cpp \
  wallitem.cpp \
 $${VLEAFLIBDIR}/warning.cpp \
- xmlwrite.cpp \
  $$MAINSRC
 
 contains( TARGET, leaf_fleming ) {

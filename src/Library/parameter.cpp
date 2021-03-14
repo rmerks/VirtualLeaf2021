@@ -463,906 +463,1175 @@ void Parameter::Write(ostream &os) const {
   os << " dir2 = " << dir2 << endl;
 }
 
-void Parameter::XMLAdd(xmlNode *root) const {
-    xmlNode *xmlparameter = xmlNewChild(root, NULL, BAD_CAST "parameter", NULL);
+void Parameter::XMLAdd(QDomElement &root) const {
+    //xmlNode *xmlparameter = xmlNewChild(root, NULL, BAD_CAST "parameter", NULL);
+    QDomElement xmlparameter;
+    xmlparameter.setTagName("parameter");
+    root.appendChild(xmlparameter);
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "arrowcolor" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","arrowcolor" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 
   if (arrowcolor) 
     text << arrowcolor;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "arrowsize" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","arrowsize" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << arrowsize;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "textcolor" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","textcolor" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 
   if (textcolor) 
     text << textcolor;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "cellnumsize" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","cellnumsize" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << cellnumsize;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "nodenumsize" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","nodenumsize" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << nodenumsize;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "node_mag" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","node_mag" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << node_mag;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "outlinewidth" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","outlinewidth" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << outlinewidth;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "cell_outline_color" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","cell_outline_color" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 
   if (cell_outline_color) 
     text << cell_outline_color;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "resize_stride" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","resize_stride" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << resize_stride;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "export_interval" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","export_interval" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << export_interval;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "export_fn_prefix" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","export_fn_prefix" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 
   if (export_fn_prefix) 
     text << export_fn_prefix;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "storage_stride" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","storage_stride" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << storage_stride;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "xml_storage_stride" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","xml_storage_stride" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << xml_storage_stride;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "datadir" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","datadir" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 
   if (datadir) {
                                      QDir dataDir = QDir::home().relativeFilePath(datadir);
                                      text << dataDir.dirName().toStdString();
                                    }
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "T" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","T" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << T;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "lambda_length" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","lambda_length" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << lambda_length;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "yielding_threshold" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","yielding_threshold" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << yielding_threshold;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "lambda_celllength" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","lambda_celllength" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << lambda_celllength;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "target_length" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","target_length" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << target_length;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "cell_expansion_rate" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","cell_expansion_rate" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << cell_expansion_rate;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "cell_div_expansion_rate" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","cell_div_expansion_rate" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << cell_div_expansion_rate;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "auxin_dependent_growth" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","auxin_dependent_growth" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 text << sbool(auxin_dependent_growth);
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "ode_accuracy" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","ode_accuracy" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << ode_accuracy;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "mc_stepsize" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","mc_stepsize" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << mc_stepsize;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "mc_cell_stepsize" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","mc_cell_stepsize" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << mc_cell_stepsize;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "energy_threshold" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","energy_threshold" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << energy_threshold;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "bend_lambda" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","bend_lambda" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << bend_lambda;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "alignment_lambda" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","alignment_lambda" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << alignment_lambda;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "rel_cell_div_threshold" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","rel_cell_div_threshold" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << rel_cell_div_threshold;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "rel_perimeter_stiffness" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","rel_perimeter_stiffness" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << rel_perimeter_stiffness;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "collapse_node_threshold" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","collapse_node_threshold" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << collapse_node_threshold;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "morphogen_div_threshold" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","morphogen_div_threshold" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << morphogen_div_threshold;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "morphogen_expansion_threshold" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","morphogen_expansion_threshold" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << morphogen_expansion_threshold;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "copy_wall" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","copy_wall" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 text << sbool(copy_wall);
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "source" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","source" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << source;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "D" );
-  xmlNode *xmlvalarray = xmlNewChild(xmlpar, NULL, BAD_CAST "valarray", NULL);
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","D" );
+  xmlparameter.appendChild(xmlpar);
+  QDomElement xmlvalarray;
+  xmlvalarray.setTagName("valarray");
+  xmlpar.appendChild(xmlvalarray);
   {
     ostringstream text;
     text << D[0];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[1];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[2];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[3];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[4];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[5];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[6];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[7];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[8];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[9];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[10];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[11];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[12];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[13];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[14];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "initval" );
-  xmlNode *xmlvalarray = xmlNewChild(xmlpar, NULL, BAD_CAST "valarray", NULL);
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","initval" );
+  xmlparameter.appendChild(xmlpar);
+  QDomElement xmlvalarray;
+  xmlvalarray.setTagName("valarray");
+  xmlpar.appendChild(xmlvalarray);
   {
     ostringstream text;
     text << initval[0];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[1];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[2];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[3];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[4];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[5];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[6];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[7];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[8];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[9];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[10];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[11];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[12];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[13];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[14];
-    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST "val", NULL);
-    xmlNewProp(xmlval, BAD_CAST "v", BAD_CAST text.str().c_str());
+   QDomElement xmlval;
+   xmlval.setTagName("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
   }
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "k1" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","k1" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << k1;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "k2" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","k2" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << k2;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "r" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","r" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << r;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "kr" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","kr" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << kr;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "km" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","km" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << km;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "Pi_tot" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","Pi_tot" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << Pi_tot;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "transport" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","transport" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << transport;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "ka" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","ka" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << ka;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "pin_prod" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","pin_prod" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << pin_prod;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "pin_prod_in_epidermis" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","pin_prod_in_epidermis" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << pin_prod_in_epidermis;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "pin_breakdown" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","pin_breakdown" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << pin_breakdown;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "pin_breakdown_internal" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","pin_breakdown_internal" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << pin_breakdown_internal;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "aux1prod" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","aux1prod" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << aux1prod;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "aux1prodmeso" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","aux1prodmeso" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << aux1prodmeso;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "aux1decay" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","aux1decay" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << aux1decay;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "aux1decaymeso" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","aux1decaymeso" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << aux1decaymeso;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "aux1transport" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","aux1transport" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << aux1transport;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "aux_cons" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","aux_cons" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << aux_cons;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "aux_breakdown" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","aux_breakdown" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << aux_breakdown;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "kaux1" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","kaux1" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << kaux1;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "kap" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","kap" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << kap;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "leaf_tip_source" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","leaf_tip_source" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << leaf_tip_source;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "sam_efflux" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","sam_efflux" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << sam_efflux;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "sam_auxin" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","sam_auxin" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << sam_auxin;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "sam_auxin_breakdown" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","sam_auxin_breakdown" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << sam_auxin_breakdown;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "van3prod" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","van3prod" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << van3prod;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "van3autokat" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","van3autokat" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << van3autokat;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "van3sat" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","van3sat" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << van3sat;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "k2van3" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","k2van3" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << k2van3;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "dt" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","dt" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << dt;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "rd_dt" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","rd_dt" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << rd_dt;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "movie" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","movie" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 text << sbool(movie);
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "nit" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","nit" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << nit;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "maxt" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","maxt" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << maxt;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "rseed" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","rseed" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << rseed;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "constituous_expansion_limit" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","constituous_expansion_limit" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << constituous_expansion_limit;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "vessel_inh_level" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","vessel_inh_level" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << vessel_inh_level;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "vessel_expansion_rate" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","vessel_expansion_rate" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << vessel_expansion_rate;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "d" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","d" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << d;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "e" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","e" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << e;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "f" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","f" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << f;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "c" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","c" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << c;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "mu" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","mu" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << mu;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "nu" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","nu" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << nu;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "rho0" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","rho0" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << rho0;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "rho1" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","rho1" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << rho1;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "c0" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","c0" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << c0;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "gamma" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","gamma" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << gamma;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "eps" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","eps" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << eps;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaN" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","betaN" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << betaN;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "gammaN" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","gammaN" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << gammaN;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaD" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","betaD" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << betaD;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "gammaD" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","gammaD" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << gammaD;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "betaR" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","betaR" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << betaR;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "gammaR" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","gammaR" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << gammaR;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "tau" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","tau" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << tau;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "kt" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","kt" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << kt;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "kc" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","kc" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << kc;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "krs" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","krs" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << krs;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "i1" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","i1" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << i1;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "i2" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","i2" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << i2;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "b4" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","b4" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 text << sbool(b4);
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "dir1" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","dir1" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 
   if (dir1) 
     text << dir1;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST "par", NULL);
-  xmlNewProp(xmlpar, BAD_CAST "name", BAD_CAST "dir2" );
+  QDomElement xmlpar;
+  xmlpar.setTagName("par");
+  xmlpar.setAttribute("name","dir2" );
+  xmlparameter.appendChild(xmlpar);
   ostringstream text;
 
   if (dir2) 
     text << dir2;
-xmlNewProp(xmlpar, BAD_CAST "val", BAD_CAST text.str().c_str());
+  xmlpar.setAttribute("val",text.str().c_str());
 }
 }
 void Parameter::AssignValToPar(const char *namec, const char *valc) {

@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
 CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
-DEFINES       = -DQTGRAPHICS -DQT_NO_DEBUG -DQT_PLUGIN -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQTGRAPHICS -DQT_NO_DEBUG -DQT_PLUGIN -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.12 -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -stdlib=libc++ -Wno-write-strings -Wno-unused-parameter -fPIC -I/usr/include/libxml2 -O2 -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.12 -Wall -W -fPIC $(DEFINES)
-INCPATH       = -I. -I../../Library -I../../GUI -I../../../include -I/opt/Qt/5.12.1/clang_64/lib/QtWidgets.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/Applications/Xcode10.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/Applications/Xcode10.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AGL.framework/Headers/ -I/opt/Qt/5.12.1/clang_64/mkspecs/macx-clang -F/opt/Qt/5.12.1/clang_64/lib
+INCPATH       = -I. -I../../Library -I../../GUI -I../../../include -I/opt/Qt/5.12.1/clang_64/lib/QtWidgets.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/Applications/Xcode10.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/Applications/Xcode10.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AGL.framework/Headers/ -I/opt/Qt/5.12.1/clang_64/mkspecs/macx-clang -F/opt/Qt/5.12.1/clang_64/lib
 QMAKE         = /opt/Qt/5.12.1/clang_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = MyModel1.0.0
 DISTDIR = /Users/roel/Documents/GitHub/VirtualLeaf/src/Models/MyModel/.tmp/MyModel1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 LFLAGS        = -stdlib=libc++ -fPIC -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.12 -Wl,-rpath,@executable_path/Frameworks -Wl,-rpath,/opt/Qt/5.12.1/clang_64/lib -single_module -dynamiclib
-LIBS          = $(SUBLIBS) -F/opt/Qt/5.12.1/clang_64/lib -L../../../lib -lvleaf -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL   
+LIBS          = $(SUBLIBS) -F/opt/Qt/5.12.1/clang_64/lib -L../../../lib -lvleaf -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework QtXml -framework OpenGL -framework AGL   
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -466,6 +466,7 @@ Makefile: MyModel.pro /opt/Qt/5.12.1/clang_64/mkspecs/macx-clang/qmake.conf /opt
 		MyModel.pro \
 		/opt/Qt/5.12.1/clang_64/lib/QtWidgets.framework/QtWidgets.prl \
 		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/QtGui.prl \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/QtXml.prl \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/QtCore.prl
 	$(QMAKE) -o Makefile MyModel.pro -spec macx-clang CONFIG+=x86_64
 /opt/Qt/5.12.1/clang_64/mkspecs/features/spec_pre.prf:
@@ -663,6 +664,7 @@ Makefile: MyModel.pro /opt/Qt/5.12.1/clang_64/mkspecs/macx-clang/qmake.conf /opt
 MyModel.pro:
 /opt/Qt/5.12.1/clang_64/lib/QtWidgets.framework/QtWidgets.prl:
 /opt/Qt/5.12.1/clang_64/lib/QtGui.framework/QtGui.prl:
+/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/QtXml.prl:
 /opt/Qt/5.12.1/clang_64/lib/QtCore.framework/QtCore.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile MyModel.pro -spec macx-clang CONFIG+=x86_64
@@ -839,6 +841,11 @@ moc_MyModel.cpp: MyModel.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QPointF \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/qpoint.h \
 		../../Library/parameter.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/QtXml \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qtxmlglobal.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qdom.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qxml.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qtxmlversion.h \
 		../../GUI/wall.h \
 		../../Library/wallbase.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
@@ -847,7 +854,7 @@ moc_MyModel.cpp: MyModel.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers/QColor \
 		moc_predefs.h \
 		/opt/Qt/5.12.1/clang_64/bin/moc
-	/opt/Qt/5.12.1/clang_64/bin/moc $(DEFINES) --include /Users/roel/Documents/GitHub/VirtualLeaf/src/Models/MyModel/moc_predefs.h -I/opt/Qt/5.12.1/clang_64/mkspecs/macx-clang -I/Users/roel/Documents/GitHub/VirtualLeaf/src/Models/MyModel -I/Users/roel/Documents/GitHub/VirtualLeaf/src/Library -I/Users/roel/Documents/GitHub/VirtualLeaf/src/GUI -I/Users/roel/Documents/GitHub/VirtualLeaf/include -I/opt/Qt/5.12.1/clang_64/lib/QtWidgets.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include -F/opt/Qt/5.12.1/clang_64/lib MyModel.h -o moc_MyModel.cpp
+	/opt/Qt/5.12.1/clang_64/bin/moc $(DEFINES) --include /Users/roel/Documents/GitHub/VirtualLeaf/src/Models/MyModel/moc_predefs.h -I/opt/Qt/5.12.1/clang_64/mkspecs/macx-clang -I/Users/roel/Documents/GitHub/VirtualLeaf/src/Models/MyModel -I/Users/roel/Documents/GitHub/VirtualLeaf/src/Library -I/Users/roel/Documents/GitHub/VirtualLeaf/src/GUI -I/Users/roel/Documents/GitHub/VirtualLeaf/include -I/opt/Qt/5.12.1/clang_64/lib/QtWidgets.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers -I/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include -F/opt/Qt/5.12.1/clang_64/lib MyModel.h -o moc_MyModel.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -974,6 +981,11 @@ MyModel.o: MyModel.cpp /opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QObj
 		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers/qwindowdefs.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers/qtguiversion.h \
 		../../Library/parameter.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/QtXml \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qtxmlglobal.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qdom.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qxml.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qtxmlversion.h \
 		../../Library/vector.h \
 		../../Library/sqr.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QPointF \

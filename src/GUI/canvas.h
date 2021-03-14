@@ -31,6 +31,7 @@
 #include <QMenu>
 #include <QList>
 #include <QDir>
+#include <QtXml>
 
 #include <string>
 #include <sstream>
@@ -50,8 +51,7 @@
 #include "data_plot.h"
 #endif
 
-#include <libxml/xpath.h>
-#include <libxml/xmlreader.h>
+
 
 #if defined(Q_OS_MAC)
 #define PREFIX "cmd"
@@ -195,7 +195,7 @@ class Main : public QMainWindow, public MainBase {
   void Refresh(void) { Plot(); }
   void PauseIfRunning(void);
   void ContIfRunning(void);
-  virtual void XMLReadSettings(xmlNode *settings);
+  virtual void XMLReadSettings(QDomElement &settings);
 
   private slots:
   void aboutQt();

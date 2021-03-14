@@ -275,8 +275,11 @@ print cppfile "}\n";
 
 print cppfile <<END_TRAIL2;
 
-void Parameter::XMLAdd(xmlNode *root) const {
-    xmlNode *xmlparameter = xmlNewChild(root, NULL, BAD_CAST "parameter", NULL);
+void Parameter::XMLAdd(QDomElement &root) const {
+    //xmlNode *xmlparameter = xmlNewChild(root, NULL, BAD_CAST "parameter", NULL);
+    QDomElement xmlparameter;
+    xmlparameter.setTagName("parameter");
+    root.appendChild(xmlparameter);
 END_TRAIL2
 
 for ($i=0;$i<$lines;$i++) {
@@ -284,17 +287,30 @@ for ($i=0;$i<$lines;$i++) {
 	next;
     }
     print cppfile "{\n";
-    print cppfile "  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST \"par\", NULL);\n";
-    print cppfile "  xmlNewProp(xmlpar, BAD_CAST \"name\", BAD_CAST \"$param[$i]\" );\n";
+    #print cppfile "  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST \"par\", NULL);\n";
+    print cppfile "  QDomElement xmlpar;\n";
+    print cppfile "  xmlpar.setTagName(\"par\");\n";
+    print cppfile "  xmlpar.setAttribute(\"name\",\"$param[$i]\" );\n";
+    print cppfile "  xmlparameter.appendChild(xmlpar);\n";
+    
+    #  print cppfile "  xmlNewProp(xmlpar, BAD_CAST \"name\", BAD_CAST \"$param[$i]\" );\n";
     if ($convtype[$i] eq "double *") {
 	@paramlist = split(/,/,$value[$i]);
-	print cppfile "  xmlNode *xmlvalarray = xmlNewChild(xmlpar, NULL, BAD_CAST \"valarray\", NULL);\n";
+        #print cppfile "  xmlNode *xmlvalarray = xmlNewChild(xmlpar, NULL, BAD_CAST \"valarray\", NULL);\n";
+        print cppfile "  QDomElement xmlvalarray;\n";
+        print cppfile "  xmlvalarray.setTagName(\"valarray\");\n";
+        print cppfile "  xmlpar.appendChild(xmlvalarray);\n";
+        
 	for ($j=0;$j<=$#paramlist;$j++) {
 	    print cppfile "  {\n";
 	    print cppfile "    ostringstream text;\n";
 	    print cppfile "    text << $param[$i]\[$j\];\n";
-	    print cppfile "    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST \"val\", NULL);\n";
-	    print cppfile "    xmlNewProp(xmlval, BAD_CAST \"v\", BAD_CAST text.str().c_str());\n";
+        #print cppfile "    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST \"val\", NULL);\n";
+        print cppfile "   QDomElement xmlval;\n";
+        print cppfile "   xmlval.setTagName(\"val\");\n";
+        print cppfile "   xmlval.setAttribute(\"v\",text.str().c_str());\n";
+        print cppfile "   xmlvalarray.appendChild(xmlval);\n";
+        #	    print cppfile "    xmlNewProp(xmlval, BAD_CAST \"v\", BAD_CAST text.str().c_str());\n";
 	    print cppfile "  }\n";
 	}
 	print cppfile "}\n";
@@ -317,7 +333,8 @@ for ($i=0;$i<$lines;$i++) {
 	    }
 	}
     }
-    print cppfile "xmlNewProp(xmlpar, BAD_CAST \"val\", BAD_CAST text.str().c_str());\n";
+    #print cppfile "xmlNewProp(xmlpar, BAD_CAST \"val\", BAD_CAST text.str().c_str());\n";
+    print cppfile "  xmlpar.setAttribute(\"val\",text.str().c_str());\n";
     print cppfile "}\n";
 }
 
@@ -427,8 +444,9 @@ print hfile <<END_HEADER2;
 #include "vector.h"
 #include <vector>
 
-#include <libxml/parser.h>
-#include <libxml/tree.h>
+//#include <libxml/parser.h>
+//#include <libxml/tree.h>
+#include <QtXml>
 
  class Parameter {
 		
@@ -438,8 +456,8 @@ print hfile <<END_HEADER2;
    void CleanUp(void);
    void Read(const char *filename);
    void Write(ostream &os) const;
-   void XMLAdd(xmlNode *root) const;
-   void XMLRead(xmlNode *root);
+   void XMLAdd(QDomElement &root) const;
+   void XMLRead(QDomElement &root);
    void AssignValToPar(const char *namec, const char *valc);
    void AssignValArrayToPar(const char *namec, vector<double> valarray);
 END_HEADER2

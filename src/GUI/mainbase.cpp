@@ -156,166 +156,161 @@ xmlNode *MainBase::XMLSettingsTree(void) {
   return xmlsettings;
 }
 
-void MainBase::XMLReadViewport(xmlNode *settings) {
+void MainBase::XMLReadViewport(QDomElement &settings) {
 
-  if (settings == 0) {
+  if (settings == QDomElement()) {
     return;
   }
 
   qreal m11=25,m12=0,m21=0,m22=25,dx=0,dy=0;
   QLocale standardlocale(QLocale::C);
-  xmlNode *cur = settings->xmlChildrenNode;
+  QDomElement cur = settings.firstChild().toElement();
 
-  while (cur!=NULL) {
+  while (!cur.isNull()) {
     
-    if (!xmlStrcmp(cur->name,(const xmlChar *)"viewport")) {
+    if (cur.tagName()=="viewport") {
       bool ok;
       {
-	xmlChar *v_str = xmlGetProp(cur, BAD_CAST "m11");
-	
-	if (v_str==0) {
+    QString v_str = cur.attribute("m11");
+    if (v_str.isEmpty()) {
 	  MyWarning::unique_warning("Error reading viewport in mainbase.cpp");
-	}
-	if (v_str != NULL) {
-	  m11=standardlocale.toDouble((char *)v_str, &ok);
-	  if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",(char *)v_str);
-	  xmlFree(v_str);
+    } else {
+      m11=standardlocale.toDouble(v_str, &ok);
+      if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",v_str.toStdString().c_str());
+
 	}
       }
       {
-	xmlChar *v_str = xmlGetProp(cur, BAD_CAST "m12");
+    QString v_str = cur.attribute("m12");
 	
-	if (v_str==0) {
+    if (v_str.isEmpty()) {
 	  MyWarning::unique_warning("Error reading viewport in mainbase.cpp");
-	}
-	if (v_str != NULL) {
-	  m12=standardlocale.toDouble((char *)v_str, &ok);
-	  if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",(char *)v_str);
-	  xmlFree(v_str);
+    } else {
+      m12=standardlocale.toDouble(v_str, &ok);
+      if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",v_str.toStdString().c_str());
 	}
       }
       { 
-	xmlChar *v_str = xmlGetProp(cur, BAD_CAST "m21");
+    QString v_str = cur.attribute("m21");
 	
-	if (v_str==0) {
+    if (v_str.isEmpty()) {
 	  MyWarning::unique_warning("Error reading viewport in mainbase.cpp");
 	}
-	if (v_str != NULL) {
-	  m21=standardlocale.toDouble((char *)v_str, &ok);
-	  if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",(char *)v_str);
-	  xmlFree(v_str);
+    else {
+      m21=standardlocale.toDouble(v_str, &ok);
+      if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",v_str.toStdString().c_str());
+
 	}
       }
       {
-	xmlChar *v_str = xmlGetProp(cur, BAD_CAST "m22");
+    QString v_str = cur.attribute("m22");
 	
-	if (v_str==0) {
+    if (v_str.isEmpty()) {
 	  MyWarning::unique_warning("Error reading viewport in mainbase.cpp");
 	}
-	if (v_str != NULL) {
-	  m22=standardlocale.toDouble((char *)v_str, &ok);
-	  if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",(char *)v_str);
-	  xmlFree(v_str);
+    else {
+      m22=standardlocale.toDouble(v_str, &ok);
+      if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",v_str.toStdString().c_str());
+
 	}
       }
       {
-	xmlChar *v_str = xmlGetProp(cur, BAD_CAST "dx");
+    QString v_str = cur.attribute("dx");
 	
-	if (v_str==0) {
+    if (v_str.isEmpty()) {
 	  MyWarning::unique_warning("Error reading viewport in mainbase.cpp");
 	}
-	if (v_str != NULL) {
-	  dx=standardlocale.toDouble((char *)v_str, &ok);
-	  if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",(char *)v_str);
-	  xmlFree(v_str);
+    else {
+      dx=standardlocale.toDouble(v_str, &ok);
+      if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",v_str.toStdString().c_str());
+
 	}
       }
       {
-	xmlChar *v_str = xmlGetProp(cur, BAD_CAST "dy");
+    QString v_str = cur.attribute("dy");
 	
-	if (v_str==0) {
+    if (v_str.isEmpty()) {
 	  MyWarning::unique_warning("Error reading viewport in mainbase.cpp");
 	}
-	if (v_str != NULL) {
-	  dy=standardlocale.toDouble((char *)v_str, &ok);
-	  if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",(char *)v_str);
-	  xmlFree(v_str);
+    else {
+      dy=standardlocale.toDouble(v_str, &ok);
+      if (!ok) MyWarning::error("Could Not Convert \"%S\" To Double In XMLRead.",v_str.toStdString().c_str());
+
 	}
       }
     }
-    cur=cur->next;
+    cur=cur.nextSibling().toElement();
   }
   viewport = QTransform(m11,m12,m21,m22,dx,dy);
 }
 
-void MainBase::XMLReadSettings(xmlNode *settings)
+void MainBase::XMLReadSettings(QDomElement &settings)
 {
 
   // Many files have no settings section, so don't complain about it.
   // Defaults will be used instead.
-  if (settings == 0) {
+  if (settings==QDomElement()) {
     return;
   }
 
   XMLReadViewport(settings);
-  xmlNode *cur = settings->xmlChildrenNode;
+  QDomElement cur = settings.firstChild().toElement();
 
-  while (cur!=NULL) {
+  while (!cur.isNull) {
 
-    if ((!xmlStrcmp(cur->name, (const xmlChar *)"setting"))){
+    if (cur.tagName()=="setting") {
 
-      xmlChar *name = xmlGetProp(cur, BAD_CAST "name");
-    
-      xmlChar *val = xmlGetProp(cur, BAD_CAST "val");
-      if (!xmlStrcmp(name, (const xmlChar *)"show_cell_centers")) {
+        QString name = cur.attibute("name");
+        //xmlChar *name = xmlGetProp(cur, BAD_CAST "name");
+        QString val = cur.attribute("val");
+
+    //  xmlChar *val = xmlGetProp(cur, BAD_CAST "val");
+        if (name=="show_cell_centers") {
+    //  if (!xmlStrcmp(name, (const xmlChar *)"show_cell_centers")) {
 	showcentersp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_nodes")) {
+      if (name=="show_nodes")) {
 	showmeshp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_node_numbers")) {
+      if (name=="show_node_numbers")) {
 	shownodenumbersp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_cell_numbers")) {
+      if (name=="show_cell_numbers")) {
 	showcellnumbersp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_border_cells")) {
+      if (name=="show_border_cells")) {
 	showbordercellp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_cell_axes")) {
+      if (name=="show_cell_axes")) {
 	showcellsaxesp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_cell_strain")) {
+      if (name=="show_cell_strain")) {
 	showcellstrainp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_fluxes")) {
+      if (name=="show_fluxes")) {
 	showfluxesp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_walls")) {
+      if (name=="show_walls")) {
 	showwallsp = strtobool( (const char *)val );
       }
      /* if (!xmlStrcmp(name, (const xmlChar *)"show_apoplasts")) {
 	showapoplastsp = strtobool( (const char *)val );
       }*/
-      if (!xmlStrcmp(name, (const xmlChar *)"save_movie_frames")) {
+      if (name=="save_movie_frames")) {
 	movieframesp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"show_only_leaf_boundary")) {
+      if (name=="show_only_leaf_boundary")) {
 	showboundaryonlyp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name, (const xmlChar *)"cell_growth")) {
+      if (name=="cell_growth")) {
 	dynamicscellsp = strtobool( (const char *)val );
       }
-      if (!xmlStrcmp(name,(const xmlChar *)"hide_cells")) {
+      if (name=="hide_cells")) {
 	hidecellsp = strtobool( (const char *)val ); 
       }
-    
-	
-  
-      xmlFree(name);
-      xmlFree(val);
+
     }
-    cur=cur->next;
+    cur=cur.nextSibling().toElement();
   }
 }
 

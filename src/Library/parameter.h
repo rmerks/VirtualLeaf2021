@@ -29,8 +29,9 @@
 #include "vector.h"
 #include <vector>
 
-#include <libxml/parser.h>
-#include <libxml/tree.h>
+//#include <libxml/parser.h>
+//#include <libxml/tree.h>
+#include <QtXml>
 
  class Parameter {
 		
@@ -40,8 +41,8 @@
    void CleanUp(void);
    void Read(const char *filename);
    void Write(ostream &os) const;
-   void XMLAdd(xmlNode *root) const;
-   void XMLRead(xmlNode *root);
+   void XMLAdd(QDomElement &root) const;
+   void XMLRead(QDomElement &root);
    void AssignValToPar(const char *namec, const char *valc);
    void AssignValArrayToPar(const char *namec, vector<double> valarray);
   char * arrowcolor;

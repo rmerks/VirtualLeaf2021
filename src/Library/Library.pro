@@ -23,9 +23,10 @@ CONFIG += release
 CONFIG -= debug
 CONFIG += staticlib
 
-QT += widgets
+QT += widgets xml
 QT += core
 QT += printsupport
+QT += xml
 INCLUDEPATH += ../GUI
 INCLUDEPATH += ../../include
 

@@ -42,6 +42,7 @@
 #include <QPair>
 #include <QDebug>
 #include <QTextStream>
+#include <QtXml>
 
 using namespace std;
 // new queue which rejects duplicate elements
@@ -332,17 +333,18 @@ class Mesh {
   double max_chem;
 
   void XMLSave(const char *docname, xmlNode *settings=0) const;
-  void XMLRead(const char *docname, xmlNode **settings=0, bool geometry = true, bool pars = true, bool simtime = true);
-  void XMLReadPars(const xmlNode * root_node);
-  void XMLReadGeometry(const xmlNode *root_node);
-  void XMLReadSimtime(const xmlNode *root_node);
-  void XMLReadNodes(xmlNode *cur);
-  void XMLReadCells(xmlNode *cur);
-  void XMLParseTree(const xmlNode * root_node);
-  void XMLReadWalls(xmlNode *cur, vector<Wall *> *tmp_cells);
+  void XMLRead(const char *docname, const QDomElement &settings=QDomElement(), bool geometry = true, bool pars = true, bool simtime = true);
+  //void QtXMLRead(const char *docname, QDomElement &settings, bool geometry = true, bool pars = true, bool simtime = true);
+  void XMLReadPars(const QDomElement &a_node);
+  void XMLReadGeometry(QDomElement root_node);
+  void XMLReadSimtime(const QDomElement &root_node);
+  void XMLReadNodes(QDomElement &cur);
+  void XMLReadCells(QDomElement &root);
+  void XMLParseTree(const QDomElement &root_node);
+  void XMLReadWalls(QDomElement &cur, vector<Wall *> *tmp_cells);
   void XMLReadWallsToCells(xmlNode *root, vector<Wall *> *tmp_walls);
-  void XMLReadNodeSets(xmlNode *root);
-  void XMLReadNodeSetsToNodes(xmlNode *root);
+  void XMLReadNodeSets(QDomElement &root);
+  void XMLReadNodeSetsToNodes(QDomElement &root);
   void PerturbChem(int chemnum, double range);
   void CleanUpCellNodeLists(void);
   void CleanUpWalls(void);
