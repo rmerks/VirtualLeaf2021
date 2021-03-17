@@ -209,7 +209,7 @@ class Main : public QMainWindow, public MainBase {
   void readLastStateXML();
   void exportCellData();
   void exportCellData(QString);
-  void saveStateXML();
+  void saveStateXML(void);
   void GenerateNewTissue();
   void snapshot();
   void savePars();
@@ -275,7 +275,7 @@ class Main : public QMainWindow, public MainBase {
   QTimer *timer;
   QFile *gifanim;
   bool running;
-  virtual xmlNode *XMLSettingsTree(void);
+  virtual QDomElement XMLSettingsTree();
   static const QString caption;
   static const QString caption_with_file;
   InfoBar *infobar;

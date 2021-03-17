@@ -727,7 +727,7 @@ void Main::readPars()
 }
 
 
-void Main::saveStateXML()
+void Main::saveStateXML(void)
 {
 
     stopSimulation();
@@ -766,8 +766,8 @@ void Main::saveStateXML()
             return saveStateXML();
 
         } else {
-
-            mesh.XMLSave(fileName.toLatin1(), XMLSettingsTree());
+        QDomElement settings=XMLSettingsTree();
+            mesh.XMLSave(fileName.toLatin1(),settings);
             QString status_message;
             status_message = QString("Wrote LeafML to %1").arg(fileName);
             cerr << status_message.toStdString().c_str() << endl;
@@ -1566,7 +1566,7 @@ void Main::XMLReadSettings(QDomElement &settings)
     editor->setTransform(viewport);
 }
 
-xmlNode *Main::XMLSettingsTree(void) 
+QDomElement Main::XMLSettingsTree()
 {
 
     showcentersp = com_act->isChecked();
@@ -1593,10 +1593,11 @@ xmlNode *Main::XMLSettingsTree(void)
     //showapoplastsp = apoplasts_act->isChecked( );
     hidecellsp = hide_cells_act->isChecked( );
     
-    xmlNode *settings = MainBase::XMLSettingsTree();
+    QDomElement settings = MainBase::XMLSettingsTree();
     QTransform viewport(editor->transform());
 
-    xmlAddChild(settings, XMLViewportTree(viewport));
+    //xmlAddChild(settings, XMLViewportTree(viewport));
+    settings.appendChild(XMLViewportTree(viewport));
     return settings;
 }
 

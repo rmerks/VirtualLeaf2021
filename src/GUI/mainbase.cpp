@@ -34,125 +34,215 @@
 
 static const std::string _module_id("$Id$");
 
-xmlNode *MainBase::XMLViewportTree(QTransform &transform) const {
+QDomElement MainBase::XMLViewportTree(QTransform &transform) const {
   
   QLocale standardlocale(QLocale::C);
   
 
-  xmlNode *xmlviewport = xmlNewNode(NULL, BAD_CAST "viewport");
+ // xmlNode *xmlviewport = xmlNewNode(NULL, BAD_CAST "viewport");
+  QDomElement xmlviewport;
+  xmlviewport.setTagName("xmlviewport")
   {
-    xmlNewProp(xmlviewport, BAD_CAST "m11", BAD_CAST standardlocale.toString(transform.m11()).toStdString().c_str() );
-    xmlNewProp(xmlviewport, BAD_CAST "m12", BAD_CAST standardlocale.toString(transform.m12()).toStdString().c_str() );    
-    xmlNewProp(xmlviewport, BAD_CAST "m21", BAD_CAST standardlocale.toString(transform.m21()).toStdString().c_str() );    
-    xmlNewProp(xmlviewport, BAD_CAST "m22", BAD_CAST standardlocale.toString(transform.m22()).toStdString().c_str() );    
-    xmlNewProp(xmlviewport, BAD_CAST "dx", BAD_CAST standardlocale.toString(transform.dx()).toStdString().c_str() );    
-    xmlNewProp(xmlviewport, BAD_CAST "dy", BAD_CAST standardlocale.toString(transform.dy()).toStdString().c_str() );    
+   // xmlNewProp(xmlviewport, BAD_CAST "m11", BAD_CAST standardlocale.toString(transform.m11()).toStdString().c_str() );
+      xmlviewport.setAttribute("m11",standardlocale.toString(transform.m11()));
+   // xmlNewProp(xmlviewport, BAD_CAST "m12", BAD_CAST standardlocale.toString(transform.m12()).toStdString().c_str() );
+      xmlviewport.setAttribute("m12",standardlocale.toString(transform.m12()));
+    //xmlNewProp(xmlviewport, BAD_CAST "m21", BAD_CAST standardlocale.toString(transform.m21()).toStdString().c_str() );
+      xmlviewport.setAttribute("m21",standardlocale.toString(transform.m21()));
+   // xmlNewProp(xmlviewport, BAD_CAST "m22", BAD_CAST standardlocale.toString(transform.m22()).toStdString().c_str() );
+      xmlviewport.setAttribute("m22",standardlocale.toString(transform.m22()));
+   // xmlNewProp(xmlviewport, BAD_CAST "dx", BAD_CAST standardlocale.toString(transform.dx()).toStdString().c_str() );
+      xmlviewport.setAttribute("dx",standardlocale.toString(transform.dx()));
+   // xmlNewProp(xmlviewport, BAD_CAST "dy", BAD_CAST standardlocale.toString(transform.dy()).toStdString().c_str() );
+      xmlviewport.setAttribute("dy",standardlocale.toString(transform.dy()));
  }
   
   return xmlviewport;
 }
 
-xmlNode *MainBase::XMLSettingsTree(void) {
+QDomElement MainBase::XMLSettingsTree(QDomElement &xmlsettings) {
 
-  xmlNode *xmlsettings = xmlNewNode(NULL, BAD_CAST "settings");
+
+  //xmlNode *xmlsettings = xmlNewNode(NULL, BAD_CAST "settings");
   {
-    xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
-    xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_cell_centers");
-    ostringstream text;
-    text << bool_name(showcentersp);
-    xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
+    //xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
+      QDomElement xmloption;
+      xmloption=tagName("setting");
+      xmlsettings.appendChild(xmloption);
+   // xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_cell_centers");
+      xmloption.setAttribute("name","show_cell_centers");
+
+   // ostringstream text;
+    //text << bool_name(showcentersp);
+      xmloption.setAttribute("val",bool_name(showcentersp));
+   // xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
   }
-  {
+
+/*  {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_nodes");
     ostringstream text;
     text << bool_name(showmeshp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption;
+        xmloption.setTagName("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_nodes");
+        xmloption.setAttribute("val",bool_name(showmeshp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_node_numbers");
     ostringstream text;
     text << bool_name(shownodenumbersp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_node_numbers");
+        xmloption.setAttribute("val",bool_name(shownodenumbersp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_cell_numbers");
     ostringstream text;
     text << bool_name(showcellnumbersp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_cell_numbers");
+        xmloption.setAttribute("val",bool_name(showcellnumbersp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_border_cells");
     ostringstream text;
     text << bool_name(showbordercellp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_borders_cells");
+        xmloption.setAttribute("val",bool_name(showbordercellp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_cell_axes");
     ostringstream text;
     text << bool_name(showcellsaxesp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_cell_axes");
+        xmloption.setAttribute("val",bool_name(showcellsaxesp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_cell_strain");
     ostringstream text;
     text << bool_name(showcellstrainp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_cell_strain");
+        xmloption.setAttribute("val",bool_name(showcellstrainp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_fluxes");
     ostringstream text;
     text << bool_name(showfluxesp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_fluxes");
+        xmloption.setAttribute("val",bool_name(showfluxesp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_walls");
     ostringstream text;
     text << bool_name(showwallsp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
- /* {
-    xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
-    xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_apoplasts");
-    ostringstream text;
-    text << bool_name(showapoplastsp);
-    xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
   }*/
-  {
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_walls");
+        xmloption.setAttribute("val",bool_name(showwallsp));
+    }
+ //{
+   // xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
+   // xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_apoplasts");
+   // ostringstream text;
+   // text << bool_name(showapoplastsp);
+  //  xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
+//  }*/
+  /*{
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "save_movie_frames");
     ostringstream text;
     text << bool_name(movieframesp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","save_movie_frames");
+        xmloption.setAttribute("val",bool_name(movieframesp));
+    }
+
+  /*{
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_only_leaf_boundary");
     ostringstream text;
     text << bool_name(showboundaryonlyp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","show_only_leaf_boundary");
+        xmloption.setAttribute("val",bool_name(showboundaryonlyp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "cell_growth");
     ostringstream text;
     text << bool_name(dynamicscellsp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
-  {
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","cell_growth");
+        xmloption.setAttribute("val",bool_name(dynamicscellsp));
+    }
+ /* {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "hide_cells");
     ostringstream text;
     text << bool_name(hidecellsp);
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
-  }
+  }*/
+    {
+        QDomElement xmloption=doc.createElement("setting");
+        xmlsettings.appendChild(xmloption);
+        xmloption.setAttribute("name","hide_cells");
+        xmloption.setAttribute("val",bool_name(hidecellsp));
+    }
   return xmlsettings;
 }
 
@@ -256,57 +346,57 @@ void MainBase::XMLReadSettings(QDomElement &settings)
   XMLReadViewport(settings);
   QDomElement cur = settings.firstChild().toElement();
 
-  while (!cur.isNull) {
+  while (!cur.isNull()) {
 
     if (cur.tagName()=="setting") {
 
-        QString name = cur.attibute("name");
+        QString name = cur.attribute("name");
         //xmlChar *name = xmlGetProp(cur, BAD_CAST "name");
         QString val = cur.attribute("val");
 
     //  xmlChar *val = xmlGetProp(cur, BAD_CAST "val");
         if (name=="show_cell_centers") {
     //  if (!xmlStrcmp(name, (const xmlChar *)"show_cell_centers")) {
-	showcentersp = strtobool( (const char *)val );
+    showcentersp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_nodes")) {
-	showmeshp = strtobool( (const char *)val );
+      if (name=="show_nodes") {
+    showmeshp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_node_numbers")) {
-	shownodenumbersp = strtobool( (const char *)val );
+      if (name=="show_node_numbers") {
+    shownodenumbersp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_cell_numbers")) {
-	showcellnumbersp = strtobool( (const char *)val );
+      if (name=="show_cell_numbers") {
+    showcellnumbersp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_border_cells")) {
-	showbordercellp = strtobool( (const char *)val );
+      if (name=="show_border_cells") {
+    showbordercellp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_cell_axes")) {
-	showcellsaxesp = strtobool( (const char *)val );
+      if (name=="show_cell_axes") {
+    showcellsaxesp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_cell_strain")) {
-	showcellstrainp = strtobool( (const char *)val );
+      if (name=="show_cell_strain") {
+    showcellstrainp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_fluxes")) {
-	showfluxesp = strtobool( (const char *)val );
+      if (name=="show_fluxes") {
+    showfluxesp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_walls")) {
-	showwallsp = strtobool( (const char *)val );
+      if (name=="show_walls") {
+    showwallsp = strtobool(  val.toStdString().c_str() );
       }
      /* if (!xmlStrcmp(name, (const xmlChar *)"show_apoplasts")) {
-	showapoplastsp = strtobool( (const char *)val );
+    showapoplastsp = strtobool(  val.toStdString().c_str() );
       }*/
-      if (name=="save_movie_frames")) {
-	movieframesp = strtobool( (const char *)val );
+      if (name=="save_movie_frames") {
+    movieframesp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="show_only_leaf_boundary")) {
-	showboundaryonlyp = strtobool( (const char *)val );
+      if (name=="show_only_leaf_boundary") {
+    showboundaryonlyp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="cell_growth")) {
-	dynamicscellsp = strtobool( (const char *)val );
+      if (name=="cell_growth") {
+    dynamicscellsp = strtobool(  val.toStdString().c_str() );
       }
-      if (name=="hide_cells")) {
-	hidecellsp = strtobool( (const char *)val ); 
+      if (name=="hide_cells") {
+    hidecellsp = strtobool(  val.toStdString().c_str() );
       }
 
     }

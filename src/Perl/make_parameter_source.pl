@@ -275,10 +275,9 @@ print cppfile "}\n";
 
 print cppfile <<END_TRAIL2;
 
-void Parameter::XMLAdd(QDomElement &root) const {
+void Parameter::XMLAdd(QDomDocument &doc, QDomElement &root) const {
     //xmlNode *xmlparameter = xmlNewChild(root, NULL, BAD_CAST "parameter", NULL);
-    QDomElement xmlparameter;
-    xmlparameter.setTagName("parameter");
+    QDomElement xmlparameter = doc.createElement("parameter");
     root.appendChild(xmlparameter);
 END_TRAIL2
 
@@ -288,8 +287,8 @@ for ($i=0;$i<$lines;$i++) {
     }
     print cppfile "{\n";
     #print cppfile "  xmlNode *xmlpar = xmlNewChild(xmlparameter, NULL, BAD_CAST \"par\", NULL);\n";
-    print cppfile "  QDomElement xmlpar;\n";
-    print cppfile "  xmlpar.setTagName(\"par\");\n";
+    print cppfile "  QDomElement xmlpar = doc.createElement(\"par\");\n";
+    # print cppfile "  xmlpar.setTagName(\"par\");\n";
     print cppfile "  xmlpar.setAttribute(\"name\",\"$param[$i]\" );\n";
     print cppfile "  xmlparameter.appendChild(xmlpar);\n";
     
@@ -297,8 +296,8 @@ for ($i=0;$i<$lines;$i++) {
     if ($convtype[$i] eq "double *") {
 	@paramlist = split(/,/,$value[$i]);
         #print cppfile "  xmlNode *xmlvalarray = xmlNewChild(xmlpar, NULL, BAD_CAST \"valarray\", NULL);\n";
-        print cppfile "  QDomElement xmlvalarray;\n";
-        print cppfile "  xmlvalarray.setTagName(\"valarray\");\n";
+        print cppfile "  QDomElement xmlvalarray = doc.createElement(\"valarray\");\n";
+        #       print cppfile "  xmlvalarray.setTagName(\"valarray\");\n";
         print cppfile "  xmlpar.appendChild(xmlvalarray);\n";
         
 	for ($j=0;$j<=$#paramlist;$j++) {
@@ -306,8 +305,8 @@ for ($i=0;$i<$lines;$i++) {
 	    print cppfile "    ostringstream text;\n";
 	    print cppfile "    text << $param[$i]\[$j\];\n";
         #print cppfile "    xmlNode *xmlval = xmlNewChild(xmlvalarray, NULL, BAD_CAST \"val\", NULL);\n";
-        print cppfile "   QDomElement xmlval;\n";
-        print cppfile "   xmlval.setTagName(\"val\");\n";
+        print cppfile "   QDomElement xmlval = doc.createElement(\"val\");\n";
+        #     print cppfile "   xmlval.setTagName(\"val\");\n";
         print cppfile "   xmlval.setAttribute(\"v\",text.str().c_str());\n";
         print cppfile "   xmlvalarray.appendChild(xmlval);\n";
         #	    print cppfile "    xmlNewProp(xmlval, BAD_CAST \"v\", BAD_CAST text.str().c_str());\n";
@@ -456,7 +455,7 @@ print hfile <<END_HEADER2;
    void CleanUp(void);
    void Read(const char *filename);
    void Write(ostream &os) const;
-   void XMLAdd(QDomElement &root) const;
+   void XMLAdd(QDomDocument &doc, QDomElement &root) const;
    void XMLRead(QDomElement &root);
    void AssignValToPar(const char *namec, const char *valc);
    void AssignValArrayToPar(const char *namec, vector<double> valarray);

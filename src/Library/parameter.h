@@ -41,7 +41,7 @@
    void CleanUp(void);
    void Read(const char *filename);
    void Write(ostream &os) const;
-   void XMLAdd(QDomElement &root) const;
+   void XMLAdd(QDomDocument &doc, QDomElement &root) const;
    void XMLRead(QDomElement &root);
    void AssignValToPar(const char *namec, const char *valc);
    void AssignValArrayToPar(const char *namec, vector<double> valarray);

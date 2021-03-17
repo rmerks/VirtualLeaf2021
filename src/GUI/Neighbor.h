@@ -26,8 +26,9 @@
 #define _NEIGHBOR_H_
 
 #include <iostream>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
+//#include <libxml/parser.h>
+//#include <libxml/tree.h>
+#include <QtXml>
 
 using namespace std;
 
@@ -55,7 +56,7 @@ class Neighbor {
   bool Cmp(Neighbor&) const;
   bool Eq(Neighbor&) const;
   Cell* getCell(void) const;
-  void XMLAdd(xmlNodePtr) const;
+  void XMLAdd(QDomDocument &doc, QDomElement &e) const;
 
   ostream &print(ostream &os) const;
 };

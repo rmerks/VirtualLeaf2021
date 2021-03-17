@@ -26,8 +26,9 @@
 #define _WALL_H_
 
 #include "wallbase.h"
-#include <libxml/parser.h>
-#include <libxml/tree.h>
+//#include <libxml/parser.h>
+//#include <libxml/tree.h>
+#include <QtXml>
 
 #include<QGraphicsScene>
 
@@ -37,7 +38,7 @@ class Wall : public WallBase {
  Wall(Node *sn1, Node *sn2, CellBase *sc1, CellBase *sc2) : WallBase(sn1, sn2, sc1, sc2) {}
 
 
-  void XMLAdd(xmlNodePtr parent_node) const;
+  void XMLAdd(QDomDocument &doc, QDomElement &parent_node) const;
   bool CorrectWall(void);
 
 

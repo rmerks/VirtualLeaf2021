@@ -110,7 +110,7 @@ class MainBase  {
     }
   };
   virtual void XMLReadSettings(QDomElement &settings);
-  virtual void XMLReadViewport(xmlNode *viewport);
+  virtual void XMLReadViewport(QDomElement &viewport);
 
   virtual double getFluxArrowsize(void) { return 10.;}
 
@@ -129,8 +129,8 @@ class MainBase  {
 
  protected:
   QGraphicsScene &canvas;
-  virtual xmlNode *XMLSettingsTree(void);
-  virtual xmlNode *XMLViewportTree(QTransform &transform) const;
+  virtual QDomElement XMLSettingsTree();
+  virtual QDomElement XMLViewportTree( QTransform &transform) const;
 
 
   
@@ -159,6 +159,7 @@ class MainBase  {
   bool removep;
   bool showtooltipsp;
   bool hidecellsp;
+
 };
 
 //#include <qapplication.h>

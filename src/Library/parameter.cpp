@@ -463,14 +463,12 @@ void Parameter::Write(ostream &os) const {
   os << " dir2 = " << dir2 << endl;
 }
 
-void Parameter::XMLAdd(QDomElement &root) const {
+void Parameter::XMLAdd(QDomDocument &doc, QDomElement &root) const {
     //xmlNode *xmlparameter = xmlNewChild(root, NULL, BAD_CAST "parameter", NULL);
-    QDomElement xmlparameter;
-    xmlparameter.setTagName("parameter");
+    QDomElement xmlparameter = doc.createElement("parameter");
     root.appendChild(xmlparameter);
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","arrowcolor" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -480,8 +478,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","arrowsize" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -489,8 +486,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","textcolor" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -500,8 +496,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","cellnumsize" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -509,8 +504,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","nodenumsize" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -518,8 +512,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","node_mag" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -527,8 +520,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","outlinewidth" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -536,8 +528,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","cell_outline_color" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -547,8 +538,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","resize_stride" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -556,8 +546,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","export_interval" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -565,8 +554,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","export_fn_prefix" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -576,8 +564,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","storage_stride" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -585,8 +572,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","xml_storage_stride" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -594,8 +580,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","datadir" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -607,8 +592,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","T" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -616,8 +600,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","lambda_length" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -625,8 +608,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","yielding_threshold" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -634,8 +616,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","lambda_celllength" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -643,8 +624,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","target_length" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -652,8 +632,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","cell_expansion_rate" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -661,8 +640,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","cell_div_expansion_rate" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -670,8 +648,7 @@ void Parameter::XMLAdd(QDomElement &root) const {
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","auxin_dependent_growth" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -679,8 +656,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","ode_accuracy" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -688,8 +664,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","mc_stepsize" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -697,8 +672,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","mc_cell_stepsize" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -706,8 +680,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","energy_threshold" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -715,8 +688,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","bend_lambda" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -724,8 +696,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","alignment_lambda" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -733,8 +704,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","rel_cell_div_threshold" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -742,8 +712,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","rel_perimeter_stiffness" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -751,8 +720,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","collapse_node_threshold" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -760,8 +728,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","morphogen_div_threshold" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -769,8 +736,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","morphogen_expansion_threshold" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -778,8 +744,7 @@ text << sbool(auxin_dependent_growth);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","copy_wall" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -787,8 +752,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","source" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -796,266 +760,231 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","D" );
   xmlparameter.appendChild(xmlpar);
-  QDomElement xmlvalarray;
-  xmlvalarray.setTagName("valarray");
+  QDomElement xmlvalarray = doc.createElement("valarray");
   xmlpar.appendChild(xmlvalarray);
   {
     ostringstream text;
     text << D[0];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[1];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[2];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[3];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[4];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[5];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[6];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[7];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[8];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[9];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[10];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[11];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[12];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[13];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << D[14];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","initval" );
   xmlparameter.appendChild(xmlpar);
-  QDomElement xmlvalarray;
-  xmlvalarray.setTagName("valarray");
+  QDomElement xmlvalarray = doc.createElement("valarray");
   xmlpar.appendChild(xmlvalarray);
   {
     ostringstream text;
     text << initval[0];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[1];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[2];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[3];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[4];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[5];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[6];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[7];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[8];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[9];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[10];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[11];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[12];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[13];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
   {
     ostringstream text;
     text << initval[14];
-   QDomElement xmlval;
-   xmlval.setTagName("val");
+   QDomElement xmlval = doc.createElement("val");
    xmlval.setAttribute("v",text.str().c_str());
    xmlvalarray.appendChild(xmlval);
   }
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","k1" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1063,8 +992,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","k2" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1072,8 +1000,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","r" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1081,8 +1008,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","kr" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1090,8 +1016,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","km" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1099,8 +1024,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","Pi_tot" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1108,8 +1032,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","transport" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1117,8 +1040,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","ka" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1126,8 +1048,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","pin_prod" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1135,8 +1056,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","pin_prod_in_epidermis" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1144,8 +1064,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","pin_breakdown" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1153,8 +1072,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","pin_breakdown_internal" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1162,8 +1080,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","aux1prod" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1171,8 +1088,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","aux1prodmeso" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1180,8 +1096,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","aux1decay" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1189,8 +1104,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","aux1decaymeso" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1198,8 +1112,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","aux1transport" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1207,8 +1120,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","aux_cons" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1216,8 +1128,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","aux_breakdown" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1225,8 +1136,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","kaux1" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1234,8 +1144,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","kap" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1243,8 +1152,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","leaf_tip_source" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1252,8 +1160,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","sam_efflux" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1261,8 +1168,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","sam_auxin" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1270,8 +1176,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","sam_auxin_breakdown" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1279,8 +1184,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","van3prod" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1288,8 +1192,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","van3autokat" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1297,8 +1200,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","van3sat" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1306,8 +1208,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","k2van3" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1315,8 +1216,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","dt" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1324,8 +1224,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","rd_dt" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1333,8 +1232,7 @@ text << sbool(copy_wall);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","movie" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1342,8 +1240,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","nit" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1351,8 +1248,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","maxt" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1360,8 +1256,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","rseed" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1369,8 +1264,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","constituous_expansion_limit" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1378,8 +1272,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","vessel_inh_level" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1387,8 +1280,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","vessel_expansion_rate" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1396,8 +1288,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","d" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1405,8 +1296,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","e" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1414,8 +1304,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","f" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1423,8 +1312,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","c" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1432,8 +1320,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","mu" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1441,8 +1328,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","nu" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1450,8 +1336,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","rho0" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1459,8 +1344,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","rho1" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1468,8 +1352,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","c0" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1477,8 +1360,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","gamma" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1486,8 +1368,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","eps" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1495,8 +1376,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","betaN" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1504,8 +1384,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","gammaN" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1513,8 +1392,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","betaD" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1522,8 +1400,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","gammaD" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1531,8 +1408,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","betaR" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1540,8 +1416,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","gammaR" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1549,8 +1424,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","tau" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1558,8 +1432,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","kt" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1567,8 +1440,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","kc" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1576,8 +1448,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","krs" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1585,8 +1456,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","i1" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1594,8 +1464,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","i2" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1603,8 +1472,7 @@ text << sbool(movie);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","b4" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1612,8 +1480,7 @@ text << sbool(b4);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","dir1" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1623,8 +1490,7 @@ text << sbool(b4);
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
-  QDomElement xmlpar;
-  xmlpar.setTagName("par");
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","dir2" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;

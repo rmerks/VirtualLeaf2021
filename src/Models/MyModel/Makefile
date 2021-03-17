@@ -981,15 +981,15 @@ MyModel.o: MyModel.cpp /opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QObj
 		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers/qwindowdefs.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtGui.framework/Headers/qtguiversion.h \
 		../../Library/parameter.h \
+		../../Library/vector.h \
+		../../Library/sqr.h \
+		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QPointF \
+		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/qpoint.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/QtXml \
 		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qtxmlglobal.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qdom.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qxml.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtXml.framework/Headers/qtxmlversion.h \
-		../../Library/vector.h \
-		../../Library/sqr.h \
-		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QPointF \
-		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/qpoint.h \
 		../../Library/wallbase.h \
 		../../Library/cellbase.h \
 		/opt/Qt/5.12.1/clang_64/lib/QtCore.framework/Headers/QString \

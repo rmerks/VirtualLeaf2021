@@ -198,7 +198,8 @@ void MainBase::Plot(int resize_stride)
       XMLname.width(6);
       XMLname << count << ".xml";
       // Write XML file every ten plot steps
-      mesh.XMLSave(XMLname.str().c_str(), XMLSettingsTree());
+      QDomElement settings=XMLSettingsTree();
+      mesh.XMLSave(XMLname.str().c_str(), settings);
 
       // add PDF
       stringstream PDFname;
@@ -230,11 +231,12 @@ INIT {
     } */
       
       
-       xmlNode *settings;
-       mesh.XMLRead(leaffile, &settings);
+      // xmlNode *settings;
+      QDomElement settings;
+       mesh.XMLRead(leaffile, settings);
        
        main_window->XMLReadSettings(settings);
-       xmlFree(settings);
+     //  xmlFree(settings);
        if (useGUI) main_window->UserMessage(QString("Ready. Time is %1").arg(mesh.getTimeHours().c_str()));
       
 

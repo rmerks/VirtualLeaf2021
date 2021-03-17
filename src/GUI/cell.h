@@ -33,7 +33,7 @@
 #include "wall.h"
 #include "warning.h"
 #include "cellbase.h"
-#include "cell.h"
+//#include "cell.h"
 
 #include <QGraphicsScene>
 #include <qcolor.h>
@@ -119,7 +119,7 @@ class Cell : public CellBase
   bool LinePieceIntersectsP(const Vector v1, const Vector v2) const;
   bool IntersectsWithLineP(const Vector v1, const Vector v2);
 
-  void XMLAdd(xmlNodePtr cells_node) const;
+  void XMLAdd(QDomDocument &doc, QDomElement &cells_node) const;
 
   void ConstructWalls(void);
   void Flux(double *flux, double *D);
@@ -151,8 +151,8 @@ class Cell : public CellBase
   void ChemMonValue(double t, double *x);
 
  protected:
-  void XMLAddCore(xmlNodePtr xmlcell) const;
-  int XMLRead(xmlNode *cur);
+  void XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const;
+  int XMLRead(QDomElement &cur);
   void DivideWalls(ItList new_node_locations, const Vector from, const Vector to, bool wall_fixed = false, NodeSet *node_set = 0);
 
  private:
@@ -188,7 +188,7 @@ class BoundaryPolygon : public Cell {
   }
   virtual void Draw(QGraphicsScene *c, QString tooltip = QString::Null());
 
-  virtual void XMLAdd(xmlNodePtr parent_node) const;
+  virtual void XMLAdd(QDomDocument &doc, QDomElement &parent_node) const;
 
   virtual bool BoundaryPolP(void) const { return true; } 
 };

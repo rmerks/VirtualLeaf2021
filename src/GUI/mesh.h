@@ -332,8 +332,8 @@ class Mesh {
 #endif
   double max_chem;
 
-  void XMLSave(const char *docname, xmlNode *settings=0) const;
-  void XMLRead(const char *docname, const QDomElement &settings=QDomElement(), bool geometry = true, bool pars = true, bool simtime = true);
+  void XMLSave(const char *docname, QDomElement &settings) const;
+  void XMLRead(const char *docname, QDomElement &settings, bool geometry = true, bool pars = true, bool simtime = true);
   //void QtXMLRead(const char *docname, QDomElement &settings, bool geometry = true, bool pars = true, bool simtime = true);
   void XMLReadPars(const QDomElement &a_node);
   void XMLReadGeometry(QDomElement root_node);
@@ -342,7 +342,7 @@ class Mesh {
   void XMLReadCells(QDomElement &root);
   void XMLParseTree(const QDomElement &root_node);
   void XMLReadWalls(QDomElement &cur, vector<Wall *> *tmp_cells);
-  void XMLReadWallsToCells(xmlNode *root, vector<Wall *> *tmp_walls);
+  void XMLReadWallsToCells(QDomElement &root, vector<Wall *> *tmp_walls);
   void XMLReadNodeSets(QDomElement &root);
   void XMLReadNodeSetsToNodes(QDomElement &root);
   void PerturbChem(int chemnum, double range);

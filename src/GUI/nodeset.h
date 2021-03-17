@@ -152,8 +152,8 @@ class NodeSet : public list<Node *> {
     }
   }
 
-  void XMLAdd(xmlNode *root) const;
-  void XMLRead(xmlNode *root, Mesh *m);
+  void XMLAdd(QDomDocument &doc, QDomElement &root) const;
+  void XMLRead(QDomElement &root, Mesh *m);
  private:
   bool done;
 };

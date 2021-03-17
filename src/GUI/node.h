@@ -128,7 +128,7 @@ class Node : public Vector {
   Cell &getCell(const Neighbor &i);
 
   ostream &print(ostream &os) const;
-  void XMLAdd(xmlNodePtr nodes_node) const;
+  void XMLAdd(QDomDocument &doc, QDomElement &nodes_node) const;
 
 #ifdef QTGRAPHICS
   void Draw(QGraphicsScene &c, QColor color=QColor("black"), int size = 10) const;

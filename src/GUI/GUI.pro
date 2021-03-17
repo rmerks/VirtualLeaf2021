@@ -19,9 +19,10 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG += release
-CONFIG -= debug
+CONFIG -= release
+CONFIG += debug
 CONFIG += qt
+CONFIG -= app_bundle
 CONFIG+=sdk_no_version_check
 
 
