@@ -62,10 +62,11 @@ void Cell::XMLAdd(QDomDocument &doc, QDomElement &cells_node) const {
   XMLAddCore(doc,xmlcell);
 }
 
-void BoundaryPolygon::XMLAdd(QDomDocument &doc, QDomElement &parent_node) const {
+void BoundaryPolygon::XMLAdd(QDomDocument &doc, QDomElement &cells_node) const {
 
   //xmlNodePtr xmlcell = xmlNewChild(parent_node, NULL, BAD_CAST "boundary_polygon",NULL);
     QDomElement xmlcell = doc.createElement("boundary_polygon");
+    cells_node.appendChild(xmlcell);
   XMLAddCore(doc,xmlcell);
 }
 
@@ -95,25 +96,25 @@ void NodeSet::XMLAdd(QDomDocument &doc, QDomElement &root) const {
 void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
 
   // properties
-
+  QLocale standardlocale(QLocale::C);
   {
     //ostringstream text;
     //text << index;
    // xmlNewProp(xmlcell, BAD_CAST "index" , BAD_CAST text.str().c_str() );
-    xmlcell.setAttribute("index",QString("%1").arg(index));
+    xmlcell.setAttribute("index",standardlocale.toString(index));
   }
   {
     //ostringstream text;
     //text << area;
     //xmlNewProp(xmlcell, BAD_CAST "area", BAD_CAST text.str().c_str());
-       xmlcell.setAttribute("area",QString("%1").arg(area));
+       xmlcell.setAttribute("area",standardlocale.toString(area));
   }
 
   {
   //  ostringstream text;
   //  text << target_area;
   //  xmlNewProp(xmlcell, BAD_CAST "target_area", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("target_area",QString("%1").arg(target_area));
+         xmlcell.setAttribute("target_area",standardlocale.toString(target_area));
   }
 
 
@@ -121,14 +122,14 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
     //ostringstream text;
     //text << target_length;
    // xmlNewProp(xmlcell, BAD_CAST "target_length", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("target_length",QString("%1").arg(target_length));
+         xmlcell.setAttribute("target_length",standardlocale.toString(target_length));
   }
 
   {
    // ostringstream text;
    // text << lambda_celllength;
    // xmlNewProp(xmlcell, BAD_CAST "lambda_celllength", BAD_CAST text.str().c_str());
-        xmlcell.setAttribute("lambda_celllength",QString("%1").arg(lambda_celllength));
+        xmlcell.setAttribute("lambda_celllength",standardlocale.toString(lambda_celllength));
 
   }
 
@@ -136,28 +137,28 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
    // ostringstream text;
     //text << stiffness;
     //xmlNewProp(xmlcell, BAD_CAST "stiffness", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("stiffness",QString("%1").arg(stiffness));
+         xmlcell.setAttribute("stiffness",standardlocale.toString(stiffness));
   }
 
   {
     //ostringstream text;
     //text << bool_name(fixed);
     //xmlNewProp(xmlcell, BAD_CAST "fixed", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("fixed",QString("%1").arg(fixed));
+         xmlcell.setAttribute("fixed",bool_name(fixed));
   }
 
   {
  //   ostringstream text;
  //   text << bool_name(pin_fixed);
  //   xmlNewProp(xmlcell, BAD_CAST "pin_fixed", BAD_CAST text.str().c_str());
-    xmlcell.setAttribute("pin_fixed",QString("%1").arg(pin_fixed));
+    xmlcell.setAttribute("pin_fixed",bool_name(pin_fixed));
   }
 
   {
     //ostringstream text;
     //text << bool_name(at_boundary);
     //xmlNewProp(xmlcell, BAD_CAST "at_boundary", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("at_boundary",QString("%1").arg(at_boundary));
+         xmlcell.setAttribute("at_boundary",bool_name(at_boundary));
   }
 
 
@@ -165,14 +166,14 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
     //ostringstream text;
     //text << bool_name(dead);
    // xmlNewProp(xmlcell, BAD_CAST "dead", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("dead",QString("%1").arg(dead));
+         xmlcell.setAttribute("dead",bool_name(dead));
   }
 
   {
    // ostringstream text;
    // text << bool_name(source);
    // xmlNewProp(xmlcell, BAD_CAST "source", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("source",QString("%1").arg(source));
+         xmlcell.setAttribute("source",bool_name(source));
   }
 
 
@@ -180,21 +181,21 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
     //ostringstream text;
    // text << boundary_type_names[boundary];
    // xmlNewProp(xmlcell, BAD_CAST "boundary", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("boundary",QString("%1").arg(boundary));
+         xmlcell.setAttribute("boundary",standardlocale.toString(boundary));
   }
 
   {
    // ostringstream text;
    // text << div_counter;
    // xmlNewProp(xmlcell, BAD_CAST "div_counter", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("div_counter",QString("%1").arg(div_counter));
+         xmlcell.setAttribute("div_counter",standardlocale.toString(div_counter));
   }
 
   {
    // ostringstream text;
    // text << cell_type;
    // xmlNewProp(xmlcell, BAD_CAST "cell_type", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("cell_type",QString("%1").arg(cell_type));
+         xmlcell.setAttribute("cell_type",standardlocale.toString(cell_type));
   }
 
   for (list<Node *>::const_iterator i=nodes.begin();i!=nodes.end();i++) {
@@ -206,7 +207,7 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
 
       //text << (*i)->Index();
       //xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
-      node_xml.setAttribute("n",QString("%1").arg((*i)->Index()));
+      node_xml.setAttribute("n",standardlocale.toString((*i)->Index()));
        xmlcell.appendChild(node_xml);
     }
   }
@@ -231,7 +232,7 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
     //ostringstream text;
     //text << NChem();
     //xmlNewProp(chem_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
-      chem_xml.setAttribute("n",QString("%1").arg(NChem()));
+      chem_xml.setAttribute("n",standardlocale.toString(NChem()));
   }
 
   for (int i=0;i<NChem();i++) {
@@ -242,7 +243,7 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
       //ostringstream text;
       //text << chem[i];
       //xmlNewProp(chem_val_xml, BAD_CAST "v", BAD_CAST text.str().c_str());
-         chem_val_xml.setAttribute("v",QString("%1").arg(chem[i]));
+         chem_val_xml.setAttribute("v",standardlocale.toString(chem[i]));
     }
   }
 }
@@ -251,6 +252,7 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
 
 void Node::XMLAdd(QDomDocument &doc, QDomElement &nodes_node) const {
 
+    QLocale standardlocale(QLocale::C);
   // Save the node to a stream so we can reconstruct its state later
   //xmlNodePtr xmlnode = xmlNewChild(nodes_node, NULL, BAD_CAST "node",NULL);
     QDomElement xmlnode=doc.createElement("node");
@@ -260,35 +262,35 @@ void Node::XMLAdd(QDomDocument &doc, QDomElement &nodes_node) const {
     //ostringstream text;
     //text << x;
     //xmlNewProp(xmlnode, BAD_CAST "x", BAD_CAST text.str().c_str());
-        xmlnode.setAttribute("x",QString("%1").arg(x));
+        xmlnode.setAttribute("x",standardlocale.toString(x));
   }
 
   {
     //ostringstream text;
     //text << y;
     //xmlNewProp(xmlnode, BAD_CAST "y", BAD_CAST text.str().c_str());
-        xmlnode.setAttribute("y",QString("%1").arg(y));
+        xmlnode.setAttribute("y",standardlocale.toString(y));
   }
 
   {
    /* ostringstream text;
     text << bool_name(fixed);
     xmlNewProp(xmlnode, BAD_CAST "fixed", BAD_CAST text.str().c_str());*/
-         xmlnode.setAttribute("fixed",QString("%1").arg(bool_name(fixed)));
+         xmlnode.setAttribute("fixed",bool_name(fixed));
   }
 
   {
    /* ostringstream text;
     text << bool_name(boundary);
     xmlNewProp(xmlnode, BAD_CAST "boundary", BAD_CAST text.str().c_str());*/
-         xmlnode.setAttribute("boundary",QString("%1").arg(bool_name(boundary)));
+         xmlnode.setAttribute("boundary",bool_name(boundary));
   }
 
   {
     /*ostringstream text;
     text << bool_name(sam);
     xmlNewProp(xmlnode, BAD_CAST "sam", BAD_CAST text.str().c_str());*/
-         xmlnode.setAttribute("sam",QString("%1").arg(bool_name(sam)));
+         xmlnode.setAttribute("sam",bool_name(sam));
   }
 
   if (node_set) {
@@ -301,6 +303,7 @@ void Node::XMLAdd(QDomDocument &doc, QDomElement &nodes_node) const {
 
 void Neighbor::XMLAdd(QDomDocument &doc, QDomElement &neighbors_node) const {
 
+  QLocale standardlocale(QLocale::C);
   //xmlNodePtr xmlnode = xmlNewChild(neighbors_node, NULL, BAD_CAST "neighbor",NULL);
       QDomElement xmlnode = doc.createElement("neighbor");
       neighbors_node.appendChild(xmlnode);
@@ -308,21 +311,21 @@ void Neighbor::XMLAdd(QDomDocument &doc, QDomElement &neighbors_node) const {
    // ostringstream text;
    // text << cell->Index();
     //xmlNewProp(xmlnode, BAD_CAST "cell", BAD_CAST text.str().c_str());
-       xmlnode.setAttribute("cell",QString("%1").arg(cell->Index()));
+       xmlnode.setAttribute("cell",standardlocale.toString(cell->Index()));
   }
 
   {
    // ostringstream text;
     //text << nb1->Index();
    // xmlNewProp(xmlnode, BAD_CAST "nb1", BAD_CAST text.str().c_str());
-          xmlnode.setAttribute("nb1",QString("%1").arg(nb1->Index()));
+          xmlnode.setAttribute("nb1",standardlocale.toString(nb1->Index()));
   }
 
   {
   //  ostringstream text;
    // text << nb2->Index();
    // xmlNewProp(xmlnode, BAD_CAST "nb2", BAD_CAST text.str().c_str());
-          xmlnode.setAttribute("nb2",QString("%1").arg(nb2->Index()));
+          xmlnode.setAttribute("nb2",standardlocale.toString(nb2->Index()));
   }
 }
 
@@ -374,8 +377,9 @@ int Cell::XMLRead(QDomElement &cur)
       if (nc.isEmpty()) {
     unique_warning("Token \"n\" not found in xmlwrite.cpp at or around line no. 966");
       }
-      tmp_nodes.push_back(atoi(nc.toStdString().c_str()));
-     // xmlFree(nc);
+      //tmp_nodes.push_back(atoi(qPrintable(nc)));
+        tmp_nodes.push_back(standardlocale.toInt(nc));
+      // xmlFree(nc);
 
     }
     n = n.nextSibling().toElement();
@@ -420,7 +424,7 @@ if (v_node.tagName() == "val") {
         unique_warning("Token \"v\" not found in xmlwrite.cpp at or around line no. 1002");
       }
       double v=standardlocale.toDouble(nc, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",nc.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(nc));
       chem[nv++]=v;
 
     }
@@ -440,7 +444,7 @@ if (v_node.tagName() == "val") {
       unique_warning("Token \"area\" not found in xmlwrite.cpp at or around line no. 1018");
     } else {
       area=standardlocale.toDouble(v_str, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",v_str.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(v_str));
 
     }
   }
@@ -455,7 +459,7 @@ if (v_node.tagName() == "val") {
     }
     else {
       target_area=standardlocale.toDouble(v_str, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",v_str.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(v_str));
 
     }
   }
@@ -469,7 +473,7 @@ if (v_node.tagName() == "val") {
     }
      else {
       target_length=standardlocale.toDouble(v_str, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",v_str.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(v_str));
 
     }
   }
@@ -482,7 +486,7 @@ if (v_node.tagName() == "val") {
     }
      else {
       lambda_celllength=standardlocale.toDouble(v_str, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",v_str.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(v_str));
 
     }
   }
@@ -495,7 +499,7 @@ if (v_node.tagName() == "val") {
     }
      else {
       stiffness=standardlocale.toDouble(v_str, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",v_str.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(v_str));
 
     }
   }
@@ -508,7 +512,7 @@ if (v_node.tagName() == "val") {
       unique_warning("Token \"fixed\" not found in xmlwrite.cpp at or around line no. 1075");
     }
      else {
-      fixed = strtobool( v_str.toStdString().c_str());
+      fixed = strtobool( qPrintable(v_str));
 
     }
   }
@@ -520,7 +524,7 @@ if (v_node.tagName() == "val") {
       unique_warning("Token \"pin_fixed\" not found in xmlwrite.cpp at or around line no. 1086");
     }
      else {
-      pin_fixed = strtobool( v_str.toStdString().c_str());
+      pin_fixed = strtobool( qPrintable(v_str));
 
     }
   }
@@ -532,7 +536,7 @@ if (v_node.tagName() == "val") {
       unique_warning("Token \"at_boundary\" not found in xmlwrite.cpp at or around line no. 1097");
     }
      else {
-      at_boundary = strtobool( v_str.toStdString().c_str());
+      at_boundary = strtobool( qPrintable(v_str));
 
     }
   }
@@ -544,7 +548,7 @@ if (v_node.tagName() == "val") {
       unique_warning("Token \"dead\" not found in xmlwrite.cpp at or around line no. 1108");
     }
      else {
-      dead = strtobool( v_str.toStdString().c_str());
+      dead = strtobool( qPrintable(v_str));
 
     }
   }
@@ -556,7 +560,7 @@ if (v_node.tagName() == "val") {
       unique_warning("Token \"source\" not found in xmlwrite.cpp at or around line no. 1119");
     }
      else {
-      source = strtobool( v_str.toStdString().c_str());
+      source = strtobool( qPrintable(v_str));
 
     }
   }
@@ -586,8 +590,8 @@ if (v_node.tagName() == "val") {
       unique_warning("Token \"div_counter\" not found in xmlwrite.cpp at or around line no. 1119");
     }
      else {
-      div_counter = atoi( v_str.toStdString().c_str());
-
+    //  div_counter = atoi( qPrintable(v_str));
+        div_counter = standardlocale.toInt(v_str);
     }
   }
 
@@ -598,8 +602,8 @@ if (v_node.tagName() == "val") {
       unique_warning("Token \"cell_type\" not found in xmlwrite.cpp at or around line no. 1237");
     }
      else {
-      cell_type = atoi( v_str.toStdString().c_str());
-
+     // cell_type = atoi( qPrintable(v_str));
+    cell_type=standardlocale.toInt(v_str);
     }
   }
 
@@ -612,6 +616,7 @@ void NodeSet::XMLRead(QDomElement &root, Mesh *m)
 {
 
   //xmlNode *n = root->xmlChildrenNode;
+    QLocale standardlocale(QLocale::C);
     QDomElement n = root.firstChild().toElement();
 
   vector<int> tmp_nodes;
@@ -622,8 +627,8 @@ void NodeSet::XMLRead(QDomElement &root, Mesh *m)
       if (nc==0) {
     unique_warning("Token \"n\" not found in xmlwrite.cpp at or around line no. 966");
       }
-      tmp_nodes.push_back(atoi( nc.toStdString().c_str()));
-
+      //tmp_nodes.push_back(atoi( qPrintable(nc) ) );
+        tmp_nodes.push_back(standardlocale.toInt(nc));
     }
     n = n.nextSibling().toElement();
   }
@@ -639,6 +644,7 @@ void NodeSet::XMLRead(QDomElement &root, Mesh *m)
 
 void Wall::XMLAdd(QDomDocument &doc, QDomElement &parent) const {
 
+    QLocale standardlocale(QLocale::C);
   // Save the node to a stream so we can reconstruct its state later
   //xmlNodePtr xmlwall = xmlNewChild(parent, NULL, BAD_CAST "wall",NULL);
     QDomElement xmlwall = doc.createElement("wall");
@@ -647,14 +653,14 @@ void Wall::XMLAdd(QDomDocument &doc, QDomElement &parent) const {
    // ostringstream text;
    // text << Index();
    // xmlNewProp(xmlwall, BAD_CAST "index" , BAD_CAST text.str().c_str() );
-        xmlwall.setAttribute("index",QString("%1").arg(Index()));
+        xmlwall.setAttribute("index",standardlocale.toString(Index()));
   }
 
   {
     //ostringstream text;
     //text << c1->Index();
     //xmlNewProp(xmlwall, BAD_CAST "c1", BAD_CAST text.str().c_str());
-    xmlwall.setAttribute("c1",QString("%1").arg(c1->Index()));
+    xmlwall.setAttribute("c1",standardlocale.toString(c1->Index()));
   }
 
 
@@ -662,7 +668,7 @@ void Wall::XMLAdd(QDomDocument &doc, QDomElement &parent) const {
     //ostringstream text;
    // text << c2->Index();
    // xmlNewProp(xmlwall, BAD_CAST "c2", BAD_CAST text.str().c_str());
-        xmlwall.setAttribute("c2",QString("%1").arg(c2->Index()));
+        xmlwall.setAttribute("c2",standardlocale.toString(c2->Index()));
   }
 
 
@@ -670,21 +676,21 @@ void Wall::XMLAdd(QDomDocument &doc, QDomElement &parent) const {
    // ostringstream text;
    // text << n1->Index();
    // xmlNewProp(xmlwall, BAD_CAST "n1", BAD_CAST text.str().c_str());
-    xmlwall.setAttribute("n1",QString("%1").arg(n1->Index()));
+    xmlwall.setAttribute("n1",standardlocale.toString(n1->Index()));
   }
 
   {
    // ostringstream text;
    // text << n2->Index();
    // xmlNewProp(xmlwall, BAD_CAST "n2", BAD_CAST text.str().c_str());
-            xmlwall.setAttribute("n2",QString("%1").arg(n2->Index()));
+            xmlwall.setAttribute("n2",standardlocale.toString(n2->Index()));
   }
 
   {
   //  ostringstream text;
   //  text << length;
   //  xmlNewProp(xmlwall, BAD_CAST "length", BAD_CAST text.str().c_str());
-            xmlwall.setAttribute("length",QString("%1").arg(length));
+            xmlwall.setAttribute("length",standardlocale.toString(length));
   }
 
 
@@ -692,7 +698,7 @@ void Wall::XMLAdd(QDomDocument &doc, QDomElement &parent) const {
    // ostringstream text;
    // text << viz_flux;
    // xmlNewProp(xmlwall, BAD_CAST "viz_flux", BAD_CAST text.str().c_str());
-            xmlwall.setAttribute("viz_flux",QString("%1").arg(viz_flux));
+            xmlwall.setAttribute("viz_flux",standardlocale.toString(viz_flux));
   }
 
   {
@@ -773,7 +779,7 @@ vector<double> XMLIO::XMLReadValArray(QDomElement &cur)
       if (!vc.isEmpty()) {
     //result.push_back(strtod( (const char *)vc, 0));
     result.push_back(standardlocale.toDouble(vc, &ok));
-    if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",vc.toStdString().c_str());
+    if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(vc) );
       }
 
     }
@@ -785,6 +791,7 @@ vector<double> XMLIO::XMLReadValArray(QDomElement &cur)
 void Mesh::XMLSave(const char *docname, QDomElement &options) const
 {
 
+    QLocale standardlocale(QLocale::C);
   // based on libxml2 example code "tree2.c"
 
  // xmlDocPtr doc = NULL;       /* document pointer */
@@ -798,10 +805,11 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
   /*
    * Creates a new document, a node and set it as a root node
    */
-  //doc = xmlNewDoc(BAD_CAST "1.0");
-  //root_node = xmlNewNode(NULL, BAD_CAST "leaf");
-    QDomDocument doc("1.0");
+    //doc = xmlNewDoc(BAD_CAST "1.0");
+    //root_node = xmlNewNode(NULL, BAD_CAST "leaf");
+    QDomDocument doc("leaf");
     QDomElement root_node = doc.createElement("leaf");
+    //QDomElement root_node=doc.toElement();
     doc.appendChild(root_node);
   //xmlDocSetRootElement(doc, root_node);
 
@@ -827,7 +835,7 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
   free(tstring);
 
 
-  QString simtime = QString("%1").arg(time);
+  QString simtime = standardlocale.toString(time);
   //xmlNewProp(root_node, BAD_CAST "simtime", BAD_CAST simtime.toStdString().c_str());
   root_node.setAttribute("simtime",simtime);
   /*
@@ -842,13 +850,13 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
   { //ostringstream text;
     //text << NNodes();
     //xmlNewProp(xmlnodes, BAD_CAST "n", BAD_CAST text.str().c_str());
-    xmlnodes.setAttribute("n",QString("%1").arg(NNodes()));
+    xmlnodes.setAttribute("n",standardlocale.toString(NNodes()));
   }
 
   { //ostringstream text;
     //text << Node::target_length;
     //xmlNewProp(xmlnodes, BAD_CAST "target_length", BAD_CAST text.str().c_str());
-    xmlnodes.setAttribute("target_length",QString("%1").arg(Node::target_length));
+    xmlnodes.setAttribute("target_length",standardlocale.toString(Node::target_length));
   }
 
   for (vector<Node *>::const_iterator i=nodes.begin(); i!=nodes.end(); i++) {
@@ -868,20 +876,20 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
    // ostringstream text;
    // text << NCells();
     //xmlNewProp(xmlcells, BAD_CAST "n", BAD_CAST text.str().c_str());
-      xmlcells.setAttribute("n",QString("%1").arg(NCells()));
+      xmlcells.setAttribute("n",standardlocale.toString(NCells()));
   }
   {
    // ostringstream text;
     //text << Cell::offset[0];
    // xmlNewProp(xmlcells, BAD_CAST "offsetx", BAD_CAST text.str().c_str());
-      xmlcells.setAttribute("offsetx",QString("%1").arg(Cell::offset[0]));
+      xmlcells.setAttribute("offsetx",standardlocale.toString(Cell::offset[0]));
   }
 
   {
     //ostringstream text;
     //text << Cell::offset[1];
     //xmlNewProp(xmlcells, BAD_CAST "offsety", BAD_CAST text.str().c_str());
-       xmlcells.setAttribute("offsety",QString("%1").arg(Cell::offset[1]));
+       xmlcells.setAttribute("offsety",standardlocale.toString(Cell::offset[1]));
   }
 
   {
@@ -895,7 +903,7 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
     //ostringstream text;
     //text << cells.front()->BaseArea();
     //xmlNewProp(xmlcells, BAD_CAST "base_area", BAD_CAST text.str().c_str());
-    xmlcells.setAttribute("base_area",QString("%1").arg(cells.front()->BaseArea()));
+    xmlcells.setAttribute("base_area",standardlocale.toString(cells.front()->BaseArea()));
 
   }
 
@@ -903,7 +911,7 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
     //ostringstream text;
     //text << Cell::NChem();
     //xmlNewProp(xmlcells, BAD_CAST "nchem", BAD_CAST text.str().c_str());
-      xmlcells.setAttribute("nchem",QString("%1").arg(Cell::NChem()));
+      xmlcells.setAttribute("nchem",standardlocale.toString(Cell::NChem()));
   }
 
   for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
@@ -919,7 +927,7 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
     //ostringstream text;
     //text << walls.size();
     //xmlNewProp(xmlwalls, BAD_CAST "n", BAD_CAST text.str().c_str());
-    xmlwalls.setAttribute("n",QString("%1").arg(walls.size()) );
+    xmlwalls.setAttribute("n",standardlocale.toString((int)walls.size()) );
 
   }
 
@@ -936,7 +944,7 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
    // ostringstream text;
    // text << node_sets.size();
    // xmlNewProp(xmlnodesets, BAD_CAST "n", BAD_CAST text.str().c_str());
-      xmlnodesets.setAttribute("n",QString("%1").arg(node_sets.size()));
+      xmlnodesets.setAttribute("n",standardlocale.toString((int)node_sets.size()));
   }
 
 //  for_each( node_sets.begin(), node_sets.end(), bind2nd ( mem_fun_ref( &NodeSet::XMLAdd ), xmlnodesets ) );
@@ -948,8 +956,8 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
    // xmlAddChild(root_node, options);
   //}
 
-
- root_node.appendChild(options);
+    QDomNode options_copy = doc.importNode(options,true);
+     root_node.appendChild(options_copy);
 
 
   /*
@@ -963,8 +971,7 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
       throw("cannot open file for output");
     }
     QTextStream out(&xmlout);
-    QString xml = doc.toString();
-    cerr << qPrintable(xml) << endl;
+    doc.save(out,2, QDomNode::EncodingFromDocument);
     xmlout.close();
   /*free the document */
   //xmlFreeDoc(doc);
@@ -996,7 +1003,7 @@ void Mesh::XMLReadSimtime(const QDomElement &a_node)
     bool ok;
 
     double simtime=standardlocale.toDouble(strsimtime, &ok);
-    if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",strsimtime.toStdString().c_str());
+    if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(strsimtime) );
     time = simtime;
 #ifdef QDEBUG
     qDebug() << "Simtime = " << strsimtime << endl;
@@ -1076,10 +1083,10 @@ void Mesh::XMLReadGeometry(const QDomElement root_node)
       QString offsetyc = cur.attribute("offsety","0");
 
       double ox=standardlocale.toDouble(offsetxc, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",offsetxc.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable (offsetxc) );
 
       double oy=standardlocale.toDouble(offsetyc, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",offsetyc.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(offsetyc) );
       Cell::setOffset(ox, oy);
     //  xmlFree(offsetxc);
 //      xmlFree(offsetyc);
@@ -1087,13 +1094,13 @@ void Mesh::XMLReadGeometry(const QDomElement root_node)
         QString magnificationc = cur.attribute("magnification","1");
 
       Cell::SetMagnification(standardlocale.toDouble(magnificationc, &ok));
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",magnificationc.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(magnificationc) );
 
 
       QString baseareac = cur.attribute("base_area","1");
 
       Cell::BaseArea() = standardlocale.toDouble(baseareac, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",baseareac.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(baseareac) );
 
 
      XMLReadCells(cur);
@@ -1166,7 +1173,7 @@ void Mesh::XMLReadNodes(QDomElement &root)
   if (!tlc.isEmpty()) {
 
     Node::target_length = standardlocale.toDouble(tlc, &ok);
-    if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",tlc.toStdString().c_str());
+    if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(tlc) );
 
   } else {
     // note that libxml2 also defines a token "warning"
@@ -1206,18 +1213,18 @@ void Mesh::XMLReadNodes(QDomElement &root)
       }
 
       double x = standardlocale.toDouble(xc, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",xc.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable( xc ) );
 
       double y = standardlocale.toDouble(yc, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",yc.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable (yc));
 
       Node *new_node = new Node(x,y);
       nodes.push_back(new_node);
 
       new_node->m = this;
-      new_node->fixed = strtobool(fixedc.toStdString().c_str());
-      new_node->boundary = strtobool( boundaryc.toStdString().c_str() );
-      new_node->sam = strtobool ( samc.toStdString().c_str());
+      new_node->fixed = strtobool(qPrintable( fixedc) );
+      new_node->boundary = strtobool( qPrintable (boundaryc) );
+      new_node->sam = strtobool ( qPrintable(samc) );
       new_node->node_set = 0;
 
     }
@@ -1259,28 +1266,32 @@ void Mesh::XMLReadWalls(QDomElement &root, vector<Wall *> *tmp_walls)
     if (nc.isEmpty()) {
       unique_warning("Token \"c1\" not found in xmlwrite.cpp at or around line no. 777");
     }
-    int c1 = atoi(nc.toStdString().c_str());
+    //int c1 = atoi(qPrintable(nc) ) ;
+    int c1 = standardlocale.toInt(nc);
 
     nc = cur.attribute("c2");
 
     if (nc.isEmpty()) {
       unique_warning("Token \"c2\" not found in xmlwrite.cpp at or around line no. 785");
     }
-    int c2 = atoi( nc.toStdString().c_str());
+    //int c2 = atoi( qPrintable(nc));
+    int c2 = standardlocale.toInt(nc);
 
     nc = cur.attribute("n1");
 
     if (nc.isEmpty()) {
       unique_warning("Token \"n1\" not found in xmlwrite.cpp at or around line no. 793");
     }
-    int n1 = atoi( nc.toStdString().c_str());
+   // int n1 = atoi( qPrintable(nc));
+    int n1 = standardlocale.toInt(nc);
 
     nc = cur.attribute("n2");
 
     if (nc.isEmpty()) {
       unique_warning("Token \"n2\" not found in xmlwrite.cpp at or around line no. 801");
     }
-    int n2 = atoi( nc.toStdString().c_str());
+   // int n2 = atoi( qPrintable(nc));
+    int n2 = standardlocale.toInt(nc);
 
     nc = cur.attribute( "length");
 
@@ -1289,14 +1300,14 @@ void Mesh::XMLReadWalls(QDomElement &root, vector<Wall *> *tmp_walls)
     }
 
     double length = standardlocale.toDouble(nc, &ok);
-    if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",nc.toStdString().c_str());
+    if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(nc));
 
     nc = cur.attribute("viz_flux");
 
     double viz_flux = 0.0;
     if (!nc.isEmpty()) {
       viz_flux = standardlocale.toDouble(nc, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",nc.toStdString().c_str());
+      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(nc));
     }
 
 
@@ -1329,7 +1340,7 @@ void Mesh::XMLReadWalls(QDomElement &root, vector<Wall *> *tmp_walls)
       QString v_str = cur.attribute("delete");
 
       if (!v_str.isEmpty()) {
-        dead = strtobool( v_str.toStdString().c_str());
+        dead = strtobool( qPrintable(v_str));
       }
     }
 
@@ -1370,7 +1381,7 @@ void Mesh::XMLReadWalls(QDomElement &root, vector<Wall *> *tmp_walls)
         }
 
         double v = standardlocale.toDouble(nc, &ok);
-        if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",nc.toStdString().c_str());
+        if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(nc));
 
         w->transporters1[nv++]=v;
 
@@ -1402,7 +1413,7 @@ void Mesh::XMLReadWalls(QDomElement &root, vector<Wall *> *tmp_walls)
         }
 
         double v = standardlocale.toDouble(nc, &ok);
-        if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",nc.toStdString().c_str());
+        if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(nc));
 
         w->transporters2[nv++]=v;
 
@@ -1461,6 +1472,8 @@ void Mesh::XMLReadWallsToCells(QDomElement &root, vector<Wall *> *tmp_walls)
   // 3. Read Walls
   // 4. Read Walls into Cells
 
+    QLocale standardlocale(QLocale::C);
+
   //xmlNode *cur = root->xmlChildrenNode;
     QDomElement cur = root.firstChild().toElement();
   int ci=0; // cell index
@@ -1484,7 +1497,9 @@ void Mesh::XMLReadWallsToCells(QDomElement &root, vector<Wall *> *tmp_walls)
         if (nc.isEmpty()) {
         unique_warning("Token \"w\" not found in xmlwrite.cpp at or around line no. 931");
       }
-      tmp_walls_ind.push_back(atoi( nc.toStdString().c_str()));
+      //tmp_walls_ind.push_back(atoi( qPrintable(nc)));
+        tmp_walls_ind.push_back( standardlocale.toInt(nc));
+
       //xmlFree(nc);
     }
     //n = n->next;
@@ -1532,9 +1547,9 @@ void Mesh::XMLReadNodeSetsToNodes(QDomElement &root)
           QString nc = n.attribute("nodeset","0");
 
   //  xmlChar *nc = xmlGetProp(n, BAD_CAST "nodeset");
- bool ok;
+    //bool ok;
     if (nc!="0") {
-     int nodeset_n = standardlocale.toInt(nc,&ok);
+     int nodeset_n = standardlocale.toInt(nc);
       //int nodeset_n = atoi( (char *)nc);
       nodes[ci]->node_set = node_sets[nodeset_n];
     } else {
@@ -1657,7 +1672,8 @@ void Mesh::XMLRead(const char *docname,  QDomElement &settings, bool geometry, b
   QString Type=root.tagName();
 
   if (Type!="leaf") {
-    throw("XML file of the wrong type, it is not a leaf.");
+      QString msg=QString("XML file of the wrong type, it is not a leaf, but a ")+Type;
+    throw(qPrintable(msg));
     //xmlFreeDoc(doc);
     return;
   }
@@ -1713,7 +1729,7 @@ void Parameter::XMLRead(QDomElement &root)
           QString valc = par_node.attribute("val","");
 
         if (!valc.isEmpty()) {
-          AssignValToPar(namec.toStdString().c_str(),valc.toStdString().c_str());
+          AssignValToPar(qPrintable(namec),qPrintable(valc) );
         } else {
           /* Probably a valarray */
             QDomElement sub_par_node = par_node.firstChild().toElement();
@@ -1727,7 +1743,7 @@ void Parameter::XMLRead(QDomElement &root)
         }
         sub_par_node = sub_par_node.nextSibling().toElement();
           }
-          AssignValArrayToPar(namec.toStdString().c_str(), valarray);
+          AssignValArrayToPar(qPrintable(namec), valarray);
         }
       }
     }

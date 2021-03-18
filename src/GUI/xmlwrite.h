@@ -59,7 +59,7 @@ inline bool strtobool(const char *str) {
     if (!strcmp(str, "false")) {
       return false;
     } else {
-      throw("Error in xmlwrite.cpp : strtobool(const char *str). Parameter passed other than \"true\" or \"false\".");
+      throw(qPrintable( QString("Error in xmlwrite.cpp : strtobool(const char *str). Parameter '%1' passed is different from \"true\" or \"false\".").arg(str)));
     }
   }
 }

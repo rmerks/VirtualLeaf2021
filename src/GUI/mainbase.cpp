@@ -41,7 +41,7 @@ QDomElement MainBase::XMLViewportTree(QTransform &transform) const {
 
  // xmlNode *xmlviewport = xmlNewNode(NULL, BAD_CAST "viewport");
   QDomElement xmlviewport;
-  xmlviewport.setTagName("xmlviewport")
+  xmlviewport.setTagName("xmlviewport");
   {
    // xmlNewProp(xmlviewport, BAD_CAST "m11", BAD_CAST standardlocale.toString(transform.m11()).toStdString().c_str() );
       xmlviewport.setAttribute("m11",standardlocale.toString(transform.m11()));
@@ -60,14 +60,15 @@ QDomElement MainBase::XMLViewportTree(QTransform &transform) const {
   return xmlviewport;
 }
 
-QDomElement MainBase::XMLSettingsTree(QDomElement &xmlsettings) {
-
+QDomElement MainBase::XMLSettingsTree(void) {
 
   //xmlNode *xmlsettings = xmlNewNode(NULL, BAD_CAST "settings");
+    QDomDocument doc("tmp-settings-doc");
+    QDomElement xmlsettings = doc.createElement("settings");
+    doc.appendChild(xmlsettings);
   {
     //xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
-      QDomElement xmloption;
-      xmloption=tagName("setting");
+      QDomElement xmloption =  doc.createElement("setting");
       xmlsettings.appendChild(xmloption);
    // xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_cell_centers");
       xmloption.setAttribute("name","show_cell_centers");
@@ -86,8 +87,7 @@ QDomElement MainBase::XMLSettingsTree(QDomElement &xmlsettings) {
     xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
   }*/
     {
-        QDomElement xmloption;
-        xmloption.setTagName("setting");
+        QDomElement xmloption = doc.createElement("setting");
         xmlsettings.appendChild(xmloption);
         xmloption.setAttribute("name","show_nodes");
         xmloption.setAttribute("val",bool_name(showmeshp));
