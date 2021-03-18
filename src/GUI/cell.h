@@ -38,9 +38,6 @@
 #include <QGraphicsScene>
 #include <qcolor.h>
 #include <QObject>
-
-#include <libxml/parser.h>
-#include <libxml/tree.h>
 #include <QMouseEvent>
 
 class Cell : public CellBase 

@@ -41,11 +41,11 @@
 
 #include <QInputDialog>
 
-#include <libxml/parser.h>
+/*#include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xpath.h>
 #include <libxml/xmlreader.h>
-#include <libxml/xmlstring.h>
+#include <libxml/xmlstring.h>*/
 
 #include <sstream>
 #include <iostream>
@@ -61,19 +61,18 @@
 
 using namespace std;
 
-QString hFileName;
-QDir tissuedir;
-xmlDocPtr doc = NULL;         /* document pointer */
-xmlNodePtr root_node = NULL;  /* node pointers */
+TissueGenerator::TissueGenerator() {
 
-int polygon = 6;
-int rows = 1;
-int cols = 1;
-double edgeL = 1.;
-double edgeW = 1.;
+    polygon = 6;
+    rows = 1;
+    cols = 1;
+    edgeL = 1.;
+    edgeW = 1.;
+    standardlocale = QLocale(QLocale::C);
 
+}
 /* store generated tissue in an xml file */
-QString GenerateTissue(void) {
+QString TissueGenerator::GenerateTissue(void) {
     Dialog();
     GenerateParams();
     if (polygon == 4) { AddRectangles(); }
@@ -83,7 +82,7 @@ QString GenerateTissue(void) {
 }
 
 /* popupscreens used to change parameters and store the tissue */
-void Dialog(void) {
+void TissueGenerator::Dialog(void) {
     filedialog:
     QFileDialog *fd = new QFileDialog( 0, "Save new file as:", QString(tissuedir.dirName()), QString("LeafML files (*.xml)"));
     fd->setFileMode( QFileDialog::AnyFile );
@@ -147,44 +146,50 @@ void Dialog(void) {
 }
 
 /* adds some parameters to the file */
-void GenerateParams(void) {
-    // based on libxml2 example code "tree2.c"
-    /* Creates a new document, a node and set it as a root node */
-    doc = xmlNewDoc(BAD_CAST "1.0");
-    root_node = xmlNewNode(NULL, BAD_CAST "leaf");
-    xmlDocSetRootElement(doc, root_node);
+void TissueGenerator::GenerateParams(void) {
 
+    /* Creates a new document, a node and set it as a root node */
+    doc = QDomDocument("leaf");
+    root_node = doc.createElement("leaf");
+    doc.appendChild(root_node);
 
     /* stores Tissue attributes */
-    xmlNewProp(root_node, BAD_CAST "name", BAD_CAST hFileName.toStdString().c_str());
-
+    //xmlNewProp(root_node, BAD_CAST "name", BAD_CAST hFileName.toStdString().c_str());
+    root_node.setAttribute("name",hFileName);
     time_t t;
     std::time(&t);
-    char *tstring = strdup(asctime(localtime(&t))); // but this does replace "end of line character by '\0'
-    char *eol=strchr(tstring,'\n');
-    if (eol!=NULL) * eol='\0';
-    xmlNewProp(root_node, BAD_CAST "date", BAD_CAST tstring);
-    free(tstring);
+    QString tstring(asctime(localtime(&t)));
+ //   char *tstring = strdup(asctime(localtime(&t))); // but this does replace "end of line character by '\0'
+   // char *eol=strchr(tstring,'\n');
+    //if (eol!=NULL) * eol='\0';
+    //xmlNewProp(root_node, BAD_CAST "date", BAD_CAST tstring);
+    root_node.setAttribute("date",tstring);
+   // free(tstring);
 
-    ostringstream text;
-    text << 0;
-    xmlNewProp(root_node, BAD_CAST "simtime", BAD_CAST text.str().c_str());
-
+    //ostringstream text;
+    //text << 0;
+    //xmlNewProp(root_node, BAD_CAST "simtime", BAD_CAST text.str().c_str());
+    root_node.setAttribute("simtime","0");
     return;
 }
 
-void AddHexagons(void) {
+void TissueGenerator::AddHexagons(void) {
 
     /* stores nodes */
-    xmlNodePtr xmlnodes = xmlNewChild(root_node, NULL, BAD_CAST "nodes",NULL);
-    { ostringstream text;
-      text << (2*rows + 2*cols + 2*rows*cols);
-      xmlNewProp(xmlnodes, BAD_CAST "n", BAD_CAST text.str().c_str());
+
+   // QDomElement xmlnodes = doc.createElement("nodes",NULL);
+    QDomElement xmlnodes = doc.createElement("nodes");
+    root_node.appendChild(xmlnodes);
+    { //ostringstream text;
+      //text << (2*rows + 2*cols + 2*rows*cols);
+      //xmlNewProp(xmlnodes, BAD_CAST "n", BAD_CAST text.str().c_str());
+        xmlnodes.setAttribute("n",standardlocale.toString(2*rows + 2*cols + 2*rows*cols));
     }
 
-    { ostringstream text;
-      text << 3;
-      xmlNewProp(xmlnodes, BAD_CAST "target_length", BAD_CAST text.str().c_str());
+    { //ostringstream text;
+      //text << 3;
+      //(xmlnodes, BAD_CAST "target_length", BAD_CAST text.str().c_str());
+        xmlnodes.setAttribute("target_length","3");
     }
 
 
@@ -262,32 +267,45 @@ void AddHexagons(void) {
 
     /* stores cells */
     double area = 2.598 * edgeL * edgeL;
-    xmlNodePtr xmlcells = xmlNewChild(root_node, NULL, BAD_CAST "cells",NULL);
+    QDomElement xmlcells = doc.createElement("cells");
+    root_node.appendChild(xmlcells);
+   // QDomElement xmlcells = xmlNewChild(root_node, NULL, BAD_CAST "cells",NULL);
     {
-      ostringstream text;
-      text << (rows * cols);
-      xmlNewProp(xmlcells, BAD_CAST "n", BAD_CAST text.str().c_str());
+      //ostringstream text;
+     // text << (rows * cols);
+      //xmlNewProp(xmlcells, BAD_CAST "n", BAD_CAST text.str().c_str());
+        xmlcells.setAttribute("n",standardlocale.toString(rows * cols));
     }{
-      ostringstream text;
+      //ostringstream text;
+      //text << 0;
+      //xmlNewProp(xmlcells, BAD_CAST "offsetx", BAD_CAST text.str().c_str());
+        xmlcells.setAttribute("offsetx","0");
+    }{
+     /* ostringstream text;
       text << 0;
-      xmlNewProp(xmlcells, BAD_CAST "offsetx", BAD_CAST text.str().c_str());
-    }{
-      ostringstream text;
-      text << 0;
-      xmlNewProp(xmlcells, BAD_CAST "offsety", BAD_CAST text.str().c_str());
-    }{
+      xmlNewProp(xmlcells, BAD_CAST "offsety", BAD_CAST text.str().c_str());*/
+      xmlcells.setAttribute("offsety","0");
+    }/*{
       ostringstream text;
       text << 1;
       xmlNewProp(xmlcells, BAD_CAST "magnification", BAD_CAST text.str().c_str());
-    }{
+    }*/
+     xmlcells.setAttribute("magnification","1");
+
+   /*
+    {
       ostringstream text;
       text << area;
       xmlNewProp(xmlcells, BAD_CAST "base_area", BAD_CAST text.str().c_str());
-    }{
+    }
+*/
+     xmlcells.setAttribute("base_area",standardlocale.toString(area));
+    /* {
       ostringstream text;
       text << 1;
       xmlNewProp(xmlcells, BAD_CAST "nchem", BAD_CAST text.str().c_str());
-    }
+    }*/
+     xmlcells.setAttribute("nchem","1");
 
     for (int cell=0; cell != (rows*cols); cell++) {
         if (cell < cols || cell > ((rows-1)*cols) || cell%cols == 0 || cell%cols == (cols-1)) {
@@ -303,12 +321,16 @@ void AddHexagons(void) {
         int walls = (3*rows*cols - 3);
         if (rows == 1 || cols == 1) { walls -= 2; }
 
-        xmlNodePtr xmlwalls = xmlNewChild(root_node, NULL, BAD_CAST "walls",NULL);
-        {
+        //xmlNodePtr xmlwalls = xmlNewChild(root_node, NULL, BAD_CAST "walls",NULL);
+       QDomElement xmlwalls = doc.createElement("walls");
+       root_node.appendChild(xmlwalls);
+       /* {
           ostringstream text;
           text << walls;
           xmlNewProp(xmlwalls, BAD_CAST "n", BAD_CAST text.str().c_str());
-        }
+        }*/
+       xmlwalls.setAttribute("n",standardlocale.toString(walls));
+       root_node.appendChild(xmlwalls);
 
         int wall = 0;
         int c1 = 0;
@@ -403,39 +425,49 @@ void AddHexagons(void) {
 
     } else { // single cell, thus 0 walls
 
-        xmlNodePtr xmlwalls = xmlNewChild(root_node, NULL, BAD_CAST "walls",NULL);
-        {
+        //xmlNodePtr xmlwalls = xmlNewChild(root_node, NULL, BAD_CAST "walls",NULL);
+        QDomElement xmlwalls = doc.createElement("walls");
+        root_node.appendChild(xmlwalls);
+        /*{
           ostringstream text;
           text << 0;
           xmlNewProp(xmlwalls, BAD_CAST "n", BAD_CAST text.str().c_str());
-        }
+        }*/
+        xmlwalls.setAttribute("n","0");
 
     }
 
     /* stores 'nodesets' */
-    xmlNodePtr xmlnodesets = xmlNewChild(root_node, NULL, BAD_CAST "nodesets",NULL);
+    //xmlNodePtr xmlnodesets = xmlNewChild(root_node, NULL, BAD_CAST "nodesets",NULL);
+    QDomElement xmlnodesets = doc.createElement("nodesets");
+    root_node.appendChild(xmlnodesets);
+    xmlnodesets.setAttribute("n","0");
+    /*
     {
       ostringstream text;
       text << 0;
       xmlNewProp(xmlnodesets, BAD_CAST "n", BAD_CAST text.str().c_str());
     }
-
-    return;
+*/
+  //  return;
 }
 
-void AddRectangles(void) {
+void TissueGenerator::AddRectangles(void) {
 
     /* stores nodes */
-    xmlNodePtr xmlnodes = xmlNewChild(root_node, NULL, BAD_CAST "nodes",NULL);
-    { ostringstream text;
+   // xmlNodePtr xmlnodes = xmlNewChild(root_node, NULL, BAD_CAST "nodes",NULL);
+    QDomElement xmlnodes = doc.createElement("nodes");
+    root_node.appendChild(xmlnodes);
+    xmlnodes.setAttribute("n",standardlocale.toString((rows+1)*(cols+1)));
+   /* { ostringstream text;
       text << ((rows+1)*(cols+1));
       xmlNewProp(xmlnodes, BAD_CAST "n", BAD_CAST text.str().c_str());
-    }
-
-    { ostringstream text;
+    }*/
+    xmlnodes.setAttribute("target_length","3");
+   /* { ostringstream text;
       text << 3;
       xmlNewProp(xmlnodes, BAD_CAST "target_length", BAD_CAST text.str().c_str());
-    }
+    }*/
 
 
     /* loops through nodes */
@@ -454,12 +486,21 @@ void AddRectangles(void) {
     }
 
     /* stores cells */
-    xmlNodePtr xmlcells = xmlNewChild(root_node, NULL, BAD_CAST "cells",NULL);
-    {
+   // xmlNodePtr xmlcells = xmlNewChild(root_node, NULL, BAD_CAST "cells",NULL);
+    QDomElement xmlcells = doc.createElement("cells");
+    root_node.appendChild(xmlcells);
+    xmlcells.setAttribute("n",standardlocale.toString(rows * cols));
+    xmlcells.setAttribute("offsetx","0");
+    xmlcells.setAttribute("offsety","0");
+      xmlcells.setAttribute("magnfication","1.");
+        xmlcells.setAttribute("base_area",standardlocale.toString(edgeL * edgeW));
+           xmlcells.setAttribute("nchem","1");
+    /*{
       ostringstream text;
       text << (rows * cols);
       xmlNewProp(xmlcells, BAD_CAST "n", BAD_CAST text.str().c_str());
-    }{
+    }*/
+    /*{
       ostringstream text;
       text << 0;
       xmlNewProp(xmlcells, BAD_CAST "offsetx", BAD_CAST text.str().c_str());
@@ -479,7 +520,7 @@ void AddRectangles(void) {
       ostringstream text;
       text << 1;
       xmlNewProp(xmlcells, BAD_CAST "nchem", BAD_CAST text.str().c_str());
-    }
+    }*/
 
     /* loops through cells */
     int cell = 0;
@@ -503,12 +544,17 @@ void AddRectangles(void) {
     int walls = (2*rows*cols + rows + cols -4);
     if (rows == 1 || cols == 1) { walls -= 2; }
     if (rows == 1 && cols == 1) { walls = 0; }
-    xmlNodePtr xmlwalls = xmlNewChild(root_node, NULL, BAD_CAST "walls",NULL);
-    {
+   // xmlNodePtr xmlwalls = xmlNewChild(root_node, NULL, BAD_CAST "walls",NULL);
+    QDomElement xmlwalls = doc.createElement("walls");
+    root_node.appendChild(xmlwalls);
+    xmlwalls.setAttribute("n",standardlocale.toString(walls));
+
+   /* {
       ostringstream text;
       text << walls;
       xmlNewProp(xmlwalls, BAD_CAST "n", BAD_CAST text.str().c_str());
-    }
+    }*/
+
 
     /* loops through walls */
     int wall = 0;
@@ -550,18 +596,28 @@ void AddRectangles(void) {
     }
 
     /* stores 'nodesets' */
-    xmlNodePtr xmlnodesets = xmlNewChild(root_node, NULL, BAD_CAST "nodesets",NULL);
-    {
+    QDomElement xmlnodesets = doc.createElement("nodesets");
+    root_node.appendChild(xmlnodesets);
+    xmlnodes.setAttribute("n","0");
+  /*  {
       ostringstream text;
       text << 0;
       xmlNewProp(xmlnodesets, BAD_CAST "n", BAD_CAST text.str().c_str());
     }
 
-    return;
+    return;*/
 }
 
-void AddNodeToTissue(xmlNodePtr parent, double coord_x, double coord_y, const char* Nfixed, const char* Nboundary, const char* Nsam){
-    xmlNodePtr xmlnode = xmlNewChild(parent, NULL, BAD_CAST "node",NULL);
+void TissueGenerator::AddNodeToTissue(QDomElement &parent, double coord_x, double coord_y, const char* Nfixed, const char* Nboundary, const char* Nsam){
+    QDomElement xmlnode = doc.createElement("node");
+    parent.appendChild(xmlnode);
+    xmlnode.setAttribute("x",standardlocale.toString(coord_x));
+    xmlnode.setAttribute("y",standardlocale.toString(coord_y));
+    xmlnode.setAttribute("fixed",QString(Nfixed));
+    xmlnode.setAttribute("boundary",QString(Nboundary));
+    xmlnode.setAttribute("sam",QString(Nsam));
+
+/*
     {
       ostringstream text;
       text << coord_x;
@@ -583,14 +639,29 @@ void AddNodeToTissue(xmlNodePtr parent, double coord_x, double coord_y, const ch
       text << Nsam;
       xmlNewProp(xmlnode, BAD_CAST "sam", BAD_CAST text.str().c_str());
     }
-
+*/
     return;
 }
 
-void AddCellToTissue(xmlNodePtr parent, int index, double area, const char* at_boundary, int cell_type) {
+void TissueGenerator::AddCellToTissue(QDomElement &parent, int index, double area, const char* at_boundary, int cell_type) {
 
-    xmlNodePtr xmlcell = xmlNewChild(parent, NULL, BAD_CAST "cell",NULL);
-    {
+    QDomElement xmlcell = doc.createElement("cell");
+    parent.appendChild(xmlcell);
+    xmlcell.setAttribute("index",standardlocale.toString(index));
+    xmlcell.setAttribute("area",standardlocale.toString(area));
+    xmlcell.setAttribute("target_area",standardlocale.toString(area));
+    xmlcell.setAttribute("target_length","3");
+    xmlcell.setAttribute("lambda_celllength","0");
+    xmlcell.setAttribute("stiffness","0");
+    xmlcell.setAttribute("fixed","false");
+    xmlcell.setAttribute("pin_fixed","false");
+    xmlcell.setAttribute("at_boundary",QString(at_boundary));
+    xmlcell.setAttribute("dead","false");
+    xmlcell.setAttribute("source","false");
+    xmlcell.setAttribute("boundary","None");
+    xmlcell.setAttribute("div_counter","0");
+    xmlcell.setAttribute("cell_type",standardlocale.toString(cell_type));
+   /* {
       ostringstream text;
       text << index;
       xmlNewProp(xmlcell, BAD_CAST "index" , BAD_CAST text.str().c_str() );
@@ -647,32 +718,36 @@ void AddCellToTissue(xmlNodePtr parent, int index, double area, const char* at_b
       ostringstream text;
       text << cell_type;
       xmlNewProp(xmlcell, BAD_CAST "cell_type", BAD_CAST text.str().c_str());
-    }
+    }*/
 
     /* stores nodes per rectangular cell */
     if (polygon == 4) {
         int cellrow = index%rows; // collumn in which the cell is located
         int cellcol = ((index-cellrow)/rows);
         {
-          ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << (cellcol*(rows+1)+cellrow);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          //ostringstream text;
+          QDomElement node_xml = doc.createElement("node");
+            xmlcell.appendChild(node_xml);
+          //text << (cellcol*(rows+1)+cellrow);
+         node_xml.setAttribute("n", standardlocale.toString(cellcol*(rows+1)+cellrow));
+
+        }{
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString(cellcol*(rows+1)+cellrow+1));
+          //xmlNewProp(node_xml, BAD_CAST "n",standardlocale.toString BAD_CAST text.str().c_str());
         }{
           ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << (cellcol*(rows+1)+cellrow+1);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString((cellcol+1)*(rows+1)+cellrow+1));
+          //xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
         }{
           ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << ((cellcol+1)*(rows+1)+cellrow+1);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
-        }{
-          ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << ((cellcol+1)*(rows+1)+cellrow);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString((cellcol+1)*(rows+1)+cellrow));
+       //   xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
         }
     }
     /* stores nodes per hexagonal cell */
@@ -683,49 +758,57 @@ void AddCellToTissue(xmlNodePtr parent, int index, double area, const char* at_b
         int last = 0;
         if (rows == (cellrow+1) && rows%2 == 1) { last = 1; }
         {
-          ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << (cellcol + cellrow * inrow - cellrow%2);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          //ostringstream text;
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString(cellcol + cellrow * inrow - cellrow%2));
+          //xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
         }{
           ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << (cellcol + (cellrow+0.5) * inrow);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString(cellcol + (cellrow+0.5) * inrow));
+        //  xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
         }{
           ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << (cellcol + (cellrow+1) * inrow);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString(cellcol + (cellrow+1) * inrow));
+          //xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
         }{
           ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << (cellcol + (cellrow+1.5) * inrow - cellrow%2 - last); //?
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString(cellcol + (cellrow+1.5) * inrow - cellrow%2 - last)); //?
+         // xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
         }{
           ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << (cellcol + (cellrow+1) * inrow -1);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString(cellcol + (cellrow+1) * inrow -1));
+          //xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
         }{
           ostringstream text;
-          xmlNodePtr node_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "node", NULL);
-          text << (cellcol + (cellrow+0.5) * inrow -1);
-          xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+          QDomElement node_xml = doc.createElement("node");
+          xmlcell.appendChild(node_xml);
+          node_xml.setAttribute("n",standardlocale.toString(cellcol + (cellrow+0.5) * inrow -1));
+          //xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
         }
     }
 
     {
-      ostringstream text;
-      xmlNodePtr chem_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "chem", NULL);
-      text << 1;
-      xmlNewProp(chem_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+      //ostringstream text;
+      QDomElement chem_xml = doc.createElement("chem");
+      xmlcell.appendChild(chem_xml);
+      //text << 1;
+      //xmlNewProp(chem_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+      chem_xml.setAttribute("n","1");
     }
 
     return;
 }
 
-vector<int> ConstructHexagonalBoundary(vector<int> T1, vector<int> T2, vector<int> L, vector<int> R, vector<int> B1, vector<int> B2){
+vector<int> TissueGenerator::ConstructHexagonalBoundary(vector<int> T1, vector<int> T2, vector<int> L, vector<int> R, vector<int> B1, vector<int> B2){
 
     // vector and iterators
     vector<int> Boundaryvector;
@@ -757,10 +840,25 @@ vector<int> ConstructHexagonalBoundary(vector<int> T1, vector<int> T2, vector<in
     return Boundaryvector;
 }
 
-void AddBoundaryToTissue(xmlNodePtr parent, vector<int> BoundaryVector, double area){
+void TissueGenerator::AddBoundaryToTissue(QDomElement &parent, vector<int> BoundaryVector, double area){
 
-    xmlNodePtr xmlboundary = xmlNewChild(parent, NULL, BAD_CAST "boundary_polygon",NULL);
-    {
+    QDomElement xmlboundary = doc.createElement("boundary_polygon");
+    parent.appendChild(xmlboundary);
+    xmlboundary.setAttribute("index","-1");
+    xmlboundary.setAttribute("area",standardlocale.toString(area));
+    xmlboundary.setAttribute("target_area",standardlocale.toString(area));
+    xmlboundary.setAttribute("target_length","3");
+    xmlboundary.setAttribute("lambda_celllength","0");
+    xmlboundary.setAttribute("stiffness","0");
+    xmlboundary.setAttribute("fixed","false");
+    xmlboundary.setAttribute("pin_fixed","false");
+    xmlboundary.setAttribute("at_boundary","true");
+    xmlboundary.setAttribute("dead","false");
+    xmlboundary.setAttribute("source","false");
+    xmlboundary.setAttribute("boundary","None");
+    xmlboundary.setAttribute("div_counter","0");
+    xmlboundary.setAttribute("cell_type","-1");
+    /*{
       ostringstream text;
       text << -1;
       xmlNewProp(xmlboundary, BAD_CAST "index", BAD_CAST text.str().c_str());
@@ -817,29 +915,43 @@ void AddBoundaryToTissue(xmlNodePtr parent, vector<int> BoundaryVector, double a
       text << -1;
       xmlNewProp(xmlboundary, BAD_CAST "cell_type", BAD_CAST text.str().c_str());
     }
+*/
 
     //* stores boundary nodes
     for (int bn = 0; bn != (int)BoundaryVector.size(); bn++) {
       {
-        ostringstream text;
-        xmlNodePtr node_xml = xmlNewChild(xmlboundary, NULL, BAD_CAST "node", NULL);
-        text << BoundaryVector[bn];
-        xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+       // ostringstream text;
+        QDomElement node_xml = doc.createElement( "node");
+        xmlboundary.appendChild(node_xml);
+        //text << BoundaryVector[bn];
+        node_xml.setAttribute("n", standardlocale.toString(BoundaryVector[bn]));
       }
     }{
-      ostringstream text;
-      text << 1;
-      xmlNodePtr chem_xml = xmlNewChild(xmlboundary, NULL, BAD_CAST "chem", NULL);
-      xmlNewProp(chem_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
+      //ostringstream text;
+      //text << 1;
+      QDomElement chem_xml = doc.createElement("chem");
+      xmlboundary.appendChild(chem_xml);
+      chem_xml.setAttribute("n","1");
+      //xmlNewProp(chem_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
     }
 
-    return;
+    //return;
 }
 
-void AddWallToTissue(xmlNodePtr parent, int index, int c1, int c2, int n1, int n2, double wallLength){
+void TissueGenerator::AddWallToTissue(QDomElement &parent, int index, int c1, int c2, int n1, int n2, double wallLength){
 
-    xmlNodePtr xmlwall = xmlNewChild(parent, NULL, BAD_CAST "wall",NULL);
+    QDomElement xmlwall = doc.createElement("wall");
+    parent.appendChild(xmlwall);
+    xmlwall.setAttribute("index",standardlocale.toString(index));
+    xmlwall.setAttribute("c1",standardlocale.toString(c1));
+    xmlwall.setAttribute("c2",standardlocale.toString(c2));
+    xmlwall.setAttribute("n1",standardlocale.toString(n1));
+    xmlwall.setAttribute("n2",standardlocale.toString(n2));
+    xmlwall.setAttribute("length",standardlocale.toString(wallLength));
+    xmlwall.setAttribute("viz_flux","0");
+    xmlwall.setAttribute("wall_type","Normal");
 
+   /*
     {
       ostringstream text;
       text << index;
@@ -873,27 +985,43 @@ void AddWallToTissue(xmlNodePtr parent, int index, int c1, int c2, int n1, int n
       text << "Normal";
       xmlNewProp(xmlwall, BAD_CAST "wall_type", BAD_CAST text.str().c_str());
     }
+*/
 
-    xmlNodePtr tr1_xml = xmlNewChild(xmlwall, NULL, BAD_CAST "transporters1", NULL);
-    {
+    QDomElement tr1_xml = doc.createElement("transporters1");
+    xmlwall.appendChild(tr1_xml);
+    tr1_xml.setAttribute("v","0");
+
+   /* {
     ostringstream text;
     text << 0;
     xmlNewProp(tr1_xml, BAD_CAST "v", BAD_CAST text.str().c_str());
-    }
-    xmlNodePtr tr2_xml = xmlNewChild(xmlwall, NULL, BAD_CAST "transporters2", NULL);
+    }*/
+
+    QDomElement tr2_xml = doc.createElement("transporters1");
+    xmlwall.appendChild(tr2_xml);
+    tr2_xml.setAttribute("v","0");
+
+    /*QDomElement tr2_xml = xmlNewChild(xmlwall, NULL, BAD_CAST "transporters2", NULL);
     {
     ostringstream text;
     text << 0;
     xmlNewProp(tr2_xml, BAD_CAST "v", BAD_CAST text.str().c_str());
     }
+*/
 
 }
 
-void FinishTissue() {
+void TissueGenerator::FinishTissue() {
 
     //* prints document
-     xmlKeepBlanksDefault(0);
-     xmlSaveFormatFileEnc(hFileName.toStdString().c_str(), doc, "UTF-8", 1);
+   //  xmlKeepBlanksDefault(0);
+    // xmlSaveFormatFileEnc(hFileName.toStdString().c_str(), doc, "UTF-8", 1);
+    QFile xmlout(hFileName);
+    if (!xmlout.open(QIODevice::WriteOnly | QIODevice::Text)) {
+      throw("cannot open file for output");
+    }
+    QTextStream out(&xmlout);
+    doc.save(out,2, QDomNode::EncodingFromDocument);
+    xmlout.close();
 
-     return;
 }

@@ -97,17 +97,13 @@ SOURCES = \
 
 
 unix {
- QMAKE_CXXFLAGS += -fPIC -I/usr/include/libxml2
+ QMAKE_CXXFLAGS += -fPIC #-I/usr/include/libxml2
  QMAKE_LFLAGS += -fPIC
- LIBS += -lxml2 -lz -lm
+ LIBS +=-lm
 }
 
 win32 {
- LIBXML2DIR = $${LIBDIR}\libxml2
- LIBICONVDIR = $${LIBDIR}\libiconv
- LIBZDIR = $${LIBDIR}\libz
- QMAKE_CXXFLAGS += -DLIBXML_STATIC
- QMAKE_CXXFLAGS += -I$${LIBXML2DIR}\include -I$${LIBICONVDIR}\include -I$${LIBZDIR}\include
+
 }
 
 #

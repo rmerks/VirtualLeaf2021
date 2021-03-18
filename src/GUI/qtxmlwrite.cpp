@@ -27,10 +27,6 @@
 #include <string>
 #include <sstream>
 #include <QString>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xmlreader.h>
 #include <QLocale>
 #include <QtXml>
 #include <QFile>
@@ -980,7 +976,7 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
    *Free the global variables that may
    *have been allocated by the parser.
    */
-  xmlCleanupParser();
+  //xmlCleanupParser();
 
   /*
    * this is to debug memory for regression tests

@@ -28,9 +28,6 @@
 #include <list>
 //#include <pair>
 
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-
 #ifdef QTGRAPHICS
 #include <QGraphicsScene>
 #include <qcolor.h>

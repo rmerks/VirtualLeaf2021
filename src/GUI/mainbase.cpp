@@ -19,9 +19,6 @@
  *
  */
 
-#include <libxml/xpath.h>
-#include <libxml/xmlreader.h>
-
 #include "mainbase.h"
 #include "xmlwrite.h"
 

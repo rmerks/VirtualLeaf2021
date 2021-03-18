@@ -1681,8 +1681,9 @@ void Main::GenerateNewTissue()
 {
 
     stopSimulation();
+    TissueGenerator tisgen;
 
-    QString filename = GenerateTissue();
+    QString filename = tisgen.GenerateTissue();
     if (filename.isEmpty()) {
         QString status_message;
         status_message = QString("failed to generate tissue").arg(filename);

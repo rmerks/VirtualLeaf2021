@@ -19,10 +19,10 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG -= release
-CONFIG += debug
+CONFIG += release
+CONFIG -= debug
 CONFIG += qt
-CONFIG -= app_bundle
+#CONFIG -= app_bundle
 CONFIG+=sdk_no_version_check
 
 
@@ -61,14 +61,10 @@ LIBS += -L$${LIBDIR}
 win32 {
  CONFIG -= console
  CONFIG += windows
- LIBXML2DIR = $${LIBDIR}\libxml2
- LIBICONVDIR = $${LIBDIR}\libiconv
- LIBZDIR = $${LIBDIR}\libz
  GRAPHICS = qt 
  RC_FILE = VirtualLeaf.rc
- QMAKE_CXXFLAGS += -DLIBXML_STATIC
- QMAKE_CXXFLAGS += -I$${LIBXML2DIR}\include -I$${LIBICONVDIR}\include -I$${LIBZDIR}\include
- LIBS += -L$${LIBXML2DIR}\lib -lxml2 -L$${LIBICONVDIR}\lib -liconv -L$${LIBZDIR}\lib -lz -lm -lwsock32
+ QMAKE_CXXFLAGS +=
+ LIBS +=  -lm #-lwsock32
 }
 
 
@@ -80,9 +76,9 @@ unix {
 # CC = /usr/bin/gcc
 # # QWTDIR = /ufs/guravage/opt/qwt-5.2.1-svn
 # #QMAKE_LIBDIR += $$QWTDIR/lib
-QMAKE_CXXFLAGS += -fPIC -I/usr/include/libxml2
+QMAKE_CXXFLAGS += -fPIC# -I/usr/include/libxml2
 # QMAKE_LFLAGS += -fPIC
- LIBS += -lxml2 -lz -lm
+ LIBS +=  -lm
 }
 
 # Input

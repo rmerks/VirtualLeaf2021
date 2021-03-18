@@ -23,12 +23,13 @@
 
 #include <vector>
 #include <QString>
+#include <QtXml>
 
-#include <libxml/parser.h>
+/* #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xpath.h>
 #include <libxml/xmlreader.h>
-#include <libxml/xmlstring.h>
+#include <libxml/xmlstring.h>*/
 
 using namespace std;
 
@@ -40,20 +41,36 @@ using namespace std;
 #endif
 
 #define DELETED -2
+class TissueGenerator {
 
-/* functions */
-QString GenerateTissue(void);
-void Dialog(void);
-void GenerateParams(void);
-void AddHexagons(void);
-void AddRectangles(void);
-void AddNodeToTissue(xmlNodePtr, double, double, const char*, const char*, const char*);
-void AddCellToTissue(xmlNodePtr, int, double, const char*, int);
-vector<int> ConstructHexagonalBoundary(vector<int>, vector<int>, vector<int>, vector<int>, vector<int>, vector<int>);
-void AddBoundaryToTissue(xmlNodePtr, vector<int>, double);
-void AddWallToTissue(xmlNodePtr, int, int, int, int, int, double);
-void FinishTissue(void);
+public:
+    /* methods */
+    TissueGenerator();
+    QString GenerateTissue(void);
+    void Dialog(void);
+    void GenerateParams(void);
+    void AddHexagons(void);
+    void AddRectangles(void);
+    void AddNodeToTissue(QDomElement&, double, double, const char*, const char*, const char*);
+    void AddCellToTissue(QDomElement&, int, double, const char*, int);
+    vector<int> ConstructHexagonalBoundary(vector<int>, vector<int>, vector<int>, vector<int>, vector<int>, vector<int>);
+    void AddBoundaryToTissue(QDomElement&, vector<int>, double);
+    void AddWallToTissue(QDomElement&, int, int, int, int, int, double);
+    void FinishTissue(void);
+private:
+     QDomDocument doc;
+     QDomElement root_node;
 
+     QString hFileName;
+     QDir tissuedir;
+
+     int polygon;
+     int rows;
+     int cols;
+     double edgeL;
+     double edgeW;
+      QLocale standardlocale;
+};
 #endif  
 
 
