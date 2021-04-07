@@ -29,7 +29,9 @@
 extern "C" {
 #endif
 
-  int OpenFileAndCheckExistance(FILE **fp,const char *fname,char *ftype);
+#include <stdio.h>
+
+  int OpenFileAndCheckExistance(FILE **fp,const char *fname, const char *ftype);
   int YesNoP(const char *message);
   FILE *OpenWriteFile(const char *filename);
   FILE *OpenGZippedWriteFile(const char *filename);

@@ -70,7 +70,7 @@ class FigureEditor : public QGraphicsView {
 
     friend class Main;
  public:
-  FigureEditor(QGraphicsScene&, Mesh&, QWidget* parent=0, const char* name=0, Qt::WindowFlags f=0);
+  FigureEditor(QGraphicsScene&, Mesh&, QWidget* parent=0, const char* name=0, Qt::WindowFlags f=Qt::WindowFlags());
   void clear();
   void Save(const char *fname, const char *format, int sizex=640, int sizey=480);
   void FullRedraw(void);
@@ -108,11 +108,11 @@ class Main : public QMainWindow, public MainBase {
   Q_OBJECT
     friend class ModelCatalogue; // needs to populate menu item models
  public:
-  Main(QGraphicsScene&, Mesh&, QWidget* parent=0, const char* name=0, Qt::WindowFlags f=0);
+  Main(QGraphicsScene&, Mesh&, QWidget* parent=0, const char* name=0, Qt::WindowFlags f=Qt::WindowFlags());
   ~Main();
   virtual bool ShowCentersP(void) {return com_act->isChecked();}
   virtual bool ShowMeshP(void) {return mesh_act->isChecked();}
-  virtual bool ShowBorderCellsP(void) {border_act->isChecked();}
+  virtual bool ShowBorderCellsP(void) {return border_act->isChecked();}
   virtual bool PausedP(void) {return paused_act->isChecked();}
   virtual bool ShowNodeNumbersP(void) {return node_number_act->isChecked();}
   virtual bool ShowCellNumbersP(void) {return cell_number_act->isChecked();}

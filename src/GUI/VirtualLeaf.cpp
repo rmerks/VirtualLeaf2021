@@ -369,7 +369,7 @@ int main(int argc,char **argv) {
       };
 
       // short option 'p' creates trouble for non-commandline usage on MacOSX. Option -p changed to -P (capital)
-      static char *short_options = "blm";
+      static const char *short_options = "blm";
       c = getopt_long (argc, argv, "bl:m:",
 		       long_options, &option_index);
       if (c == -1)
@@ -524,6 +524,7 @@ int main(int argc,char **argv) {
       abort();
     }
   }
+    return 0;
 }
 
 /* finis */

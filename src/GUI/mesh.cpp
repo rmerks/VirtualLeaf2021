@@ -848,10 +848,10 @@ double Mesh::DisplaceNodes(void) {
 	    }
 	  }
 
-	  double old_nodex, old_nodey;
+//	  double old_nodex, old_nodey;
 
-	  old_nodex=node.x;
-	  old_nodey=node.y;
+    //  old_nodex=node.x;
+     // old_nodey=node.y;
 
 	  node.x = new_p.x;
 	  node.y = new_p.y;
@@ -1420,7 +1420,7 @@ void Mesh::RepairBoundaryPolygon(void) {
 
 
 Node* Mesh::findNextBoundaryNode(Node* boundary_node) {
-  bool found_next_boundary_node = false;
+  //bool found_next_boundary_node = false;
   Node *next_boundary_node = 0;
   set<int> boundary_node_owners; // This is a list of the current boundary node's owners' Ids
   vector<int> neighborIds; // A list of the current boundary node's owners' 2nd neighbor Ids
@@ -1461,7 +1461,7 @@ Node* Mesh::findNextBoundaryNode(Node* boundary_node) {
 #endif
 
     if (intersection.size() == 1){
-      found_next_boundary_node = true;
+      //found_next_boundary_node = true;
       vector<Node *>::iterator next_boundary_node_it = find_if (nodes.begin(), nodes.end(), bind2nd(mem_fun(&Node::IndexEquals), *itt));
       next_boundary_node = *next_boundary_node_it; // defeference the itterator to get to the node pointer
 
@@ -1988,7 +1988,7 @@ double Mesh::Compactness(double *res_compactness, double *res_area, double *res_
   }
   
   // chainHull algorithm requires sorted points
-  qSort( p, p+pc );
+  sort( p, p+pc );
 
  
   // Step 2: call 2D Hull code
@@ -2053,7 +2053,7 @@ void Mesh::CSVExportCellData(QTextStream &csv_stream) const {
   for (int c=0;c<Cell::NChem(); c++) {
     csv_stream << ",\"Chemical " << c << "\"";
   }
-  csv_stream << endl;
+  csv_stream << Qt::endl;
   for (vector<Cell *>::const_iterator i=cells.begin();
        i!=cells.end();
        i++) {
@@ -2066,7 +2066,7 @@ void Mesh::CSVExportCellData(QTextStream &csv_stream) const {
     for (int c=0;c<Cell::NChem(); c++) {
       csv_stream << ", " << (*i)->Chemical(c);
     }
-    csv_stream << endl;
+    csv_stream << Qt::endl;
   }
 
   
@@ -2084,7 +2084,7 @@ void Mesh::CSVExportWallData(QTextStream &csv_stream) const {
   for (int c=0;c<Cell::NChem(); c++) {
     csv_stream << ",\"Transporter B:" << c << "\"";
   }
-  csv_stream << endl;
+  csv_stream << Qt::endl;
   for (list<Wall *>::const_iterator i=walls.begin();
        i!=walls.end();
        i++) {
@@ -2100,7 +2100,7 @@ void Mesh::CSVExportWallData(QTextStream &csv_stream) const {
       csv_stream << "," << (*i)->Transporters2(c);
     }
 
-    csv_stream << endl;
+    csv_stream << Qt::endl;
   }
 
   
@@ -2109,12 +2109,12 @@ void Mesh::CSVExportWallData(QTextStream &csv_stream) const {
 
 void Mesh::CSVExportMeshData(QTextStream &csv_stream) { 
   
-  csv_stream << "\"Morph area\",\"Number of cells\",\"Number of nodes\",\"Compactness\",\"Hull area\",\"Morph circumference\",\"Hull circumference\"" << endl;
+  csv_stream << "\"Morph area\",\"Number of cells\",\"Number of nodes\",\"Compactness\",\"Hull area\",\"Morph circumference\",\"Hull circumference\"" << Qt::endl;
   
   double res_compactness, res_area, res_cell_area, hull_circumference;
   Compactness(&res_compactness, &res_area, &res_cell_area, &hull_circumference);
   double morph_circumference = boundary_polygon->ExactCircumference();
-  csv_stream << Area() << ", " << NCells() << ", " << NNodes() << ", " << res_compactness << ", " << res_area << ", " << morph_circumference << ", " << hull_circumference << endl;
+  csv_stream << Area() << ", " << NCells() << ", " << NNodes() << ", " << res_compactness << ", " << res_area << ", " << morph_circumference << ", " << hull_circumference << Qt::endl;
   
 }
 /* finis */

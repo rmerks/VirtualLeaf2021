@@ -55,8 +55,8 @@ void Tutorial3::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase 
 		
 		// if both cells are at the tissue perimeter, choose at random
 		if (daughter1->AtBoundaryP() && daughter2->AtBoundaryP()) {
-		
-			if (qrand()%2){
+            quint32 r = QRandomGenerator::global()->bounded(2);
+            if (r==1){
 				daughter1->SetCellType(1);
 				daughter2->SetCellType(0);
 			} else {

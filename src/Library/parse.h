@@ -25,23 +25,27 @@
 #ifndef _PARSE_H_
 #define _PARSE_H_
 
-char *ParsePar(FILE *fp, char *parameter, bool wrapflag);
-int igetpar(FILE *fp,char *parameter, bool wrapflag);
-int igetpar(FILE *fp,char *parameter, int default_val, bool wrapflag);
-float fgetpar(FILE *fp,char *parameter, bool wrapflag);
-float fgetpar(FILE *fp,char *parameter, double default_val, bool wrapflag);
+
+#include <cstdio>
+
+char *ParsePar(FILE *fp, const char *parameter, bool wrapflag);
+int igetpar(FILE *fp,const char *parameter, bool wrapflag);
+int igetpar(FILE *fp,const char *parameter, int default_val, bool wrapflag);
+float fgetpar(FILE *fp,const char *parameter, bool wrapflag);
+float fgetpar(FILE *fp,const char *parameter, double default_val, bool wrapflag);
 
 /* Get a list of n comma separated doubles */
-double *dgetparlist(FILE *fp,char *parameter, int n, bool wrapflag);
-char *sgetpar(FILE *fp,char *parameter, bool wrapflag);
-char *sgetpar(FILE *fp,char *parameter,const char *default_val, bool wrapflag);
-bool bgetpar(FILE *fp, char *parameter, bool wrapflag);
-bool bgetpar(FILE *fp, char *parameter, int default_val, bool wrapflag);
-char *SearchToken(FILE *fp, char *token, bool wrapflag);
-int TokenInLineP(char *line,char *token);
-void SkipToken(FILE *fp,char *token, bool wrapflag);
+double *dgetparlist(FILE *fp, const char *parameter, int n, bool wrapflag);
+char *sgetpar(FILE *fp,const char *parameter, bool wrapflag);
+char *sgetpar(FILE *fp,const char *parameter,const char *default_val, bool wrapflag);
+bool bgetpar(FILE *fp, const char *parameter, bool wrapflag);
+bool bgetpar(FILE *fp, const char *parameter, int default_val, bool wrapflag);
+char *SearchToken(FILE *fp, const char *token, bool wrapflag);
+int TokenInLineP(char *line, const char *token);
+void SkipToken(FILE *fp, const char *token, bool wrapflag);
 void SkipLine(FILE *fp);
 char *bool_str(bool bool_var);
+
 
 #endif
 

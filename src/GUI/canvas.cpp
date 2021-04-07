@@ -98,7 +98,7 @@ using namespace std;
 static QColor dark_red("darkRed");
 
 
-static const int imageRTTI = 984376;
+//static const int imageRTTI = 984376;
 extern Parameter par;
 const QString Main::caption("Virtual leaf");
 const QString Main::caption_with_file("Virtual leaf: %1");
@@ -127,13 +127,17 @@ void FigureEditor::clear()
 
 void FigureEditor::wheelEvent(QWheelEvent *event)
 {
-    scaleView(pow((double)2, -event->delta() / 240.0));
+    QPoint rotate = event->angleDelta();
+   // scaleView(pow((double)2, -event->delta() / 240.0));
+     scaleView(pow((double)2, -rotate.y() / 240.0));
 }
 
 
 void FigureEditor::scaleView (qreal scaleFactor)
 {
-    qreal factor = matrix().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)). width();
+    //qreal factor = matrix().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)). width();
+    qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)). width();
+
     if (factor < 0.07 || factor > 100) return;
     scale (scaleFactor, scaleFactor);
 }
@@ -190,9 +194,8 @@ void FigureEditor::mousePressEvent(QMouseEvent* e)
 #ifdef QDEBUG
         qDebug() << typeid(**it).name() << endl;
 #endif
-
-        if ( !strcmp(typeid(**it).name(),"8NodeItem")) {
-
+        QGraphicsItem *gi=*it;
+        if ( !strcmp(typeid(*gi).name(),"8NodeItem")) {
             stringstream data_strstream;
             data_strstream << (dynamic_cast<NodeItem*>(*it))->getNode();
             dynamic_cast<Main *>(parent())->UserMessage(QString(data_strstream.str().c_str()));
@@ -200,13 +203,13 @@ void FigureEditor::mousePressEvent(QMouseEvent* e)
             (dynamic_cast<NodeItem*>(*it))->OnClick(e->button());
         }
         else
-            if ( !strcmp(typeid(**it).name(),"8CellItem") ) {
+            if ( !strcmp(typeid(*gi).name(),"8CellItem") ) {
 
                 Cell &c=((dynamic_cast<CellItem *>(*it))->getCell());
                 // OnClick to be defined in end-user code
                 c.OnClick(e);
             } else {
-                if ( !strcmp(typeid(**it).name(),"8WallItem") ) {
+                if ( !strcmp(typeid(*gi).name(),"8WallItem") ) {
                     (dynamic_cast<WallItem *>(*it))->OnClick(e);
                 }
             }
@@ -402,13 +405,13 @@ vector <CellItem *> FigureEditor::getIntersectedCells(void)
 #endif
 
     for (QList<QGraphicsItem *>::Iterator it=l.begin(); it!=l.end(); ++it) {
-
+        QGraphicsItem *gi=*it;
 #ifdef QDEBUG
-        qDebug() << typeid(**it).name() << endl;
+        qDebug() << typeid(*gi).name() << endl;
 #endif
 
-        if ( !strcmp(typeid(**it).name(),"8CellItem") ) {
-            colliding_cells.push_back(dynamic_cast<CellItem *>(*it));
+        if ( !strcmp(typeid(*gi).name(),"8CellItem") ) {
+            colliding_cells.push_back(dynamic_cast<CellItem *>(gi));
         }
     }
 
@@ -431,9 +434,10 @@ NodeItem *FigureEditor::selectedNodeItem(QList<QGraphicsItem *> graphicItems) co
     // graphicItems is a list of the QgraphicItems under the mouse click event
     QList<QGraphicsItem *>::Iterator it = graphicItems.begin();
     for (; it != graphicItems.end(); ++it) {
-        if ( !strcmp(typeid(**it).name(),"8NodeItem")) {
+        QGraphicsItem *gi=*it;
+        if ( !strcmp(typeid(*gi).name(),"8NodeItem")) {
             // the object under the mouse click is a Nodeitem
-            nodeItem = dynamic_cast<NodeItem *>(*it);
+            nodeItem = dynamic_cast<NodeItem *>(gi);
             // indicate we've selected it
             nodeItem->setBrush(dark_red);
             break;
@@ -762,7 +766,7 @@ void Main::saveStateXML(void)
                     " Do you want to overwrite it?")
                  .arg( fileName ),
                  tr("&Yes"), tr("&No"),
-                 QString::null, 1, 1 ) ) {
+                 QString(), 1, 1 ) ) {
             return saveStateXML();
 
         } else {
@@ -1170,7 +1174,8 @@ void Main::gpl()
     docDir.cd("../doc"); // Where Linux expects gpl3.txt
     QString path = docDir.filePath("gpl3.txt");
     if (!docDir.exists("gpl3.txt")){
-        docDir = QApplication::applicationDirPath();
+      //docDir = QApplication::applicationDirPath();
+        docDir.setPath(QApplication::applicationDirPath());
         docDir.cd("doc"); // Where Windows expects gpl3.txt
         path = docDir.filePath("gpl3.txt");
     }
@@ -1316,23 +1321,24 @@ void Main::shrink()
 
 void Main::scale(double factor)
 {
-    QMatrix m = editor->matrix();
+    QTransform m = editor->transform();
+    //   QMatrix m = editor->matrix();
     m.scale(factor, factor);
-    editor->setMatrix( m );
+    editor->setTransform(m );
 }
 
 void Main::zoomIn()
 {
-    QMatrix m = editor->matrix();
+    QTransform m = editor->transform();
     m.scale( 1.1, 1.1 );
-    editor->setMatrix( m );
+    editor->setTransform( m );
 }
 
 void Main::zoomOut()
 {
-    QMatrix m = editor->matrix();
+    QTransform m = editor->transform();
     m.scale( 0.9, 0.9 );
-    editor->setMatrix( m );
+    editor->setTransform( m );
 }
 
 
@@ -1352,10 +1358,10 @@ void Main::print()
         qDebug() << "bbll = " << bbll << endl;
         qDebug() << "bbur = " << bbur << endl;
 #endif
-        double cw = (bbur.x - bbll.x);
-        double ch = (bbur.y - bbll.y);
+       // double cw = (bbur.x - bbll.x);
+        //double ch = (bbur.y - bbll.y);
         QPainter pp(printer);
-        QRect vp=pp.viewport();
+   //     QRect vp=pp.viewport();
 #ifdef QDEBUG
         qDebug() << "Paper width = " << vp.width() << " x " << vp.height() << endl;
 #endif
@@ -1424,7 +1430,7 @@ void Main::FitCanvasToWindow(void)
     double scale_factor_x = (double)editor->width()/(double)canvas.width();
     double scale_factor_y = (double)editor->height()/(double)canvas.height();
     double scale_factor = scale_factor_x > scale_factor_y ? scale_factor_x : scale_factor_y;
-    QMatrix m = editor->matrix();
+    QTransform m = editor->transform();
 
 #ifdef QDEBUG  
     qDebug() << "editor->width() = " << editor->width() << endl;
@@ -1435,7 +1441,7 @@ void Main::FitCanvasToWindow(void)
     qDebug() << "scale_factor_y = " << scale_factor_y << endl;
 #endif
     m.scale( scale_factor, scale_factor );
-    editor->setMatrix( m );
+    editor->setTransform( m );
     editor->show();
 }
 

@@ -113,30 +113,30 @@ void TissueGenerator::Dialog(void) {
 
         tissuedialog:
         bool ok;
-        polygon = QInputDialog::getInt(0, QString("Hexagonal or Rectangular tissue"), QString("type of polygon"),0,4,6,2,&ok,0);
+        polygon = QInputDialog::getInt(0, QString("Hexagonal or Rectangular tissue"), QString("type of polygon"),0,4,6,2,&ok);
         if (!ok || (polygon != 4 && polygon != 6)) {
-            QMessageBox::warning(0, QString("Waring"), QString("choose 4 or 6"),QMessageBox::Ok,0);
+            QMessageBox::warning(0, QString("Warning"), QString("choose 4 or 6"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        rows = QInputDialog::getInt(0, QString("Determine the amount of rows of cells"), QString("amount of rows"),0,1,100,1,&ok,0);
+        rows = QInputDialog::getInt(0, QString("Determine the amount of rows of cells"), QString("amount of rows"),0,1,100,1,&ok);
         if (!ok) {
-            QMessageBox::warning(0, QString("Waring"), QString("rows should have a value between 1 and 100"),QMessageBox::Ok,0);
+            QMessageBox::warning(0, QString("Warning"), QString("rows should have a value between 1 and 100"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        cols = QInputDialog::getInt(0, QString("Determine the amount of collumns of cells"), QString("amount of collumns"),0,1,100,1,&ok,0);
+        cols = QInputDialog::getInt(0, QString("Determine the amount of columns of cells"), QString("amount of columns"),0,1,100,1,&ok);
         if (!ok) {
-            QMessageBox::warning(0, QString("Waring"), QString("collumns should have a value between 1 and 100"),QMessageBox::Ok,0);
+            QMessageBox::warning(0, QString("Warning"), QString("columns should have a value between 1 and 100"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        edgeL = QInputDialog::getDouble(0, QString("Determine the length of the edges"), QString("edge lenght"),0,0.1,100.00,2,&ok,0);
+        edgeL = QInputDialog::getDouble(0, QString("Determine the length of the edges"), QString("edge lenght"),0,0.1,100.00,2,&ok);
         if (!ok) {
-            QMessageBox::warning(0, QString("Waring"), QString("The edge length should have a value between 0.1 and 100"),QMessageBox::Ok,0);
+            QMessageBox::warning(0, QString("Warning"), QString("The edge length should have a value between 0.1 and 100"),QMessageBox::Ok);
             goto tissuedialog;
         }
         if (polygon == 4) {
-            edgeW = QInputDialog::getDouble(0, QString("Determine the width of the edges"), QString("edge width"),0,0.1,100.00,2,&ok,0);
+            edgeW = QInputDialog::getDouble(0, QString("Determine the width of the edges"), QString("edge width"),0,0.1,100.00,2,&ok);
             if (!ok) {
-                QMessageBox::warning(0, QString("Waring"), QString("The edge width should have a value between 0.1 and 100"),QMessageBox::Ok,0);
+                QMessageBox::warning(0, QString("Warning"), QString("The edge width should have a value between 0.1 and 100"),QMessageBox::Ok);
                 goto tissuedialog;
             }
         }
@@ -360,7 +360,7 @@ void TissueGenerator::AddHexagons(void) {
         // second: add vertical walls
         int i = 1; c1 = 0; c2 = 1; n1 = (cols+1); n2 = (2*cols)+2;
         if (cols == 1) { n1 = 6; n2 = 8; } // exception on initial n1 and n2
-        for (i; i != ((rows*cols)-1); i++){
+        for (; i != ((rows*cols)-1); i++){
             if (i%cols != (cols-1) && i%cols != 0) { // != begin and != end of one row
                 AddWallToTissue(xmlwalls, wall, c1, c2, n1, n2, edgeL);
                 wall++; c1++; c2++; n1++; n2++;
@@ -722,7 +722,7 @@ void TissueGenerator::AddCellToTissue(QDomElement &parent, int index, double are
 
     /* stores nodes per rectangular cell */
     if (polygon == 4) {
-        int cellrow = index%rows; // collumn in which the cell is located
+        int cellrow = index%rows; // column in which the cell is located
         int cellcol = ((index-cellrow)/rows);
         {
           //ostringstream text;
@@ -752,7 +752,7 @@ void TissueGenerator::AddCellToTissue(QDomElement &parent, int index, double are
     }
     /* stores nodes per hexagonal cell */
     if (polygon == 6) {
-        int cellcol = index%cols; // collumn in which the cell is located
+        int cellcol = index%cols; // column in which the cell is located
         int cellrow = (index-cellcol)/rows; // row in which the cell is located
         int inrow = (2*cols+2); // amount of nodes in one row (except for the first)
         int last = 0;

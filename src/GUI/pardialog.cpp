@@ -511,7 +511,7 @@ QString tmpval;
   if (tmpval == "true" || tmpval == "yes" ) par.auxin_dependent_growth = true;
   else if (tmpval == "false" || tmpval == "no") par.auxin_dependent_growth = false;
   else {
-    if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("auxin_dependent_growth"),"True","False", QString::null, 0, 1)==0) par.auxin_dependent_growth=true;
+    if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("auxin_dependent_growth"),"True","False", QString(), 0, 1)==0) par.auxin_dependent_growth=true;
       else par.auxin_dependent_growth=false;
   }
   par.ode_accuracy = ode_accuracy_edit->text().toDouble();
@@ -529,7 +529,7 @@ QString tmpval;
   if (tmpval == "true" || tmpval == "yes" ) par.copy_wall = true;
   else if (tmpval == "false" || tmpval == "no") par.copy_wall = false;
   else {
-    if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("copy_wall"),"True","False", QString::null, 0, 1)==0) par.copy_wall=true;
+    if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("copy_wall"),"True","False", QString(), 0, 1)==0) par.copy_wall=true;
       else par.copy_wall=false;
   }
   par.source = source_edit->text().toDouble();
@@ -628,7 +628,7 @@ QString tmpval;
   if (tmpval == "true" || tmpval == "yes" ) par.movie = true;
   else if (tmpval == "false" || tmpval == "no") par.movie = false;
   else {
-    if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("movie"),"True","False", QString::null, 0, 1)==0) par.movie=true;
+    if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("movie"),"True","False", QString(), 0, 1)==0) par.movie=true;
       else par.movie=false;
   }
   par.nit = nit_edit->text().toInt();
@@ -664,7 +664,7 @@ QString tmpval;
   if (tmpval == "true" || tmpval == "yes" ) par.b4 = true;
   else if (tmpval == "false" || tmpval == "no") par.b4 = false;
   else {
-    if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("b4"),"True","False", QString::null, 0, 1)==0) par.b4=true;
+    if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("b4"),"True","False", QString(), 0, 1)==0) par.b4=true;
       else par.b4=false;
   }
   par.dir1 = strdup(dir1_edit->text().toLatin1());

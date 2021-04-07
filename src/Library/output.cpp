@@ -40,7 +40,7 @@ using namespace MyWarning;
 
 #define FNAMESIZE 100
 
-int OpenFileAndCheckExistance(FILE **fp,const char *fname,char *ftype) {
+int OpenFileAndCheckExistance(FILE **fp,const char *fname, const char *ftype) {
 
   *fp=fopen(fname,ftype);
   if (*fp==NULL) 

@@ -119,9 +119,11 @@ void Cell::Apoptose(void)
   }
   for (list<Wall *>::iterator w=walls.begin(); w!=walls.end(); w++) {
 
+#ifdef QDEBUG
     bool illegal_flag = false;
-    if ((*w)->c1 == (*w)->c2 ) 
+    if ((*w)->c1 == (*w)->c2 )
       illegal_flag=true;
+#endif
     if ((*w)->c1 == this) {
 
       // invert wall?
@@ -1573,10 +1575,11 @@ void BoundaryPolygon::Draw(QGraphicsScene *c, QString tooltip)
   p->setBrush( Qt::NoBrush );
   p->setZValue(1);
 
-  if (!tooltip.isEmpty())
+  if (!tooltip.isEmpty()) {
     p->setToolTip(tooltip);
+  }
 
-    c->addItem(p);
+  c->addItem(p);
   p->show();
 }
 
@@ -1648,10 +1651,10 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
   p->setBrush( cell_color );
   p->setZValue(1);
 
-  if (!tooltip.isEmpty())
+  if (!tooltip.isEmpty()) {
     p->setToolTip(tooltip);
-
-    c->addItem(p);
+  }
+  c->addItem(p);
   p->show();
 }
 

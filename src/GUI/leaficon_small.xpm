@@ -1,5 +1,5 @@
 /* XPM */
-static char *leaficon_small[] = {
+const char *leaficon_small[] = {
 /* columns rows colors chars-per-pixel */
 "55 55 256 2 ",
 "   c #020C02",

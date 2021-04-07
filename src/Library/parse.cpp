@@ -33,7 +33,7 @@ static const std::string _module_id("$Id$");
 
 using namespace MyWarning;
 
-char *ParsePar(FILE *fp, char *parameter, bool wrapflag) 
+char *ParsePar(FILE *fp, const char *parameter, bool wrapflag)
 {
   char *line,*token;
   char *value;
@@ -67,14 +67,14 @@ char *ParsePar(FILE *fp, char *parameter, bool wrapflag)
 }
 
 
-int igetpar(FILE *fp,char *parameter, bool wrapflag) {
+int igetpar(FILE *fp, const char *parameter, bool wrapflag) {
 
   // overloaded compatibility function. Doesn't need default parameter
 
   return igetpar(fp, parameter, 0, wrapflag);
 }
 
-int igetpar(FILE *fp,char *parameter, int default_val, bool wrapflag) 
+int igetpar(FILE *fp,const char *parameter, int default_val, bool wrapflag)
 {
   char *token;
   int value;
@@ -96,13 +96,13 @@ int igetpar(FILE *fp,char *parameter, int default_val, bool wrapflag)
   return value;
 }
 
-float fgetpar(FILE *fp,char *parameter, bool wrapflag) {
+float fgetpar(FILE *fp,const char *parameter, bool wrapflag) {
 
   // overloaded compatibility function. Doesn't need default parameter
   return fgetpar(fp, parameter, 0., wrapflag);
 }
 
-float fgetpar(FILE *fp, char *parameter, double default_val, bool wrapflag) 
+float fgetpar(FILE *fp, const char *parameter, double default_val, bool wrapflag)
 {
   char *token;
   float value;
@@ -124,7 +124,7 @@ float fgetpar(FILE *fp, char *parameter, double default_val, bool wrapflag)
 }
 
 
-double *dgetparlist(FILE *fp,char *parameter, int n, bool wrapflag) 
+double *dgetparlist(FILE *fp,const char *parameter, int n, bool wrapflag)
 {
   /* Get a list of n comma separated doubles */
   char *token;
@@ -176,12 +176,12 @@ double *dgetparlist(FILE *fp,char *parameter, int n, bool wrapflag)
   return value;
 }
 
-char *sgetpar(FILE *fp,char *parameter, bool wrapflag) 
+char *sgetpar(FILE *fp,const char *parameter, bool wrapflag)
 {
   return sgetpar(fp, parameter, " ", wrapflag);
 }
 
-char *sgetpar(FILE *fp, char *parameter, const char *default_val, bool wrapflag) {
+char *sgetpar(FILE *fp, const char *parameter, const char *default_val, bool wrapflag) {
 
   char *token;
   char *value;
@@ -223,7 +223,7 @@ char *bool_str(bool bool_var) {
   }
 }
 
-bool bgetpar(FILE *fp, char *parameter,  bool wrapflag) {
+bool bgetpar(FILE *fp, const char *parameter,  bool wrapflag) {
 
   // overloaded compatibility function. Doesn't need default parameter
   // default = false
@@ -231,7 +231,7 @@ bool bgetpar(FILE *fp, char *parameter,  bool wrapflag) {
   return bgetpar(fp, parameter, 0, wrapflag);
 }
 
-bool bgetpar(FILE *fp, char *parameter, int default_val, bool wrapflag) {
+bool bgetpar(FILE *fp, const char *parameter, int default_val, bool wrapflag) {
 
   /* Get boolean parameter. */
   /* if "true" or "yes", return 1 */
@@ -269,7 +269,7 @@ bool bgetpar(FILE *fp, char *parameter, int default_val, bool wrapflag) {
 }
 
 
-char *SearchToken(FILE *fp, char *token,bool wrapflag) 
+char *SearchToken(FILE *fp, const char *token,bool wrapflag)
 {
   /* This function returns the next line of FILE *fp that contains
      the string stored in the null terminated string token */
@@ -339,7 +339,7 @@ char *SearchToken(FILE *fp, char *token,bool wrapflag)
   return NULL; /* Token Not Found in the file */
 }
 
-int TokenInLineP(char *line,char *token) 
+int TokenInLineP(const char *line,const char *token)
 {
   if (strstr(token, line)!=NULL)
     return true;
@@ -356,7 +356,7 @@ void SkipLine(FILE *fp) {
   free(tmpstring);
 }
 
-void SkipToken(FILE *fp,char *token, bool wrapflag)
+void SkipToken(FILE *fp,const char *token, bool wrapflag)
 {
   /* A very simple function:
      call SearchToken() and get rid of the memory returned by
