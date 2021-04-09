@@ -32,8 +32,7 @@ class QGraphicsArrowItem : public QGraphicsLineItem {
  public:
  QGraphicsArrowItem(QGraphicsItem *parent) : QGraphicsLineItem(parent) {};
 
-  void paint ( QPainter *p, const QStyleOptionGraphicsItem *option,
-	       QWidget *widget ) {
+  void paint ( QPainter *p) {
 
     // construct arrow head
     QPointF start=line().p1();

@@ -482,7 +482,7 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
     file->addAction("&Read leaf", this, SLOT(readStateXML()));
     file->addAction("&Save leaf", this, SLOT(saveStateXML()));
     file->addAction("Generate new tissue", this, SLOT(GenerateNewTissue()));
-    file->addAction("Snapshot", this, SLOT(snapshot()), Qt::CTRL+Qt::SHIFT+Qt::Key_S);
+    file->addAction("Snapshot", this, SLOT(snapshot()), Qt::CTRL|Qt::SHIFT|Qt::Key_S);
 
     file->addSeparator();
     file->addAction("Read next leaf", this, SLOT(readNextStateXML()), Qt::Key_PageDown);
@@ -492,14 +492,14 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
     file->addAction("Export cell data", this, SLOT(exportCellData()));
 
     file->addSeparator();
-    file->addAction("&Print...", this, SLOT(print()), Qt::CTRL+Qt::Key_P);
+    file->addAction("&Print...", this, SLOT(print()), Qt::CTRL|Qt::Key_P);
     file->addSeparator();
-    file->addAction("E&xit", qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
+    file->addAction("E&xit", qApp, SLOT(quit()), Qt::CTRL|Qt::Key_Q);
     //menu->addAction("&File", file);
 
     edit = menu->addMenu("&Edit");
     
-    edit->addAction("Reset Chemicals and Transporters", this, SLOT( CleanMesh()), Qt::CTRL+Qt::Key_R );
+    edit->addAction("Reset Chemicals and Transporters", this, SLOT( CleanMesh()), Qt::CTRL|Qt::Key_R );
     edit->addAction("Reset Chemicals", this, SLOT( CleanMeshChemicals()) );
     edit->addAction("Reset Transporters", this, SLOT( CleanMeshTransporters()) );
     edit->addAction("Randomize Chemicals and Transporters", this, SLOT( RandomizeMesh()) );
@@ -512,16 +512,16 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
     paused_act->setChecked(true);
 
     view = menu->addMenu("&View");
-    view->addAction("&Zoom in", this, SLOT(zoomIn()), Qt::CTRL+Qt::Key_Equal);
-    view->addAction("Zoom &out", this, SLOT(zoomOut()), Qt::CTRL+Qt::Key_Minus);
+    view->addAction("&Zoom in", this, SLOT(zoomIn()), Qt::CTRL|Qt::Key_Equal);
+    view->addAction("Zoom &out", this, SLOT(zoomOut()), Qt::CTRL|Qt::Key_Minus);
     view->addSeparator();
     com_act = view->addAction("Show cell &centers", this, SLOT(toggleShowCellCenters()));
     com_act->setCheckable(true);
     
-    mesh_act = view->addAction("Show &nodes", this, SLOT(toggleShowNodes()), Qt::CTRL+Qt::SHIFT+Qt::Key_N);
+    mesh_act = view->addAction("Show &nodes", this, SLOT(toggleShowNodes()), Qt::CTRL|Qt::SHIFT|Qt::Key_N);
     mesh_act->setCheckable(true);
     
-    node_number_act = view->addAction("Show node numbers", this, SLOT(toggleNodeNumbers()), Qt::CTRL+Qt::SHIFT+Qt::Key_M);
+    node_number_act = view->addAction("Show node numbers", this, SLOT(toggleNodeNumbers()), Qt::CTRL|Qt::SHIFT|Qt::Key_M);
     node_number_act->setCheckable(true);
     
     cell_number_act = view->addAction("Show cell numbers", this, SLOT(toggleCellNumbers()));
@@ -564,7 +564,7 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
 
     output = menu->addMenu("&Output");
     
-    output->addAction("Snapshot", this, SLOT(snapshot()), Qt::CTRL+Qt::SHIFT+Qt::Key_S);
+    output->addAction("Snapshot", this, SLOT(snapshot()), Qt::CTRL|Qt::SHIFT|Qt::Key_S);
     output->addAction("Export cell data", this, SLOT(exportCellData()));
     //output->addAction("Export Cell in DXF format", this, SLOT(exportDXF()));
     
@@ -589,9 +589,9 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
     dyn_cells_act->setChecked(true);
 
     options->addSeparator();
-    options->addAction("Edit &parameters", this, SLOT(EditParameters()), Qt::CTRL+Qt::Key_E);
+    options->addAction("Edit &parameters", this, SLOT(EditParameters()), Qt::CTRL|Qt::Key_E);
     
-    rotation_mode_act = options->addAction("Rotate leaf", this, SLOT(EnterRotationMode()), Qt::CTRL + Qt::SHIFT + Qt::Key_R);
+    rotation_mode_act = options->addAction("Rotate leaf", this, SLOT(EnterRotationMode()), Qt::CTRL | Qt::SHIFT | Qt::Key_R);
     rotation_mode_act->setCheckable(true);
     rotation_mode_act->setChecked(false);
 

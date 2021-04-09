@@ -36,11 +36,12 @@
 #include "output.h"
 #include <qwidget.h>
 #include <qapplication.h>
-#include <QDesktopWidget>
+#include <QWidget>
 #include <QGraphicsScene>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QSettings>
+#include <QScreen>
 
 #include <unistd.h>
 //#include <q3textstream.h>
@@ -259,7 +260,7 @@ TIMESTEP {
   static int ncells;
 
   if (!batch) {
-    UserMessage(QString("Time: %1").arg(mesh.getTimeHours().c_str()),0);
+    UserMessage(QString("Time: %1").arg(mesh.getTimeHours().c_str()));
   }
 
   ncells=mesh.NCells();
@@ -444,8 +445,10 @@ int main(int argc,char **argv) {
 
     if (useGUI) {
       main_window=new Main(canvas, mesh);
-      if ( QApplication::desktop()->width() > ((Main *)main_window)->width() + 10
-	   && QApplication::desktop()->height() > ((Main *)main_window)->height() +30 ) {
+      QScreen *screen = QGuiApplication::primaryScreen();
+      QRect  screenGeometry = screen->geometry();
+      if ( screenGeometry.width() > ((Main *)main_window)->width() + 10
+       && screenGeometry.height() > ((Main *)main_window)->height() +30 ) {
 
 	((Main *)main_window)->show();
 	((Main *)main_window)->resize( ((Main *)main_window)->sizeHint());

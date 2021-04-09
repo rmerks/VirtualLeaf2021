@@ -26,7 +26,7 @@
 
 #include "wallbase.h"
 #include "cellbase.h"
-#include "mymodel.h"
+#include "MyModel.h"
 #include "random.h"
 
 static const std::string _module_id("$Id$");

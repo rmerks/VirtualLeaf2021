@@ -129,7 +129,7 @@ class Cell : public CellBase
   list<Wall *>::iterator RemoveWall( Wall *w );
   void AddWall( Wall *w );
 
-  void Draw(QGraphicsScene *c, QString tooltip = QString::Null());
+  void Draw(QGraphicsScene *c, QString tooltip = "");
 
   // Draw a text in the cell's center
   void DrawText(QGraphicsScene *c, const QString &text) const;
@@ -183,7 +183,7 @@ class BoundaryPolygon : public Cell {
     index=-1;
     return *this;
   }
-  virtual void Draw(QGraphicsScene *c, QString tooltip = QString::Null());
+  virtual void Draw(QGraphicsScene *c, QString tooltip = "");
 
   virtual void XMLAdd(QDomDocument &doc, QDomElement &parent_node) const;
 

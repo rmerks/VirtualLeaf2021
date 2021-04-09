@@ -620,7 +620,7 @@ void NodeSet::XMLRead(QDomElement &root, Mesh *m)
     if (n.tagName()=="node") {
       QString nc = n.attribute("n");
 
-      if (nc==0) {
+      if (nc=="") {
     unique_warning("Token \"n\" not found in xmlwrite.cpp at or around line no. 966");
       }
       //tmp_nodes.push_back(atoi( qPrintable(nc) ) );
@@ -1372,7 +1372,7 @@ void Mesh::XMLReadWalls(QDomElement &root, vector<Wall *> *tmp_walls)
         }
         QString nc = v_node.attribute("v");
 
-        if (nc==0) {
+        if (nc=="") {
           unique_warning("Token \"v\" not found in xmlwrite.cpp at or around line no. 835");
         }
 
