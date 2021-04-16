@@ -73,7 +73,9 @@ TissueGenerator::TissueGenerator() {
 }
 /* store generated tissue in an xml file */
 QString TissueGenerator::GenerateTissue(void) {
-    Dialog();
+    if (Dialog()){
+    	return "";
+    }
     GenerateParams();
     if (polygon == 4) { AddRectangles(); }
     if (polygon == 6) { AddHexagons(); }
@@ -82,7 +84,7 @@ QString TissueGenerator::GenerateTissue(void) {
 }
 
 /* popupscreens used to change parameters and store the tissue */
-void TissueGenerator::Dialog(void) {
+int TissueGenerator::Dialog(void) {
     filedialog:
     QFileDialog *fd = new QFileDialog( 0, "Save new file as:", QString(tissuedir.dirName()), QString("LeafML files (*.xml)"));
     fd->setFileMode( QFileDialog::AnyFile );
@@ -95,7 +97,6 @@ void TissueGenerator::Dialog(void) {
             hFileName = files[0];
        // hFileName = fd->selectedFile();
         if (hFileName.isEmpty()) { goto filedialog; }
-
         // extract extension from rFileName
         QFileInfo fi(hFileName);
         QString extension = fi.suffix();
@@ -140,9 +141,9 @@ void TissueGenerator::Dialog(void) {
                 goto tissuedialog;
             }
         }
-
+    	return 0;
     }
-    return;
+    return 1;
 }
 
 /* adds some parameters to the file */

@@ -47,7 +47,7 @@ public:
     /* methods */
     TissueGenerator();
     QString GenerateTissue(void);
-    void Dialog(void);
+    int Dialog(void);
     void GenerateParams(void);
     void AddHexagons(void);
     void AddRectangles(void);
