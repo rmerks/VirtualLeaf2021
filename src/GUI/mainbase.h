@@ -125,11 +125,11 @@ class MainBase  {
 
   Mesh &mesh;
   QTransform viewport;
-
+  virtual QDomElement XMLSettingsTree();
 
  protected:
   QGraphicsScene &canvas;
-  virtual QDomElement XMLSettingsTree();
+
   virtual QDomElement XMLViewportTree( QTransform &transform) const;
 
 

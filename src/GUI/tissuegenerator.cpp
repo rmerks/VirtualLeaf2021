@@ -57,6 +57,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <parameter.h>
+#include <canvas.h>
 
 #include "tissuegenerator.h"
 
@@ -73,11 +74,11 @@ TissueGenerator::TissueGenerator() {
 
 }
 /* store generated tissue in an xml file */
-QString TissueGenerator::GenerateTissue(void) {
+QString TissueGenerator::GenerateTissue(Main *m) {
     if (Dialog()){
     	return "";
     }
-    GenerateParams();
+    GenerateParams(m);
     if (polygon == 4) { AddRectangles(); }
     if (polygon == 6) { AddHexagons(); }
     FinishTissue();
@@ -120,23 +121,23 @@ int TissueGenerator::Dialog(void) {
             QMessageBox::warning(0, QString("Warning"), QString("choose 4 or 6"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        rows = QInputDialog::getInt(0, QString("Determine the amount of rows of cells"), QString("amount of rows"),0,1,100,1,&ok);
+        rows = QInputDialog::getInt(0, QString("Determine the amount of rows of cells"), QString("amount of rows"),1,10,1000,1,&ok);
         if (!ok) {
             QMessageBox::warning(0, QString("Warning"), QString("rows should have a value between 1 and 100"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        cols = QInputDialog::getInt(0, QString("Determine the amount of columns of cells"), QString("amount of columns"),0,1,100,1,&ok);
+        cols = QInputDialog::getInt(0, QString("Determine the amount of columns of cells"), QString("amount of columns"),1,10,1000,1,&ok);
         if (!ok) {
             QMessageBox::warning(0, QString("Warning"), QString("columns should have a value between 1 and 100"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        edgeL = QInputDialog::getDouble(0, QString("Determine the length of the edges"), QString("edge lenght"),0,0.1,100.00,2,&ok);
+        edgeL = QInputDialog::getDouble(0, QString("Determine the length of the edges"), QString("edge length"),0,1,100.00,2,&ok);
         if (!ok) {
             QMessageBox::warning(0, QString("Warning"), QString("The edge length should have a value between 0.1 and 100"),QMessageBox::Ok);
             goto tissuedialog;
         }
         if (polygon == 4) {
-            edgeW = QInputDialog::getDouble(0, QString("Determine the width of the edges"), QString("edge width"),0,0.1,100.00,2,&ok);
+            edgeW = QInputDialog::getDouble(0, QString("Determine the width of the edges"), QString("edge width"),0,1,100.00,2,&ok);
             if (!ok) {
                 QMessageBox::warning(0, QString("Warning"), QString("The edge width should have a value between 0.1 and 100"),QMessageBox::Ok);
                 goto tissuedialog;
@@ -148,7 +149,7 @@ int TissueGenerator::Dialog(void) {
 }
 
 /* adds some parameters to the file */
-void TissueGenerator::GenerateParams(void) {
+void TissueGenerator::GenerateParams(Main *m) {
 
     /* Creates a new document, a node and set it as a root node */
     doc = QDomDocument("leaf");
@@ -175,7 +176,11 @@ void TissueGenerator::GenerateParams(void) {
     extern Parameter par;
     par.outlinewidth=0.1; // set outlinewidth to a decent value matching with the default settings
     par.XMLAdd(doc,root_node);
-    return;
+
+    // add Settings and unset walls by default
+    m->setCheckedShowFluxes(false);
+   m->setCheckedShowTransporters(false);
+    QDomElement settings=m->XMLSettingsTree();
 }
 
 void TissueGenerator::AddHexagons(void) {

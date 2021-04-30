@@ -136,7 +136,13 @@ class Main : public QMainWindow, public MainBase {
 
   void FitCanvasToWindow();
   void FitLeafToCanvas(void);
-
+   virtual QDomElement XMLSettingsTree();
+  void setCheckedShowFluxes(bool checked) {
+      fluxes_act->setChecked(checked);
+  }
+  void setCheckedShowTransporters(bool checked) {
+      cell_walls_act->setChecked(checked);
+  }
   public slots:
     void setAbout(int state);
   void about();
@@ -229,6 +235,9 @@ class Main : public QMainWindow, public MainBase {
 
   void RandomizeMesh();
 
+
+
+
  signals:
   void SimulationDone(void);
   void ParsChanged(void);
@@ -275,7 +284,7 @@ class Main : public QMainWindow, public MainBase {
   QTimer *timer;
   QFile *gifanim;
   bool running;
-  virtual QDomElement XMLSettingsTree();
+
   static const QString caption;
   static const QString caption_with_file;
   InfoBar *infobar;

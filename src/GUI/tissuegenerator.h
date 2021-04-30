@@ -24,7 +24,7 @@
 #include <vector>
 #include <QString>
 #include <QtXml>
-
+#include <canvas.h>
 /* #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xpath.h>
@@ -46,9 +46,9 @@ class TissueGenerator {
 public:
     /* methods */
     TissueGenerator();
-    QString GenerateTissue(void);
+    QString GenerateTissue(Main *m);
     int Dialog(void);
-    void GenerateParams(void);
+    void GenerateParams(Main *m);
     void AddHexagons(void);
     void AddRectangles(void);
     void AddNodeToTissue(QDomElement&, double, double, const char*, const char*, const char*);
