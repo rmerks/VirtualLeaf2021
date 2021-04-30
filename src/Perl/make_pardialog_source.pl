@@ -160,7 +160,7 @@ QGridLayout *grid = new QGridLayout( this);
 // add the first four widgets with (row, column) addressing
 END_HEADER3
 
-$numrows = 20;
+$numrows = 25;
 $c = 0;
 for ($i=0;$i<$lines;$i++) {
     $col = 2*int($c/($numrows-3));
@@ -239,7 +239,7 @@ END_HEADER4
 		print cppfile "  if (tmpval == \"true\" || tmpval == \"yes\" ) par.$param[$i] = true;\n";
 		print cppfile "  else if (tmpval == \"false\" || tmpval == \"no\") par.$param[$i] = false;\n";
 		print cppfile "  else {\n";
-		print cppfile "    if (QMessageBox::question(this, \"Syntax error\", tr(\"Value %1 of parameter %2 is not recognized as Boolean.\\nDo you mean TRUE or FALSE?\").arg(tmpval).arg(\"$param[$i]\"),\"True\",\"False\", QString::null, 0, 1)==0) par.$param[$i]=true;\n";
+		print cppfile "    if (QMessageBox::question(this, \"Syntax error\", tr(\"Value %1 of parameter %2 is not recognized as Boolean.\\nDo you mean TRUE or FALSE?\").arg(tmpval).arg(\"$param[$i]\"),\"True\",\"False\", QString(), 0, 1)==0) par.$param[$i]=true;\n";
 		print cppfile "      else par.$param[$i]=false;\n";
 		print cppfile "  }\n";
 	    } else {
@@ -334,7 +334,7 @@ class ParameterDialog : public QDialog {
     Q_OBJECT
 	
       public:
-	ParameterDialog(QWidget *parent=0, Qt::WindowFlags f = 0);
+	ParameterDialog(QWidget *parent=0, Qt::WindowFlags f = Qt::WindowFlags());
     virtual ~ParameterDialog(void);
     public slots:
     void Reset(void);
