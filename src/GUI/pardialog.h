@@ -37,7 +37,7 @@ class ParameterDialog : public QDialog {
     Q_OBJECT
 	
       public:
-    ParameterDialog(QWidget *parent=0, Qt::WindowFlags f = Qt::WindowFlags());
+	ParameterDialog(QWidget *parent=0, Qt::WindowFlags f = 0);
     virtual ~ParameterDialog(void);
     public slots:
     void Reset(void);

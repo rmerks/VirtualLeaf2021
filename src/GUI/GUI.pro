@@ -63,7 +63,7 @@ win32 {
  CONFIG += windows
  GRAPHICS = qt 
  RC_FILE = VirtualLeaf.rc
- QMAKE_CXXFLAGS +=
+ QMAKE_CXXFLAGS += -static-libgcc -static-libstdc++
  LIBS +=  -lm #-lwsock32
 }
 

@@ -56,6 +56,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <parameter.h>
 
 #include "tissuegenerator.h"
 
@@ -171,6 +172,9 @@ void TissueGenerator::GenerateParams(void) {
     //text << 0;
     //xmlNewProp(root_node, BAD_CAST "simtime", BAD_CAST text.str().c_str());
     root_node.setAttribute("simtime","0");
+    extern Parameter par;
+    par.outlinewidth=0.1; // set outlinewidth to a decent value matching with the default settings
+    par.XMLAdd(doc,root_node);
     return;
 }
 

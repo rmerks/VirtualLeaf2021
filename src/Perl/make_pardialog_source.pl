@@ -160,7 +160,7 @@ QGridLayout *grid = new QGridLayout( this);
 // add the first four widgets with (row, column) addressing
 END_HEADER3
 
-$numrows = 30;
+$numrows = 20;
 $c = 0;
 for ($i=0;$i<$lines;$i++) {
     $col = 2*int($c/($numrows-3));
