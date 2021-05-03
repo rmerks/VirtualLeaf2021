@@ -31,7 +31,7 @@
 #include <QtEndian>
 #include <QByteArray>
 #include <QDir>
-#include <QLinkedList>
+#include <QList>
 #include <QMap>
 #include <QPrinter>
 #include <QFileDialog>
