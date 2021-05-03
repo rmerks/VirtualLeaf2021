@@ -26,14 +26,18 @@
 #define _QCANVASARROW_H_
 
 #include <QGraphicsScene>
+#include <QWidget>
+#include <QGraphicsLineItem>
+#include <QPainter>
+#include <iostream>
 
 class QGraphicsArrowItem : public QGraphicsLineItem {
 
  public:
  QGraphicsArrowItem(QGraphicsItem *parent) : QGraphicsLineItem(parent) {};
 
-  void paint ( QPainter *p) {
-
+  //void paint ( QPainter *p ) {
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr){
     // construct arrow head
     QPointF start=line().p1();
     QPointF end=line().p2();
@@ -59,12 +63,12 @@ class QGraphicsArrowItem : public QGraphicsLineItem {
     QPointF arwp2 = mid - QPointF( (int)( (length/4.)*px ),
 				   (int)( (length/4.)*py ) );
 
-    p->setPen(pen());
-    // Draw arrow head
-    p->drawLine( end, arwp1 );
-    p->drawLine( end, arwp2 );
-    // Draw arrow line
-    p->drawLine( start, end);
+    painter->setPen(pen());
+     //Draw arrow head
+    painter->drawLine( end, arwp1 );
+    painter->drawLine( end, arwp2 );
+     //Draw arrow line
+    painter->drawLine( start, end);
   }
 };
 
