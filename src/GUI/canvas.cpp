@@ -91,6 +91,8 @@ using namespace std;
 // We use a global variable to save memory - all the brushes and pens in
 // the mesh are shared.
 
+//#define CUTTINGTOOL
+
 #define FNAMESIZE 100
 #define QUOTE_ME(s) QUOTE_ME_2NDLEV(s)
 #define QUOTE_ME_2NDLEV(s) #s
@@ -108,7 +110,9 @@ FigureEditor::FigureEditor(
         const char* name, Qt::WindowFlags f) :
     QGraphicsView(&c,parent), mesh(m)
 {
+    #ifdef CUTTINGTOOL
     intersection_line = 0;
+    #endif
     //angle_line = 0;
     setInteractive(true);
     moving = 0;
@@ -172,7 +176,7 @@ void FigureEditor::mousePressEvent(QMouseEvent* e)
 
 
     QList<QGraphicsItem *> l=scene()->items(p);
-
+#ifdef CUTTINGTOOL
 #ifdef QDEBUG  
     qDebug() << "MousePressEvents, items: " << l.size() << endl;
     qDebug() << "Mouse button modifier: " << e->modifiers() << endl;
@@ -189,7 +193,7 @@ void FigureEditor::mousePressEvent(QMouseEvent* e)
         scene()->addItem(intersection_line);
         intersection_line->show();
     }
-
+#endif
     for (QList<QGraphicsItem *>::Iterator it=l.begin(); it!=l.end(); ++it) {
 #ifdef QDEBUG
         qDebug() << typeid(**it).name() << endl;
@@ -262,7 +266,7 @@ void FigureEditor::mouseMoveEvent(QMouseEvent* e)
     //cerr << "event";
 
     // keep track of intersection line to interactively cut a growing leaf
-
+    #ifdef CUTTINGTOOL
     if ( intersection_line ) {
 
         QPointF sp = intersection_line -> line().p1(); // startpoint
@@ -272,6 +276,7 @@ void FigureEditor::mouseMoveEvent(QMouseEvent* e)
         // Need this for Mac
         FullRedraw();
     }
+    #endif
 }
 
 //void FigureEditor::contentsMouseReleaseEvent(QMouseEvent* e)
@@ -280,7 +285,7 @@ void FigureEditor::mouseReleaseEvent(QMouseEvent* e)
 
     emit MouseReleased();
     // intersection line for leaf was finished now.
-
+#ifdef CUTTINGTOOL
 if (e->button()==Qt::LeftButton) {
     if (intersection_line ) {
 #ifdef QDEBUG
@@ -379,7 +384,9 @@ if (e->button()==Qt::LeftButton) {
       cerr << "NodeSet of cutting line: " << *node_set << endl;
 #endif
     }
-  } /* else
+  } 
+  #endif
+   /* else
     if (e->button()==Qt::RightButton) {
 
       if (intersection_line) { // && !angle_line
