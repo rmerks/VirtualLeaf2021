@@ -25,7 +25,7 @@
 #ifndef _WARNING_H_
 #define _WARNING_H_
 
-#define MEMORYCHECK(x) if ((x)==NULL) {   fprintf(stderr, "Out of Memory error in "#x" \n");  exit(0); }
+#define MEMORYCHECK(x) if ((x)) {   fprintf(stderr, "Out of Memory error in "#x" \n");  exit(0); }
 
 #define UNIDENTIFIED 2353996
 

@@ -41,9 +41,7 @@ using namespace MyWarning;
 #define FNAMESIZE 100
 
 int OpenFileAndCheckExistance(FILE **fp,const char *fname, const char *ftype) {
-
-  *fp=fopen(fname,ftype);
-  if (*fp==NULL) 
+  if ((fp=fopen(fname,ftype)))
     return FALSE;
 
   if (!strncmp(ftype,"a",1)) {
@@ -53,10 +51,8 @@ int OpenFileAndCheckExistance(FILE **fp,const char *fname, const char *ftype) {
 }
 
 int FileExistsP(const char *fname) {
-
   FILE *fp;
-  fp=fopen(fname,"r");
-  if (fp==NULL)
+  if ((fp=fopen(fname,"r")))
     return FALSE;
 
   fclose(fp);
@@ -66,15 +62,16 @@ int FileExistsP(const char *fname) {
 int YesNoP(const char *message) {
 
   char answer[100];
+  int err;
 
   fprintf(stderr,"%s (y/n) ",message);
   fflush(stderr);
 
-  scanf("%s",answer);
-  while (strcmp(answer,"y") && strcmp(answer,"n")) {
+  err = scanf("%s",answer);
+  while (strcmp(answer,"y") && strcmp(answer,"n") && err) {
     fprintf(stderr,"\n\bPlease answer 'y' or 'n'. ");
     fflush(stderr);
-    scanf("%s",answer);
+    err = scanf("%s",answer);
   }
 
   if (!strcmp(answer,"y")) return TRUE;
@@ -110,7 +107,7 @@ FILE *OpenWriteFile(const char *filename)
 
   strncpy(fname, filename, FNAMESIZE-1);
 
-  if ((fp=fopen(fname,"w"))==NULL) {
+  if (!(fp=fopen(fname,"w"))) {
     char *message=(char *)malloc(2000*sizeof(char));
     sprintf(message," Could not open file %s for writing: "
 	    ,fname);
@@ -180,7 +177,7 @@ char *ReadLine(FILE *fp)
     if (pos==0) {
       /* EOF was reached, while no characters were read */
       free(tmpstring);
-      return NULL;
+      return 0;
     }
     if (ferror(fp)) {
       error("I/O error in ReadLine(%ld): %s\n",fp, strerror(errno));
