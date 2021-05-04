@@ -23,7 +23,7 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/timeb.h>
+#include <chrono>
 #include <iostream>
 #include "random.h"
 
@@ -116,8 +116,11 @@ long RandomNumber(long max)
 void AskSeed(void)
 {
   int seed;
-  printf("Please enter a random seed: ");
-  scanf("%d",&seed);
+  int err = 1;
+  while (err){
+    printf("Please enter a random seed: ");
+    err = scanf("%d",&seed);
+  }
   printf("\n");
   Seed(seed);
 }
@@ -134,12 +137,16 @@ int RandomCounter(void) {
 int Randomize(void) {
 
   // Set the seed according to the local time
-  struct timeb t;
+
   int seed;
 
-  ftime(&t);
+  auto timepoint = std::chrono::system_clock::now();
+  auto since_epoch =  timepoint.time_since_epoch();
+  auto seconds = std::chrono::duration_cast<std::chrono::seconds>(since_epoch);
+  auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(since_epoch);
 
-  seed=abs((int)((t.time*t.millitm)%655337));
+  seed=abs((int)((seconds.count()*milliseconds.count())%655337));
+
   Seed(seed);
 #ifdef QDEBUG
   qDebug() << "Random seed is " << seed << endl;
