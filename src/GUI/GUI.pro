@@ -53,6 +53,8 @@ PARTMPL = $${TARGET}par.tmpl
 MAINSRC = $${TARGET}.cpp
 QT -= network sql
 
+QMAKE_CXXFLAGS += -Wno-unused-parameter
+
 LIBS += -L$${LIBDIR}
 !win32 {
  GRAPHICS = qt #qwt
@@ -76,7 +78,7 @@ unix {
 # CC = /usr/bin/gcc
 # # QWTDIR = /ufs/guravage/opt/qwt-5.2.1-svn
 # #QMAKE_LIBDIR += $$QWTDIR/lib
-QMAKE_CXXFLAGS += -fPIC# -I/usr/include/libxml2
+QMAKE_CXXFLAGS += -fPIC 
 # QMAKE_LFLAGS += -fPIC
  LIBS +=  -lm
 }

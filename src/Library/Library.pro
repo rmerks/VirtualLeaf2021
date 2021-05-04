@@ -95,15 +95,15 @@ SOURCES = \
 #tmplh_compiler.clean = ${QMAKE_FILE_OUT}
 #QMAKE_EXTRA_COMPILERS += tmplh_compiler
 
+QMAKE_CXXFLAGS += -Wno-unused-parameter
 
 unix {
- QMAKE_CXXFLAGS += -fPIC #-I/usr/include/libxml2
+ QMAKE_CXXFLAGS += -fPIC 
  QMAKE_LFLAGS += -fPIC
  LIBS +=-lm
 }
 
 win32 {
-
 }
 
 #
