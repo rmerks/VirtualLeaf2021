@@ -202,7 +202,6 @@ contains(GRAPHICS, qwt) {
 }
 
 contains( GRAPHICS, qt ) {
- message( "Building Qt executable" )
  QMAKE_CXXFLAGS += -DQTGRAPHICS # -fpermissive
 }
 

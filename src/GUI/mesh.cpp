@@ -1316,7 +1316,7 @@ void Mesh::RepairBoundaryPolygon(void) {
 #endif
 
   // Step 1a: Create a set containing the current boundary polygon nodes' Indices.
-  foreach (Node* node, boundary_polygon->nodes) {
+  for (Node * node : boundary_polygon->nodes) {
     original_boundary_nodes.insert(node->Index());
   }
 
@@ -1324,7 +1324,7 @@ void Mesh::RepairBoundaryPolygon(void) {
   boundary_polygon->nodes.clear();
 
   // Step 2: Remove all references to the boundary polygon from the Mesh's current list of nodes
-  foreach (Node* node, nodes) {
+  for (Node* node : nodes) {
     node->Unmark(); // remove marks, we need them to determine if we have closed the circle
     list<Neighbor>::iterator boundary_ref_pos;
     if ((boundary_ref_pos = find_if (node->owners.begin(), node->owners.end(), 
@@ -1342,7 +1342,7 @@ void Mesh::RepairBoundaryPolygon(void) {
   // and proceed from there. If findNextBoundaryNode() returns a node
   // other than the one passed to it, the original node is the first
   // boundary node.
-  foreach (Node* node, nodes) {
+  for (Node* node : nodes) {
     if ((findNextBoundaryNode(node))->index != node->index){
       next_boundary_node = node;
       break;
@@ -1373,7 +1373,7 @@ void Mesh::RepairBoundaryPolygon(void) {
 
   // Tell each node in the difference that it's no longer part of the boundary polygon
   vector<Node *>::iterator internal_node_it;
-  foreach (int i, difference){
+  for (int i : difference){
     internal_node_it = find_if (nodes.begin(), nodes.end(), bind2nd(mem_fun(&Node::IndexEquals), i));
     internal_node = *internal_node_it; // dereference the itterator to get to the node pointer
     if (!internal_node) throw("Found a null Node pointer.");
@@ -1433,7 +1433,7 @@ Node* Mesh::findNextBoundaryNode(Node* boundary_node) {
     set<int> *owners = new set<int>; // create a set to hold a 2nd neighbor's owners' Ids
     nodeOwners.push_back(owners);
     neighborIds.push_back(it->nb2->Index());
-    foreach(Neighbor neighbor, it->nb2->owners){
+    for (Neighbor neighbor : it->nb2->owners){
       if (neighbor.cell->Index() != -1) owners->insert(neighbor.cell->Index()); // Save second neighbors' owners' Ids - except the boundary polygon 
     }
   }

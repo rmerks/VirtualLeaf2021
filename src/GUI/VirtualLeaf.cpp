@@ -257,13 +257,13 @@ TIMESTEP {
 
   static int i=0;
   static int t=0;
-  static int ncells;
+  //static int ncells;
 
   if (!batch) {
     UserMessage(QString("Time: %1").arg(mesh.getTimeHours().c_str()));
   }
 
-  ncells=mesh.NCells();
+  //ncells=mesh.NCells();
 
 
   double dh;
@@ -515,7 +515,7 @@ int main(int argc,char **argv) {
       QMessageBox::critical(0, "Critical Error", qmess);
       abort();
     }
-  } catch (ios_base::failure) {
+  } catch (ios_base::failure const&) {
     stringstream error_message;
     error_message << "I/O failure: " << strerror(errno);
     if (batch) {
