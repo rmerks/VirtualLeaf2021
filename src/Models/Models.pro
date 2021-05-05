@@ -6,8 +6,6 @@ Meinhardt \
 AuxinGrowth \
 Turing \
 Test \
-Collier \
-Sprinzak \
 Tutorial0 \
 Tutorial1A \
 Tutorial1B \

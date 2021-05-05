@@ -41,7 +41,7 @@ using namespace MyWarning;
 #define FNAMESIZE 100
 
 int OpenFileAndCheckExistance(FILE **fp,const char *fname, const char *ftype) {
-  if ((fp=fopen(fname,ftype)))
+  if (((*fp)=fopen(fname,ftype)))
     return FALSE;
 
   if (!strncmp(ftype,"a",1)) {
