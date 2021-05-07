@@ -53,7 +53,6 @@ PARTMPL = $${TARGET}par.tmpl
 MAINSRC = $${TARGET}.cpp
 QT -= network sql
 
-QMAKE_CXXFLAGS += -Wno-unused-parameter
 
 LIBS += -L$${LIBDIR}
 !win32 {
@@ -205,7 +204,8 @@ contains( GRAPHICS, qt ) {
  QMAKE_CXXFLAGS += -DQTGRAPHICS # -fpermissive
 }
 
-
+QMAKE_CXXFLAGS += -Wall -Wextra
+QMAKE_CXXFLAGS += -Wno-unused-parameter
 
 # MACOSX packaging
 macx {
@@ -214,4 +214,8 @@ QMAKE_POST_LINK = "cp leaficon.icns $${DESTDIR}/$${TARGET}.app; \
       cp ../../doc/gpl3.txt $${DESTDIR}/$${TARGET}.app/Contents/MacOS/.;" 
 }
 
+
+win32 {
+ QMAKE_POST_LINK = "windeployqt $${DESTDIR}/VirtualLeaf.exe"
+}
 

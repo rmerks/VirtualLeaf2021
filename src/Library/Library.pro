@@ -47,6 +47,7 @@ PARTMPL = VirtualLeafpar.tmpl
 PERLDIR = ../Perl
 #QT += qt3support
 
+
 TARGET = vleaf
 TEMPLATE = lib
 
@@ -95,15 +96,18 @@ SOURCES = \
 #tmplh_compiler.clean = ${QMAKE_FILE_OUT}
 #QMAKE_EXTRA_COMPILERS += tmplh_compiler
 
-QMAKE_CXXFLAGS += -Wno-unused-parameter
-
 unix {
  QMAKE_CXXFLAGS += -fPIC 
  QMAKE_LFLAGS += -fPIC
  LIBS +=-lm
 }
 
+QMAKE_CXXFLAGS += -Wall -Wextra
+QMAKE_CXXFLAGS += -Wno-unused-parameter
+
+
 win32 {
+
 }
 
 #
