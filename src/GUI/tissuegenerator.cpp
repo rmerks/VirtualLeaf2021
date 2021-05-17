@@ -121,12 +121,12 @@ int TissueGenerator::Dialog(void) {
             QMessageBox::warning(0, QString("Warning"), QString("choose 4 or 6"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        rows = QInputDialog::getInt(0, QString("Determine the amount of rows of cells"), QString("amount of rows"),1,10,1000,1,&ok);
+        rows = QInputDialog::getInt(0, QString("Determine the amount of rows of cells"), QString("amount of rows"),10,1,1000,1,&ok);
         if (!ok) {
             QMessageBox::warning(0, QString("Warning"), QString("rows should have a value between 1 and 100"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        cols = QInputDialog::getInt(0, QString("Determine the amount of columns of cells"), QString("amount of columns"),1,10,1000,1,&ok);
+        cols = QInputDialog::getInt(0, QString("Determine the amount of columns of cells"), QString("amount of columns"),10,1,1000,1,&ok);
         if (!ok) {
             QMessageBox::warning(0, QString("Warning"), QString("columns should have a value between 1 and 100"),QMessageBox::Ok,0);
             goto tissuedialog;
