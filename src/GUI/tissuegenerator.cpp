@@ -131,13 +131,13 @@ int TissueGenerator::Dialog(void) {
             QMessageBox::warning(0, QString("Warning"), QString("columns should have a value between 1 and 100"),QMessageBox::Ok,0);
             goto tissuedialog;
         }
-        edgeL = QInputDialog::getDouble(0, QString("Determine the length of the edges"), QString("edge length"),0,1,100.00,2,&ok);
+        edgeL = QInputDialog::getDouble(0, QString("Determine the length of the edges"), QString("edge length"),1,0.1,100.00,2,&ok);
         if (!ok) {
             QMessageBox::warning(0, QString("Warning"), QString("The edge length should have a value between 0.1 and 100"),QMessageBox::Ok);
             goto tissuedialog;
         }
         if (polygon == 4) {
-            edgeW = QInputDialog::getDouble(0, QString("Determine the width of the edges"), QString("edge width"),0,1,100.00,2,&ok);
+            edgeW = QInputDialog::getDouble(0, QString("Determine the width of the edges"), QString("edge width"),1,0.1,100.00,2,&ok);
             if (!ok) {
                 QMessageBox::warning(0, QString("Warning"), QString("The edge width should have a value between 0.1 and 100"),QMessageBox::Ok);
                 goto tissuedialog;
