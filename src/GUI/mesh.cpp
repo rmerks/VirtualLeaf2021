@@ -1374,7 +1374,7 @@ void Mesh::RepairBoundaryPolygon(void) {
   // Tell each node in the difference that it's no longer part of the boundary polygon
   vector<Node *>::iterator internal_node_it;
   for (int i : difference){
-    internal_node_it = find_if (nodes.begin(), nodes.end(), bind2nd(mem_fn(&Node::IndexEquals), i));
+    internal_node_it = find_if (nodes.begin(), nodes.end(), [i](auto node){return node->IndexEquals(i);});
     internal_node = *internal_node_it; // dereference the itterator to get to the node pointer
     if (!internal_node) throw("Found a null Node pointer.");
     internal_node->UnsetBoundary();
@@ -1462,7 +1462,7 @@ Node* Mesh::findNextBoundaryNode(Node* boundary_node) {
 
     if (intersection.size() == 1){
       //found_next_boundary_node = true;
-      vector<Node *>::iterator next_boundary_node_it = find_if (nodes.begin(), nodes.end(), bind2nd(mem_fn(&Node::IndexEquals), *itt));
+      vector<Node *>::iterator next_boundary_node_it = find_if (nodes.begin(), nodes.end(), [itt](auto node){return node->IndexEquals(*itt);});
       next_boundary_node = *next_boundary_node_it; // defeference the itterator to get to the node pointer
 
 #ifdef QDEBUG  

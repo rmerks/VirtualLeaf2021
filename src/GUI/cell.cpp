@@ -583,7 +583,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       // find first non-self duplicate in the owners: 
       // cells owning the same two nodes
       // share an edge with me
-      owners.sort( mem_fn( &Neighbor::Cmp ) );
+      owners.sort( [](auto neighbor_a, auto neighbor_b){return neighbor_a.Cmp(neighbor_b);} );
 
 
 #ifdef QDEBUG  
@@ -703,7 +703,8 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       w = start_search = walls.begin();
       do {
 	// Find wall between this cell and neighbor cell
-    w = find_if( start_search, walls.end(), bind2nd (mem_fn( &Wall::is_wall_of_cell_p ), neighbor_cell ) );
+        w = find_if( start_search, walls.end(), [neighbor_cell](auto wall){
+			return wall->is_wall_of_cell_p(neighbor_cell);} );
 	start_search = w; start_search++; // continue searching at next element
       } while ( w!=walls.end() && !(*w)->IntersectsWithDivisionPlaneP( from, to ) ); // go on until we find the right one.
 
@@ -1777,11 +1778,10 @@ void Cell::DrawFluxes(QGraphicsScene *c, double arrowsize)
 
 
 void Cell::DrawWalls(QGraphicsScene *c) const {
-
-  for_each(walls.begin(), walls.end(), bind2nd ( mem_fn ( &Wall::Draw ) , c ) );
+  for_each(walls.begin(), walls.end(), [c](auto wall){return wall->Draw(c);});
 
   // to see the cells connected the each wall (for debugging), uncomment the following
-  //for_each(walls.begin(), walls.end(), bind2nd ( mem_fn ( &Wall::ShowStructure ), c ) );
+  //for_each(walls.begin(), walls.end(), [c](auto wall){return wall->ShowStructure(c);});
 }
 
 
