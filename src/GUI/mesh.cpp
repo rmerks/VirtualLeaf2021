@@ -496,7 +496,7 @@ void Mesh::Clear(void) {
 double Mesh::DisplaceNodes(void) {
 
   MyUrand r(shuffled_nodes.size());
-  std::shuffle(shuffled_nodes.begin(),shuffled_nodes.end(),r);
+  vl_shuffle(shuffled_nodes.begin(),shuffled_nodes.end(),r);
 
   double sum_dh=0;
 

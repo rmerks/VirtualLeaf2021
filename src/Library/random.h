@@ -38,15 +38,25 @@ int Randomize(void);
 int RandomCounter(void);
 
 
+// Included Random shuffle to retain compatibility with the MacOS standard library
+template <class RandomAccessIterator, class RandomNumberGenerator>
+  void vl_shuffle (RandomAccessIterator first, RandomAccessIterator last,
+                       RandomNumberGenerator& gen) {
+  long i, n;
+  n = (last-first);
+  for (i=n-1; i>0; --i) {
+    swap (first[i],first[gen(i+1)]);
+  }
+}
 
-// Class MyUrand, so we can pass the random generator to STL's shuffle,
-// and get identical simulations for a given random seed.
+
+// Class MyUrand
+// to get identical simulations for a given random seed.
 class MyUrand {
-
   long n;
  public:
   typedef long result_type;
-  static long min() { return 0; }
+  long min() { return 0; }
   long max() { return n; }
 
   MyUrand(long nn) {
