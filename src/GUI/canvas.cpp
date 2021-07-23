@@ -461,9 +461,6 @@ void FigureEditor::insertNode(QPointF p)
     scene()->clearSelection();
     dynamic_cast<Main *>(parent())->Plot();
     FullRedraw();
-#ifdef QDEBUG  
-    qDebug() << "Node: " << p << endl;
-#endif
 }
 
 static uint mainCount = 0;

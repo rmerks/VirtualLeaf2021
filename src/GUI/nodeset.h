@@ -53,7 +53,7 @@ class NodeSet : public list<Node *> {
     for (list<Node *>::const_iterator i=begin();
 	 i!=end();
 	 i++) {
-      transform ( (*i)->owners.begin(), (*i)->owners.end(), back_inserter( cellset ) , mem_fun_ref ( &Neighbor::getCell ));
+      transform ( (*i)->owners.begin(), (*i)->owners.end(), back_inserter( cellset ) , mem_fn ( &Neighbor::getCell ));
     }
 
     cellset.sort();

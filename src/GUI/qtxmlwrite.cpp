@@ -856,7 +856,7 @@ void Mesh::XMLSave(const char *docname, QDomElement &options) const
   }
 
   for (vector<Node *>::const_iterator i=nodes.begin(); i!=nodes.end(); i++) {
-      cerr << "Node " << (*i)->Index() << ": ";
+      //cerr << "Node " << (*i)->Index() << ": ";
     (*i)->XMLAdd(doc,xmlnodes) ;
   }
 

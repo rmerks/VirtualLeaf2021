@@ -39,8 +39,8 @@ bool Wall::CorrectWall( void ) {
 
   // collect all cells to which my nodes are connected on one list
   list<CellBase *> owners;
-  transform(n1->owners.begin(),n1->owners.end(), back_inserter(owners), mem_fun_ref(&Neighbor::getCell));
-  transform(n2->owners.begin(),n2->owners.end(), back_inserter(owners), mem_fun_ref(&Neighbor::getCell));
+  transform(n1->owners.begin(),n1->owners.end(), back_inserter(owners), mem_fn(&Neighbor::getCell));
+  transform(n2->owners.begin(),n2->owners.end(), back_inserter(owners), mem_fn(&Neighbor::getCell));
 
   // get the list of duplicates
   list<CellBase *> wall_owners;

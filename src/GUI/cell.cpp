@@ -200,8 +200,7 @@ void Cell::Apoptose(void)
     } else {
       // register node with outside world
       if (find_if( no.owners.begin(), no.owners.end(), 
-		   bind2nd ( mem_fun_ref(&Neighbor::CellEquals), m->boundary_polygon->Index() ) ) == no.owners.end() ) {
-
+		   [this](auto neighbor){return neighbor.CellEquals(m->boundary_polygon->Index());} ) == no.owners.end() ) {
 	tmp.cell = m->boundary_polygon;
 	no.owners.push_back(tmp);
       }
@@ -228,7 +227,7 @@ void Cell::ConstructConnections(void)
 	// remove myself from the neighbor list of the node
 	find_if((*i)->owners.begin(),
 		(*i)->owners.end(),
-		bind2nd(mem_fun_ref( &Neighbor::CellEquals ),this->Index() )  );
+		 [this](auto neighbor){return neighbor.CellEquals(this->Index());});
       if (neighb_with_this_cell!=(*i)->owners.end()) 
 	(*i)->owners.erase(neighb_with_this_cell);
     }
@@ -584,13 +583,13 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       // find first non-self duplicate in the owners: 
       // cells owning the same two nodes
       // share an edge with me
-      owners.sort( mem_fun_ref( &Neighbor::Cmp ) );
+      owners.sort( mem_fn( &Neighbor::Cmp ) );
 
 
 #ifdef QDEBUG  
       list<Neighbor> unique_owners;
       copy(owners.begin(), owners.end(), back_inserter(unique_owners));
-      unique_owners.unique( mem_fun_ref( &Neighbor::Eq ) );
+      unique_owners.unique( mem_fn( &Neighbor::Eq ) );
       qDebug() << "The dividing edge nodes: " << div_edges[i].first->Index() 
 	       << " and " << div_edges[i].second->Index() << " are owned by cells: ";
 
@@ -621,7 +620,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       if (edge_owners.size() > 1){
 	// Remove the boundary polygon - if its there
 	list<Neighbor>::iterator it;
-	if ((it = find_if (edge_owners.begin(), edge_owners.end(), bind2nd(mem_fun_ref(&Neighbor::CellEquals), -1)))
+	if ((it = find_if (edge_owners.begin(), edge_owners.end(), [](auto neighbor){return neighbor.CellEquals(-1);}))
 	    != edge_owners.end()) {
 #ifdef QDEBUG
       qDebug() << "deleting: " << it->cell->Index() << " from the list of edge owners." << endl;
@@ -679,7 +678,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       // find first non-self duplicate in the owners: 
       // cells owning the same two nodes
       // share an edge with me
-      owners.sort( mem_fun_ref( &Neighbor::Cmp ) );
+      owners.sort( mem_fn ( &Neighbor::Cmp ) );
 
       list<Neighbor>::iterator c;
       for (c=owners.begin(); c!=owners.end(); c++) {
@@ -806,7 +805,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       list<Neighbor>::iterator neighb_with_this_cell=
 	find_if((*i)->owners.begin(),
 		(*i)->owners.end(),
-		bind2nd(mem_fun_ref( &Neighbor::CellEquals ),this->Index() )  );
+	        [this](auto neighbor){return neighbor.CellEquals(this->Index());});
       if (neighb_with_this_cell==(*i)->owners.end()) {
 
 #ifdef QDEBUG

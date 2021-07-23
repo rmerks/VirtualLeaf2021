@@ -939,7 +939,7 @@ void Mesh::InsertNode(Edge &e) {
   //cerr << endl;
 
   // sort the nodes
-  owners.sort( mem_fun_ref( &Neighbor::Cmp ) );
+  owners.sort( mem_fn( &Neighbor::Cmp ) );
 
   //  extern ofstream debug_stream;
 
@@ -991,7 +991,7 @@ void Mesh::InsertNode(Edge &e) {
       list<Neighbor>::iterator cpos=
 	find_if( e.first->owners.begin(),
 		 e.first->owners.end(),
-		 bind2nd( mem_fun_ref(&Neighbor::CellEquals), c->cell->Index()) );
+		 [c](auto neighbor){return neighbor.CellEquals(c->cell->Index());});
 
       // - correct the record
       if (cpos->nb1 == e.second) {
@@ -1005,7 +1005,7 @@ void Mesh::InsertNode(Edge &e) {
       cpos=
 	find_if( e.second->owners.begin(),
 		 e.second->owners.end(),
-		 bind2nd( mem_fun_ref(&Neighbor::CellEquals), c->cell->Index()) );
+		 [c](auto neighbor){return neighbor.CellEquals(c->cell->Index());});
 
       // - correct the record
       if (cpos->nb1 == e.first) {
@@ -1328,7 +1328,7 @@ void Mesh::RepairBoundaryPolygon(void) {
     node->Unmark(); // remove marks, we need them to determine if we have closed the circle
     list<Neighbor>::iterator boundary_ref_pos;
     if ((boundary_ref_pos = find_if (node->owners.begin(), node->owners.end(), 
-				     bind2nd(mem_fun_ref(&Neighbor::CellEquals), -1))) != node->owners.end()) {
+				     [](auto neighbor){return neighbor.CellEquals(-1);})) != node->owners.end()) {
       // i.e. if one of the node's owners is the boundary polygon 
       node->owners.erase(boundary_ref_pos); // remove the reference
     }

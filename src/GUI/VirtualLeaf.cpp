@@ -154,29 +154,20 @@ void MainBase::Plot(int resize_stride)
       FitLeafToCanvas();
     }
   }
-
+  
   mesh.LoopCells(DrawCell(),canvas,*this);
-
   if (ShowNodeNumbersP()) 
-    mesh.LoopNodes( bind2nd (mem_fun_ref ( &Node::DrawIndex), &canvas ) ) ;
+    mesh.LoopNodes([this](auto node){node.DrawIndex(&canvas);});
   if (ShowCellNumbersP()) 
-    mesh.LoopCells( bind2nd (mem_fun_ref ( &Cell::DrawIndex), &canvas ) ) ;
-
+    mesh.LoopCells([this](auto cell){cell.DrawIndex(&canvas);});
   if (ShowCellAxesP()) 
-    mesh.LoopCells( bind2nd (mem_fun_ref ( &Cell::DrawAxis), &canvas ) );
-
+    mesh.LoopCells( [this](auto cell){cell.DrawAxis(&canvas);});
   if (ShowCellStrainP()) 
-    mesh.LoopCells( bind2nd (mem_fun_ref ( &Cell::DrawStrain), &canvas ) );
-
+    mesh.LoopCells( [this](auto cell){cell.DrawStrain(&canvas);});
   if (ShowWallsP())
-    mesh.LoopWalls( bind2nd( mem_fun_ref( &Wall::Draw ), &canvas ) );
-
-  /*  if (ShowApoplastsP()) 
-      mesh.LoopWalls( bind2nd( mem_fun_ref( &Wall::DrawApoplast ), &canvas ) );
-  */
+    mesh.LoopWalls([this](auto wall){wall.Draw(&canvas);});
   if (ShowMeshP()) 
     mesh.DrawNodes(&canvas);
-
   if (ShowBoundaryOnlyP()) 
     mesh.DrawBoundary(&canvas);
 
