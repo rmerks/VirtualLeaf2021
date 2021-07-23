@@ -179,7 +179,7 @@ void TissueGenerator::GenerateParams(Main *m) {
 
     // add Settings and unset walls by default
     m->setCheckedShowFluxes(false);
-   m->setCheckedShowTransporters(false);
+    m->setCheckedShowTransporters(false);
     QDomElement settings=m->XMLSettingsTree();
 }
 

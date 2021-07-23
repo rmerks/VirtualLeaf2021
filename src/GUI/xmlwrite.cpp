@@ -821,7 +821,7 @@ void Mesh::XMLSave(const char *docname, xmlNode *options) const
     xmlNewProp(xmlnodesets, BAD_CAST "n", BAD_CAST text.str().c_str());
   }
 
-  for_each( node_sets.begin(), node_sets.end(), bind2nd ( mem_fun( &NodeSet::XMLAdd ), xmlnodesets ) );
+  for_each( node_sets.begin(), node_sets.end(), bind2nd ( mem_fn( &NodeSet::XMLAdd ), xmlnodesets ) );
 
   // Add option tree for interactive application
   if (options) {
@@ -989,7 +989,7 @@ void Mesh::XMLReadGeometry(const xmlNode * a_node)
   shuffled_cells = cells;
 
   MyUrand r(shuffled_cells.size());
-  random_shuffle(shuffled_cells.begin(),shuffled_cells.end(),r);
+  std::shuffle(shuffled_cells.begin(),shuffled_cells.end(),r);
 }
 
 void Mesh::XMLParseTree(const xmlNode *root_node)
@@ -1088,7 +1088,7 @@ void Mesh::XMLReadNodes(xmlNode *root)
   shuffled_nodes = nodes;
 
   MyUrand r(shuffled_nodes.size());
-  random_shuffle(shuffled_nodes.begin(),shuffled_nodes.end(),r);
+  std::shuffle(shuffled_nodes.begin(),shuffled_nodes.end(),r);
 }
 
 void Mesh::XMLReadWalls(xmlNode *root, vector<Wall *> *tmp_walls)

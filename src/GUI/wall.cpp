@@ -45,7 +45,7 @@ bool Wall::CorrectWall( void ) {
   // get the list of duplicates
   list<CellBase *> wall_owners;
   owners.sort();
-  //transform(owners.begin(), owners.end(), ostream_iterator<int>(cerr, ", "), mem_fun(&Cell::Index));
+  //transform(owners.begin(), owners.end(), ostream_iterator<int>(cerr, ", "), mem_fn(&Cell::Index));
   duplicates_copy( owners.begin(), owners.end(), back_inserter(wall_owners) );
 
   // duplicates are the cells to which the Wall belongs
@@ -62,7 +62,7 @@ bool Wall::CorrectWall( void ) {
     // find boundary polygon in the wall owners list
     list<CellBase *>::iterator bpit = find_if (
 					       wall_owners.begin(), wall_owners.end(), 
-					       mem_fun( &CellBase::BoundaryPolP )
+                           mem_fn( &CellBase::BoundaryPolP )
 					       );
     if (bpit!=wall_owners.end()) {
 
@@ -85,7 +85,7 @@ bool Wall::CorrectWall( void ) {
       qDebug() << "Wall::CorrectWall says: Wall has three owners, but none of them is the BoundaryPolygon. I have no clue what to do with this case... Sorry!" << endl;
       cerr << "Wall: " << *this << endl;
       qDebug() << "Owners are: ";
-      transform(wall_owners.begin(), wall_owners.end(), ostream_iterator<int>(cerr, "  "), mem_fun (&CellBase::Index) );
+      transform(wall_owners.begin(), wall_owners.end(), ostream_iterator<int>(cerr, "  "), mem_fn (&CellBase::Index) );
       qDebug() << endl;
       qDebug() << "Owners node " << n1->Index() << ": ";
 

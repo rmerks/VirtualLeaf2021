@@ -537,7 +537,7 @@ void CellBase::ConstructNeighborList(void)
     // Sorry about this; I hope to solve this annoying issue later. RM :-).
     // All cells in neighbors seem to be okay (I might be messing some part of the memory elsewhere
     // during the cutting operation?).
-    e = find_if(neighbors.begin(),neighbors.end(),mem_fun(&CellBase::BoundaryPolP));
+    e = find_if(neighbors.begin(),neighbors.end(),mem_fn(&CellBase::BoundaryPolP));
     if (e!=neighbors.end()) {
       e=neighbors.erase(e);
       at_boundary=true;

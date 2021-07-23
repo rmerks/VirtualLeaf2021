@@ -704,7 +704,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       w = start_search = walls.begin();
       do {
 	// Find wall between this cell and neighbor cell
-	w = find_if( start_search, walls.end(), bind2nd (mem_fun( &Wall::is_wall_of_cell_p ), neighbor_cell ) );
+    w = find_if( start_search, walls.end(), bind2nd (mem_fn( &Wall::is_wall_of_cell_p ), neighbor_cell ) );
 	start_search = w; start_search++; // continue searching at next element
       } while ( w!=walls.end() && !(*w)->IntersectsWithDivisionPlaneP( from, to ) ); // go on until we find the right one.
 
@@ -1515,7 +1515,7 @@ void Cell::ConstructWalls(void)
     }
 
     // sort cell owners
-    owning_cells.sort( mem_fun( &Cell::Cmp ));
+    owning_cells.sort( mem_fn( &Cell::Cmp ));
 
     // find duplicates
     vector<Cell *> duplicates;
@@ -1528,7 +1528,7 @@ void Cell::ConstructWalls(void)
     }
 
     if (duplicates.size()==3) { // ignore cell boundary (this occurs only after the first division, I think)
-      vector<Cell *>::iterator dup_it = find_if(duplicates.begin(),duplicates.end(),mem_fun(&Cell::BoundaryPolP) );
+      vector<Cell *>::iterator dup_it = find_if(duplicates.begin(),duplicates.end(),mem_fn(&Cell::BoundaryPolP) );
       if (dup_it!=duplicates.end()) 
 	duplicates.erase(dup_it);
       else {
@@ -1772,17 +1772,17 @@ void Cell::DrawFluxes(QGraphicsScene *c, double arrowsize)
 		  ( (offset[0]+to.x)*factor ),
 		  ( (offset[1]+to.y)*factor ) );
   arrow->setZValue(10);
-    c->addItem(arrow);
+  c->addItem(arrow);
   arrow->show();
 }
 
 
 void Cell::DrawWalls(QGraphicsScene *c) const {
 
-  for_each(walls.begin(), walls.end(), bind2nd ( mem_fun ( &Wall::Draw ) , c ) );
+  for_each(walls.begin(), walls.end(), bind2nd ( mem_fn ( &Wall::Draw ) , c ) );
 
   // to see the cells connected the each wall (for debugging), uncomment the following
-  //for_each(walls.begin(), walls.end(), bind2nd ( mem_fun ( &Wall::ShowStructure ), c ) );
+  //for_each(walls.begin(), walls.end(), bind2nd ( mem_fn ( &Wall::ShowStructure ), c ) );
 }
 
 

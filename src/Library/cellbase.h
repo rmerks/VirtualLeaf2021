@@ -330,6 +330,7 @@ class CellBase :  public QObject, public Vector
       sum += ((*w)->c1 == this) ? 
 	f( ((*w)->c1), ((*w)->c2), *w ) :  
 	f( ((*w)->c2), ((*w)->c1), *w );
+
     }
     return sum;
   }

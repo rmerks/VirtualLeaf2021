@@ -165,7 +165,7 @@ class Mesh {
   template<class Op> void RandomlyLoopNodes(Op f) {
 
     MyUrand r(shuffled_nodes.size());
-    random_shuffle(shuffled_nodes.begin(),shuffled_nodes.end(),r);
+    std::shuffle(shuffled_nodes.begin(),shuffled_nodes.end(),r);
 
     for (vector<Node *>::const_iterator i=shuffled_nodes.begin();
 	 i!=shuffled_nodes.end();
@@ -177,7 +177,7 @@ class Mesh {
   template<class Op> void RandomlyLoopCells(Op f) {
 
     MyUrand r(shuffled_cells.size());
-    random_shuffle(shuffled_cells.begin(),shuffled_cells.end(),r);
+    std::shuffle(shuffled_cells.begin(),shuffled_cells.end(),r);
 
     for (vector<Cell *>::const_iterator i=shuffled_cells.begin();
 	 i!=shuffled_cells.end();

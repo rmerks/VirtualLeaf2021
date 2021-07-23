@@ -1136,7 +1136,7 @@ void Mesh::XMLReadGeometry(const QDomElement root_node)
   shuffled_cells = cells;
 
   MyUrand r(shuffled_cells.size());
-  random_shuffle(shuffled_cells.begin(),shuffled_cells.end(),r);
+  std::shuffle(shuffled_cells.begin(),shuffled_cells.end(),r);
 }
 
 void Mesh::XMLParseTree(const QDomElement &root_node)
@@ -1231,7 +1231,7 @@ void Mesh::XMLReadNodes(QDomElement &root)
   shuffled_nodes = nodes;
 
   MyUrand r(shuffled_nodes.size());
-  random_shuffle(shuffled_nodes.begin(),shuffled_nodes.end(),r);
+  std::shuffle(shuffled_nodes.begin(),shuffled_nodes.end(),r);
 }
 
 void Mesh::XMLReadWalls(QDomElement &root, vector<Wall *> *tmp_walls)

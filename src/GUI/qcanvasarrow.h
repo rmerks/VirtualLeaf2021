@@ -69,6 +69,7 @@ class QGraphicsArrowItem : public QGraphicsLineItem {
     painter->drawLine( end, arwp2 );
      //Draw arrow line
     painter->drawLine( start, end);
+
   }
 };
 

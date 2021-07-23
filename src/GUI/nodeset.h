@@ -64,7 +64,7 @@ class NodeSet : public list<Node *> {
     cellset.erase(::unique(cellset.begin(), cellset.end() ), cellset.end() );
 
     // remove boundary_polygon
-    cellset.erase( find_if ( cellset.begin(), cellset.end(), mem_fun( &Cell::BoundaryPolP  ) ) );
+    cellset.erase( find_if ( cellset.begin(), cellset.end(), mem_fn( &Cell::BoundaryPolP  ) ) );
     return cellset;
   }
 
@@ -78,7 +78,7 @@ class NodeSet : public list<Node *> {
 
   }
   void print(ostream &os) const {
-    transform( begin(), end(), ostream_iterator<int>( os, " " ), mem_fun( &Node::Index ) );
+    transform( begin(), end(), ostream_iterator<int>( os, " " ), mem_fn( &Node::Index ) );
   }
 
   /*! Attempt a move over (rx, ry)
@@ -132,10 +132,10 @@ class NodeSet : public list<Node *> {
 
       // ACCEPT
       // recalculate areas of cells
-      for_each ( celllist.begin(), celllist.end(), mem_fun ( &Cell::RecalcArea ) );
+      for_each ( celllist.begin(), celllist.end(), mem_fn ( &Cell::RecalcArea ) );
 
       // recalculate integrals of cells
-      for_each ( celllist.begin(), celllist.end(), mem_fun ( &Cell::SetIntegrals ) );
+      for_each ( celllist.begin(), celllist.end(), mem_fn ( &Cell::SetIntegrals ) );
 
 
     } else {

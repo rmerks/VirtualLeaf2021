@@ -282,7 +282,7 @@ TIMESTEP {
 
       mesh.IncreaseCellCapacityIfNecessary();
       mesh.DoCellHouseKeeping();
-      //mesh.LoopCurrentCells(mem_fun(&plugin->CellHouseKeeping)); // this includes cell division
+      //mesh.LoopCurrentCells(mem_fn(&plugin->CellHouseKeeping)); // this includes cell division
 
       // Reaction diffusion	
       mesh.ReactDiffuse(par.rd_dt);
