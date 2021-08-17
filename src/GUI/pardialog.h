@@ -142,6 +142,7 @@ class ParameterDialog : public QDialog {
   QLineEdit *kt_edit;
   QLineEdit *kc_edit;
   QLineEdit *krs_edit;
+  QLineEdit *k_edit;
   QLineEdit *i1_edit;
   QLineEdit *i2_edit;
   QLineEdit *b4_edit;

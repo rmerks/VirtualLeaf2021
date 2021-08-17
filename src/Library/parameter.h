@@ -141,6 +141,7 @@
   double kt;
   double kc;
   double krs;
+  double * k;
   int i1;
   int i2;
   bool b4;

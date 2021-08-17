@@ -24,7 +24,7 @@ CONFIG -= debug
 CONFIG += qt
 #CONFIG -= app_bundle
 CONFIG+=sdk_no_version_check
-
+CONFIG += c++14
 
 VLEAFLIBDIR = ../Library
 PERLDIR = $$top_srcdir/Perl

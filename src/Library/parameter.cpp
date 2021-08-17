@@ -169,6 +169,22 @@ Parameter::Parameter() {
   kt = 0.;
   kc = 0.;
   krs = 0.;
+  k = new double[15];
+  k[0] = 0.;
+  k[1] = 0.0;
+  k[2] = 0.0;
+  k[3] = 0.;
+  k[4] = 0.;
+  k[5] = 0.;
+  k[6] = 0.;
+  k[7] = 0.;
+  k[8] = 0.;
+  k[9] = 0.;
+  k[10] = 0.;
+  k[11] = 0.;
+  k[12] = 0.;
+  k[13] = 0.;
+  k[14] = 0.;
   i1 = 0;
   i2 = 0;
   b4 = false;
@@ -198,6 +214,8 @@ void Parameter::CleanUp(void) {
      free(D);
   if (initval) 
      free(initval);
+  if (k) 
+     free(k);
   if (dir1) 
      free(dir1);
   if (dir2) 
@@ -319,6 +337,7 @@ void Parameter::Read(const char *filename) {
   kt = fgetpar(fp, "kt", 0., true);
   kc = fgetpar(fp, "kc", 0., true);
   krs = fgetpar(fp, "krs", 0., true);
+  k = dgetparlist(fp, "k", 15, true);
   i1 = igetpar(fp, "i1", 0, true);
   i2 = igetpar(fp, "i2", 0, true);
   b4 = bgetpar(fp, "b4", false, true);
@@ -452,6 +471,7 @@ void Parameter::Write(ostream &os) const {
   os << " kt = " << kt << endl;
   os << " kc = " << kc << endl;
   os << " krs = " << krs << endl;
+  os << " k = "<< k[0] << ", " << k[1] << ", " << k[2] << ", " << k[3] << ", " << k[4] << ", " << k[5] << ", " << k[6] << ", " << k[7] << ", " << k[8] << ", " << k[9] << ", " << k[10] << ", " << k[11] << ", " << k[12] << ", " << k[13] << ", " << k[14] << endl;
   os << " i1 = " << i1 << endl;
   os << " i2 = " << i2 << endl;
   os << " b4 = " << sbool(b4) << endl;
@@ -1457,6 +1477,118 @@ text << sbool(movie);
 }
 {
   QDomElement xmlpar = doc.createElement("par");
+  xmlpar.setAttribute("name","k" );
+  xmlparameter.appendChild(xmlpar);
+  QDomElement xmlvalarray = doc.createElement("valarray");
+  xmlpar.appendChild(xmlvalarray);
+  {
+    ostringstream text;
+    text << k[0];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[1];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[2];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[3];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[4];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[5];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[6];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[7];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[8];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[9];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[10];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[11];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[12];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[13];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+  {
+    ostringstream text;
+    text << k[14];
+   QDomElement xmlval = doc.createElement("val");
+   xmlval.setAttribute("v",text.str().c_str());
+   xmlvalarray.appendChild(xmlval);
+  }
+}
+{
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","i1" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1910,6 +2042,13 @@ if (!strcmp(namec, "initval")) {
   vector<double>::const_iterator v=valarray.begin();
   while (v!=valarray.end() && i <= 14 ) {
      initval[i++]=*(v++);
+  }
+}
+if (!strcmp(namec, "k")) {
+  int i=0;
+  vector<double>::const_iterator v=valarray.begin();
+  while (v!=valarray.end() && i <= 14 ) {
+     k[i++]=*(v++);
   }
 }
 }
