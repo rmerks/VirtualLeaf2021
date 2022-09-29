@@ -44,6 +44,15 @@
 #include <QTextStream>
 #include <QtXml>
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+namespace Qt
+{
+    static auto endl = ::endl;
+    static auto SkipEmptyParts = QString::SkipEmptyParts;
+}
+#endif
+
 using namespace std;
 // new queue which rejects duplicate elements
 template<class T, class C = deque<T> > class unique_queue : public queue<T,C> {
