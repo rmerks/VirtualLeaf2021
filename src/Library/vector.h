@@ -32,6 +32,7 @@
 #include <QPointF>
 #endif
 
+
 // three dimensional vector
 using namespace std;
 
