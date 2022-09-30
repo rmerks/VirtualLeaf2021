@@ -1,0 +1,24 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: sudo ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+      - run: sudo apt-get -qq update
+      - run: sudo apt-get -qq -y install lsb-release 
+      - run: lsb_release -a
+      - run: sudo apt-get -qq -y install build-essential git cmake make-guile g++ qtbase5-dev qtbase5-dev-tools qtcreator
+      - run: cd ${{ github.workspace }}/src;qmake VirtualLeaf.pro;make -f Makefile
+      - uses: actions/upload-artifact@v3
+        with:
+           name: VirtualLeaf
+           path: ${{ github.workspace }}/bin/**/*
+      - uses: actions/upload-artifact@v3
+        with:
+           name: VirtualLeaf-lib
+           path: ${{ github.workspace }}/lib/**/*
+           
