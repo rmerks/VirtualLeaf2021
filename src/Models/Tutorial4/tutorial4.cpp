@@ -54,8 +54,32 @@ void Tutorial4::SetCellColor(CellBase *c, QColor *color) {
   // add cell coloring rules here
 	// Red: PIN1
 	// Green: Auxin
-	color->setRgb(c->Chemical(1)/(1+c->Chemical(1)) * 255.,(c->Chemical(0)/(1+c->Chemical(0)) * 255.), 0);
-	
+	static QColor *leiden_orange=0;
+	if (!leiden_orange) {
+		leiden_orange=new QColor();
+	        leiden_orange->setCmykF(0.01,0.65,0.95,0.);
+	}
+	static QColor *nice_green=0;
+	if (!nice_green) {
+	   nice_green=new QColor();
+		nice_green->setCmykF(0.71,0.17,0.96,0.06);
+	}
+	//color->setRgb(c->Chemical(1)/(1+c->Chemical(1)) * 255.,(c->Chemical(0)/(1+c->Chemical(0)) * 255.), 0);
+        // interpolate colors from orange to green
+	qreal shade=c->Chemical(0)/(1.+c->Chemical(0));	
+    qreal oc,om,oy,ok;
+    qreal gc,gm,gy,gk;
+	leiden_orange->getCmykF(&oc,&om,&oy,&ok);
+        nice_green->getCmykF(&gc,&gm,&gy,&gk);
+	qreal cc,mm,yy,kk;
+	cc=gc+(oc-gc)*shade;
+	mm=gm+(om-gm)*shade;
+	yy=gy+(oy-gy)*shade;
+        kk=gk+(ok-gk)*shade;
+        cerr<< "[ " << cc << ", " << mm << ", " << yy << ", " << kk << "], " << shade << "\n";
+	color->setCmykF(cc,mm,yy,kk);
+        
+
 }
 
 void Tutorial4::CellHouseKeeping(CellBase *c) {
