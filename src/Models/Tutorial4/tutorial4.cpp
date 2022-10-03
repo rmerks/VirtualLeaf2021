@@ -67,8 +67,13 @@ void Tutorial4::SetCellColor(CellBase *c, QColor *color) {
 	//color->setRgb(c->Chemical(1)/(1+c->Chemical(1)) * 255.,(c->Chemical(0)/(1+c->Chemical(0)) * 255.), 0);
         // interpolate colors from orange to green
 	qreal shade=c->Chemical(0)/(1.+c->Chemical(0));	
+ #if QT_VERSION >= 0x060000
+        float oc,om,oy,ok;
+        float gc,gm,gy,gk;
+ #else
     qreal oc,om,oy,ok;
     qreal gc,gm,gy,gk;
+ #endif
 	leiden_orange->getCmykF(&oc,&om,&oy,&ok);
         nice_green->getCmykF(&gc,&gm,&gy,&gk);
 	qreal cc,mm,yy,kk;
