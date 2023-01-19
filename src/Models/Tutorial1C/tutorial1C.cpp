@@ -24,7 +24,7 @@
 
 
 #include "parameter.h"
-
+#include "node.h"
 #include "wallbase.h"
 #include "cellbase.h"
 #include "tutorial1C.h"
@@ -51,9 +51,17 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
   // add cell behavioral rules here
+
+	QString str = c->printednodes();
+	std::cout << str.toStdString() << std::endl;
+
+
 	c->EnlargeTargetArea(par->cell_expansion_rate);
 	if (c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
-		c->DivideOverAxis(Vector(1,0,0));
+
+
+		c->DivideOverAxis(Vector(0,1,0));
+
 	}
 }
 

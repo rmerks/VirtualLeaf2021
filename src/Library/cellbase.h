@@ -227,6 +227,7 @@ class CellBase :  public QObject, public Vector
   void Dump(ostream &os) const;
 
   QString printednodelist(void);
+  QString printednodes(void);
 
   inline bool DeadP(void) { return dead; }
   inline void MarkDead(void) { dead  = true; }
@@ -415,6 +416,7 @@ class CellBase :  public QObject, public Vector
   inline double NewChem(int c) const { return new_chem[c]; }
 
  protected:
+  Vector step(list<Node *>::const_iterator i,double add,double supstract);
   list<Node *> nodes;
   void ConstructNeighborList(void);
   long wall_list_index (Wall *elem) const;
