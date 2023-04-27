@@ -52,8 +52,7 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
   // add cell behavioral rules here
 
-	QString str = c->printednodes();
-	std::cout << str.toStdString() << std::endl;
+	c->calculateOrientation();
 
 
 	c->EnlargeTargetArea(par->cell_expansion_rate);

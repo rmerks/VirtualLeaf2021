@@ -184,7 +184,6 @@ class Node : public Vector {
   bool sam; // true if node is connected to the shoot
   bool dead;
   bool marked;
-	double angle;
 };
 
 ostream &operator<<(ostream &os, const Node &n);

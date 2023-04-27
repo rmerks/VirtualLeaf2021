@@ -46,7 +46,7 @@
 #include "mesh.h"
 #include "sqr.h"
 #include "tiny.h"
-#include "pi.h"
+#include "OShape.h"
 
 static const std::string _module_id("$Id$");
 
@@ -626,233 +626,17 @@ QString CellBase::printednodelist(void)
   return info_string;
 }
 
-Vector CellBase::step(list<Node *>::const_iterator i,double add,double substract)
-{
-    list<Node *>::const_iterator step=i;
-    Vector current;
-    while (add>0) {
-    	current.x=(*step)->x;
-    	current.y=(*step)->y;
-    	step++;
-    	if (step==nodes.end()) {
-    		step=nodes.begin();
-    	}
-    	current.x-=(*step)->x;
-    	current.y-=(*step)->y;
-    	add-=(current.Norm());
-    }
-    while (substract>0){
-    	current.x=(*step)->x;
-    	current.y=(*step)->y;
-        if (step==nodes.begin()) {
-        	step=nodes.end();
-        }
-        step--;
-    	current.x-=(*step)->x;
-    	current.y-=(*step)->y;
-    	substract-=(current.Norm());
-    }
-    Vector result;
-    result.x=(*step)->x;
-    result.y=(*step)->y;
-    return result;
-}
-
-double angleRange(double angle) {
-	angle=abs(angle);
-    if (angle> Pi) {
-    	angle = 2*Pi - angle;
-    }
-	return angle;
-}
-
- double angle(Vector* v1,Vector* v2,Vector* m12){
-    m12->x = (v1->x+v2->x)/2 ;
-    m12->y = (v1->y + v2->y)/2 ;
-    double angle1  = angleRange(v1->Angle(*v2));
-    double angle1_ = angleRange(m12->Angle(*v2));
-    if (angle1<(Pi/45)){
-    	angle1=(Pi/45);
-    	angle1_=angle1/2;
-    }
-
-    // angle1_ should be half of angle1 else take the other side
-    if (angle1 < (angle1_*2)*1.001 && angle1 > (angle1_*2)*0.999) {
-        return angle1;
-    }
-        angle1 = Pi - angle1;
-        if (angle1 < (angle1_*2)*1.001 && angle1 > (angle1_*2)*0.999) {
-            return angle1;
-        }
-        // if the other side also not fits, exit with biggest angle (probably rounding error.
-    return Pi;
-}
- double angleCostFunction(double angledir,double angle1,double angle2){
-	    if (angledir> Pi) {
-	    	angledir = abs(2*Pi - angle2);
-	    }
-	    return angledir+(angle1+angle2)*2;
- }
-
-
- int findMin(double closeAnglesMiddel,double*closeAngles,int count,double* resultCost){
-
- int index= 0;
- int flip=0;
- bool lastWasOver= closeAngles[index]> closeAnglesMiddel;
- //make sure we start searching after a gap
- while (!lastWasOver &&flip<3) {
-	 if (++index==count) {index=0;flip++;}
-	  lastWasOver= closeAngles[index]> closeAnglesMiddel;
- }
- //wait for the gap to start
- while (lastWasOver&&flip<3) {
-	  if (++index==count) {index=0;flip++;}
-	  lastWasOver= closeAngles[index]> closeAnglesMiddel;
- }
- int minIndex = index;
- int mincloseAngle = closeAngles[minIndex];
- //till end of gap
- while (!lastWasOver&&flip<3) {
-	  if (closeAngles[index]<mincloseAngle) {
-		  minIndex=index;
-		  mincloseAngle = closeAngles[minIndex];
-	  }
-	  //do not use it again
-	  closeAngles[index] = Pi*5;
-	  if (++index==count) {index=0;flip++;}
-	  lastWasOver= closeAngles[index]> closeAnglesMiddel;
- }
- *resultCost=mincloseAngle;
- return flip<3?minIndex:-1;
- }
-QString CellBase::printednodes(void)
-{
-	  QString info_string = "\\begin{tikzpicture}\n";
-
-
-	  double steplength = ExactCircumference()*0.05;
-	  int count =   nodes.size();
-	  double closeAnglesMax = 0;
-	  double closeAnglesMin = Pi*5;
-	  double *closeAngles =(double*)malloc(sizeof(double)*count);
-	  int index= 0;
-	  for (list<Node *>::const_iterator i=nodes.begin(); i!=(nodes.end()); i++) {
-		    Vector v0;v0.x=(*i)->x;v0.y=(*i)->y;
-
-		    Vector v10 = step(i,steplength*1,0)-v0;v10.Normalise();
-		    Vector v20 = step(i,steplength*2,0)-v0;v20.Normalise();
-			Vector v01 = step(i,0,steplength*1)-v0;v01.Normalise();
-			Vector v02 = step(i,0,steplength*2)-v0;v02.Normalise();
-
-			Vector m1;
-			Vector m2;
-		    double angle1  = angle(&v10,&v01,&m1);
-		    double angle2  = angle(&v20,&v02,&m2);
-
-
-		    double closeAngle=  angleCostFunction(m1.Angle(m2),angle1,angle2);
-		    closeAngles[index++]=closeAngle;
-			info_string += QString("% p(%1,%2) angle1 %3 angle2 %4 cost %5\n").arg(v0.x).arg(v0.y).arg(angle1).arg(angle2).arg(closeAngle);
-
-			if (closeAnglesMax<closeAngle)
-				closeAnglesMax=closeAngle;
-			if (closeAnglesMin>closeAngle)
-				closeAnglesMin=closeAngle;
-	  }
-	  double closeAnglesMiddel = (closeAnglesMax- closeAnglesMin)/2 +closeAnglesMin;
-	  info_string += QString("% middle costs %1\n").arg(closeAnglesMiddel);
-
-	  double minCost1 = Pi*5;
-	  int sIndex1=-1;
-	  double minCost2= Pi*5;
-	  int sIndex2=-1;
-	  double minCost;
-	  int sIndex= findMin(closeAnglesMiddel,closeAngles,count,&minCost);
-	  while (sIndex>=0) {
-		  if (minCost<minCost1) {
-			  minCost2=minCost1;
-			  sIndex2=sIndex1;
-			  minCost1=minCost;
-			  sIndex1=sIndex;
-		  }else if(minCost<minCost2){
-			  minCost2=minCost;
-			  sIndex2=sIndex;
-		  }
-		  sIndex= findMin(closeAnglesMiddel,closeAngles,count,&minCost);
-	  }
-
-	  free(closeAngles);
-	  index = 0;
-	  double rdistance1=-1;
-	  double rdistance2=-1;
-	  if (sIndex2 >=0) {
-	  double distance1=-1;
-	  double distance2=-1;
-	  for (list<Node *>::const_iterator i=nodes.begin(); i!=(nodes.end()); ) {
-		    list<Node *>::const_iterator i_plus_1=i; i_plus_1++;
-		    if (i_plus_1==nodes.end())
-		      i_plus_1=nodes.begin();
-
-		    if (index==sIndex1) {
-		  		distance1=0;
-		  	}
-	  	    double dx=((*i_plus_1)->x-(*i)->x);
-	  	    double dy=((*i_plus_1)->y-(*i)->y);
-	  	    double l=sqrt(dx*dx+dy*dy);
-		  	if (distance1>=0) {
-		  		if (index == sIndex2){
-		  			rdistance1=distance1;
-		  			distance2=0;
-		  		}
-		  		distance1+=l;
-		  	}
-		  	if (distance2>=0) {
-		  		if (index == sIndex1){
-		  			rdistance2=distance2;
-		  			break;
-		  		}
-		  		distance2+=l;
-		  	}
-		    index++;
-		    i++;
-		    if (i==nodes.end()) {
-		    	i=nodes.begin();
-		    	index=0;
-		    }
-	  }
-	  }
-
-	  info_string += QString("% distance1 %1 distance2 %2\n").arg(rdistance1).arg(rdistance2);
-
-
-	  index = 0;
-
-	  for (list<Node *>::const_iterator i=nodes.begin(); i!=(nodes.end()); i++) {
-		    list<Node *>::const_iterator i_plus_1=i; i_plus_1++;
-		    if (i_plus_1==nodes.end())
-		      i_plus_1=nodes.begin();
-		    list<Node *>::const_iterator i_minus_1=i;
-		    if (i_minus_1==nodes.begin())
-		    	i_minus_1=nodes.end();
-		    i_minus_1--;
-		  	if (index==sIndex1) {
-		  		double x= ((*i_minus_1)->x+(*i_plus_1)->x+(*i)->x)/3;
-		  		double y= ((*i_minus_1)->y+(*i_plus_1)->y+(*i)->y)/3;
-		  	  info_string += QString("\\filldraw[black] (%1,%2) circle (10pt) node[anchor=west]{Intersection point};\n").arg(x).arg(y);
-		  	}
-		  	if (index==sIndex2) {
-		  		double x= ((*i_minus_1)->x+(*i_plus_1)->x+(*i)->x)/3;
-		  		double y= ((*i_minus_1)->y+(*i_plus_1)->y+(*i)->y)/3;
-		  	  info_string += QString("\\filldraw[black] (%1,%2) circle (10pt) node[anchor=west]{Intersection point};\n").arg(x).arg(y);
-		  	}
-		    info_string += QString("\\draw[gray, thick] (%1, %2) -- (%3, %4);\n").arg((*i)->x).arg((*i)->y).arg((*i_plus_1)->x).arg((*i_plus_1)->y);
-		    index++;
-	  }
-
-
-	  info_string += "\\end{tikzpicture}";
-	  return info_string;
+void CellBase::calculateOrientation() {
+	double circonverense = this->ExactCircumference();
+	OShape* shape = new OShape(circonverense);
+	for (list<Node*>::const_iterator i = nodes.begin(); i != (nodes.end());i++) {
+		shape->addNode((*i)->x, (*i)->y);
+	}
+	// add a path to the start
+	list<Node*>::const_iterator i = nodes.begin();
+	shape->addNode((*i)->x, (*i)->y);
+	shape->finalise();
+	delete shape;
 }
 
 double CellBase::ExactCircumference(void) const

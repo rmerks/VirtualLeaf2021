@@ -1,3 +1,16 @@
 /bin/
 /build-VirtualLeaf-Desktop-Debug/
 /.project
+/.cproject
+**/prottest*
+**/.settings/
+**/.settings/*.pref
+**/.settings/*.xml
+**/*.o
+**/moc_*.h
+**/moc_*.cpp
+**/.cproject
+**/.project
+**/Makefile
+**/plottest.*
+**/.qmake.stash

@@ -63,6 +63,8 @@ HEADERS = \
  vector.h \
  wallbase.h \
  warning.h \
+ ONode.h \
+ OShape.h \
 vleafmodel.h \
 flux_function.h
 
@@ -77,6 +79,8 @@ SOURCES = \
  UniqueMessage.cpp \
  vector.cpp \
  wallbase.cpp \
+ ONode.cpp \
+ OShape.cpp \
  warning.cpp
 
 # Create parameter.cpp from *.tmpl file
