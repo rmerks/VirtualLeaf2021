@@ -68,6 +68,14 @@ Cell Cell::operator=(const Cell &src)
 
 void Cell::DivideOverAxis(Vector axis) 
 {
+	  if (dead) return;
+
+	  Vector centroid=Centroid();
+	  DivideOverAxis(axis,centroid);
+}
+
+void Cell::DivideOverAxis(Vector axis,Vector centroid)
+{
   // Build a wall
   // ->  find the position of the wall
 
@@ -75,9 +83,7 @@ void Cell::DivideOverAxis(Vector axis)
   // this leads to some exceptions: e.g. dividing a horizontal rectangle.
   // leaving it like this for the time being
 
-  if (dead) return;
 
-  Vector centroid=Centroid();
   double prev_cross_z=(axis * (centroid - *(nodes.back()) ) ).z ;
 
   ItList new_node_locations;

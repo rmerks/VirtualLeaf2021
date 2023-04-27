@@ -29,6 +29,8 @@
 #include "cellbase.h"
 #include "tutorial1C.h"
 
+#include "CellOrientation.h"
+
 static const std::string _module_id("$Id$");
 
 QString Tutorial1C::ModelID(void) {
@@ -52,15 +54,18 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
   // add cell behavioral rules here
 
-	c->calculateOrientation();
+	CellOrientation orientation =  c->calculateOrientation();
 
 
 	c->EnlargeTargetArea(par->cell_expansion_rate);
 	if (c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
-
-
-		c->DivideOverAxis(Vector(0,1,0));
-
+		if (orientation.initialized) {
+			Vector divideVector = orientation.divide50End-orientation.divide50Start;
+			Vector center = (orientation.divide50End+orientation.divide50Start)/2.0;
+			c->DivideOverAxis(divideVector,center);
+		} else {
+			c->Divide();
+		}
 	}
 }
 

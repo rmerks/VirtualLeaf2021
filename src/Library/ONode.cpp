@@ -172,3 +172,8 @@ std::string ONode::print(){
 	return result ;
 }
 
+void ONode::copyCoord(Vector * target) {
+	target->x= this->x;
+	target->y= this->y;
+}
+

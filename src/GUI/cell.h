@@ -89,6 +89,8 @@ class Cell : public CellBase
   }
 
   void DivideOverAxis(Vector axis); // divide cell over axis
+  void DivideOverAxis(Vector axis,Vector centroid); // divide cell over axis
+
 
   // divide over the line (if line and cell intersect)
   bool DivideOverGivenLine(const Vector v1, const Vector v2, bool wall_fixed = false, NodeSet *node_set = 0);

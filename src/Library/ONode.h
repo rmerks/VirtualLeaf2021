@@ -4,6 +4,7 @@
 #define ORIENTATION_ONODE_H_
 
 #include <string>
+#include "vector.h"
 
 class ONode {
 	double x,y;
@@ -34,6 +35,7 @@ public:
 	void followPrevUntil(double distance,ONode* target);
 	ONode nomalize(ONode* base);
 	std::string print();
+	void copyCoord(Vector * target);
 };
 
 #endif /* ORIENTATION_ONODE_H_ */

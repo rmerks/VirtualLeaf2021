@@ -77,19 +77,21 @@ void OShape::addOneNode(double x,double y){
 	}
 }
 
-std::string OShape::print(bool printPicture){
-	std::string info_string = "";
-	if (printPicture) {
-		info_string += "\\begin{tikzpicture}\n";
-	}
+std::string OShape::print(bool printMinima){
+	std::string info_string = "\\begin{tikzpicture}\n";
 	int lastIndex = NODE_COUNT - 1;
 	for (int index = 0;index < NODE_COUNT;index++) {
 		info_string += "\\draw[gray, thick, <->]" + this->nodes[lastIndex].print() + " -- " + this->nodes[index].print() + ";\n";
 		lastIndex = index;
 	}
-	if (printPicture) {
-		info_string += "\\end{tikzpicture}\n";
+	if (printMinima) {
+		info_string += "\\filldraw[black] " + this->minimas[0]->print() + " circle (3pt) node[anchor=west]{1};\n";
+		info_string += "\\filldraw[black] " + this->minimas[1]->print() + " circle (3pt) node[anchor=west]{2};\n";
+		info_string += "\\draw[gray, thick, <->]" + this->alongNext25.print() + " -- " + this->alongPrev25.print() + ";\n";
+		info_string += "\\draw[gray, thick, <->]" + this->alongNext50.print() + " -- " + this->alongPrev50.print() + ";\n";
+		info_string += "\\draw[gray, thick, <->]" + this->alongNext75.print() + " -- " + this->alongPrev75.print() + ";\n";
 	}
+	info_string += "\\end{tikzpicture}\n";
 	return info_string;
 }
 
@@ -109,7 +111,33 @@ double OShape::calculateThreashold() {
 	return threashold;
 }
 
-void OShape::finalise(){
+void OShape::calculateMinima(double threashold,ONode **minimas) {
+	ONode *step = this->nodes;
+	while (step->nextNode(1) != this->nodes) {
+		ONode *minima = NULL;
+		step = step->checkMinima(threashold, &minima)->nextNode(1);
+		if (minima != NULL) {
+			if (addMinima(minimas, minima)) {
+				break;
+			}
+		}
+	}
+}
+
+void OShape::fillResultOrientation(CellOrientation *result) {
+	this->minimas[0]->copyCoord(&result->minimaStart);
+	this->minimas[1]->copyCoord(&result->minimaEnd);
+	this->alongNext25.copyCoord(&result->divide25Start);
+	this->alongPrev25.copyCoord(&result->divide25End);
+	this->alongNext50.copyCoord(&result->divide50Start);
+	this->alongPrev50.copyCoord(&result->divide50End);
+	this->alongNext75.copyCoord(&result->divide75Start);
+	this->alongPrev75.copyCoord(&result->divide75End);
+	result->initialized=true;
+}
+
+CellOrientation OShape::finalise() {
+	CellOrientation result;
 	if (this->currentNode < NODE_COUNT && this->progressDistance > 0.0) {
 		this->nodes[this->currentNode].set(&(this->progressNode));
 		this->progressNode.set(0.0,0.0);
@@ -122,54 +150,28 @@ void OShape::finalise(){
 	}
 	double threashold = calculateThreashold();
 	if (threashold > 0.0) {
-		ONode* minimas[2]={NULL,NULL};
-		ONode* step = this->nodes;
-		while (step->nextNode(1) !=  this->nodes) {
-			ONode* minima = NULL;
-			step = step
-					->checkMinima(threashold,&minima)
-					->nextNode(1);
-			if (minima != NULL) {
-				if (addMinima(minimas, minima)){
-					break;
-				}
-			}
-		}
-		if (minimas[0]!= NULL && minimas[1]!= NULL) {
+		this->minimas[0] = NULL;
+		this->minimas[1] = NULL;
+		calculateMinima(threashold, this->minimas);
+		if (this->minimas[0] != NULL && this->minimas[1] != NULL) {
 			// TODO better minima if parabolic match for middle 3 points around the minima.
-			double nextDistance = minimas[0]->countNextDistanceTo(minimas[1]);
-			double prevDistance = minimas[0]->countPrevDistanceTo(minimas[1]);
-			ONode alongNext25;
-			minimas[0]->followNextUntil(nextDistance*.25,&alongNext25);
-			ONode alongNext50;
-			minimas[0]->followNextUntil(nextDistance*.50,&alongNext50);
-			ONode alongNext75;
-			minimas[0]->followNextUntil(nextDistance*.75,&alongNext75);
-			ONode alongPrev25;
-			minimas[0]->followPrevUntil(prevDistance*.25,&alongPrev25);
-			ONode alongPrev50;
-			minimas[0]->followPrevUntil(prevDistance*.50,&alongPrev50);
-			ONode alongPrev75;
-			minimas[0]->followPrevUntil(prevDistance*.75,&alongPrev75);
+			double nextDistance = this->minimas[0]->countNextDistanceTo(this->minimas[1]);
+			double prevDistance = this->minimas[0]->countPrevDistanceTo(this->minimas[1]);
 
+			this->minimas[0]->followNextUntil(nextDistance*.25,&(this->alongNext25));
+			this->minimas[0]->followNextUntil(nextDistance*.50,&(this->alongNext50));
+			this->minimas[0]->followNextUntil(nextDistance*.75,&(this->alongNext75));
+			this->minimas[0]->followPrevUntil(prevDistance*.25,&(this->alongPrev25));
+			this->minimas[0]->followPrevUntil(prevDistance*.50,&(this->alongPrev50));
+			this->minimas[0]->followPrevUntil(prevDistance*.75,&(this->alongPrev75));
 
-
-			std::cout << "\\begin{tikzpicture}\n" << std::endl;
-			std::cout << print(false) << std::endl;
-
-			std::string  info_string = "\\filldraw[black] " + minimas[0]->print() + " circle (3pt) node[anchor=west]{1};\n";
-			info_string += "\\filldraw[black] " + minimas[1]->print() + " circle (3pt) node[anchor=west]{2};\n";
-			info_string += "\\draw[gray, thick, <->]" + alongNext25.print() + " -- " + alongPrev25.print() + ";\n";
-			info_string += "\\draw[gray, thick, <->]" + alongNext50.print() + " -- " + alongPrev50.print() + ";\n";
-			info_string += "\\draw[gray, thick, <->]" + alongNext75.print() + " -- " + alongPrev75.print() + ";\n";
-			std::cout << info_string << std::endl;
-
-			std::cout << "\\end{tikzpicture}\n" << std::endl;
-
-		}else {
+			fillResultOrientation(&result);
 			std::cout << print(true) << std::endl;
+		} else {
+			std::cout << print(false) << std::endl;
 		}
 	}
+	return result;
 }
 
 bool OShape::addMinima(ONode** minimas,ONode*minima) {
