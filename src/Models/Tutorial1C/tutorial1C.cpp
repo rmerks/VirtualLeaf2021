@@ -52,11 +52,29 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 }
 
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
-  // add cell behavioral rules here
-
+    // add cell behavioral rules here
 	CellOrientation orientation =  c->calculateOrientation();
-
-
+	if (orientation.initialized) {
+		QList<WallBase *> list = c->getWalls();
+		double dStart = min(//
+				sqrt((orientation.divide25Start-orientation.minimaStart).SqrNorm()),//
+				sqrt((orientation.divide25End-orientation.minimaStart).SqrNorm()));
+		double dEnd = min(//
+				sqrt((orientation.divide75Start-orientation.minimaEnd).SqrNorm()),//
+				sqrt((orientation.divide75End-orientation.minimaEnd).SqrNorm()));
+		for (QList<WallBase*>::iterator w = list.begin(); w != list.end();w++) {
+			Vector middle = ((*(*w)->N1())+(*(*w)->N2()))/2.;
+			double d1 = sqrt((middle-orientation.minimaStart).SqrNorm());
+			double d2 = sqrt((middle-orientation.minimaEnd).SqrNorm());
+			double weightFactor = 1.;
+			if (d1 < dStart) {
+				weightFactor = d1/dStart;
+			}else if (d2 < dEnd) {
+				weightFactor = d2/dEnd;
+			}
+			(*w)->SetWeightFactor(weightFactor,c);
+		}
+	}
 	c->EnlargeTargetArea(par->cell_expansion_rate);
 	if (c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
 		if (orientation.initialized) {

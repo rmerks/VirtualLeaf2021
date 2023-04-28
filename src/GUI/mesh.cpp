@@ -570,8 +570,33 @@ double Mesh::DisplaceNodes(void) {
 	  goto next_node;
 	}
 
+    double weigthFactor = 0.;
+    double counter = 0;
+    for (list<Wall *>::const_iterator w = this->walls.begin(); w != this->walls.end();w++) {
+    	Wall &wall(**w);
+        if (wall.n1 == *i || wall.n2 == *i) {
+        	if (wall.weigthFactor1 > 0.) {
+//           	if ((wall.c1 == cit->cell) && wall.weigthFactor1 > 0.) {
+        		weigthFactor += wall.weigthFactor1;
+        		counter+=1.;
+//        	}else if ((wall.c2 == cit->cell) && wall.weigthFactor2 > 0.) {
+        	}else if (wall.weigthFactor2 > 0.) {
+        		weigthFactor += wall.weigthFactor2;
+        		counter+=1.;
+        	}
+        }
+    }
+    std::cout << "weigthFactor: " << weigthFactor << " counter: " << counter << std::endl;
+
+
+    if (weigthFactor<0.1) {
+    	weigthFactor=1.0;
+    }else {
+    	 weigthFactor=weigthFactor/counter;
+    }
+
 	// summing stiffnesses of cells. Move has to overcome this minimum required energy.
-	sum_stiff += c.stiffness;
+	sum_stiff += c.stiffness*weigthFactor;
 	// area - (area after displacement): see notes for derivation
 	
 	Vector i_min_1 = *(cit->nb1);

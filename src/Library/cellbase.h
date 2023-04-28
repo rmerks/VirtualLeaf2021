@@ -424,6 +424,7 @@ class CellBase :  public QObject, public Vector
   }
   inline double NewChem(int c) const { return new_chem[c]; }
 
+
  protected:
   list<Node *> nodes;
   void ConstructNeighborList(void);
