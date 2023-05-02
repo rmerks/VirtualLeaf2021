@@ -165,7 +165,7 @@ void MainBase::Plot(int resize_stride)
   if (ShowCellStrainP()) 
     mesh.LoopCells( [this](auto cell){cell.DrawStrain(&canvas);});
   if (ShowWallsP())
-    mesh.LoopWalls([this](auto wall){wall.Draw(&canvas);});
+    mesh.LoopWalls([this](auto wall){wall->Draw(&canvas);});
   if (ShowMeshP()) 
     mesh.DrawNodes(&canvas);
   if (ShowBoundaryOnlyP()) 

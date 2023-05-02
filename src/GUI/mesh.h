@@ -148,7 +148,7 @@ class Mesh {
     for (list <Wall *>::iterator i=walls.begin();
 	 i!=walls.end();
 	 i++) {
-      f(**i);
+      f(*i);
     }
   }
 
