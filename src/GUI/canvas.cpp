@@ -205,6 +205,7 @@ void FigureEditor::mousePressEvent(QMouseEvent* e)
             dynamic_cast<Main *>(parent())->UserMessage(QString(data_strstream.str().c_str()));
 
             (dynamic_cast<NodeItem*>(*it))->OnClick(e->button());
+        	break;
         }
         else
             if ( !strcmp(typeid(*gi).name(),"8CellItem") ) {
@@ -212,9 +213,13 @@ void FigureEditor::mousePressEvent(QMouseEvent* e)
                 Cell &c=((dynamic_cast<CellItem *>(*it))->getCell());
                 // OnClick to be defined in end-user code
                 c.OnClick(e);
+            	break;
             } else {
                 if ( !strcmp(typeid(*gi).name(),"8WallItem") ) {
-                    (dynamic_cast<WallItem *>(*it))->OnClick(e);
+                	WallItem *w=((dynamic_cast<WallItem *>(*it)));
+                	w->OnClick(e);
+
+                	break;
                 }
             }
     }
