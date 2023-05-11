@@ -1,5 +1,7 @@
 from math import sqrt
+from math import hypot
 import xml.etree.ElementTree as ET
+from shapely.geometry import Polygon
 
 class Mesh:
 
@@ -132,6 +134,9 @@ class Node:
             for cell in wall.getCells():
                 fixed = fixed or cell.getType() == "#000000"
         docNode = ET.SubElement(docNodes, "node", nr=str(self.nr), x = str(self.x), y = str(self.y), sam="false", boundary=str(border).lower(), fixed=str(fixed).lower())
+
+    def getTuple(self):
+        return (self.x, self.y)
 
 class Wall:
     def __init__(self, node1, node2,nr):
@@ -284,20 +289,21 @@ class Cell:
             cellType = "3"
         self.toXmlI("cell",cellNodes,border,cellType,self.nr,self.type == "#000000")
 
-    def toXmlI(self,nodeName,cellNodes,border,cellType,nr,fixed):        
+    def toXmlI(self,nodeName,cellNodes,border,cellType,nr,fixed):  
+        geo = self.getGeometry()      
         cellNode = ET.SubElement(cellNodes, nodeName \
                                  , boundary=str(border) \
                                  , cell_type=cellType \
-                                 , target_area="0" \
+                                 , target_area=str(geo[0]) \
                                  , lambda_celllength="0" \
                                  , at_boundary=str(border==0).lower() \
                                  , dead="false" \
-                                 , target_length="0" \
+                                 , target_length=str(geo[1]) \
                                  , stiffness="0" \
                                  , index=str(nr) \
                                  , source="false" \
                                  , pin_fixed=str(fixed).lower() \
-                                 , area="0" \
+                                 , area=str(geo[0]) \
                                  , fixed=str(fixed).lower() \
                                  , div_counter="0" \
                                  )
@@ -316,4 +322,20 @@ class Cell:
     def toBoundaryBolygon(self,cellNodes):
         self.toXmlI("boundary_polygon",cellNodes,0,"0",-1,False)
 
-
+    def getGeometry(self):
+        nextNode = self.firstNode
+        coords = list()
+        coords.append(nextNode.getTuple())
+        for wall in self.walls:
+            if wall.getNode(1) == nextNode:
+                nextNode=wall.getNode(2)
+            else:
+                nextNode=wall.getNode(1)
+            if  nextNode != self.firstNode:
+                coords.append(nextNode.getTuple())
+        polygon = Polygon(coords)
+        minx, miny, maxx, maxy = polygon.minimum_rotated_rectangle.bounds
+        width = maxx - minx
+        height = maxy - miny
+        diagonal = hypot(width, height)*1.2
+        return (polygon.area, diagonal)
