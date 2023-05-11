@@ -140,7 +140,7 @@ class Mesh {
     for (vector <Cell *>::iterator i=cells.begin();
 	 i!=cells.end();
 	 i++) {
-      f(**i);
+      f(*i);
     }
   }
 
@@ -158,7 +158,7 @@ class Mesh {
     for (vector <Cell *>::iterator i=current_cells.begin();
 	 i!=current_cells.end();
 	 i++) {
-      f(**i);
+      f(*i);
 
     }
   }
@@ -167,7 +167,7 @@ class Mesh {
     for (vector<Node *>::iterator i=nodes.begin();
 	 i!=nodes.end();
 	 i++) {
-      f(**i); 
+      f(*i);
     }
   }
 
@@ -199,7 +199,7 @@ class Mesh {
     for (vector<Cell *>::iterator i=cells.begin();
 	 i!=cells.end();
 	 i++) {
-      f(**i,g); 
+      f(*i,g);
     }
   }
 
@@ -207,7 +207,7 @@ class Mesh {
     for (vector<Cell *>::iterator i=cells.begin();
 	 i!=cells.end();
 	 i++) {
-      f(**i,g,h); 
+      f(*i,g,h);
     }
   }
 
