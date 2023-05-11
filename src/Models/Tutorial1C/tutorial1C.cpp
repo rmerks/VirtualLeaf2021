@@ -53,8 +53,14 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
     // add cell behavioral rules here
+	if (c->FixedP()||c->CellType() == 0||c->CellType() == 1||c->CellType() == 4) {
+		return;
+	}
+//	if (c->TargetArea() < 1.) {
+//		c->SetTargetArea(c->Area());
+//	}
 	CellOrientation orientation =  c->calculateOrientation();
-	if (orientation.initialized) {
+	if (orientation.initialized && false) {
 		QList<WallBase *> list = c->getWalls();
 		double dStart = min(//
 				sqrt((orientation.divide25Start-orientation.minimaStart).SqrNorm()),//
@@ -76,7 +82,7 @@ void Tutorial1C::CellHouseKeeping(CellBase *c) {
 		}
 	}
 	c->EnlargeTargetArea(par->cell_expansion_rate);
-	if (c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
+	if (false && c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
 		if (orientation.initialized) {
 			Vector divideVector = orientation.divide50End-orientation.divide50Start;
 			Vector center = (orientation.divide50End+orientation.divide50Start)/2.0;
