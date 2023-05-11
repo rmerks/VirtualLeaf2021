@@ -643,7 +643,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       list<Neighbor>::iterator c = (edge_owners.size() != 0) ? edge_owners.begin() : edge_owners.end();
 
       // (can we have more than one neighboring cell here??)
-      if (c!=owners.end()) { 
+      if (c!=edge_owners.end()) {
 	neighbor_cell = c->cell;
 	if (!c->cell->BoundaryPolP()) {
 
@@ -689,7 +689,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       list<Neighbor>::iterator c;
       for (c=owners.begin(); c!=owners.end(); c++) {
 	c=adjacent_find(c,owners.end(),neighbor_cell_eq);
-	if (c->cell->Index() != this->Index() || c==owners.end()) break;
+	if (c==owners.end()||c->cell->Index() != this->Index() ) break;
       }
 
       if (c!=owners.end())
@@ -1012,6 +1012,14 @@ void Cell::Move(const Vector T) {
   }
 }
 
+double protectedDSQR(double value1,double value2) {
+	double diff=value1-value2;
+	if (std::isnan(diff))
+		return 0.0;
+	if (diff<0.0)
+		return 0.0;
+	return DSQR(value1-value2);
+}
 double Cell::Displace(double dx, double dy, double dh)
 {
 
@@ -1045,8 +1053,8 @@ double Cell::Displace(double dx, double dy, double dh)
 	length_edges.push_back( pair <Node *,Node *> (*i, n->nb1) );
 	length_edges.push_back( pair <Node *,Node *> (*i, n->nb2) );
 	old_length += 
-	  DSQR(Node::target_length-(*(*i)-*(n->nb1)).Norm())+
-	  DSQR(Node::target_length-(*(*i)-*(n->nb2)).Norm());
+			protectedDSQR(Node::target_length,(*(*i)-*(n->nb1)).Norm())+
+			protectedDSQR(Node::target_length,(*(*i)-*(n->nb2)).Norm());
       }
     }
   }
@@ -1055,8 +1063,8 @@ double Cell::Displace(double dx, double dy, double dh)
   // (this cells' shape remains unchanged)
   double old_area_energy=0., old_length_energy=0.;
   for (list<CellBase *>::const_iterator i=neighbors.begin(); i!=neighbors.end(); i++) {
-    old_area_energy += DSQR((*i)->Area()-(*i)->TargetArea());
-    old_length_energy += DSQR((*i)->Length()-(*i)->TargetLength());
+    old_area_energy += protectedDSQR((*i)->Area(),(*i)->TargetArea());
+    old_length_energy += protectedDSQR((*i)->Length(),(*i)->TargetLength());
   }
 
   Move(movement);
@@ -1064,13 +1072,13 @@ double Cell::Displace(double dx, double dy, double dh)
   double new_area_energy=0., new_length_energy=0.;
   for (list<CellBase *>::const_iterator i=neighbors.begin(); i!=neighbors.end(); i++) {
     cellareas.push_back((*i)->CalcArea());
-    new_area_energy += DSQR(cellareas.back()-(*i)->TargetArea());
-    new_length_energy += DSQR((*i)->CalcLength()-(*i)->TargetLength());
+    new_area_energy += protectedDSQR(cellareas.back(),(*i)->TargetArea());
+    new_length_energy += protectedDSQR((*i)->CalcLength(),(*i)->TargetLength());
   }
 
   double new_length=0;
   for ( vector< pair< Node *, Node * > >::const_iterator e = length_edges.begin(); e != length_edges.end(); e++) {
-    new_length +=  DSQR(Node::target_length - (*(e->first) - *(e->second)).Norm());
+    new_length +=  protectedDSQR(Node::target_length , (*(e->first) - *(e->second)).Norm());
   }
 
 
@@ -1097,7 +1105,6 @@ double Cell::Displace(double dx, double dy, double dh)
 
   return dh;
 }
-
 
 void Cell::Displace (void)
 {
