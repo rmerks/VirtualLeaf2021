@@ -2,6 +2,7 @@ from math import sqrt
 from math import hypot
 import xml.etree.ElementTree as ET
 from shapely.geometry import Polygon
+from shapely.geometry.polygon import orient
 
 class Mesh:
 
@@ -277,22 +278,27 @@ class Cell:
     
     def toXml(self,cellNodes):
         border = 0
+        boundary = 0
         for wall in self.walls:
             if wall.isBorder():
                 border = 1
         cellType = "0"
+        boundary = 0 # None
         if self.type == "#ffffff":
             cellType = "1"
+            boundary = 2 # SOURCESINK 
         if self.type == "#0000f8":
             cellType = "2"
         if self.type == "#009000":
             cellType = "3"
-        self.toXmlI("cell",cellNodes,border,cellType,self.nr,self.type == "#000000")
+        self.toXmlI("cell",cellNodes,border,boundary,cellType,self.nr,self.type == "#000000")
 
-    def toXmlI(self,nodeName,cellNodes,border,cellType,nr,fixed):  
-        geo = self.getGeometry()      
+    def toXmlI(self,nodeName,cellNodes,border,boundary,cellType,nr,fixed):  
+        geo = self.getGeometry()     
+        if geo[2]:
+            self.walls.reverse()
         cellNode = ET.SubElement(cellNodes, nodeName \
-                                 , boundary=str(border) \
+                                 , boundary=str(boundary) \
                                  , cell_type=cellType \
                                  , target_area=str(geo[0]) \
                                  , lambda_celllength="0" \
@@ -320,7 +326,7 @@ class Cell:
             ET.SubElement(cellNode, "wall" , w=str(wall.getNr()))
 
     def toBoundaryBolygon(self,cellNodes):
-        self.toXmlI("boundary_polygon",cellNodes,0,"0",-1,False)
+        self.toXmlI("boundary_polygon",cellNodes,0,0,"0",-1,False)
 
     def getGeometry(self):
         nextNode = self.firstNode
@@ -334,8 +340,10 @@ class Cell:
             if  nextNode != self.firstNode:
                 coords.append(nextNode.getTuple())
         polygon = Polygon(coords)
+        counterclock = orient(polygon, sign=1.0)
+        reverse = polygon.exterior.coords[1] != counterclock.exterior.coords[1]
         minx, miny, maxx, maxy = polygon.minimum_rotated_rectangle.bounds
         width = maxx - minx
         height = maxy - miny
         diagonal = hypot(width, height)*1.2
-        return (polygon.area, diagonal)
+        return (polygon.area, diagonal, reverse)

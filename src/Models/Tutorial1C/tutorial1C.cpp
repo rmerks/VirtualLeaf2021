@@ -53,12 +53,25 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
     // add cell behavioral rules here
+	if (c->Index() < this->cellIndex) {
+		// next interation
+		this->lastSharedArea = this->sharedArea;
+		this->sharedArea = 0.0;
+		if (this->initialSharedArea < 0.0) {
+			this->initialSharedArea = this->lastSharedArea;
+		}
+		this->sharedAreaGrowthFactor = this->initialSharedArea/this->lastSharedArea;
+	} else if (c->CellType() == 1 ) {
+		this->sharedArea+=c->Area();
+	}
+	this->cellIndex = c->Index();
+	if (c->CellType() == 1) {
+		c->SetTargetArea(c->Area()*this->sharedAreaGrowthFactor);
+	}
+
 	if (c->FixedP()||c->CellType() == 0||c->CellType() == 1||c->CellType() == 4) {
 		return;
 	}
-//	if (c->TargetArea() < 1.) {
-//		c->SetTargetArea(c->Area());
-//	}
 	CellOrientation orientation =  c->calculateOrientation();
 	if (orientation.initialized && false) {
 		QList<WallBase *> list = c->getWalls();
@@ -81,7 +94,9 @@ void Tutorial1C::CellHouseKeeping(CellBase *c) {
 			(*w)->SetWeightFactor(weightFactor,c);
 		}
 	}
-	c->EnlargeTargetArea(par->cell_expansion_rate);
+	double area = c->Area();
+	double tarea = c->TargetArea();
+	c->SetTargetArea(area*1.1);
 	if (false && c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
 		if (orientation.initialized) {
 			Vector divideVector = orientation.divide50End-orientation.divide50Start;

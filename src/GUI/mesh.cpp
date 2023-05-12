@@ -510,7 +510,7 @@ double Mesh::DisplaceNodes(void) {
     Node &node(**i);
 
     // Do not allow displacement if fixed
-    //if (node.fixed) continue;
+    if (node.fixed) continue;
 
     if (node.DeadP()) continue;
 

@@ -1017,8 +1017,8 @@ double protectedDSQR(double value1,double value2) {
 	if (std::isnan(diff))
 		return 0.0;
 	if (diff<0.0)
-		return 0.0;
-	return DSQR(value1-value2);
+		diff=value2-value1;
+	return DSQR(diff);
 }
 double Cell::Displace(double dx, double dy, double dh)
 {
