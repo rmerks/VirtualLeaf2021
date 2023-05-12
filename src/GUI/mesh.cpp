@@ -772,14 +772,45 @@ double Mesh::DisplaceNodes(void) {
 
 	  }
 
+    // determines the list of cells belonging to the node and its neighbors
+      set<int> nodeown,nb1own,nb2own;
+      vector<int> intersection_no_nb1,intersection_no_nb2;
+      for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
+        nodeown.insert(c->cell->Index());
+      }
+      for (list<Neighbor>::iterator c=cit->nb1->owners.begin(); c!=cit->nb1->owners.end(); c++) {
+        nb1own.insert(c->cell->Index());
+      }
+      for (list<Neighbor>::iterator c=cit->nb2->owners.begin(); c!=cit->nb2->owners.end(); c++) {
+        nb2own.insert(c->cell->Index());
+      }
+      set_intersection(nodeown.begin(), nodeown.end(), nb1own.begin(), nb1own.end(), back_inserter(intersection_no_nb1));
+      set_intersection(nodeown.begin(), nodeown.end(), nb2own.begin(), nb2own.end(), back_inserter(intersection_no_nb2));
 
-	
-	  length_dh += 2*Node::target_length * ( w1*(old_l1 - new_l1) + 
-						 w2*(old_l2 - new_l2) ) +
-	    w1*(DSQR(new_l1) 
-		- DSQR(old_l1)) 
-	    + w2*(DSQR(new_l2) 
-		  - DSQR(old_l2));
+      w1 = 0;
+      w2 = 0;
+
+      // uses the cell specific stiffness values to calculate length_dh as introduced in Lebovka et al
+      for (list<Neighbor>::iterator c=cit->nb1->owners.begin(); c!=cit->nb1->owners.end(); c++) {
+        if (std::find(intersection_no_nb1.begin(), intersection_no_nb1.end(), c->cell->Index()) != intersection_no_nb1.end()) {
+            w1 += (c->cell->Index() !=-1?c->cell->GetWallStiffness():par.rel_perimeter_stiffness);
+        }
+      }
+      for (list<Neighbor>::iterator c=cit->nb2->owners.begin(); c!=cit->nb2->owners.end(); c++) {
+        if (std::find(intersection_no_nb2.begin(), intersection_no_nb2.end(), c->cell->Index()) != intersection_no_nb2.end()) {
+             w2 += (c->cell->Index() !=-1?c->cell->GetWallStiffness():par.rel_perimeter_stiffness);
+        }
+      }
+      w1 =w1/2 ;
+      w2 =w2/2 ;
+
+
+      length_dh += 2*Node::target_length * ( w1*(old_l1 - new_l1) +
+                         w2*(old_l2 - new_l2) ) +
+        w1*(DSQR(new_l1)
+        - DSQR(old_l1))
+        + w2*(DSQR(new_l2)
+          - DSQR(old_l2));
 
 
 	 

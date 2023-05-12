@@ -195,6 +195,10 @@ class CellBase :  public QObject, public Vector
 
   inline double Area(void) const { return area; }
 
+  inline double SetWallStiffness(double value_stiffness) {return wall_stiffness = value_stiffness;}
+
+  inline double GetWallStiffness(void) const {return wall_stiffness;}
+
   inline void Divide(void) { flag_for_divide = true; }
 
   inline void DivideOverAxis(const Vector &v)
@@ -438,6 +442,7 @@ class CellBase :  public QObject, public Vector
   double target_area;
   double target_length;
   double lambda_celllength;
+  double wall_stiffness; // Lebovka et al
 
   double stiffness; // stiffness like in Hogeweg (2000)
 
