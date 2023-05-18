@@ -87,7 +87,7 @@ CellBase::CellBase(QObject *parent) :
   fixed = false;
   pin_fixed = false;
   stiffness = 0;
-  wall_stiffness = 1;
+  wall_stiffness = std::nan("1");
   marked = false;
   dead = false;
   div_counter=0;
@@ -128,7 +128,7 @@ CellBase::CellBase(double x,double y,double z) : QObject(), Vector(x,y,z)
   at_boundary=false;
   pin_fixed = false;
   stiffness = 0;
-  wall_stiffness = 1;
+  wall_stiffness = std::nan("1");
   marked=false;
   dead  = false;
   div_counter = 0;

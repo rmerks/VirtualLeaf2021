@@ -28,6 +28,7 @@
 #define _MESH_H_
 
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <queue>
 #include <iterator>
@@ -421,6 +422,7 @@ class Mesh {
   SimPluginInterface *plugin;
 
   // Private member functions
+  double CellSpecificStiffnessOneSide(Node *nb,set<int> &nodeown);
   void AddNodeToCell(Cell *c, Node *n, Node *nb1 , Node *nb2);
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);

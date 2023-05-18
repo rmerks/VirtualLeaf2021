@@ -493,6 +493,29 @@ void Mesh::Clear(void) {
 #endif
 }
 
+double Mesh::CellSpecificStiffnessOneSide(Node *nb,set<int> &nodeown) {
+    // determines the list of cells belonging to the node and its neighbors
+    set<int> nb1own;
+    vector<int> intersection_no_nb1;
+    for (list<Neighbor>::iterator c=nb->owners.begin(); c!=nb->owners.end(); c++) {
+      nb1own.insert(c->cell->Index());
+    }
+    set_intersection(nodeown.begin(), nodeown.end(), nb1own.begin(), nb1own.end(), back_inserter(intersection_no_nb1));
+
+	double cell_w=0.;
+    // uses the cell specific stiffness values to calculate length_dh as introduced in Lebovka et al
+    for (list<Neighbor>::iterator c=nb->owners.begin(); c!=nb->owners.end(); c++) {
+      if (std::find(intersection_no_nb1.begin(), intersection_no_nb1.end(), c->cell->Index()) != intersection_no_nb1.end()) {
+    	  cell_w += (c->cell->Index() !=-1?c->cell->GetWallStiffness():par.rel_perimeter_stiffness);
+      }
+      if (std::isnan(cell_w)) {
+    	  break;
+      }
+    }
+    return cell_w;
+}
+
+
 double Mesh::DisplaceNodes(void) {
 
   MyUrand r(shuffled_nodes.size());
@@ -577,27 +600,6 @@ double Mesh::DisplaceNodes(void) {
 	Vector i_min_1 = *(cit->nb1);
 	//Vector i_plus_1 = m->getNode(cit->nb2);
 	Vector i_plus_1 = *(cit->nb2);
-
-
-	// We must double the weights for the perimeter (otherwise they start bulging...)
-	double w1, w2;
-	if (node.boundary && cit->nb1->boundary) 
-#ifdef FLEMING
-	  w1 = par.rel_perimeter_stiffness;
-#else
-	w1=2;
-#endif
-	else
-	  w1 = 1;
-
-	if (node.boundary && cit->nb2->boundary) 
-#ifdef FLEMING
-	  w2 = par.rel_perimeter_stiffness;
-#else
-	w2 = 2;
-#endif
-	else 
-	  w2 = 1;
 
 	//if (cit->cell>=0) {
 	if (!cit->cell->BoundaryPolP()) {
@@ -772,38 +774,40 @@ double Mesh::DisplaceNodes(void) {
 
 	  }
 
-    // determines the list of cells belonging to the node and its neighbors
-      set<int> nodeown,nb1own,nb2own;
-      vector<int> intersection_no_nb1,intersection_no_nb2;
-      for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
-        nodeown.insert(c->cell->Index());
-      }
-      for (list<Neighbor>::iterator c=cit->nb1->owners.begin(); c!=cit->nb1->owners.end(); c++) {
-        nb1own.insert(c->cell->Index());
-      }
-      for (list<Neighbor>::iterator c=cit->nb2->owners.begin(); c!=cit->nb2->owners.end(); c++) {
-        nb2own.insert(c->cell->Index());
-      }
-      set_intersection(nodeown.begin(), nodeown.end(), nb1own.begin(), nb1own.end(), back_inserter(intersection_no_nb1));
-      set_intersection(nodeown.begin(), nodeown.end(), nb2own.begin(), nb2own.end(), back_inserter(intersection_no_nb2));
 
-      w1 = 0;
-      w2 = 0;
+    // We must double the weights for the perimeter (otherwise they start bulging...)
+    double w1, w2;
+#ifdef FLEMING
+  	if (node.boundary && cit->nb1->boundary)
+  	  w1 = par.rel_perimeter_stiffness;
+  	else
+  	  w1 = 1;
+  	if (node.boundary && cit->nb2->boundary)
+  	  w2 = par.rel_perimeter_stiffness;
+  	else
+  	  w2 = 1;
 
-      // uses the cell specific stiffness values to calculate length_dh as introduced in Lebovka et al
-      for (list<Neighbor>::iterator c=cit->nb1->owners.begin(); c!=cit->nb1->owners.end(); c++) {
-        if (std::find(intersection_no_nb1.begin(), intersection_no_nb1.end(), c->cell->Index()) != intersection_no_nb1.end()) {
-            w1 += (c->cell->Index() !=-1?c->cell->GetWallStiffness():par.rel_perimeter_stiffness);
-        }
-      }
-      for (list<Neighbor>::iterator c=cit->nb2->owners.begin(); c!=cit->nb2->owners.end(); c++) {
-        if (std::find(intersection_no_nb2.begin(), intersection_no_nb2.end(), c->cell->Index()) != intersection_no_nb2.end()) {
-             w2 += (c->cell->Index() !=-1?c->cell->GetWallStiffness():par.rel_perimeter_stiffness);
-        }
-      }
-      w1 =w1/2 ;
-      w2 =w2/2 ;
+    set<int> nodeown;
+    for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
+    	nodeown.insert(c->cell->Index());
+	}
+    double cell_w1 = this->CellSpecificStiffnessOneSide(cit->nb1,nodeown);
+    double cell_w2 = this->CellSpecificStiffnessOneSide(cit->nb2,nodeown);
+    if (!std::isnan(cell_w1) && !std::isnan(cell_w2)) {
+    	w1 = cell_w1/2. ;
+    	w2 = cell_w2/2. ;
+    }
 
+#else
+  	if (node.boundary && cit->nb1->boundary)
+  		w1=2;
+  	else
+  		w1 = 1;
+  	if (node.boundary && cit->nb2->boundary)
+  		w2 = 2;
+  	else
+  		w2 = 1;
+#endif
 
       length_dh += 2*Node::target_length * ( w1*(old_l1 - new_l1) +
                          w2*(old_l2 - new_l2) ) +
@@ -836,13 +840,7 @@ double Mesh::DisplaceNodes(void) {
 	  bending_dh += DSQR(1/r2 - 1/r1);
 
 	}
-
-
       }
-
-     
-		
-
       dh = 	area_dh + cell_length_dh +
 	par.lambda_length * length_dh + par.bend_lambda * bending_dh + par.alignment_lambda * alignment_dh;
 
