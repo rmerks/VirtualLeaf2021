@@ -61,17 +61,18 @@ void Tutorial1C::CellHouseKeeping(CellBase *c) {
 			this->initialSharedArea = this->lastSharedArea;
 		}
 		this->sharedAreaGrowthFactor = this->initialSharedArea/this->lastSharedArea;
-	} else if (c->CellType() == 1 ) {
+	} else if (c->CellType() == FLUID_CELL_TYPE ) {
 		this->sharedArea+=c->Area();
 	}
 	this->cellIndex = c->Index();
-	if (c->CellType() == 1) {
+	if (c->CellType() == FLUID_CELL_TYPE) {
 		c->SetTargetArea(c->Area()*this->sharedAreaGrowthFactor);
 	}
 
-	if (c->FixedP()||c->CellType() == 0||c->CellType() == 1||c->CellType() == 4) {
+	if (c->FixedP()||c->CellType() == FIXED_CELL_TYPE||c->CellType() == FLUID_CELL_TYPE) {
 		return;
 	}
+	// now cell type = MESOPHYLL_CELL_TYPE  EPIDERMIS_CELL_TYPE
 	CellOrientation orientation =  c->calculateOrientation();
 	if (orientation.initialized && false) {
 		QList<WallBase *> list = c->getWalls();

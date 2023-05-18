@@ -26,6 +26,10 @@
 #include <QString>
 #include "simplugin.h"
 
+#define FIXED_CELL_TYPE 0
+#define FLUID_CELL_TYPE 1
+#define MESOPHYLL_CELL_TYPE 2
+#define EPIDERMIS_CELL_TYPE 3
 
 class Tutorial1C : public QObject, SimPluginInterface {
 	Q_OBJECT
