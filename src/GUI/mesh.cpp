@@ -515,7 +515,9 @@ double Mesh::CellSpecificStiffnessOneSide(Node *nb,set<int> &nodeown) {
     return cell_w;
 }
 
+void checkWallStiffness(Wall* wall) {
 
+}
 double Mesh::DisplaceNodes(void) {
 
   MyUrand r(shuffled_nodes.size());
@@ -796,6 +798,19 @@ double Mesh::DisplaceNodes(void) {
     if (!std::isnan(cell_w1) && !std::isnan(cell_w2)) {
     	w1 = cell_w1/2. ;
     	w2 = cell_w2/2. ;
+    }
+
+
+    double w_w1 = 0.0;
+    int w_count = 0;
+    int* count_p = &w_count;
+    double *w_p=&w_w1;
+    for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
+    	c->cell->LoopWalls([count_p,cit,w_p](auto wall){wall->calculateDirectWallStiffNess(cit->nb1, cit->nb2, w_p, count_p);});
+    }
+    if (!std::isnan(w_w1)) {
+    	w1 = w_w1/((double)w_count);
+    	w2 = w1;
     }
 
 #else

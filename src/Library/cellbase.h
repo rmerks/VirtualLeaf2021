@@ -228,6 +228,14 @@ class CellBase :  public QObject, public Vector
     return wall_list;
   }
 
+  template<class Op> void LoopWalls(Op f) {
+    for (list <Wall *>::iterator i=walls.begin();
+	 i!=walls.end();
+	 i++) {
+      f(*i);
+    }
+  }
+
   void Dump(ostream &os) const;
 
   QString printednodelist(void);
