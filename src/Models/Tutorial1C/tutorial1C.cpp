@@ -50,6 +50,10 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 }
 
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
+    c->LoopWallElements([c](auto wallElementInfo){
+    	wallElementInfo->getWallElement()->setStiffness(1.5);
+    	wallElementInfo->write();
+    });
   // add cell behavioral rules here
 	c->EnlargeTargetArea(par->cell_expansion_rate);
 	if (c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {

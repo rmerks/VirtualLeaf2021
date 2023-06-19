@@ -266,9 +266,9 @@ Vector WallBase::getInfluxVector(CellBase *c)
     return ( Vector(*n1) - Vector(*n2) ).Normalised().Perp2D();
   }
 }
-void WallBase::calculateDirectWallStiffNess(Node* nb1, Node* nb2, double* stiffness,int* count_p) {
-	// if this wall is connected to nb1 or nb2 then assign the wall stiffness
-	if (this->n1==nb1 ||this->n1==nb2 || this->n2==nb1 ||this->n2==nb2 ) {
+void WallBase::calculateDirectWallStiffNess(Node* nb, double* stiffness,int* count_p) {
+	// if this wall is connected to nb then assign the wall stiffness
+	if (this->n1==nb || this->n2==nb ) {
 		if (std::isnan(this->c1WallStiffness)) {
 			*count_p += 1;
 			*stiffness += std::max(this->c1->GetWallStiffness(), this->c2WallStiffness);

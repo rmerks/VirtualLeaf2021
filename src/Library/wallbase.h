@@ -131,7 +131,7 @@ class WallBase {
   inline void setNewTransporters2(int ch, double val) { new_transporters2[ch]=val; }
   inline double Transporters1(int ch) { return transporters1[ch]; }
   inline double Transporters2(int ch) { return transporters2[ch]; }
-  void calculateDirectWallStiffNess(Node* nb1,Node* nb2, double* stiffness, int* count_p);
+  void calculateDirectWallStiffNess(Node* nb, double* stiffness, int* count_p);
   //! Return true if the WallBase adheres to the SAM (shoot apical meristem)
   bool SAM_P(void);
   // NB. Not checked. If cell is not found, it returns transporters2[ch]!!

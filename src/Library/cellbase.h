@@ -37,6 +37,10 @@
 #include "wall.h"
 #include "warning.h"
 #include "assert.h"
+#include "wallelementinfo.h"
+
+
+//#include "wallelementinfo.h"
 
 extern Parameter par;
 using namespace std;
@@ -45,6 +49,8 @@ class Mesh;
 class Node;
 class CellBase;
 class NodeSet;
+class WallElementInfo;
+class WallElement;
 
 struct ParentInfo {
 
@@ -84,6 +90,8 @@ class CellBase :  public QObject, public Vector
   friend class CellInfo;
   friend class Node;
   friend class WallBase;
+  friend class WallElement;
+  friend class WallElementInfo;
   friend class SimPluginInterface;
 
  public:
@@ -227,11 +235,25 @@ class CellBase :  public QObject, public Vector
     }
     return wall_list;
   }
+  template<class Op> void LoopWallElements(Op f) {
+			WallElementInfo info;
+			list <Node *>::iterator i=nodes.begin();
+			Node * first=*i;
+			Node * from=first;
+			Node * to=*(++i);
+			while (i!=nodes.end()) {
+				fillWallElementInfo(&info,from,to);
+		        f(&info);
+		        from=to;
+		        to=*(++i);
+			}
+			fillWallElementInfo(&info,to,first);
+  }
+
+
 
   template<class Op> void LoopWalls(Op f) {
-    for (list <Wall *>::iterator i=walls.begin();
-	 i!=walls.end();
-	 i++) {
+    for (list <Wall *>::iterator i=walls.begin();i!=walls.end();i++) {
       f(*i);
     }
   }
@@ -482,6 +504,8 @@ class CellBase :  public QObject, public Vector
 
   bool marked;
   int div_counter;
+
+  void fillWallElementInfo(WallElementInfo * info,Node* from,Node* to) ;
 };
 
 ostream &operator<<(ostream &os, const CellBase &v);

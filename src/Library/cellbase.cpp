@@ -651,5 +651,10 @@ double CellBase::ExactCircumference(void) const
 
   return circumference;
 } 
-
+void CellBase::fillWallElementInfo(WallElementInfo * info, Node* from,Node* to) {
+	WallElement* we =(from)->getWallElement(this);
+	info->setWallElement(we);
+	info->setNodes(from,to);
+	info->setCell(this);
+}
 /* finis*/

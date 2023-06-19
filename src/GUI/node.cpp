@@ -206,6 +206,20 @@ QVector<qreal> Node::NeighbourAngles(void)
   return angles;
 }
 
+WallElement* Node::getWallElement(CellBase * c) {
+	  for (vector<WallElement*>::iterator i=wallElements.begin(); i!=wallElements.end(); i++) {
+		  if((*i)->isWallOfCell(c)) {
+			  return (*i);
+		  }
+	  }
+	  return NULL;
+}
+
+WallElement* Node::insertWallElement(WallElement* we) {
+	WallElement* copy = new WallElement(we);
+	wallElements.push_back(copy);
+	return we;
+}
 
 #endif
 
