@@ -39,7 +39,6 @@ WallElement* NodeBase::getWallElement(CellBase * c) {
 }
 
 WallElement* NodeBase::insertWallElement(WallElement* we) {
-	WallElement* copy = new WallElement(we);
-	wallElements.push_back(copy);
+	wallElements.push_back(we);
 	return we;
 }

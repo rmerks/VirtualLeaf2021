@@ -835,7 +835,7 @@ double Mesh::DisplaceNodes(void) {
     		}
     	});
     }
-    if (!std::isnan(w_w1)&&!std::isnan(w_w2)) {
+    if (!std::isnan(w_w1)&&!std::isnan(w_w2)&& w_count1>0&& w_count2>0) {
     	w1 = w_w1/((double)w_count1);
     	w2 = w_w2/((double)w_count2);
     }

@@ -23,7 +23,11 @@ class NodeBase : public Vector {
 
 	  explicit NodeBase(const Vector &src);
 
-
+	  virtual ~NodeBase() {
+		  for (vector<WallElement*>::iterator i=wallElements.begin(); i!=wallElements.end(); i++) {
+			  delete *i;
+		  }
+	  }
 
 	  WallElement* getWallElement(CellBase *);
 
