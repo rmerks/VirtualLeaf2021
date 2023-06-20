@@ -31,7 +31,7 @@ class NodeBase : public Vector {
 
 	  WallElement* getWallElement(CellBase *);
 
-	  WallElement* insertWallElement(WallElement* we);
+	  WallElement* insertWallElement(CellBase *);
 };
 
 #endif /* NODEBASE_H_ */

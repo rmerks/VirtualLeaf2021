@@ -804,37 +804,10 @@ double Mesh::DisplaceNodes(void) {
     double w_w1 = 0.0;
     double w_w2 = 0.0;
     int w_count1 = 0;
-    int* count_p1 = &w_count1;
     int w_count2 = 0;
-    int* count_p2 = &w_count2;
-    double *w_p1=&w_w1;
-    double *w_p2=&w_w2;
-    for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
-    	c->cell->LoopWallElements([c,i,count_p1,count_p2,cit,w_p1,w_p2](auto wallElementInfo){
-			double stiffness;
-    		if (wallElementInfo->isFrom(*i)) {
-    			if (wallElementInfo->hasWallElement()) {
-        			stiffness = wallElementInfo->getWallElement()->getStiffness();
-        		} else {
-        			stiffness = c->cell->wall_stiffness;
-        		}
-    			if (!std::isnan(stiffness)){
-    				(*w_p1) += stiffness;
-    				(*count_p1)++;
-    			}
-    		} else if (wallElementInfo->isTo(*i)) {
-    			if (wallElementInfo->hasWallElement()) {
-        			stiffness = wallElementInfo->getWallElement()->getStiffness();
-        		} else {
-        			stiffness = c->cell->wall_stiffness;
-        		}
-    			if (!std::isnan(stiffness)){
-    				(*w_p2) += stiffness;
-    				(*count_p2)++;
-    			}
-    		}
-    	});
-    }
+
+    calculateWallStiffness(&c, *i,&w_count1,&w_count2,&w_w1,&w_w2);
+
     if (!std::isnan(w_w1)&&!std::isnan(w_w2)&& w_count1>0&& w_count2>0) {
     	w1 = w_w1/((double)w_count1);
     	w2 = w_w2/((double)w_count2);
@@ -947,6 +920,36 @@ double Mesh::DisplaceNodes(void) {
   }
 
   return sum_dh;
+}
+
+
+void Mesh::calculateWallStiffness(CellBase*c, Node* node,int* count_p1,int* count_p2,double *w_p1,double *w_p2) {
+    for (list<Neighbor>::iterator c=node->owners.begin(); c!=node->owners.end(); c++) {
+    	c->cell->LoopWallElements([c,node,count_p1,count_p2,w_p1,w_p2](auto wallElementInfo){
+			double stiffness;
+    		if (wallElementInfo->isFrom(node)) {
+    			if (wallElementInfo->hasWallElement()) {
+        			stiffness = wallElementInfo->getWallElement()->getStiffness();
+        		} else {
+        			stiffness = c->cell->wall_stiffness;
+        		}
+    			if (!std::isnan(stiffness)){
+    				(*w_p1) += stiffness;
+    				(*count_p1)++;
+    			}
+    		} else if (wallElementInfo->isTo(node)) {
+    			if (wallElementInfo->hasWallElement()) {
+        			stiffness = wallElementInfo->getWallElement()->getStiffness();
+        		} else {
+        			stiffness = c->cell->wall_stiffness;
+        		}
+    			if (!std::isnan(stiffness)){
+    				(*w_p2) += stiffness;
+    				(*count_p2)++;
+    			}
+    		}
+    	});
+    }
 }
 
 

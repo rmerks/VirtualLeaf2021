@@ -22,7 +22,7 @@ WallElement* WallElementInfo::getWallElement(){
 		 wallElement= ((Node*)this->from)->getWallElement(this->cell);
 	}
 	if (wallElement == NULL) {
-		wallElement= ((Node*)this->from)->insertWallElement(new WallElement(cell));
+		wallElement= ((Node*)this->from)->insertWallElement(cell);
 	}
 	return wallElement;
 } ;

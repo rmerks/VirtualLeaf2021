@@ -51,14 +51,19 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
 
-    c->LoopWallElements([c](auto wallElementInfo){
-    	wallElementInfo->getWallElement()->setStiffness(1.0);
+
+	double stiffness = 0.5;
+	double* p_stiffness= &stiffness;
+
+    c->LoopWallElements([c,p_stiffness](auto wallElementInfo){
+    	wallElementInfo->getWallElement()->setStiffness(*p_stiffness);
+    	(*p_stiffness)+=0.1;
     	wallElementInfo->write();
     });
   // add cell behavioral rules here
 	c->EnlargeTargetArea(par->cell_expansion_rate);
 	if (c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
-		c->DivideOverAxis(Vector(1,0,0));
+		c->Divide();
 	}
 }
 
