@@ -57,7 +57,7 @@ ostream &operator<<(ostream &os, const Neighbor &n) {
 }
 
 
-Node::Node(void) : Vector()
+Node::Node(void) : NodeBase()
 {
   index=(nnodes++);
   node_set =0;
@@ -67,7 +67,7 @@ Node::Node(void) : Vector()
   dead=false;
 }
 
-Node::Node(int ind) : Vector()
+Node::Node(int ind) : NodeBase()
 {
   node_set =0;
   index=ind;
@@ -77,7 +77,7 @@ Node::Node(int ind) : Vector()
   dead=false;
 }
 
-Node::Node(const Vector &src) : Vector(src)
+Node::Node(const Vector &src) : NodeBase(src)
 {
   node_set = 0;
   index=(nnodes++);
@@ -87,7 +87,7 @@ Node::Node(const Vector &src) : Vector(src)
   dead = false;
 }
 
-Node::Node(double x,double y, double z) : Vector (x,y,z)
+Node::Node(double x,double y, double z) : NodeBase (x,y,z)
 {
   node_set = 0;
   index=(nnodes++);
@@ -97,7 +97,7 @@ Node::Node(double x,double y, double z) : Vector (x,y,z)
   dead = false;
 }
 
-Node::Node(const Node &src) : Vector(src)
+Node::Node(const Node &src) : NodeBase(src)
 {
   node_set=0;
   owners=src.owners;
@@ -204,21 +204,6 @@ QVector<qreal> Node::NeighbourAngles(void)
     MyWarning::warning("sum = %f",sum);
   }
   return angles;
-}
-
-WallElement* Node::getWallElement(CellBase * c) {
-	  for (vector<WallElement*>::iterator i=wallElements.begin(); i!=wallElements.end(); i++) {
-		  if((*i)->isWallOfCell(c)) {
-			  return (*i);
-		  }
-	  }
-	  return NULL;
-}
-
-WallElement* Node::insertWallElement(WallElement* we) {
-	WallElement* copy = new WallElement(we);
-	wallElements.push_back(copy);
-	return we;
 }
 
 #endif

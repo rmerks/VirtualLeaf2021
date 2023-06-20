@@ -50,8 +50,9 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 }
 
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
+
     c->LoopWallElements([c](auto wallElementInfo){
-    	wallElementInfo->getWallElement()->setStiffness(1.5);
+    	wallElementInfo->getWallElement()->setStiffness(1.0);
     	wallElementInfo->write();
     });
   // add cell behavioral rules here

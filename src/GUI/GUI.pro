@@ -20,7 +20,7 @@
 #
 
 CONFIG += release
-CONFIG -= debug
+CONFIG += debug
 CONFIG += qt
 #CONFIG -= app_bundle
 CONFIG+=sdk_no_version_check
@@ -118,6 +118,7 @@ $${VLEAFLIBDIR}/cellbase.h \
  transporterdialog.h \
  $${VLEAFLIBDIR}/UniqueMessage.h \
  $${VLEAFLIBDIR}/vector.h \
+ $${VLEAFLIBDIR}/nodebase.h \
  $${VLEAFLIBDIR}/wallbase.h \
  wall.h \
  wallitem.h \
@@ -154,8 +155,11 @@ $${VLEAFLIBDIR}/random.cpp \
  transporterdialog.cpp \
 $${VLEAFLIBDIR}/UniqueMessage.cpp \
 $${VLEAFLIBDIR}/vector.cpp \
+$${VLEAFLIBDIR}/nodebase.cpp \
  wall.cpp \
 $${VLEAFLIBDIR}/wallbase.cpp \
+$${VLEAFLIBDIR}/wallelement.cpp \
+$${VLEAFLIBDIR}/wallelementinfo.cpp \
  wallitem.cpp \
 $${VLEAFLIBDIR}/warning.cpp \
  $$MAINSRC

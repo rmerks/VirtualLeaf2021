@@ -247,7 +247,7 @@ class CellBase :  public QObject, public Vector
 		        from=to;
 		        to=*(++i);
 			}
-			fillWallElementInfo(&info,to,first);
+			fillWallElementInfo(&info,from,first);
   }
 
 

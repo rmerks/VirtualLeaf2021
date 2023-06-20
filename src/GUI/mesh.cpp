@@ -816,7 +816,7 @@ double Mesh::DisplaceNodes(void) {
     			if (wallElementInfo->hasWallElement()) {
         			stiffness = wallElementInfo->getWallElement()->getStiffness();
         		} else {
-        			stiffness = c->cell->stiffness;
+        			stiffness = c->cell->wall_stiffness;
         		}
     			if (!std::isnan(stiffness)){
     				(*w_p1) += stiffness;
@@ -826,7 +826,7 @@ double Mesh::DisplaceNodes(void) {
     			if (wallElementInfo->hasWallElement()) {
         			stiffness = wallElementInfo->getWallElement()->getStiffness();
         		} else {
-        			stiffness = c->cell->stiffness;
+        			stiffness = c->cell->wall_stiffness;
         		}
     			if (!std::isnan(stiffness)){
     				(*w_p2) += stiffness;

@@ -33,7 +33,7 @@
 #include <qcolor.h>
 #include <iostream>
 #endif
-#include "vector.h"
+#include "nodebase.h"
 #include "random.h"
 #include "parameter.h"
 #include "cell.h"
@@ -83,7 +83,7 @@ class Edge {
 class NodeSet;
 
 // this class is a node in a cell wall
-class Node : public Vector {
+class Node : public NodeBase {
 
   friend class Mesh;
   friend class CellBase;
@@ -105,10 +105,6 @@ class Node : public Vector {
   explicit Node(const Vector &src); // "nonconverting" - explicit constructor syntax required
 
   virtual ~Node() {}
-
-  WallElement* getWallElement(CellBase *);
-
-  WallElement* insertWallElement(WallElement* we);
 
   inline int Index(void) const { return index; }
 
@@ -183,7 +179,6 @@ class Node : public Vector {
 
   // if the node belongs to a NodeSet, node_set contains the pointer. Otherwise it is 0.
   NodeSet *node_set; 
-  vector<WallElement *> wallElements;
   // fixed nodes cannot move. E.g. to represent the petiole
   bool fixed;
   bool boundary; // true if node is at the edge of the leaf
