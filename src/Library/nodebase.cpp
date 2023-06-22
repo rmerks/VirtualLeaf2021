@@ -43,3 +43,7 @@ WallElement* NodeBase::insertWallElement(CellBase* cell) {
 	wallElements.push_back(we);
 	return we;
 }
+
+
+
+

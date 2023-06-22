@@ -58,7 +58,6 @@ void Tutorial1C::CellHouseKeeping(CellBase *c) {
     c->LoopWallElements([c,p_stiffness](auto wallElementInfo){
     	wallElementInfo->getWallElement()->setStiffness(*p_stiffness);
     	(*p_stiffness)+=0.1;
-    	wallElementInfo->write();
     });
   // add cell behavioral rules here
 	c->EnlargeTargetArea(par->cell_expansion_rate);

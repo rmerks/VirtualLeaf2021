@@ -427,6 +427,7 @@ class CellBase :  public QObject, public Vector
   inline double TargetLength() const { return target_length; } 
 
   static inline CellsStaticDatamembers *GetStaticDataMemberPointer(void) { return static_data_members; }
+  void fillWallElementInfo(WallElementInfo * info,Node* from,Node* to) ;
 
  protected:
   // (define a list of Node* iterators)
@@ -448,7 +449,6 @@ class CellBase :  public QObject, public Vector
   }
   inline double NewChem(int c) const { return new_chem[c]; }
 
- protected:
   list<Node *> nodes;
   void ConstructNeighborList(void);
   long wall_list_index (Wall *elem) const;
@@ -505,7 +505,6 @@ class CellBase :  public QObject, public Vector
   bool marked;
   int div_counter;
 
-  void fillWallElementInfo(WallElementInfo * info,Node* from,Node* to) ;
 };
 
 ostream &operator<<(ostream &os, const CellBase &v);

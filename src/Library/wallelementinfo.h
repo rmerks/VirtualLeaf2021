@@ -25,7 +25,7 @@ class WallElementInfo {
 
 	Vector* to=NULL;
 public:
-	inline void setWallElement(WallElement* elementInfo) { this->wallElement=wallElement; };
+	inline void setWallElement(WallElement* wallElement) { this->wallElement=wallElement; };
 	inline void setCell(CellBase* cell) { this->cell=cell; };
 	WallElementInfo();
 	virtual ~WallElementInfo();
@@ -33,10 +33,11 @@ public:
 	inline bool hasWallElement() {return wallElement!= NULL;};
 	inline Vector* getFrom() {return from;};
 	inline Vector* getTo() {return to;};
+	inline CellBase* getCell() {return cell;};
 	inline bool isFrom(Vector * other) {return from==other;};
 	inline bool isTo(Vector * other) {return to==other;};
 	inline void setNodes(Vector* from,Vector* to) {this->from =from;this->to =to;};
-	inline void write(){} ;
+	void divide(WallElementInfo * other);
 };
 
 #endif /* WALLELEMENTINFO_H_ */

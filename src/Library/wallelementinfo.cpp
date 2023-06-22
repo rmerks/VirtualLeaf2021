@@ -26,3 +26,7 @@ WallElement* WallElementInfo::getWallElement(){
 	}
 	return wallElement;
 } ;
+
+void WallElementInfo::divide(WallElementInfo* other){
+	other->getWallElement()->setStiffness(wallElement->getStiffness());
+}
