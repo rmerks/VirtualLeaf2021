@@ -515,9 +515,6 @@ double Mesh::CellSpecificStiffnessOneSide(Node *nb,set<int> &nodeown) {
     return cell_w;
 }
 
-void checkWallStiffness(Wall* wall) {
-
-}
 double Mesh::DisplaceNodes(void) {
 
   MyUrand r(shuffled_nodes.size());
@@ -789,6 +786,9 @@ double Mesh::DisplaceNodes(void) {
   	else
   	  w2 = 1;
 
+
+  	// @Ruth dies kann glaube ich jetzt weg oder? bitte kontroliere mal ob das
+  	// durch calculateWallStiffness abgedeckt ist.
     set<int> nodeown;
     for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
     	nodeown.insert(c->cell->Index());
@@ -799,7 +799,7 @@ double Mesh::DisplaceNodes(void) {
     	w1 = cell_w1/2. ;
     	w2 = cell_w2/2. ;
     }
-
+    // @Ruth check ende ;-)
 
     double w_w1 = 0.0;
     double w_w2 = 0.0;
