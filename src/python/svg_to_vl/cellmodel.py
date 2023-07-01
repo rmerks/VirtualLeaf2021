@@ -58,7 +58,7 @@ class Mesh:
         if another:
             for cell in self.cells:
                 if cell.retryDefineInnerCell() == None:
-                    print("not successful!")
+                    print("not successful, defining an inner cell!")
         self.removeCircumverence()
                     
         
@@ -70,9 +70,10 @@ class Mesh:
             if size>longest:
                 longest=size
                 self.boundary_polygon=cell
-        self.cells.remove(self.boundary_polygon)
-        for wall in self.boundary_polygon.getWalls():
-            wall.getCells().remove(self.boundary_polygon)
+        if self.boundary_polygon in self.cells:
+            self.cells.remove(self.boundary_polygon)
+            for wall in self.boundary_polygon.getWalls():
+                wall.getCells().remove(self.boundary_polygon)
             
     def toXml(self):
         docLeaf = ET.Element("leaf")
@@ -220,17 +221,23 @@ class Cell:
         return self.type
         
     def addNode(self, x, y):
-        self.addNodeO(self.mesh.getNode(x,y)) 
+        return self.addNodeO(self.mesh.getNode(x,y)) 
 
     def addNodeO(self, node):
         if self.lastNode is None:
-               self.lastNode = node
-               self.firstNode = node
+            self.lastNode = node
+            self.firstNode = node
+            return False
         else:
-             wall = self.mesh.getWall(self.lastNode,node)
-             self.appendWall(wall)
-             wall.addCell(self)
-             self.lastNode = node
+            if len(self.walls)>1 and node==self.firstNode: 
+                return True
+            if self.lastNode == node:
+                return False
+            wall = self.mesh.getWall(self.lastNode,node)
+            self.appendWall(wall)
+            wall.addCell(self)
+            self.lastNode = node
+            return False
              
     def addClosingWall(self):
              wall = self.mesh.getWall(self.lastNode,self.firstNode)
