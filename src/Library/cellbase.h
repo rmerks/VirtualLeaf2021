@@ -37,6 +37,7 @@
 #include "wall.h"
 #include "warning.h"
 #include "assert.h"
+#include "CellOrientation.h"
 
 extern Parameter par;
 using namespace std;
@@ -94,6 +95,7 @@ class CellBase :  public QObject, public Vector
     delete[] chem;
     delete[] new_chem;
     if (division_axis) delete division_axis;
+    if (division_centroid) delete division_centroid;
     //cerr << "CellBase " << index << " is dying. " << endl;
   }
 
@@ -203,6 +205,13 @@ class CellBase :  public QObject, public Vector
     flag_for_divide = true;
   }
 
+  inline void DivideOverAxis(const Vector &v,const Vector &centroid)
+  {
+    division_axis = new Vector(v);
+    division_centroid = new Vector(centroid);
+    flag_for_divide = true;
+  }
+
   inline double WallCircumference(void) const {
     double sum=0.;
     for (list<Wall *>::const_iterator w=walls.begin();
@@ -227,6 +236,7 @@ class CellBase :  public QObject, public Vector
   void Dump(ostream &os) const;
 
   QString printednodelist(void);
+  CellOrientation calculateOrientation(void);
 
   inline bool DeadP(void) { return dead; }
   inline void MarkDead(void) { dead  = true; }
@@ -414,6 +424,7 @@ class CellBase :  public QObject, public Vector
   }
   inline double NewChem(int c) const { return new_chem[c]; }
 
+
  protected:
   list<Node *> nodes;
   void ConstructNeighborList(void);
@@ -448,6 +459,7 @@ class CellBase :  public QObject, public Vector
   bool flag_for_divide;
 
   Vector *division_axis;
+  Vector *division_centroid;
   int cell_type;
 
   // for length constraint

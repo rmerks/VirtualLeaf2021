@@ -101,6 +101,9 @@ $${VLEAFLIBDIR}/cellbase.h \
  node.h \
  nodeitem.h \
  nodeset.h \
+ $${VLEAFLIBDIR}/ONode.h \
+ $${VLEAFLIBDIR}/OShape.h \
+ $${VLEAFLIBDIR}/CellOrientation.h \
  OptionFileDialog.h \
  $${VLEAFLIBDIR}/output.h \
  $${VLEAFLIBDIR}/parameter.h \
@@ -141,6 +144,9 @@ $${VLEAFLIBDIR}/cellbase.cpp \
  node.cpp \
  nodeitem.cpp \
  nodeset.cpp \
+ $${VLEAFLIBDIR}/ONode.cpp \
+ $${VLEAFLIBDIR}/OShape.cpp \
+ $${VLEAFLIBDIR}/CellOrientation.cpp \
  $${VLEAFLIBDIR}/output.cpp \
  OptionFileDialog.cpp \
  $${VLEAFLIBDIR}/parameter.cpp \

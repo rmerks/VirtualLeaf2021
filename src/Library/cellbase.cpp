@@ -46,6 +46,7 @@
 #include "mesh.h"
 #include "sqr.h"
 #include "tiny.h"
+#include "OShape.h"
 
 static const std::string _module_id("$Id$");
 
@@ -93,6 +94,7 @@ CellBase::CellBase(QObject *parent) :
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
+  division_centroid = 0;
 }
 
 
@@ -133,6 +135,7 @@ CellBase::CellBase(double x,double y,double z) : QObject(), Vector(x,y,z)
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
+  division_centroid = 0;
 }
 
 CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
@@ -173,6 +176,7 @@ CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
   div_counter = src.div_counter;
   flag_for_divide = src.flag_for_divide;
   division_axis = src.division_axis;
+  division_centroid = src.division_centroid;
 }
 
 
@@ -213,6 +217,7 @@ CellBase CellBase::operator=(const CellBase &src)
   div_counter = src.div_counter;
   flag_for_divide = src.flag_for_divide;
   division_axis = src.division_axis;
+  division_centroid = src.division_centroid;
   return *this;
 }
 
@@ -623,6 +628,20 @@ QString CellBase::printednodelist(void)
   }
   info_string += " } ";
   return info_string;
+}
+
+CellOrientation CellBase::calculateOrientation() {
+	double circonverense = this->ExactCircumference();
+	OShape* shape = new OShape(circonverense);
+	for (list<Node*>::const_iterator i = nodes.begin(); i != (nodes.end());i++) {
+		shape->addNode((*i)->x, (*i)->y);
+	}
+	// add a path to the start
+	list<Node*>::const_iterator i = nodes.begin();
+	shape->addNode((*i)->x, (*i)->y);
+	CellOrientation result = shape->finalise();
+	delete shape;
+	return result;
 }
 
 double CellBase::ExactCircumference(void) const

@@ -86,6 +86,8 @@ WallBase::WallBase(Node *sn1, Node *sn2, CellBase *sc1, CellBase *sc2)
   dead = false;
   wall_type = Normal;
   wall_index = nwalls++;
+  weigthFactor1=1.0;
+  weigthFactor2=1.0;
 }
 
 void WallBase::CopyWallContents(const WallBase &src)
@@ -111,6 +113,8 @@ void WallBase::CopyWallContents(const WallBase &src)
   }
   dead = src.dead;
   wall_type = src.wall_type;
+  weigthFactor1 = src.weigthFactor1;
+  weigthFactor2 = src.weigthFactor2;
 }
 
 void WallBase::SwapWallContents(WallBase *src)
@@ -160,6 +164,15 @@ void WallBase::SwapWallContents(WallBase *src)
   tmp_wall_type = src->wall_type;
   src->wall_type = wall_type;
   wall_type = tmp_wall_type;
+
+  bool tmp_double;
+  tmp_double = src->weigthFactor1;
+  src->weigthFactor1=weigthFactor1;
+  weigthFactor1 = tmp_double;
+
+  tmp_double = src->weigthFactor2;
+  src->weigthFactor2=weigthFactor2;
+  weigthFactor2 = tmp_double;
 }
 
 bool WallBase::SAM_P(void)

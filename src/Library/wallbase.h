@@ -87,6 +87,8 @@ class WallBase {
  protected:
   int wall_index;
   WallType wall_type;
+  double weigthFactor1; // cell1 stiffness weight factor, when zero it will be assumed as 1.0
+  double weigthFactor2; // cell2 stiffness weight factor, when zero it will be assumed as 1.0
 
 
  public:
@@ -107,6 +109,8 @@ class WallBase {
     viz_flux = src.viz_flux;
     dead = src.dead;
     wall_index = src.wall_index;
+    weigthFactor1 = src.weigthFactor1;
+    weigthFactor2 = src.weigthFactor2;
   }
 
   inline int Index(void) const { return wall_index;}
@@ -129,6 +133,13 @@ class WallBase {
   inline void setNewTransporters2(int ch, double val) { new_transporters2[ch]=val; }
   inline double Transporters1(int ch) { return transporters1[ch]; }
   inline double Transporters2(int ch) { return transporters2[ch]; }
+  inline void SetWeightFactor(double newWeightFactor, CellBase * c) {
+	  if (c==c1) {
+		  weigthFactor1=newWeightFactor;
+	  } else if (c==c2) {
+		  weigthFactor2=newWeightFactor;
+	  }
+  }
 
   //! Return true if the WallBase adheres to the SAM (shoot apical meristem)
   bool SAM_P(void);

@@ -24,10 +24,12 @@
 
 
 #include "parameter.h"
-
+#include "node.h"
 #include "wallbase.h"
 #include "cellbase.h"
 #include "tutorial1C.h"
+
+#include "CellOrientation.h"
 
 static const std::string _module_id("$Id$");
 
@@ -50,10 +52,60 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 }
 
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
-  // add cell behavioral rules here
-	c->EnlargeTargetArea(par->cell_expansion_rate);
-	if (c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
-		c->DivideOverAxis(Vector(1,0,0));
+    // add cell behavioral rules here
+	if (c->Index() < this->cellIndex) {
+		// next interation
+		this->lastSharedArea = this->sharedArea;
+		this->sharedArea = 0.0;
+		if (this->initialSharedArea < 0.0) {
+			this->initialSharedArea = this->lastSharedArea;
+		}
+		this->sharedAreaGrowthFactor = this->initialSharedArea/this->lastSharedArea;
+	} else if (c->CellType() == FLUID_CELL_TYPE ) {
+		this->sharedArea+=c->Area();
+	}
+	this->cellIndex = c->Index();
+	if (c->CellType() == FLUID_CELL_TYPE) {
+		c->SetTargetArea(c->Area()*this->sharedAreaGrowthFactor);
+	}
+
+	if (c->FixedP()||c->CellType() == FIXED_CELL_TYPE||c->CellType() == FLUID_CELL_TYPE) {
+		return;
+	}
+	// now cell type = MESOPHYLL_CELL_TYPE  EPIDERMIS_CELL_TYPE
+	CellOrientation orientation =  c->calculateOrientation();
+	if (orientation.initialized && false) {
+		QList<WallBase *> list = c->getWalls();
+		double dStart = min(//
+				sqrt((orientation.divide25Start-orientation.minimaStart).SqrNorm()),//
+				sqrt((orientation.divide25End-orientation.minimaStart).SqrNorm()));
+		double dEnd = min(//
+				sqrt((orientation.divide75Start-orientation.minimaEnd).SqrNorm()),//
+				sqrt((orientation.divide75End-orientation.minimaEnd).SqrNorm()));
+		for (QList<WallBase*>::iterator w = list.begin(); w != list.end();w++) {
+			Vector middle = ((*(*w)->N1())+(*(*w)->N2()))/2.;
+			double d1 = sqrt((middle-orientation.minimaStart).SqrNorm());
+			double d2 = sqrt((middle-orientation.minimaEnd).SqrNorm());
+			double weightFactor = 1.;
+			if (d1 < dStart) {
+				weightFactor = d1/dStart;
+			}else if (d2 < dEnd) {
+				weightFactor = d2/dEnd;
+			}
+			(*w)->SetWeightFactor(weightFactor,c);
+		}
+	}
+	double area = c->Area();
+	double tarea = c->TargetArea();
+	c->SetTargetArea(area*1.1);
+	if (false && c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
+		if (orientation.initialized) {
+			Vector divideVector = orientation.divide50End-orientation.divide50Start;
+			Vector center = (orientation.divide50End+orientation.divide50Start)/2.0;
+			c->DivideOverAxis(divideVector,center);
+		} else {
+			c->Divide();
+		}
 	}
 }
 

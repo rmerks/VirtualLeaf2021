@@ -220,14 +220,20 @@ class Mesh {
 
       // Call functions of Cell that cannot be called from CellBase, including Division
       if ((*i)->flag_for_divide) {
-	if ((*i)->division_axis) {
-	  (*i)->DivideOverAxis(*(*i)->division_axis);
-	  delete (*i)->division_axis;
-	  (*i)->division_axis = 0;
-	} else {
-	  (*i)->Divide();
-	}
-	(*i)->flag_for_divide=false;
+    	  if ((*i)->division_axis && (*i)->division_centroid) {
+    	     		  (*i)->DivideOverAxis(*(*i)->division_axis,*(*i)->division_centroid);
+    	     		  delete (*i)->division_axis;
+    	     		  delete (*i)->division_centroid;
+    	     		  (*i)->division_axis = 0;
+    	     		  (*i)->division_centroid = 0;
+    	  } else if ((*i)->division_axis) {
+    		  (*i)->DivideOverAxis(*(*i)->division_axis);
+    		  delete (*i)->division_axis;
+    		  (*i)->division_axis = 0;
+    	  } else {
+    		  (*i)->Divide();
+    	  }
+    	  (*i)->flag_for_divide=false;
       }
     }
   }

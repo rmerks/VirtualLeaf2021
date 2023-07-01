@@ -26,12 +26,21 @@
 #include <QString>
 #include "simplugin.h"
 
+#define FIXED_CELL_TYPE 0
+#define FLUID_CELL_TYPE 1
+#define MESOPHYLL_CELL_TYPE 2
+#define EPIDERMIS_CELL_TYPE 3
 
 class Tutorial1C : public QObject, SimPluginInterface {
 	Q_OBJECT
 	Q_INTERFACES(SimPluginInterface);
      Q_PLUGIN_METADATA(IID "org.virtualleaf.tutorial1c")
 
+	double initialSharedArea = -1.0;
+	double lastSharedArea = -1.0;
+ 	double sharedArea = -1.0;
+ 	double sharedAreaGrowthFactor = 1.0;
+    int cellIndex = -1;
 public:
 	virtual QString ModelID(void);
 	
