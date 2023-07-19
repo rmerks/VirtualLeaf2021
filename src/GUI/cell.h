@@ -136,6 +136,7 @@ class Cell : public CellBase
   void DrawIndex(QGraphicsScene *c) const;
   void DrawCenter(QGraphicsScene *c) const;
   void DrawNodes(QGraphicsScene *c) const;
+  void DrawMiddleLamella(QGraphicsScene *c, QString tooltip = "");
 
   void DrawAxis(QGraphicsScene *c) const;
   void DrawStrain(QGraphicsScene *c) const;

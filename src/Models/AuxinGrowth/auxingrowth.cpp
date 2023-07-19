@@ -48,6 +48,17 @@ void AuxinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, C
   // After divisions, parent and daughter cells get a standard stock of PINs.
   daughter1->SetChemical(1, par->initval[1]);
   daughter2->SetChemical(1, par->initval[1]);
+ // daughter1->SetWallStiffness(2);
+  daughter2->SetWallStiffness(1);
+
+  double stiffness = 1.5;
+  double * p_stiffness=&stiffness;
+  daughter1->LoopWallElements([p_stiffness](auto wallElementInfo){
+  	wallElementInfo->getWallElement()->setStiffness(*p_stiffness);
+  	(*p_stiffness)+=0.1;
+  });
+
+
 	
 	
   // Reset transporter values of parent and daughter

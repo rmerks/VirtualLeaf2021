@@ -21,23 +21,40 @@ class WallElementInfo {
 
 	  CellBase* cell=NULL;
 
-	Vector* from=NULL;
+      Vector* from=NULL;
 
-	Vector* to=NULL;
+      Vector* to=NULL;
+
+      double base_length;
+
+      double length;
+
 public:
 	inline void setWallElement(WallElement* wallElement) { this->wallElement=wallElement; };
 	inline void setCell(CellBase* cell) { this->cell=cell; };
 	WallElementInfo();
 	virtual ~WallElementInfo();
 	WallElement* getWallElement();
-	inline bool hasWallElement() {return wallElement!= NULL;};
+    inline bool hasWallElement() {return wallElement!= NULL;};
 	inline Vector* getFrom() {return from;};
-	inline Vector* getTo() {return to;};
+    inline Vector* getTo() {return to;};
 	inline CellBase* getCell() {return cell;};
 	inline bool isFrom(Vector * other) {return from==other;};
 	inline bool isTo(Vector * other) {return to==other;};
 	inline void setNodes(Vector* from,Vector* to) {this->from =from;this->to =to;};
 	void divide(WallElementInfo * other);
+    double stiffness();
+
+
+    inline void setBaseLength() {this->base_length=this->length/1.2;};
+    double getBaseLength() {return this->base_length;};
+    double calcLength(void) const;
+    double setLength() {return this->length=calcLength();};
+    double getLength() {return this->length;};
+
+    inline void updateBaseLength() {this->base_length=this->length/1.2;};
+    inline bool plasticStretch() {return this->length > 1.2*this->base_length;};
+
 };
 
 #endif /* WALLELEMENTINFO_H_ */

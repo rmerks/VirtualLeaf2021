@@ -29,4 +29,27 @@ WallElement* WallElementInfo::getWallElement(){
 
 void WallElementInfo::divide(WallElementInfo* other){
 	other->getWallElement()->setStiffness(wallElement->getStiffness());
+    other->setLength();
+    other->setBaseLength();
 }
+
+double WallElementInfo::stiffness(){
+	double stiffness = std::nan("1");
+	if (hasWallElement()){
+		stiffness = getWallElement()->getStiffness();
+	}
+	if (std::isnan(stiffness)){
+		stiffness = getCell()->GetWallStiffness();
+	}
+	return  stiffness;
+}
+
+double WallElementInfo::calcLength() const{
+    double length = 0;
+    Vector *from = this->from;
+    Vector *to = this->to;
+    Vector edge = to - from;
+    length = sqrt(DSQR(to->x-from->x)+DSQR(to->y-from->y));
+    return length;
+}
+

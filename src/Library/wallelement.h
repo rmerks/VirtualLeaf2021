@@ -12,6 +12,8 @@ class CellBase;
 class WallElement {
 	CellBase * cell;
 	double stiffness = std::nan("1");
+
+
 public:
 	WallElement();
 	WallElement(WallElement* copy);
@@ -20,6 +22,7 @@ public:
 	void setStiffness(double stiffness) {this->stiffness=stiffness;};
 
 	double getStiffness() {return this->stiffness;};
+
 
 	virtual ~WallElement();
 	inline int isWallOfCell(CellBase* other) {

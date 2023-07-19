@@ -18,7 +18,7 @@
 #
 
 CONFIG += release
-CONFIG -= debug
+CONFIG += debug
 CONFIG += plugin
 
 BINDIR = ../../../bin

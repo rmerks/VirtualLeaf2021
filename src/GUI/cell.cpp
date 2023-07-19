@@ -1683,6 +1683,34 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
   p->show();
 }
 
+void Cell::DrawMiddleLamella(QGraphicsScene *c, QString tooltip){
+    QGraphicsPathItem *middle = new QGraphicsPathItem;
+    QPainterPath path;
+    int cc=0;
+
+    for (list<Node *>::const_iterator n=nodes.begin(); n!=nodes.end(); n++) {
+        Node *i=*n;
+        if(cc ==0){
+            path.moveTo(QPointF(i->x, i->y));
+        }
+        else{
+      path.lineTo(QPointF(i->x, i->y));
+        }
+      cc++;
+    }
+
+
+    middle->setPath(path);
+    middle->setPen(QPen(QColor("white"),0.1));
+    middle->setZValue(3);
+
+    if (!tooltip.isEmpty()) {
+      middle->setToolTip(tooltip);
+    }
+    c->addItem(middle);
+    middle->show();
+}
+
 
 void Cell::DrawCenter(QGraphicsScene *c) const {
   // Maginfication derived similarly to that in nodeitem.cpp
