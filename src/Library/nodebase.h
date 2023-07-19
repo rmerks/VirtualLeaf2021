@@ -1,9 +1,3 @@
-/*
- * NodeBase.h
- *
- *  Created on: Jun 20, 2023
- *      Author: ritchie
- */
 
 #ifndef NODEBASE_H_
 #define NODEBASE_H_

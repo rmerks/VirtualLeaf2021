@@ -445,7 +445,7 @@ class Mesh {
 
   void CircumCircle(double x1,double y1,double x2,double y2,double x3,double y3,
 		    double *xc,double *yc,double *r);
-  void calculateWallStiffness(CellBase*c, Node* node, Node* nb1, Node* nb2, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double *bl_minus_1, double *bl_plus_1);
+  void calculateWallStiffness(CellBase*c, Node* node, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double *bl_minus_1, double *bl_plus_1);
 };
 #endif
 

@@ -808,7 +808,7 @@ double Mesh::DisplaceNodes(void) {
     double bl_plus_1 = 0.0;
     double bl_minus_1 = 0.0;
 
-    calculateWallStiffness(&c, *i,cit->nb1, cit->nb1, &w_count1,&w_count2,&w_w1,&w_w2, &bl_minus_1, &bl_plus_1);
+    calculateWallStiffness(&c, *i, &w_count1,&w_count2,&w_w1,&w_w2, &bl_minus_1, &bl_plus_1);
 
     if (!std::isnan(w_w1)&&!std::isnan(w_w2)&& w_count1>0&& w_count2>0) {
     	w1 = w_w1/((double)w_count1);
@@ -966,90 +966,41 @@ double Mesh::DisplaceNodes(void) {
   return sum_dh;
 }
 
+void extractWallData(WallElementInfo* wallElementInfo, int* count,double *w,double* bl){
+	double stiffness=.0;
+	double base_length=.0;
+	if (wallElementInfo->hasWallElement()) {
+		stiffness = wallElementInfo->getWallElement()->getStiffness();
+		base_length = wallElementInfo->getBaseLength();
+	} else {
+		stiffness = wallElementInfo->getCell()->GetWallStiffness();
+	}
+	if (!std::isnan(stiffness)){
+		(*w) += stiffness;
+		(*count)++;
+		(*bl) += base_length;
+	}
+}
 
-void Mesh::calculateWallStiffness(CellBase*c, Node* node, Node* i_minus_1, Node* i_plus_1, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
-    set<int> nodeown,nb1own,nb2own;
-    vector<int> intersection_no_nb1,intersection_no_nb2;
+void Mesh::calculateWallStiffness(CellBase*cell, Node* node, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
+
     for (list<Neighbor>::iterator c=node->owners.begin(); c!=node->owners.end(); c++) {
-      nodeown.insert(c->cell->Index());
-    }
-    for (list<Neighbor>::iterator c=i_minus_1->owners.begin(); c!=i_minus_1->owners.end(); c++) {
-      nb1own.insert(c->cell->Index());
-    }
-    for (list<Neighbor>::iterator c=i_plus_1->owners.begin(); c!=i_plus_1->owners.end(); c++) {
-      nb2own.insert(c->cell->Index());
-    }
-    set_intersection(nodeown.begin(), nodeown.end(), nb1own.begin(), nb1own.end(), back_inserter(intersection_no_nb1));
-    set_intersection(nodeown.begin(), nodeown.end(), nb2own.begin(), nb2own.end(), back_inserter(intersection_no_nb2));
-
-
-    for (list<Neighbor>::iterator c=node->owners.begin(); c!=node->owners.end(); c++) {
-        if (std::find(intersection_no_nb1.begin(), intersection_no_nb1.end(), c->cell->Index()) != intersection_no_nb1.end()) {
-            c->cell->LoopWallElements([c,node,count_p1,count_p2,w_p1,w_p2,bl_minus_1](auto wallElementInfo){
-                double stiffness;
-                double base_length;
+    	c->cell->LoopWallElements([c,cell,node,count_p1,count_p2,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
+    		WallElementInfo counterWall;
+    		if (wallElementInfo->hasCounterWallInCell(cell,&counterWall)) {
                 if (wallElementInfo->isFrom(node)) {
-                    if (wallElementInfo->hasWallElement()) {
-                        stiffness = wallElementInfo->getWallElement()->getStiffness();
-                        base_length = wallElementInfo->getBaseLength();
-                    } else {
-                        stiffness = c->cell->wall_stiffness;
-                    }
-                    if (!std::isnan(stiffness)){
-                        (*w_p1) += stiffness;
-                        (*count_p1)++;
-                        (*bl_minus_1) = base_length;
-                    } else if (wallElementInfo->isTo(node)) {
-                        if (wallElementInfo->hasWallElement()) {
-                            stiffness = wallElementInfo->getWallElement()->getStiffness();
-                            base_length = wallElementInfo->getBaseLength();
-                        } else {
-                            stiffness = c->cell->wall_stiffness;
-                        }
-                        if (!std::isnan(stiffness)){
-                            (*w_p2) += stiffness;
-                            (*count_p2)++;
-                            (*bl_minus_1) = base_length;
-                        }
-                    }
-
-        }
-        });
-    }
-        if (std::find(intersection_no_nb2.begin(), intersection_no_nb2.end(), c->cell->Index()) != intersection_no_nb2.end()) {
-            c->cell->LoopWallElements([c,node,count_p1,count_p2,w_p1,w_p2, bl_plus_1](auto wallElementInfo){
-                double stiffness;
-                double base_length;
-                if (wallElementInfo->isFrom(node)) {
-                    if (wallElementInfo->hasWallElement()) {
-                        stiffness = wallElementInfo->getWallElement()->getStiffness();
-                        base_length = wallElementInfo->getLength();
-                    } else {
-                        stiffness = c->cell->wall_stiffness;
-                    }
-                    if (!std::isnan(stiffness)){
-                        (*w_p2) += stiffness;
-                        (*count_p2)++;
-                        (*bl_plus_1) = base_length;
-                    } else if (wallElementInfo->isTo(node)) {
-                        if (wallElementInfo->hasWallElement()) {
-                            stiffness = wallElementInfo->getWallElement()->getStiffness();
-                            base_length = wallElementInfo->getLength();
-                        } else {
-                            stiffness = c->cell->wall_stiffness;
-                        }
-                        if (!std::isnan(stiffness)){
-                            (*w_p1) += stiffness;
-                            (*count_p1)++;
-                            (*bl_plus_1) = base_length;
-                        }
-                    }
-
-        }
+                	extractWallData(wallElementInfo,count_p1,w_p1,bl_minus_1);
+                	extractWallData(&counterWall,count_p1,w_p1,bl_minus_1);
+                }
+                if (wallElementInfo->isTo(node)) {
+                	extractWallData(wallElementInfo,count_p2,w_p2,bl_plus_1);
+                	extractWallData(&counterWall,count_p2,w_p2,bl_plus_1);
+				}
+			}
         });
     }
 }
-}
+
 void splitWallElements(WallElementInfo *base,Node* new_node) {
 	WallElement * newWallElement = new_node->insertWallElement(base->getCell());
 	WallElementInfo sub;

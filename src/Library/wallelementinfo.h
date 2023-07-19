@@ -29,8 +29,11 @@ class WallElementInfo {
 
       double length;
 
+      bool stop = false;
+
 public:
 	inline void setWallElement(WallElement* wallElement) { this->wallElement=wallElement; };
+	bool hasCounterWallInCell(CellBase* cell,WallElementInfo * other) ;
 	inline void setCell(CellBase* cell) { this->cell=cell; };
 	WallElementInfo();
 	virtual ~WallElementInfo();
@@ -41,6 +44,8 @@ public:
 	inline CellBase* getCell() {return cell;};
 	inline bool isFrom(Vector * other) {return from==other;};
 	inline bool isTo(Vector * other) {return to==other;};
+	inline void stopLoop() {stop=true;};
+	inline bool isStop() {return stop;};
 	inline void setNodes(Vector* from,Vector* to) {this->from =from;this->to =to;};
 	void divide(WallElementInfo * other);
     double stiffness();

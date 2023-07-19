@@ -235,6 +235,8 @@ class CellBase :  public QObject, public Vector
     }
     return wall_list;
   }
+
+
   template<class Op> void LoopWallElements(Op f) {
 			WallElementInfo info;
 			list <Node *>::iterator i=nodes.begin();
@@ -244,6 +246,9 @@ class CellBase :  public QObject, public Vector
 			while (i!=nodes.end()) {
 				fillWallElementInfo(&info,from,to);
 		        f(&info);
+				if (stopWallElementInfo(&info)) {
+		        	return;
+		        }
 		        from=to;
 		        to=*(++i);
 			}
@@ -429,6 +434,7 @@ class CellBase :  public QObject, public Vector
 
   static inline CellsStaticDatamembers *GetStaticDataMemberPointer(void) { return static_data_members; }
   void fillWallElementInfo(WallElementInfo * info,Node* from,Node* to) ;
+  bool stopWallElementInfo(WallElementInfo * info);
 
  protected:
   // (define a list of Node* iterators)

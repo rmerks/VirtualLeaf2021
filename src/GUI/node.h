@@ -92,6 +92,7 @@ class Node : public NodeBase {
   friend class Wall;
   friend class NodeSet;
   friend class FigureEditor;
+  friend class WallElementInfo;
 
  public:
   Node(void);
