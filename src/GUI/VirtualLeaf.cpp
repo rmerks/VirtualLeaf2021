@@ -113,6 +113,9 @@ double PINSum(Cell &c) {
 class DrawCell {
 public:
   void operator() (Cell &c,QGraphicsScene &canvas, MainBase &m) const {
+	  if (m.ShowMeshP()) {
+		  c.DrawNodes(&canvas);
+	  }
     if (m.ShowBorderCellsP() || c.Boundary()==Cell::None) {
       if (!m.ShowBoundaryOnlyP() && !m.HideCellsP()) {
 	if (m.ShowToolTipsP()) {
@@ -125,9 +128,12 @@ public:
 		
 	  info_string += "\nNodes: " + c.printednodelist();
 	  c.Draw(&canvas, info_string);
+     c.DrawMiddleLamella(&canvas);
 	} else {
 	  c.Draw(&canvas);
+      c.DrawMiddleLamella(&canvas);
 	}
+
       }
       if (m.ShowCentersP()){
 	c.DrawCenter(&canvas);

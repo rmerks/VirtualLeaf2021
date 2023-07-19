@@ -22,6 +22,7 @@
 #include <QDebug>
 
 #include <string>
+#include "pi.h"
 #include "cell.h"
 #include "node.h"
 #include "mesh.h"
@@ -1631,23 +1632,47 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
 
   CellItem* p = new CellItem(this, c);
 
-  QPolygonF pa(nodes.size());
   int cc=0;
+  int* pcc=&cc;
+  QPolygonF pa(nodes.size());
+  QPolygonF *ppa =&pa;
+  LoopWallElements([p,pcc,ppa,c](auto wallElementInfo){
+  	wallElementInfo->getWallElement();
+  	Vector start =  *wallElementInfo->getFrom();
+  	Vector end =  *wallElementInfo->getTo();
+    Vector edgevec = end-start;
+	Vector edgevecNormalised = edgevec.Normalised();
+    Vector perp = edgevecNormalised.Perp2D();
 
-  for (list<Node *>::const_iterator n=nodes.begin(); n!=nodes.end(); n++) {
-    Node *i=*n;
+    Vector offs = Cell::Offset();
+    double factor = Cell::Factor();
+    double stiffness = wallElementInfo->stiffness();
+    if (std::isnan(stiffness)) {
+    	stiffness=1.0;
+    }
 
-    pa[cc++] = QPointF((qreal)((offset[0]+i->x)*factor),
-              (qreal)((offset[1]+i->y)*factor) );
-  }
+	Vector startEndOffset = edgevecNormalised * stiffness * 0.25 * factor;
+    Vector thicknessOffset = (-1) * stiffness * 0.5 * factor * perp;
+    Vector from = ( offs + start)  * factor + thicknessOffset + startEndOffset;
+    Vector to = ( offs + end)  * factor + thicknessOffset - startEndOffset;
 
+
+    QGraphicsLineItem *line = new QGraphicsLineItem((qreal)(from.x), (qreal)(from.y ),(qreal)(to.x), (qreal)(to.y ),p);
+    line->setPen(QPen( QColor(par.cell_outline_color),stiffness,Qt::SolidLine,Qt::RoundCap, Qt::BevelJoin));
+    line->setZValue(2);
+     c->addItem(line);
+    line->show();
+
+
+    (*ppa)[(*pcc)++] = QPointF((qreal)(from.x), (qreal)(from.y ));
+  });
 
   QColor cell_color;
 
   m->plugin->SetCellColor(this,&cell_color);
 
   p->setPolygon(pa);
-  p->setPen(par.outlinewidth>=0?QPen( QColor(par.cell_outline_color),par.outlinewidth):QPen(Qt::NoPen));
+  p->setPen(QPen(Qt::NoPen));
   p->setBrush( cell_color );
   p->setZValue(1);
 
