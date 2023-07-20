@@ -25,8 +25,6 @@ class WallElementInfo {
 
       Vector* to=NULL;
 
-      double base_length;
-
       double length;
 
       bool stop = false;
@@ -50,15 +48,13 @@ public:
 	void divide(WallElementInfo * other);
     double stiffness();
 
-
-    inline void setBaseLength() {this->base_length=this->length/1.2;};
-    double getBaseLength() {return this->base_length;};
+    double getBaseLength();
     double calcLength(void) const;
     double setLength() {return this->length=calcLength();};
     double getLength() {return this->length;};
 
-    inline void updateBaseLength() {this->base_length=this->length/1.2;};
-    inline bool plasticStretch() {return this->length > 1.2*this->base_length;};
+    void updateBaseLength();
+    bool plasticStretch();
 
 };
 

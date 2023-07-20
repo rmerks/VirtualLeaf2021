@@ -657,7 +657,6 @@ void CellBase::fillWallElementInfo(WallElementInfo * info, Node* from,Node* to) 
 	info->setNodes(from,to);
 	info->setCell(this);
     info->setLength();
-    info->setBaseLength();
 }
 
 bool CellBase::stopWallElementInfo(WallElementInfo * info) {
