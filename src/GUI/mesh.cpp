@@ -808,7 +808,7 @@ double Mesh::DisplaceNodes(void) {
     double bl_plus_1 = 0.0;
     double bl_minus_1 = 0.0;
 
-    calculateWallStiffness(&c, *i, &w_count1,&w_count2,&w_w1,&w_w2, &bl_minus_1, &bl_plus_1);
+    calculateWallStiffness(*i, &w_count1,&w_count2,&w_w1,&w_w2, &bl_minus_1, &bl_plus_1);
 
     if (!std::isnan(w_w1)&&!std::isnan(w_w2)&& w_count1>0&& w_count2>0) {
     	w1 = w_w1/((double)w_count1);
@@ -982,20 +982,23 @@ void extractWallData(WallElementInfo* wallElementInfo, int* count,double *w,doub
 	}
 }
 
-void Mesh::calculateWallStiffness(CellBase*cell, Node* node, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
-
+void Mesh::calculateWallStiffness(Node* node, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
     for (list<Neighbor>::iterator c=node->owners.begin(); c!=node->owners.end(); c++) {
-    	c->cell->LoopWallElements([c,cell,node,count_p1,count_p2,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
+    	c->cell->LoopWallElements([node,count_p1,count_p2,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
     		WallElementInfo counterWall;
-    		if (wallElementInfo->hasCounterWallInCell(cell,&counterWall)) {
-                if (wallElementInfo->isFrom(node)) {
-                	extractWallData(wallElementInfo,count_p1,w_p1,bl_minus_1);
-                	extractWallData(&counterWall,count_p1,w_p1,bl_minus_1);
-                }
-                if (wallElementInfo->isTo(node)) {
-                	extractWallData(wallElementInfo,count_p2,w_p2,bl_plus_1);
-                	extractWallData(&counterWall,count_p2,w_p2,bl_plus_1);
+    		if (wallElementInfo->isTo(node)) {
+				extractWallData(wallElementInfo,count_p2,w_p2,bl_plus_1);
+				// on the outside there is no counter wall
+    			if(wallElementInfo->hasCounterWall(&counterWall)) {
+					extractWallData(&counterWall,count_p1,w_p1,bl_minus_1);
+    			}
+			} else	if (wallElementInfo->isFrom(node)) {
+				// on the outer wall we need to include this wallelement as we wont see it from the other side
+				if(!(wallElementInfo->hasCounterWall(&counterWall))) {
+					extractWallData(wallElementInfo,count_p2,w_p2,bl_plus_1);
 				}
+				// we are past the node so we can end the LoopWallElements
+				wallElementInfo->stopLoop();
 			}
         });
     }

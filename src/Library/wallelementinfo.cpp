@@ -53,12 +53,12 @@ double WallElementInfo::calcLength() const{
     return length;
 }
 
-bool WallElementInfo::hasCounterWallInCell(CellBase* cell,WallElementInfo * other) {
+bool WallElementInfo::hasCounterWall(WallElementInfo * other) {
 	//find the wall on the connected cell, must be in the other direction along the same nodes
 	bool found = false;
 	bool* pfound = &found;
 	for (list<Neighbor>::iterator c=((Node*)from)->owners.begin(); c!=((Node*)from)->owners.end(); c++) {
-		 c->getCell()->LoopWallElements([cell,this,other,pfound](auto wallElementInfo){
+		 c->getCell()->LoopWallElements([this,other,pfound](auto wallElementInfo){
 			 bool toIsFrom = to == wallElementInfo->from;
 			 bool fromIsTo = from == wallElementInfo->to;
 			 if (toIsFrom && fromIsTo) {

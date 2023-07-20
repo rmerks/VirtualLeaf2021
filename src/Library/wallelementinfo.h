@@ -33,7 +33,7 @@ class WallElementInfo {
 
 public:
 	inline void setWallElement(WallElement* wallElement) { this->wallElement=wallElement; };
-	bool hasCounterWallInCell(CellBase* cell,WallElementInfo * other) ;
+	bool hasCounterWall(WallElementInfo * other) ;
 	inline void setCell(CellBase* cell) { this->cell=cell; };
 	WallElementInfo();
 	virtual ~WallElementInfo();
