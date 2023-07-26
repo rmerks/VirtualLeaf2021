@@ -786,35 +786,6 @@ double Mesh::DisplaceNodes(void) {
   	else
   	  w2 = 1;
 
-
-  	// @Ruth dies kann glaube ich jetzt weg oder? bitte kontroliere mal ob das
-  	// durch calculateWallStiffness abgedeckt ist.
-    set<int> nodeown;
-    for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
-    	nodeown.insert(c->cell->Index());
-	}
-    double cell_w1 = this->CellSpecificStiffnessOneSide(cit->nb1,nodeown);
-    double cell_w2 = this->CellSpecificStiffnessOneSide(cit->nb2,nodeown);
-    if (!std::isnan(cell_w1) && !std::isnan(cell_w2)) {
-    	w1 = cell_w1/2. ;
-    	w2 = cell_w2/2. ;
-    }
-    // @Ruth check ende ;-)
-
-    double w_w1 = 0.0;
-    double w_w2 = 0.0;
-    int w_count1 = 0;
-    int w_count2 = 0;
-    double bl_plus_1 = 0.0;
-    double bl_minus_1 = 0.0;
-
-    calculateWallStiffness(*i, &w_count1,&w_count2,&w_w1,&w_w2, &bl_minus_1, &bl_plus_1);
-
-    if (!std::isnan(w_w1)&&!std::isnan(w_w2)&& w_count1>0&& w_count2>0) {
-    	w1 = w_w1/((double)w_count1);
-    	w2 = w_w2/((double)w_count2);
-    }
-
 #else
   	if (node.boundary && cit->nb1->boundary)
   		w1=2;
@@ -825,15 +796,33 @@ double Mesh::DisplaceNodes(void) {
   	else
   		w2 = 1;
 #endif
-    /*
+
+
+    // Cell specific wall stiffness
+    double cell_w = cit->cell->GetWallStiffness();
+
+    double w_w1 = 1;
+    double w_w2 = 1;
+    int w_count1 = 0;
+    int w_count2 = 0;
+    double bl_minus_1 = 0.0;
+    double bl_plus_1 = 0.0;
+
+    calculateWallStiffness(&c, *i, &w_count1,&w_count2,&w_w1,&w_w2, &bl_minus_1, &bl_plus_1);
+
+
+
+    if (!std::isnan(w_w1)&&!std::isnan(w_w2)&& w_count1>0&& w_count2>0) {
+        w1 = cell_w * w_w1;
+        w2 = cell_w * w_w2;
+    }
+
+
      //check if wall elements are defined and pick the appropriate length_dh
       if(bl_minus_1>0 && bl_plus_1>0){
-        double elastic_modulus = 0.01;
-        length_dh = elastic_modulus *(bl_minus_1 * w1*(old_l1 - new_l1) + bl_plus_1 *  w2*(old_l2 - new_l2)  +
-                             w1*(DSQR(new_l1)
-                             - DSQR(old_l1))
-                             + w2*(DSQR(new_l2)
-                               - DSQR(old_l2)));
+        double elastic_modulus = 10;
+        length_dh = elastic_modulus * w1 * bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1))+
+                elastic_modulus * w2 * bl_plus_1 *(DSQR(new_l2/bl_plus_1 - 1)-DSQR(old_l2/bl_plus_1 - 1));
     } else {
       length_dh +=2*Node::target_length * ( w1*(old_l1 - new_l1) +
                                             w2*(old_l2 - new_l2) ) +
@@ -844,17 +833,17 @@ double Mesh::DisplaceNodes(void) {
 
 
 
-        } */
-
+        }
+/*
     length_dh +=2*Node::target_length * ( w1*(old_l1 - new_l1) +
                                           w2*(old_l2 - new_l2) ) +
                          w1*(DSQR(new_l1)
                          - DSQR(old_l1))
                          + w2*(DSQR(new_l2)
                            - DSQR(old_l2));
-    //cout << node << "\t" << bl_minus_1 <<  "\t" << bl_plus_1 << "\n";
+    cout << node << "\t" << bl_minus_1 <<  "\t" << bl_plus_1 <<  "\t" << w_w1 <<  "\t" << w_w2 << "\n";
 
-
+    */
 	}
 
 	// bending energy also holds for outer boundary
@@ -982,27 +971,19 @@ void extractWallData(WallElementInfo* wallElementInfo, int* count,double *w,doub
 	}
 }
 
-void Mesh::calculateWallStiffness(Node* node, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
-    for (list<Neighbor>::iterator c=node->owners.begin(); c!=node->owners.end(); c++) {
-    	c->cell->LoopWallElements([node,count_p1,count_p2,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
-    		WallElementInfo counterWall;
+void Mesh::calculateWallStiffness(CellBase* c, Node* node, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
+        c->LoopWallElements([node,count_p1,count_p2,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
     		if (wallElementInfo->isTo(node)) {
-				extractWallData(wallElementInfo,count_p2,w_p2,bl_plus_1);
-				// on the outside there is no counter wall
-    			if(wallElementInfo->hasCounterWall(&counterWall)) {
-					extractWallData(&counterWall,count_p1,w_p1,bl_minus_1);
-    			}
+                extractWallData(wallElementInfo,count_p1,w_p1,bl_plus_1);
+                // on the outside there is no counter wall
 			} else	if (wallElementInfo->isFrom(node)) {
+                extractWallData(wallElementInfo,count_p2,w_p2,bl_minus_1);
 				// on the outer wall we need to include this wallelement as we wont see it from the other side
-				if(!(wallElementInfo->hasCounterWall(&counterWall))) {
-					extractWallData(wallElementInfo,count_p2,w_p2,bl_plus_1);
-				}
 				// we are past the node so we can end the LoopWallElements
-				wallElementInfo->stopLoop();
 			}
         });
     }
-}
+
 
 void splitWallElements(WallElementInfo *base,Node* new_node) {
 	WallElement * newWallElement = new_node->insertWallElement(base->getCell());
