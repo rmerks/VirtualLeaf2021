@@ -266,6 +266,8 @@ TIMESTEP {
   double dh;
 
   if(DynamicCellsP()) {
+	mesh.WallRelaxation();
+
     dh = mesh.DisplaceNodes();
 
     // Only allow for node insertion, cell division and cell growth

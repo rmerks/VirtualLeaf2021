@@ -922,27 +922,6 @@ double Mesh::DisplaceNodes(void) {
 
 	  }
 
-      // check lengths of wall elements and apply plastic deformation
-      for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
-          Vector *point = &node;
-          c->cell->LoopWallElements([point](auto wallElementInfo){
-            if(wallElementInfo->isFrom(point)){
-                if(wallElementInfo->hasWallElement()){
-                    if(wallElementInfo->plasticStretch()){
-                        wallElementInfo->updateBaseLength();
-                    }
-                }
-            } else if(wallElementInfo->isTo(point)){
-                if(wallElementInfo->hasWallElement()){
-                    if(wallElementInfo->plasticStretch()){
-                        wallElementInfo->updateBaseLength();
-                    }
-                }
-            }
-          }
-      );
-      }
-
 	  sum_dh += dh;
 	}  
       }
@@ -953,6 +932,21 @@ double Mesh::DisplaceNodes(void) {
   }
 
   return sum_dh;
+}
+
+void Mesh::WallRelaxation(void) {
+	// as we relax every wall element independently no re-scuffling is necessary.
+	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
+		Cell &cell(**i);
+		// check lengths of wall elements and apply plastic deformation
+		cell.LoopWallElements([](auto wallElementInfo){
+			if(wallElementInfo->hasWallElement()){
+				if(wallElementInfo->plasticStretch()){
+					wallElementInfo->updateBaseLength();
+				}
+			}
+		});
+	}
 }
 
 void extractWallData(WallElementInfo* wallElementInfo, int* count,double *w,double* bl){
@@ -972,17 +966,14 @@ void extractWallData(WallElementInfo* wallElementInfo, int* count,double *w,doub
 }
 
 void Mesh::calculateWallStiffness(CellBase* c, Node* node, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
-        c->LoopWallElements([node,count_p1,count_p2,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
-    		if (wallElementInfo->isTo(node)) {
-                extractWallData(wallElementInfo,count_p1,w_p1,bl_plus_1);
-                // on the outside there is no counter wall
-			} else	if (wallElementInfo->isFrom(node)) {
-                extractWallData(wallElementInfo,count_p2,w_p2,bl_minus_1);
-				// on the outer wall we need to include this wallelement as we wont see it from the other side
-				// we are past the node so we can end the LoopWallElements
-			}
-        });
-    }
+	c->LoopWallElements([node,count_p1,count_p2,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
+		if (wallElementInfo->isTo(node)) {
+			extractWallData(wallElementInfo,count_p1,w_p1,bl_plus_1);
+		} else	if (wallElementInfo->isFrom(node)) {
+			extractWallData(wallElementInfo,count_p2,w_p2,bl_minus_1);
+		}
+	});
+}
 
 
 void splitWallElements(WallElementInfo *base,Node* new_node) {
