@@ -567,8 +567,8 @@ double Mesh::DisplaceNodes(void) {
       //   calculate energy difference
 
       double area_dh=0.;
-      double length_dh=0.;
       double bending_dh=0.;
+      double length_dh=0.;
       double cell_length_dh=0.;
       double alignment_dh=0.;
 
@@ -808,32 +808,30 @@ double Mesh::DisplaceNodes(void) {
     double bl_minus_1 = 0.0;
     double bl_plus_1 = 0.0;
 
-    calculateWallStiffness(&c, *i, &w_count1,&w_count2,&w_w1,&w_w2, &bl_minus_1, &bl_plus_1);
+    double length_dh=std::nan("1");
 
-
+    calculateWallStiffness(&c, *i, &w_count1, &w_count2, &w_w1, &w_w2, &bl_minus_1, &bl_plus_1);
 
     if (!std::isnan(w_w1)&&!std::isnan(w_w2)&& w_count1>0&& w_count2>0) {
-        w1 = cell_w * w_w1;
-        w2 = cell_w * w_w2;
-    }
-
-
-     //check if wall elements are defined and pick the appropriate length_dh
-      if(bl_minus_1>0 && bl_plus_1>0){
-        double elastic_modulus = 10;
-        length_dh = elastic_modulus * w1 * bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1))+
-                elastic_modulus * w2 * bl_plus_1 *(DSQR(new_l2/bl_plus_1 - 1)-DSQR(old_l2/bl_plus_1 - 1));
-    } else {
-      length_dh +=2*Node::target_length * ( w1*(old_l1 - new_l1) +
-                                            w2*(old_l2 - new_l2) ) +
-                           w1*(DSQR(new_l1)
-                           - DSQR(old_l1))
-                           + w2*(DSQR(new_l2)
-                             - DSQR(old_l2));
-
-
-
+        w1 = cell_w * (w_w1 / ((double)w_count1));
+        w2 = cell_w * (w_w2 / ((double)w_count2));
+        //check if wall elements are defined and pick the appropriate length_dh
+        if (false) {
+        	double elastic_modulus = 10;
+        	length_dh =
+        		elastic_modulus * w1 *
+        		bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1)) +
+                elastic_modulus * w2 *
+				bl_plus_1 *(DSQR(new_l2/bl_plus_1 - 1)-DSQR(old_l2/bl_plus_1 - 1));
         }
+    }
+    if (std::isnan(length_dh)) {
+    	length_dh +=2*Node::target_length * (
+    			w1*(old_l1 - new_l1) +
+    			w2*(old_l2 - new_l2) ) +
+        		w1*(DSQR(new_l1) - DSQR(old_l1)) +
+				w2*(DSQR(new_l2) - DSQR(old_l2));
+	}
 /*
     length_dh +=2*Node::target_length * ( w1*(old_l1 - new_l1) +
                                           w2*(old_l2 - new_l2) ) +
@@ -943,6 +941,8 @@ void Mesh::WallRelaxation(void) {
 			if(wallElementInfo->hasWallElement()){
 				if(wallElementInfo->plasticStretch()){
 					wallElementInfo->updateBaseLength();
+				}else if(std::isnan(wallElementInfo->getBaseLength())){
+					wallElementInfo->getWallElement()->setBaseLength(wallElementInfo->getLength());
 				}
 			}
 		});
@@ -971,6 +971,8 @@ void Mesh::calculateWallStiffness(CellBase* c, Node* node, int* count_p1,int* co
 			extractWallData(wallElementInfo,count_p1,w_p1,bl_plus_1);
 		} else	if (wallElementInfo->isFrom(node)) {
 			extractWallData(wallElementInfo,count_p2,w_p2,bl_minus_1);
+			 //stop the loop, as we do not need to go further.
+			 wallElementInfo->stopLoop();
 		}
 	});
 }
