@@ -57,7 +57,7 @@ double WallElementInfo::calcLength() const{
     return length;
 }
 
-
+/*
 bool WallElementInfo::hasCounterWall(WallElementInfo * other) {
 	//find the wall on the connected cell, must be in the other direction along the same nodes
 	bool found = false;
@@ -81,7 +81,7 @@ bool WallElementInfo::hasCounterWall(WallElementInfo * other) {
 	}
 	return false;
 }
-
+*/
 double WallElementInfo::getBaseLength() {return this->getWallElement()->getBaseLength();};
 void WallElementInfo::updateBaseLength() {this->getWallElement()->setBaseLength(this->length/1.2);};
 bool WallElementInfo::plasticStretch() {return this->length > 1.2*this->getWallElement()->getBaseLength();};

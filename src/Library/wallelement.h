@@ -12,7 +12,7 @@ class CellBase;
 class WallElement {
 	CellBase * cell;
 	double stiffness = std::nan("1");
-	double base_length = std::nan("1");
+    double base_length = 1;
 
 public:
 	WallElement();

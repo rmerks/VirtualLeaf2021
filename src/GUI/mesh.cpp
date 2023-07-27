@@ -800,6 +800,9 @@ double Mesh::DisplaceNodes(void) {
 
     // Cell specific wall stiffness
     double cell_w = cit->cell->GetWallStiffness();
+    w1 = w1*cell_w;
+    w2 = w2*cell_w;
+
 
     double w_w1 = 1;
     double w_w2 = 1;
@@ -808,30 +811,32 @@ double Mesh::DisplaceNodes(void) {
     double bl_minus_1 = 0.0;
     double bl_plus_1 = 0.0;
 
-    double length_dh=std::nan("1");
+
 
     calculateWallStiffness(&c, *i, &w_count1, &w_count2, &w_w1, &w_w2, &bl_minus_1, &bl_plus_1);
 
-    if (!std::isnan(w_w1)&&!std::isnan(w_w2)&& w_count1>0&& w_count2>0) {
-        w1 = cell_w * (w_w1 / ((double)w_count1));
-        w2 = cell_w * (w_w2 / ((double)w_count2));
+    if (bl_minus_1>0 && bl_plus_1>0) {
+        w1 = cell_w * (w_w1);
+        w2 = cell_w * (w_w2);
         //check if wall elements are defined and pick the appropriate length_dh
-        if (false) {
-        	double elastic_modulus = 10;
-        	length_dh =
+
+            double elastic_modulus = 50;
+            length_dh +=
         		elastic_modulus * w1 *
         		bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1)) +
                 elastic_modulus * w2 *
 				bl_plus_1 *(DSQR(new_l2/bl_plus_1 - 1)-DSQR(old_l2/bl_plus_1 - 1));
-        }
+
     }
-    if (std::isnan(length_dh)) {
+    else {
     	length_dh +=2*Node::target_length * (
     			w1*(old_l1 - new_l1) +
     			w2*(old_l2 - new_l2) ) +
         		w1*(DSQR(new_l1) - DSQR(old_l1)) +
 				w2*(DSQR(new_l2) - DSQR(old_l2));
 	}
+    cout << node << "\t" << bl_minus_1 <<  "\t" << bl_plus_1 <<  "\t" << w_w1 <<  "\t" << w_w2 << "\n";
+
 /*
     length_dh +=2*Node::target_length * ( w1*(old_l1 - new_l1) +
                                           w2*(old_l2 - new_l2) ) +
@@ -839,7 +844,6 @@ double Mesh::DisplaceNodes(void) {
                          - DSQR(old_l1))
                          + w2*(DSQR(new_l2)
                            - DSQR(old_l2));
-    cout << node << "\t" << bl_minus_1 <<  "\t" << bl_plus_1 <<  "\t" << w_w1 <<  "\t" << w_w2 << "\n";
 
     */
 	}
@@ -941,9 +945,7 @@ void Mesh::WallRelaxation(void) {
 			if(wallElementInfo->hasWallElement()){
 				if(wallElementInfo->plasticStretch()){
 					wallElementInfo->updateBaseLength();
-				}else if(std::isnan(wallElementInfo->getBaseLength())){
-					wallElementInfo->getWallElement()->setBaseLength(wallElementInfo->getLength());
-				}
+                }
 			}
 		});
 	}
@@ -968,12 +970,10 @@ void extractWallData(WallElementInfo* wallElementInfo, int* count,double *w,doub
 void Mesh::calculateWallStiffness(CellBase* c, Node* node, int* count_p1,int* count_p2,double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
 	c->LoopWallElements([node,count_p1,count_p2,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
 		if (wallElementInfo->isTo(node)) {
-			extractWallData(wallElementInfo,count_p1,w_p1,bl_plus_1);
+            extractWallData(wallElementInfo,count_p1,w_p1,bl_minus_1);
 		} else	if (wallElementInfo->isFrom(node)) {
-			extractWallData(wallElementInfo,count_p2,w_p2,bl_minus_1);
-			 //stop the loop, as we do not need to go further.
-			 wallElementInfo->stopLoop();
-		}
+            extractWallData(wallElementInfo,count_p2,w_p2,bl_plus_1);
+        }
 	});
 }
 
