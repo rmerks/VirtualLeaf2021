@@ -922,10 +922,134 @@ double Mesh::DisplaceNodes(void) {
   return sum_dh;
 }
 
+
+
+class CellWallCurve {
+	Cell * cell;
+	Node * from=NULL;
+	Node * over=NULL;
+	Node * to=NULL;
+public:
+	void shift(Node * node) {
+		  if (from == NULL) {
+			  from=node;
+		  } else if (over == NULL) {
+			  over=node;
+		  } else if (to==NULL) {
+			  to = node;
+		  } else {
+			  from=over;
+			  over=to;
+			  to=node;
+		  }
+	}
+
+	int checkAngle() {
+		double angle = (*from-*over).Angle((*to-*over));
+		if (Pi/18. > angle ) {
+			return over->Index();
+		}
+		return -1;
+	}
+
+	void checkAngle(std::list<CellWallCurve> &toSharpNode) {
+		if (to!= NULL && checkAngle() > 0){
+			toSharpNode.push_back(*this);
+		}
+	}
+
+	void reset() {
+		cell=NULL;
+		from=NULL;
+		over=NULL;
+		to=NULL;
+	}
+
+	int Index() {
+		return over->Index();
+	}
+
+	void setCell(Cell * aCell) {
+		cell = aCell;
+	}
+
+	void setTo(Node * node) {
+		to = node;
+	}
+
+	Node* getFrom()  {
+		return from;
+	}
+
+	Node* getOver() {
+		return over;
+	}
+
+	Node* getTo() {
+		return to;
+	}
+};
+
+bool cmpCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
+	return b.Index() - a.Index();
+}
+bool eqCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
+	return b.Index() == a.Index();
+}
+void Mesh::WallCollapse(void) {
+	std::list<CellWallCurve> toSharpNode;
+	CellWallCurve curve;
+	Node * first=NULL;
+	Node * second=NULL;
+	curve.reset();
+	for (Node * node : boundary_polygon->nodes) {
+		curve.shift(node);
+		if (first==NULL) {
+			first=node;
+		}else if (second==NULL) {
+			second=node;
+		}
+		curve.checkAngle(toSharpNode);
+	}
+	curve.shift(first);
+	curve.checkAngle(toSharpNode);
+	curve.shift(second);
+	curve.checkAngle(toSharpNode);
+	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
+		Cell &cell(**i);
+		curve.reset();
+		curve.setCell(&cell);
+		list <Node *>::iterator j=cell.nodes.begin();
+		curve.shift(*j);
+		curve.shift(*(++j));
+		curve.shift(*(++j));
+		first = curve.getFrom();
+		second = curve.getOver();
+		while (j!=cell.nodes.end()) {
+			curve.checkAngle(toSharpNode);
+			curve.shift(*(++j));
+		}
+		curve.setTo(first);
+		curve.checkAngle(toSharpNode);
+		curve.shift(second);
+		curve.checkAngle(toSharpNode);
+	}
+	toSharpNode.sort(cmpCellWallCurve);
+	toSharpNode.unique(eqCellWallCurve);
+	cout << "to sharp:";
+	for (CellWallCurve node : toSharpNode) {
+	    cout << ' ' << node.Index();
+	}
+	cout << '\n';
+}
+
+
 void Mesh::WallRelaxation(void) {
+	WallCollapse();
 	// as we relax every wall element independently no re-scuffling is necessary.
 	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
 		Cell &cell(**i);
+
 		// check lengths of wall elements and apply plastic deformation
 		cell.LoopWallElements([](auto wallElementInfo){
 			if(wallElementInfo->hasWallElement()){

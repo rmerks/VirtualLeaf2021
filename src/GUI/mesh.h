@@ -242,6 +242,8 @@ class Mesh {
 
   double DisplaceNodes(void);
   void WallRelaxation(void);
+  void WallCollapse(void);
+
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);
   int NEqs(void) {     int nwalls = walls.size();
