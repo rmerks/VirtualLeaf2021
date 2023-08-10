@@ -52,12 +52,12 @@ void Tutorial1C::SetCellColor(CellBase *c, QColor *color) {
 void Tutorial1C::CellHouseKeeping(CellBase *c) {
 
 
-	double stiffness = 0.5;
+    double stiffness = 2;
 	double* p_stiffness= &stiffness;
 
     c->LoopWallElements([c,p_stiffness](auto wallElementInfo){
     	wallElementInfo->getWallElement()->setStiffness(*p_stiffness);
-    	(*p_stiffness)+=0.1;
+        (*p_stiffness)+=0.1;
     });
   // add cell behavioral rules here
 	c->EnlargeTargetArea(par->cell_expansion_rate);

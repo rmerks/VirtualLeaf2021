@@ -932,7 +932,7 @@ void Mesh::WallRelaxation(void) {
 				if(wallElementInfo->plasticStretch()){
 					wallElementInfo->updateBaseLength();
                 } else if(std::isnan(wallElementInfo->getBaseLength())){
-                	wallElementInfo->getWallElement()->setBaseLength(wallElementInfo->getLength());
+                    wallElementInfo->getWallElement()->setBaseLength(wallElementInfo->getLength()/1.2);
                 }
 			}
 		});
