@@ -128,6 +128,7 @@ class Cell : public CellBase
   void Apoptose(void); // Cell kills itself
   list<Wall *>::iterator RemoveWall( Wall *w );
   void AddWall( Wall *w );
+  void InsertWall( Wall *w );
 
   void Draw(QGraphicsScene *c, QString tooltip = "");
 

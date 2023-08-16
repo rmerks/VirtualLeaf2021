@@ -213,4 +213,19 @@ ostream &operator<<(ostream &os, const Node &n) {
   return os;
 }
 
+void Node::correctNeighbors(int cellIndex, Node* n1, Node* n3) {
+	for (list<Neighbor>::iterator it=this->owners.begin(); it!=this->owners.end(); ++it) {
+		Neighbor &nb=*it;
+		if (nb.CellEquals(cellIndex)) {
+			if (nb.nb1!=n1) {
+				nb.nb1=n1;
+			}
+			if (nb.nb2!=n3) {
+				nb.nb2=n3;
+			}
+		}
+	}
+}
+
+
 /* finis */

@@ -222,9 +222,14 @@ class CellBase :  public QObject, public Vector
 	 w++) {
       sum +=  (*w)->Length();
     }
-
     return sum;
   }
+
+  void removeNode(Node * node) ;
+
+  void insertNodeAfterFirst(Node * position1, Node * position2, Node * newNode);
+
+  void correctNeighbors();
 
   QList<WallBase *> getWalls(void) {
     QList<WallBase *> wall_list;
@@ -255,8 +260,6 @@ class CellBase :  public QObject, public Vector
 			fillWallElementInfo(&info,from,first);
 			f(&info);
   }
-
-
 
   template<class Op> void LoopWalls(Op f) {
     for (list <Wall *>::iterator i=walls.begin();i!=walls.end();i++) {

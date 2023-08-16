@@ -409,7 +409,7 @@ class Mesh {
   Node* findNextBoundaryNode(Node*);
 
  private:
-
+  list<Node *>* cellNodes(Cell * cell) ;
   // Data members
   vector<Cell *> cells;
   vector<Node *> nodes;

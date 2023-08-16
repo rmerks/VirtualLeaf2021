@@ -640,6 +640,9 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       // (can we have more than one neighboring cell here??)
       if (c!=owners.end()) { 
 	neighbor_cell = c->cell;
+	if (c->cell == NULL) {
+		cout << "error";
+	}
 	if (!c->cell->BoundaryPolP()) {
 
 	  // find correct position in the cells node list
@@ -1889,7 +1892,22 @@ void Cell::SetWallLengths(void)
   }
 }
 
+void Cell::InsertWall( Wall *w )
+{
+	list<Wall *>::iterator it;
+	if ((it=find_if ( walls.begin(), walls.end(),
+		[w](auto wall){
+			return wall->N1() == w->N2();
+		} )) == walls.end() ) {
+		walls.insert(it, w);
+	} else {
+		walls.push_back( w );
+	}
+    if (find ( m->walls.begin(), m->walls.end(), w ) == m->walls.end() ) {
+    	m->walls.push_back(w);
+	}
 
+}
 //! Add Wall w to the list of Walls
 void Cell::AddWall( Wall *w )
 {

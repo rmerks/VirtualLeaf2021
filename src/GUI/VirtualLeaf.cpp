@@ -266,6 +266,8 @@ TIMESTEP {
   double dh;
 
   if(DynamicCellsP()) {
+
+	mesh.WallCollapse();
     mesh.WallRelaxation();
 
     dh = mesh.DisplaceNodes();

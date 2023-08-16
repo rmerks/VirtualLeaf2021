@@ -38,6 +38,9 @@ bool Neighbor::CellEquals(int i) const { return cell->Index() == i; }
 bool Neighbor::Cmp(Neighbor &c) const { return cell->Index() < c.cell->Index(); } // Compare cell indices not pointers.
 bool Neighbor::Eq(Neighbor &c) const { return cell->Index() == c.cell->Index(); }
 Cell* Neighbor::getCell(void) const { return cell; } 
+void Neighbor::setPrevious(Node * nb) {nb1=nb;}
+void Neighbor::setNext(Node * nb) {nb2=nb;}
+
 
 bool neighbor_cell_eq(const Neighbor &n1, const Neighbor &n2) {
   return (n1.getCell())->Index() == (n2.getCell())->Index(); // Compare cell indices not pointers.

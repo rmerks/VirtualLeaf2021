@@ -164,6 +164,14 @@ class Node : public NodeBase {
 
   inline bool SamP(void) const { return sam; }
 
+  template<class Op> void LoopNeighbors(Op f) {
+	for (list<Neighbor>::iterator it=this->owners.begin(); it!=this->owners.end(); ++it) {
+      f(*it);
+    }
+  }
+
+  void correctNeighbors(int cellIndex, Node* n1, Node* n3);
+
   //!\brief Calculate angles with neighboring vertices
   //! Sum of angles should be 2*Pi
   QVector<qreal> NeighbourAngles(void);

@@ -662,4 +662,44 @@ void CellBase::fillWallElementInfo(WallElementInfo * info, Node* from,Node* to) 
 bool CellBase::stopWallElementInfo(WallElementInfo * info) {
 	return info->isStop();
 }
+
+void CellBase::removeNode(Node * node) {
+	this->nodes.remove(node);
+	node->owners.erase(
+	std::remove_if(node->owners.begin(), node->owners.end(),
+			[this](const Neighbor & o) { return o.CellEquals(this->index); }),
+			node->owners.end());
+}
+
+void CellBase::insertNodeAfterFirst(Node * position1,Node * position2, Node * newNode) {
+	std::_List_iterator<Node*> indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
+		return node->Index()==position1->Index()||node->Index()==position2->Index();
+	});
+	indexOfC++;
+	this->nodes.insert(indexOfC,newNode);
+	newNode->owners.push_back( Neighbor( (Cell*)this, NULL, NULL ) );
+}
+
+void CellBase::correctNeighbors() {
+	list<Node*>::iterator nit=this->nodes.begin();
+	Node* n1 = *nit;
+	Node* n2 = *(++nit);
+	Node* n3 = *(++nit);
+	Node* first = n1;
+	Node* second = n2;
+	while (nit != this->nodes.end()) {
+		n2->correctNeighbors(this->Index(), n1, n3);
+		n1=n2;
+		n2=n3;
+		n3=*(++nit);
+	}
+	n3=first;
+	n2->correctNeighbors(this->Index(), n1, n3);
+	n1=n2;
+	n2=n3;
+	n3=second;
+	n2->correctNeighbors(this->Index(), n1, n3);
+	ConstructNeighborList();
+}
+
 /* finis*/
