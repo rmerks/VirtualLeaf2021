@@ -929,6 +929,32 @@ class CellWallCurve {
 	Node * from=NULL;
 	Node * over=NULL;
 	Node * to=NULL;
+
+	Wall* findWallBetweenEndingAt(Cell *&c1, Cell *&c2, Node *&c) {
+		Wall *wallBetween = NULL;
+		Wall **pwallBetween = &wallBetween;
+		c1->LoopWalls([this, c1, c2, c, pwallBetween](auto wall) {
+			if (isWallBetweenEndingAt(wall, c1, c2, c)) {
+				// this wall now ends at b instead of c
+				(*pwallBetween) = wall;
+			}
+		}
+		);
+		return wallBetween;
+	}
+
+	Wall* otherWallEndingAt(Cell *c3, Node *&c, Wall *&wallc2c3) {
+		Wall *wallc3ToC;
+		Wall **pwallc3ToC = &wallc3ToC;
+		c3->LoopWalls([this, c, wallc2c3, pwallc3ToC](auto wall) {
+			if ((wall->N1() == c || wall->N2() == c) && wall != wallc2c3) {
+				(*pwallc3ToC) = wall;
+			}
+		}
+		);
+		return wallc3ToC;
+	}
+
 public:
 	void shift(Node * node) {
 		  if (from == NULL) {
@@ -1029,59 +1055,49 @@ public:
 		Cell * c1 = cellBehindLongerWall();
 		Cell * c2 = cell;
 		Cell * c3 = cellBehindShorterWall();
-		if (c1 == NULL||c2 == NULL||c3 == NULL) {
-			// unknow case
-			cout<< " not handled spike ";
-			return;
-		}
 		Node * a = longerWall();
 		Node * b = a == to? from : to;
 		Node * c = over;
+		if (c->Value() ==  2) {
+			// TODO delete node, spike into the cell itself
+			cout << " innser spike ";
+			cout << " c2=" << c2->Index() ;
+			c2->removeNode(c);
+			c2->correctNeighbors();
+			return;
+		}
 		//we go over the c2 walls, here is the spike
-if (c2->Index()==-1) {
-	cout<< " boundary node spike ";
-}
-		Wall * wallc1c2 = NULL;
-		Wall ** pwallc1c2 = &wallc1c2;
-		Wall * wallc2c3 = NULL;
-		Wall ** pwallc2c3 = &wallc2c3;
-		Wall * wallc1c3 = NULL;
-		Wall ** pwallc1c3 = &wallc1c3;
-		c2->LoopWalls([this,c1,c2,c3,b,c,pwallc1c2,pwallc2c3] (auto wall) {
-			if (isWallBetweenEndingAt(wall, c1, c2, c)) {
-				// this wall now ends at b instead of c
-				(*pwallc1c2) = wall;
-			}
-			if (isWallBetweenEndingAt(wall, c2, c3, c)) {
-				// this wall now ends at b instead of c
-				(*pwallc2c3) = wall;
-			}
-		});
+		if (c1 == NULL||c3 == NULL|| c1==c3) {
+			// unknow case
+			cout<< " not handled spike "<< (c1==c3?"eq ":"");
+			if (c1!= NULL)
+				cout << " c1=" << c1->Index() ;
+			else
+				cout << " c1=NULL";
+			cout << " c2=" << c2->Index() ;
+			if (c3!= NULL)
+				cout << " c3=" << c3->Index() ;
+			else
+				cout << " c3=NULL";
+			return;
+		}
+
+		if (c2->Index()==-1) {
+			cout<< " boundary node spike ";
+			cout << " c2=" << c2->Index() ;
+		}
+		Wall *wallc1c2 = findWallBetweenEndingAt(c1, c2, c);
+		Wall * wallc2c3 = findWallBetweenEndingAt(c2,c3,c);
 		//for the extending wall we need a existing wall between c1 and c3 that ends at c.
-		c1->LoopWalls([this,c1,c2,c3,b,c,pwallc1c3] (auto wall) {
-			// now a decision must be made is there a wall to extend at c or do we need a new wall.
-			if (isWallBetweenEndingAt(wall, c1, c3, c)) {
-				// this wall now ends at b instead of c
-				(*pwallc1c3) = wall;
-			}
-		});
+		Wall * wallc1c3 = findWallBetweenEndingAt(c1,c3,c);
+
 		if (wallc1c2 != NULL&&wallc2c3 != NULL) {
 			Wall * wallc1ToC = NULL;
 			Wall * wallc3ToC = NULL;
 			if (wallc1c3 == NULL) {
 				// more than 3 cells in point c, now c1 and c3 are separated by other cells.
-				Wall ** pwallc1ToC=&wallc1ToC;
-				Wall ** pwallc3ToC=&wallc3ToC;
-				c1->LoopWalls([this,c,wallc1c2,pwallc1ToC] (auto wall) {
-					if ((wall->N1() == c || wall->N2() == c) && wall != wallc1c2){
-						(*pwallc1ToC) = wall;
-					}
-				});
-				c3->LoopWalls([this,c,wallc2c3,pwallc3ToC] (auto wall) {
-					if ((wall->N1() == c || wall->N2() == c) && wall != wallc2c3){
-						(*pwallc3ToC) = wall;
-					}
-				});
+				wallc1ToC = otherWallEndingAt(c1, c, wallc1c2);
+				wallc3ToC = otherWallEndingAt(c3, c, wallc2c3);
 				if (wallc1ToC == NULL|| wallc3ToC==NULL) {
 					cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
 					cout << " not handled case\n";
@@ -1115,8 +1131,6 @@ if (c2->Index()==-1) {
 			wallc1c2->SetLength();
 			wallc2c3->replaceNode(c,b);
 			wallc2c3->SetLength();
-		//	c1->InsertWall(wallc2c3);
-		//	c2->RemoveWall(wallc2c3);
 			c1->correctNeighbors();
 			c2->correctNeighbors();
 			c3->correctNeighbors();

@@ -675,8 +675,12 @@ void CellBase::insertNodeAfterFirst(Node * position1,Node * position2, Node * ne
 	std::_List_iterator<Node*> indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
 		return node->Index()==position1->Index()||node->Index()==position2->Index();
 	});
-	indexOfC++;
-	this->nodes.insert(indexOfC,newNode);
+	if (indexOfC == this->nodes.begin() && (this->nodes.back()==position1||this->nodes.back()==position2)) {
+		this->nodes.insert(indexOfC,newNode);
+	}else {
+		indexOfC++;
+		this->nodes.insert(indexOfC,newNode);
+	}
 	newNode->owners.push_back( Neighbor( (Cell*)this, NULL, NULL ) );
 }
 
