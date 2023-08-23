@@ -33,6 +33,7 @@
 #include "wall.h"
 #include "warning.h"
 #include "cellbase.h"
+#include "Neighbor.h"
 //#include "cell.h"
 
 #include <QGraphicsScene>
@@ -162,6 +163,13 @@ class Cell : public CellBase
   Mesh *m;
   void ConstructConnections(void);
   void SetWallLengths(void);
+  void checkCellLooseWallEnds(Wall * wall,bool&n1Connected,bool&n2Connected);
+  Node * followNeighborsToWall(Node * n1, Node * n2, double &distance);
+  Neighbor getNeighbor(Node * node);
+  Wall* getBoundaryWallAt(Node * node);
+  Node * attachFreeWallEnd(Cell * cellWithOtherWalls, Cell * cellWithSingleWalls, Wall * wall, Node * loseWallNode);
+  Wall * findWall(Node * n1, Node * n2);
+
 };
 
 

@@ -321,6 +321,138 @@ bool Cell::DivideOverGivenLine(const Vector v1, const Vector v2, bool fix_cellwa
 
   return true;
 }
+void Cell::checkCellLooseWallEnds(Wall * wall,bool&n1Connected,bool&n2Connected) {
+	n1Connected = false;
+	n2Connected = false;
+	// check free swinging wall
+	for (list<Wall *>::iterator w = walls.begin(); w!=walls.end(); w++) {
+		  Wall* other = *w;
+		  if (wall != other && (wall->N1()==other->N1() ||wall->N1()==other->N2() )){
+			  n1Connected=true;
+		  }
+		  if (wall != other && (wall->N2()==other->N1() ||wall->N2()==other->N2() )){
+			  n2Connected=true;
+		  }
+		  if (n1Connected&& n2Connected) {
+			  break;
+		  }
+	}
+}
+
+Neighbor Cell::getNeighbor(Node * node) {
+	  Neighbor result;
+	  Neighbor * presult=&result;
+	  node->LoopNeighbors([this,presult](auto neighbor){
+		  if (neighbor.cell == this) {
+			  (*presult) = neighbor;
+		  }
+	  });
+	  return result;
+}
+
+Wall* Cell::getBoundaryWallAt(Node * node) {
+	Wall* wall=NULL;
+	Wall** pwall=&wall;
+	 this->LoopWalls([node,pwall,this](auto wall){
+		 if ((wall->N1()==node ||wall->N1()==node)&& (wall->C1()==this->m->boundary_polygon ||wall->C2()==this->m->boundary_polygon) ) {
+			 *pwall=wall;
+		 }
+	 });
+	  return wall;
+}
+
+Node * Cell::followNeighborsToWall(Node * n1, Node * n2, double &distance) {
+	bool isWallEnd=false;
+	bool* pisWallEnd=&isWallEnd;
+	 this->LoopWalls([n2,pisWallEnd](auto wall){
+		 if (wall->N1()==n2 ||wall->N2()==n2) {
+			 *pisWallEnd=true;
+		 }
+	 });
+	 if (isWallEnd) {
+		 return n2;
+	 }else {
+		 Neighbor neighbor = getNeighbor(n2);
+		 distance+=((*n1)-(*n2)).Norm();
+		 Node * other =  neighbor.nb1 == n1?neighbor.nb2:neighbor.nb1;
+		 return followNeighborsToWall( n2, other, distance);
+	 }
+}
+
+Wall * Cell::findWall(Node * n1, Node * n2) {
+	Wall* splittWall = NULL;
+	Wall** psplittWall = &splittWall;
+
+	LoopWalls([psplittWall,n1,n2](auto wallToSplit) {
+		if (wallToSplit->N1() == n1 && wallToSplit->N2() == n2) {
+			(*psplittWall)=wallToSplit;
+		}
+		if (wallToSplit->N2() == n1 && wallToSplit->N1() == n2) {
+			(*psplittWall)=wallToSplit;
+		}
+	});
+	return splittWall;
+}
+
+Node* Cell::attachFreeWallEnd(Cell * cellWithOtherWalls, Cell * cellWithSingleWalls, Wall * wall, Node * loseWallNode) {
+	Neighbor neighbors = cellWithOtherWalls->getNeighbor(loseWallNode);
+	cout << "wall needed (n1) after devision in cell " << Index() << "\n";
+	double distance1=0.0;
+	Node * startOfOtherWall1 = cellWithOtherWalls->followNeighborsToWall(loseWallNode, neighbors.nb1, distance1);
+	double distance2=0.0;
+	Node * startOfOtherWall2 = cellWithOtherWalls->followNeighborsToWall(loseWallNode, neighbors.nb2, distance2);
+	if (!loseWallNode->BoundaryP()) {
+		cout << "!BoundaryP\n" ;
+		// ok this is not good we are inside the cell structure and missed the wall to split
+		// but this wall must be between startOfOtherWall1 and startOfOtherWall2 so we find it and split it up
+		Wall* splittWall = findWall(startOfOtherWall1,startOfOtherWall2);
+
+		if (splittWall == NULL) {
+			cout << "!BoundaryP but no wall to split...\n" ;
+			return NULL;
+		} else {
+			// this node must have 3 neighbors, we need the 3e one.
+			Cell* opposedCell = NULL;
+			Cell** popposedCell = &opposedCell;
+			loseWallNode->LoopNeighbors([popposedCell,cellWithOtherWalls,cellWithSingleWalls](auto neighbors){
+				if (neighbors.getCell() != cellWithOtherWalls && neighbors.getCell() != cellWithSingleWalls) {
+					(*popposedCell) = neighbors.getCell();
+				}
+			});
+			double orgLength=splittWall->Length();
+			Wall * connectWall = new Wall(startOfOtherWall1, loseWallNode, cellWithSingleWalls, opposedCell );
+			splittWall->replaceNode(startOfOtherWall1, loseWallNode);
+			connectWall->CopyWallContents(*splittWall);
+			connectWall->SetLength();
+			connectWall->CorrectTransporters(orgLength);
+			splittWall->SetLength();
+			splittWall->CorrectTransporters(orgLength);
+			opposedCell->AddWall(connectWall);
+			cellWithOtherWalls->AddWall(connectWall);
+			cellWithSingleWalls->AddWall(connectWall);
+			connectWall->CorrectWall();
+			return NULL;
+		}
+	}
+
+	Node * startOfOtherWall = distance1<distance2?startOfOtherWall1:startOfOtherWall2 ;
+	cout << "wall needed from " << loseWallNode->Index() << " to " << startOfOtherWall->Index() << "\n";
+	Wall * connectWall = new Wall(startOfOtherWall, loseWallNode, cellWithSingleWalls, m->boundary_polygon );
+	Wall * donorWall = cellWithOtherWalls->getBoundaryWallAt(startOfOtherWall);
+	connectWall->SetLength();
+	double orgLength=connectWall->Length();
+	if (donorWall!=NULL) {
+	  connectWall->CopyWallContents(*donorWall);
+	  orgLength += donorWall->Length();
+	  donorWall->CorrectTransporters(orgLength);
+	}
+	connectWall->CorrectTransporters(orgLength);
+
+	cellWithSingleWalls->AddWall(connectWall);
+	m->boundary_polygon->AddWall(connectWall);
+	connectWall->CorrectWall();
+	return startOfOtherWall;
+}
 
 // Core division procedure
 void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vector to, bool fix_cellwall, NodeSet *node_set)
@@ -996,6 +1128,32 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 
   ConstructNeighborList();
   daughter->ConstructNeighborList();
+
+	bool n1Connected;
+	bool n2Connected;
+	checkCellLooseWallEnds(wall,n1Connected,n2Connected);
+	Cell * cellWithOtherWalls = this;
+	Cell * cellWithSingleWalls = daughter;
+	if (walls.size() < daughter->walls.size()) {
+		cellWithOtherWalls = daughter;
+		cellWithSingleWalls = this;
+	}
+	if (!n1Connected && !n2Connected) {
+			Node * fist = attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N1());
+			Node * second = attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N2());
+			Wall * wallToRemove = findWall(fist, second);
+			if (wallToRemove != NULL) {
+				m->walls.remove(wallToRemove);
+				wallToRemove->c1->removeWall(wallToRemove);
+				wallToRemove->c2->removeWall(wallToRemove);
+				delete wallToRemove;
+			}
+	} else if (!n1Connected) {
+		attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N1());
+	} else if (!n2Connected) {
+		attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N2());
+	}
+
 
   m->plugin->OnDivide(&parent_info, daughter, this);
 

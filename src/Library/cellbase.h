@@ -438,6 +438,7 @@ class CellBase :  public QObject, public Vector
   static inline CellsStaticDatamembers *GetStaticDataMemberPointer(void) { return static_data_members; }
   void fillWallElementInfo(WallElementInfo * info,Node* from,Node* to) ;
   bool stopWallElementInfo(WallElementInfo * info);
+  inline void removeWall(Wall * wall) {walls.remove(wall);}
 
  protected:
   // (define a list of Node* iterators)

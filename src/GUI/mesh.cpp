@@ -1066,6 +1066,9 @@ public:
 			c2->correctNeighbors();
 			return;
 		}
+		if (a==b) {
+			cout << " merged node ";
+		}
 		//we go over the c2 walls, here is the spike
 		if (c1 == NULL||c3 == NULL|| c1==c3) {
 			// unknow case
