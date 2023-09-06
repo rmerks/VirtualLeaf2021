@@ -171,6 +171,8 @@ class Node : public NodeBase {
   }
 
   void correctNeighbors(int cellIndex, Node* n1, Node* n3);
+  void removeCell(CellBase * cell);
+  void addCell(CellBase * cell);
 
   //!\brief Calculate angles with neighboring vertices
   //! Sum of angles should be 2*Pi

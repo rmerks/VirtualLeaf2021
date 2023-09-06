@@ -665,10 +665,7 @@ bool CellBase::stopWallElementInfo(WallElementInfo * info) {
 
 void CellBase::removeNode(Node * node) {
 	this->nodes.remove(node);
-	node->owners.erase(
-	std::remove_if(node->owners.begin(), node->owners.end(),
-			[this](const Neighbor & o) { return o.CellEquals(this->index); }),
-			node->owners.end());
+	node->removeCell(this);
 }
 
 void CellBase::insertNodeAfterFirst(Node * position1,Node * position2, Node * newNode) {
@@ -681,7 +678,7 @@ void CellBase::insertNodeAfterFirst(Node * position1,Node * position2, Node * ne
 		indexOfC++;
 		this->nodes.insert(indexOfC,newNode);
 	}
-	newNode->owners.push_back( Neighbor( (Cell*)this, NULL, NULL ) );
+	newNode->addCell(this);
 }
 
 void CellBase::correctNeighbors() {

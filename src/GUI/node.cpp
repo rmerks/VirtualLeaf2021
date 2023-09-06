@@ -226,6 +226,15 @@ void Node::correctNeighbors(int cellIndex, Node* n1, Node* n3) {
 		}
 	}
 }
+void Node::removeCell(CellBase * cell) {
+	owners.erase(
+	std::remove_if(owners.begin(), owners.end(),
+			[this,cell](const Neighbor & o) { return o.CellEquals(cell->index); }),
+			this->owners.end());
+}
 
+void Node::addCell(CellBase * cell) {
+	owners.push_back( Neighbor( (Cell*)cell, NULL, NULL ) );
+}
 
 /* finis */
