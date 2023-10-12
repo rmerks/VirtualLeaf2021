@@ -4,6 +4,10 @@
 #include "vector.h"
 #include "wallelement.h"
 
+
+class WallElement;
+class CellBase;
+
 class NodeBase : public Vector {
 	  vector<WallElement *> wallElements;
 	 public:

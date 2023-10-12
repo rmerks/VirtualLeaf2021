@@ -34,6 +34,7 @@
 
 #include "vector.h"
 #include "parameter.h"
+#include "nodebase.h"
 #include "wall.h"
 #include "warning.h"
 #include "assert.h"
@@ -51,6 +52,7 @@ class CellBase;
 class NodeSet;
 class WallElementInfo;
 class WallElement;
+class NodeBase;
 
 struct ParentInfo {
 
@@ -72,9 +74,9 @@ class CellsStaticDatamembers {
     base_area = 0.;
   }
   ~CellsStaticDatamembers() {
-#ifdef QDEBUG
+/*#ifdef QDEBUG
     qDebug() << "Oops! Desctructor of CellsStaticDatamembers called" << endl;
-#endif
+#endif*/
   }
   int ncells;
   int nchem;
@@ -225,11 +227,9 @@ class CellBase :  public QObject, public Vector
     return sum;
   }
 
-  void removeNode(Node * node) ;
 
-  void insertNodeAfterFirst(Node * position1, Node * position2, Node * newNode);
 
-  void correctNeighbors();
+
 
   QList<WallBase *> getWalls(void) {
     QList<WallBase *> wall_list;

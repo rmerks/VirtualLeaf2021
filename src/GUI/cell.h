@@ -146,6 +146,10 @@ class Cell : public CellBase
   void DrawWalls(QGraphicsScene *c) const;
   void DrawValence(QGraphicsScene *c) const;
   void EmitValues(double t);
+  void removeNode(Node * node);
+  void insertNodeAfterFirst(Node * position1, Node * position2, Node * newNode);
+  void correctNeighbors();
+
 
  signals:
   void ChemMonValue(double t, double *x);
