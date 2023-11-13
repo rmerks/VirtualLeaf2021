@@ -73,6 +73,7 @@ template<class T, class C = deque<T> > class unique_queue : public queue<T,C> {
 
 template<class P> P& deref_ptr ( P *obj) { return *obj; }
 
+class DeltaIntgrl;
 
 class Mesh {
 
@@ -449,6 +450,8 @@ class Mesh {
   void CircumCircle(double x1,double y1,double x2,double y2,double x3,double y3,
 		    double *xc,double *yc,double *r);
   void calculateWallStiffness(CellBase *c,Node* node, double *w_p1,double *w_p2, double *bl_minus_1, double *bl_plus_1);
+
+  void updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node);
 };
 #endif
 

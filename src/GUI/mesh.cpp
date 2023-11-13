@@ -514,6 +514,24 @@ double Mesh::CellSpecificStiffnessOneSide(Node *nb,set<int> &nodeown) {
     }
     return cell_w;
 }
+void Mesh::updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node) {
+
+	// update areas of cells
+	list<DeltaIntgrl>::const_iterator  di_it = delta_intgrl_list->begin();
+	for (list<Neighbor>::iterator cit=node->owners.begin(); cit!=node->owners.end(); ( cit++) ) {
+	  if (!cit->cell->BoundaryPolP()) {
+	    cit->cell->area -= di_it->area;
+	    if (par.lambda_celllength) {
+		cit->cell->intgrl_x -= di_it->ix;
+		cit->cell->intgrl_y -= di_it->iy;
+		cit->cell->intgrl_xx -= di_it->ixx;
+		cit->cell->intgrl_xy -= di_it->ixy;
+		cit->cell->intgrl_yy -= di_it->iyy;
+	    }
+	    di_it++;
+	  }
+	}
+}
 
 double Mesh::DisplaceNodes(void) {
 
@@ -854,64 +872,17 @@ double Mesh::DisplaceNodes(void) {
 	}
       }
       dh = 	area_dh + cell_length_dh +
-	par.lambda_length * length_dh + par.bend_lambda * bending_dh + par.alignment_lambda * alignment_dh;
+      par.lambda_length * length_dh + par.bend_lambda * bending_dh + par.alignment_lambda * alignment_dh;
 
          //(length_constraint_after - length_constraint_before);
 
-      if (node.fixed) {
+	  if (dh<-sum_stiff || RANDOM()<exp((-dh-sum_stiff)/par.T)) {
+		updateAreasOfCells(&delta_intgrl_list, &node) ;
 
-	// search the fixed cell to which this node belongs
-	// and displace these cells as a whole
-	// WARNING: undefined things will happen for connected fixed cells...
-	for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
-	  if (!c->cell->BoundaryPolP() && c->cell->FixedP()) {
-	    sum_dh+=c->cell->Displace(rx,ry,0);
-	  }
-	}
-      } else {
+		node.x = new_p.x;
+		node.y = new_p.y;
 
-
-	if (dh<-sum_stiff || RANDOM()<exp((-dh-sum_stiff)/par.T)) {
-
-	  // update areas of cells
-	  list<DeltaIntgrl>::const_iterator di_it = delta_intgrl_list.begin();
-	  for (list<Neighbor>::iterator cit=node.owners.begin(); cit!=node.owners.end(); ( cit++) ) {
-	    if (!cit->cell->BoundaryPolP()) {
-	      cit->cell->area -= di_it->area;
-	      if (par.lambda_celllength) {
-		cit->cell->intgrl_x -= di_it->ix;
-		cit->cell->intgrl_y -= di_it->iy;
-		cit->cell->intgrl_xx -= di_it->ixx;
-		cit->cell->intgrl_xy -= di_it->ixy;
-		cit->cell->intgrl_yy -= di_it->iyy;
-	      }
-	      di_it++;
-	    }
-	  }
-
-//	  double old_nodex, old_nodey;
-
-    //  old_nodex=node.x;
-     // old_nodey=node.y;
-
-	  node.x = new_p.x;
-	  node.y = new_p.y;
-
-	  for (list<Neighbor>::iterator cit=node.owners.begin();
-	       cit!=node.owners.end();
-	       ( cit++) ) {
-
-	    /*   if (cit->cell >= 0 && cells[cit->cell].SelfIntersect()) {
-		 node.x = old_nodex;		       
-		 node.y = old_nodey;
-		 goto next_node;
-		 }*/
-
-
-	  }
-
-	  sum_dh += dh;
-	}  
+		sum_dh += dh;
       }
     } 
   next_node:
@@ -921,6 +892,11 @@ double Mesh::DisplaceNodes(void) {
 
   return sum_dh;
 }
+
+/**
+ * At what angle should the walls collapse together? and what would be the properties?
+ */
+#define WALL_COLLAPS_ANGLE Pi/18.
 
 class CellWallCurve {
 	friend class Node;
@@ -972,7 +948,7 @@ public:
 
 	int checkAngle() {
 		double angle = (*from-*over).Angle((*to-*over));
-		if (Pi/18. > angle ) {
+		if (WALL_COLLAPS_ANGLE > angle ) {
 			return over->Index();
 		}
 		return -1;
@@ -1050,7 +1026,12 @@ public:
 		});
 		return result;
 	}
-
+	/**
+	 * Now we collapse the spike by letting the longer wall end at the end of the shorter wall.
+	 * Assume a sharp spike in a wall from node a to c (a-c) to b (c-b). were a-c is the longer
+	 * wall. We remove this spike if the angle between a-c and b-c gets to small. We do this
+	 * by replacing a-c and with a new wall a-b.
+	 */
 	void removeSpike() {
 		Cell * c1 = cellBehindLongerWall();
 		Cell * c2 = cell;

@@ -1129,6 +1129,12 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
   ConstructNeighborList();
   daughter->ConstructNeighborList();
 
+  	/**
+     * Here we reconnect the wall elements if they got lose ends, if both ends are lose then
+     * the original wall has to be deleted.
+     *
+     * Important we need to distribute the properties over the newly created walls.
+     */
 	bool n1Connected;
 	bool n2Connected;
 	checkCellLooseWallEnds(wall,n1Connected,n2Connected);
