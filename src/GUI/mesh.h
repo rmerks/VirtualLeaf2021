@@ -44,6 +44,7 @@
 #include <QDebug>
 #include <QTextStream>
 #include <QtXml>
+#include <cmath>
 
 #include <QtGlobal>
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
@@ -241,6 +242,8 @@ class Mesh {
   }
 
   double DisplaceNodes(void);
+  double CalculateDeltaA(Vector &new_p, Vector &old_p, Vector &i_min_1, Vector &i_plus_1);
+  double getNormA(Vector &p);
   void WallRelaxation(void);
   void WallCollapse(void);
 

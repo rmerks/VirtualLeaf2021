@@ -69,6 +69,14 @@ void AuxinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
 
 void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
 {
+
+    //cout << "Calc" << endl;
+    //cout << c->CalcArea() << endl;
+
+    //cout << "Target" << endl;
+    //cout << c->TargetArea() << endl;
+
+
     if (c->Boundary()==CellBase::None) {
         if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ) {
             c->SetChemical(0,0);
@@ -76,9 +84,9 @@ void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
         }
         // expand according to auxin concentration
         c->EnlargeTargetArea(par->auxin_dependent_growth?(c->Chemical(0)/(1.+c->Chemical(0)))*par->cell_expansion_rate:par->cell_expansion_rate);
-        cout << c->GetWallStiffness() << endl;
-        cout << c->Chemical(0) << endl;
-        cout << c->TargetArea() << endl;
+        //cout << c->GetWallStiffness() << endl;
+        //cout << c->Chemical(0) << endl;
+        //cout << c->TargetArea() << endl;
     }
 }
 

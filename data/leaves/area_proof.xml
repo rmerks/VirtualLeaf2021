@@ -157,17 +157,14 @@
     <par name="dir1" val="."/>
     <par name="dir2" val="."/>
   </parameter>
-  <nodes n="10" target_length="3.09017">
-    <node x="0" y="20" fixed="false" boundary="true" sam="false"/>
-    <node x="5" y="20" fixed="false" boundary="true" sam="false"/>
-    <node x="10" y="20" fixed="false" boundary="true" sam="false"/>
-    <node x="12.5" y="18.5" fixed="false" boundary="true" sam="false"/>
-    <node x="12.5" y="-8.5" fixed="false" boundary="true" sam="false"/>
-    <node x="10" y="-10" fixed="false" boundary="true" sam="false"/>
-    <node x="5" y="-10" fixed="false" boundary="true" sam="false"/>
-    <node x="0" y="-10" fixed="false" boundary="true" sam="false"/>
-    <node x="-2.5" y="-8.5" fixed="false" boundary="true" sam="false"/>
-    <node x="-2.5" y="18.5" fixed="false" boundary="true" sam="false"/>
+  <nodes n="7" target_length="3.09017">
+    <node x="0" y="30" fixed="false" boundary="true" sam="false"/>
+    <node x="10" y="30" fixed="false" boundary="true" sam="false"/>
+    <node x="10" y="0" fixed="false" boundary="true" sam="false"/>
+    <node x="0" y="0" fixed="false" boundary="true" sam="false"/>
+    <node x="0" y="18" fixed="false" boundary="true" sam="false"/>
+    <node x="0" y="24" fixed="false" boundary="true" sam="false"/>
+    <node x="6" y="21" fixed="false" boundary="true" sam="false"/>
   </nodes>
   <cells n="1" offsetx="0" offsety="0" magnification="1" base_area="450" nchem="2">
     <cell index="0" area="450" target_area="450" target_length="60" lambda_celllength="0" stiffness="1" fixed="false" pin_fixed="false" at_boundary="true" dead="false" source="false" boundary="None" div_counter="0" cell_type="0">
@@ -176,11 +173,15 @@
       <node n="2"/>
       <node n="3"/>
       <node n="4"/>
-      <node n="5"/>
       <node n="6"/>
-      <node n="7"/>
-      <node n="8"/>
-      <node n="9"/>     
+      <node n="5"/>
+      <wall w="0"/>
+      <wall w="1"/>
+      <wall w="2"/>
+      <wall w="3"/>
+      <wall w="4"/>
+      <wall w="5"/> 
+      <wall w="6"/>     
       <chem n="2">
         <val v="0.251808"/>
         <val v="0.481961"/>
@@ -192,18 +193,93 @@
       <node n="2"/>
       <node n="3"/>
       <node n="4"/>
-      <node n="5"/>
       <node n="6"/>
-      <node n="7"/>
-      <node n="8"/>
-      <node n="9"/>
+      <node n="5"/>
+      <wall w="0"/>
+      <wall w="1"/>
+      <wall w="2"/>
+      <wall w="3"/>
+      <wall w="4"/>
+      <wall w="5"/> 
+      <wall w="6"/> 
       <chem n="2">
         <val v="0"/>
         <val v="0"/>
       </chem>
     </boundary_polygon>
   </cells>
-  <walls n="0">
+  <walls n="7">
+    <wall index="0" c1="0" c2="-1" n1="0" n2="1" length="10" viz_flux="0" wall_type="aux_source" c1WallStiffness="115">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+    </wall>
+    <wall index="1" c1="0" c2="-1" n1="1" n2="2" length="30" viz_flux="0" wall_type="aux_source" c1WallStiffness="115">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+    </wall>
+    <wall index="2" c1="0" c2="-1" n1="2" n2="3" length="10" viz_flux="0" wall_type="aux_source" c1WallStiffness="115">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+    </wall>
+    <wall index="3" c1="0" c2="-1" n1="3" n2="4" length="18" viz_flux="0" wall_type="aux_source" c1WallStiffness="115">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+    </wall>
+    <wall index="4" c1="0" c2="-1" n1="4" n2="6" length="6.70820393" viz_flux="0" wall_type="aux_source" c1WallStiffness="5">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+    </wall>
+    <wall index="5" c1="0" c2="-1" n1="6" n2="5" length="6.70820393" viz_flux="0" wall_type="aux_source" c1WallStiffness="5">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+    </wall>
+    <wall index="6" c1="0" c2="-1" n1="5" n2="0" length="6" viz_flux="0" wall_type="aux_source" c1WallStiffness="5">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+    </wall>
+  </walls>
   <nodesets n="0"/>
   <settings>
     <setting name="show_cell_centers" val="false"/>

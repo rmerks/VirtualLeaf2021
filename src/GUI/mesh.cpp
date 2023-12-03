@@ -42,6 +42,7 @@
 #include "nodeitem.h"
 #include "simplugin.h"
 #include "forwardeuler.h"
+#include <cmath>
 
 #include <QDebug>
 #include <set>
@@ -580,7 +581,13 @@ double Mesh::DisplaceNodes(void) {
       for (list<Neighbor>::const_iterator cit=node.owners.begin(); cit!=node.owners.end(); cit++) {
 
 	
-	Cell &c=*((Cell *)(cit->cell));
+    Cell &c=*((Cell *)(cit->cell));
+
+    cout << "area" << endl;
+    cout << c.area << endl;
+    cout << "recalc" << endl;
+    cout << c.RecalcArea() << endl;
+
 
 	if (c.MoveSelfIntersectsP(&node,  new_p )) {
 		
@@ -602,8 +609,8 @@ double Mesh::DisplaceNodes(void) {
 
 	//if (cit->cell>=0) {
 	if (!cit->cell->BoundaryPolP()) {
-	  double delta_A = 0.5 * ( ( new_p.x - old_p.x ) * (i_min_1.y - i_plus_1.y) +
-				   ( new_p.y - old_p.y ) * ( i_plus_1.x - i_min_1.x ) );
+      double delta_A = this->CalculateDeltaA(new_p, old_p, i_min_1, i_plus_1);
+
 
 	  area_dh +=  delta_A * (2 * c.target_area - 2 * c.area + delta_A);
 
@@ -921,6 +928,273 @@ double Mesh::DisplaceNodes(void) {
 
   return sum_dh;
 }
+
+double Mesh::CalculateDeltaA(Vector &new_p, Vector &old_p, Vector &i_min_1, Vector &i_plus_1) {
+  double delta_A = 0.5 * ( ( new_p.x - old_p.x ) * (i_min_1.y - i_plus_1.y) +
+                          ( new_p.y - old_p.y ) * ( i_plus_1.x - i_min_1.x ) );
+
+  //Implementation with normal distance of old_p and new_p to i_min_1/i_plus_1 axis
+
+  // min is the Vector from i_min_1 to old_p
+  /*Vector min = old_p;
+  min.operator-=(i_min_1);
+  cout << min << endl;*/
+
+  // norm is the normal vector on min to the right side
+  //Vector norm = Vector(min.y, -min.x, 0);
+
+  // gradient of the vector
+  //double k = min.y/min.x;
+  //double k_norm = norm.y/norm.x;
+  /*cout << k << endl;
+  cout << k_norm << endl;*/
+
+  // distance on y-axis of the corresponding faction
+  //double d = old_p.y - k * old_p.x;
+  //double d_norm = new_p.y - k_norm * new_p.x;
+
+  // interpolation constant
+  //double t_x = (new_p.x-x_norm)/norm.x;
+  //double t_y = (new_p.y-y_norm)/norm.y;
+  // coordinates of the intersection
+
+  // the base of the triangle
+  /*double x = std::fabs(i_min_1.x-i_plus_1.x);
+  double y = std::fabs(i_min_1.x-i_plus_1.x);
+  double x_pyth = pow(x, 2);
+  double y_pyth = pow(y, 2);
+  double base = sqrt(x_pyth + y_pyth);*/
+
+  // Implementation with normal vector of i_min_1-old_p vector
+  double x_norm = (new_p.y - old_p.y)*(i_min_1.y-old_p.y)*(old_p.x-i_min_1.x)/((new_p.x*(old_p.x-i_min_1.x)*(old_p.x-i_min_1.x))-(old_p.x*(old_p.y-i_min_1.y)*(i_min_1.y-old_p.y)));
+  double b = (new_p.x-x_norm)/(i_min_1.y-old_p.y);
+  double y_norm = new_p.y - b *(old_p.x - i_min_1.x);
+
+  //double newDelta = 0.5 * base * (new_norm_dist - old_norm_dist);
+
+  // return of delta_A in regard to the result of b (depending on the orientation of the new point)
+  if (b >= 0) {
+    return std::fabs(delta_A);
+  } else {
+    return -std::fabs(delta_A);
+  }
+
+
+  /*cout << "i_min_1" << endl;
+  cout << i_min_1 << endl;
+  cout << "i_plus_1" << endl;
+  cout << i_plus_1 << endl;
+  cout << "old" << endl;
+  cout << old_p << endl;
+  cout << "new" << endl;
+  cout << new_p << endl;
+  cout << "min" << endl;
+  cout << min << endl;
+  cout << "norm" << endl;
+  cout << norm << endl;
+  cout << "k" << endl;
+  cout << k << endl;
+  cout << "k_norm" << endl;
+  cout << k_norm << endl;
+  cout << "x_norm" << endl;
+  cout << x_norm << endl;
+  cout << "y_norm" << endl;
+  cout << y_norm << endl;*/
+  /*cout << "t_x" << endl;
+  cout << t_x << endl;
+  cout << "t_y" << endl;
+  cout << t_y << endl;
+  cout << "delta_a" << endl;
+  cout << delta_A << endl;*/
+
+
+
+
+
+
+  // calculate distance of i_min_1 - i_plus_1 axis, this is also the base of the triangles
+  /*double x = std::fabs(i_min_1.x-i_plus_1.x);
+  double y = std::fabs(i_min_1.x-i_plus_1.x);
+  double x_pyth = pow(x, 2);
+  double y_pyth = pow(y, 2);
+  double base = sqrt(x_pyth + y_pyth);*/
+
+  // calculate gradient
+  /*double k_calc = (i_min_1.y-i_plus_1.y)/(i_min_1.x-i_plus_1.x);
+  double k_norm_calc = 0;
+  if (k_calc != 0) {
+    k_norm = -1/k_calc;
+  }*/
+
+  /*double d_calc = i_min_1.y - k * i_min_1.x;
+  double old_d_norm = old_p.y - k_norm_calc * old_p.x;
+  double new_d_norm = new_p.y - k_norm_calc * new_p.x;
+
+  double old_x_norm = (old_d_norm - d_calc)/(k_calc-k_norm_calc);
+  double old_y_norm = k_norm_calc * old_x_norm + old_d_norm;
+
+  double new_x_norm = (new_d_norm - d_calc)/(k_calc-k_norm_calc);
+  double new_y_norm = k_norm_calc * new_x_norm + new_d_norm;
+
+  double old_pow_x = pow(old_x_norm - old_p.x,2);
+  double old_pow_y = pow(old_y_norm - old_p.y,2);
+
+  double new_pow_x = pow(new_x_norm - new_p.x,2);
+  double new_pow_y = pow(new_y_norm - new_p.y,2);
+
+  double old_norm_dist = sqrt(old_pow_x + old_pow_y);
+  double new_norm_dist = sqrt(new_pow_x + new_pow_y);*/
+
+  //double newDelta = 0.5 * base * (new_norm_dist - old_norm_dist);
+  // true if new and old x/y values are one the same side of the i_min_1 - i_plus_1 axis
+  /*bool same_x;
+  bool same_y;
+
+  // the x/y value closer to the origin of the coordinate system
+  double x_min = std::fmin(i_min_1.x,i_plus_1.x);
+  double y_min = std::fmin(i_min_1.y,i_plus_1.y);
+
+  // the x/y-distance of the old point to the origin
+  double old_x = (old_p.x-x_min)-std::fabs((i_min_1.x-i_plus_1.x)/2);
+  double old_y = (old_p.y-y_min)-std::fabs((i_min_1.y-i_plus_1.y)/2);
+
+  // the x/y-distance of the new point to the origin
+  double new_x = (new_p.x-x_min)-std::fabs((i_min_1.x-i_plus_1.x)/2);
+  double new_y = (new_p.y-y_min)-std::fabs((i_min_1.y-i_plus_1.y)/2);
+
+  // check if new and old x/y values are one the same side of the i_min_1 - i_plus_1 axis
+  if ((old_x >= 0 && new_x >= 0) || (old_x < 0 && new_x < 0)) {
+    same_x = true;
+  } else {
+    same_x = false;
+  }
+
+  if ((old_y >= 0 && new_y >= 0) || (old_y < 0 && new_y < 0)) {
+    same_y = true;
+  } else {
+    same_y = false;
+  }
+
+  // calculation of delta A when new and old x/y values are one the same side of the i_min_1 - i_plus_1 axis
+  if (same_x && same_y) {
+
+    // implementation using analysis
+
+    // calculate distance of i_min_1 - i_plus_1 axis, this is also the base of the triangles
+    double x = std::fabs(i_min_1.x-i_plus_1.x);
+    double y = std::fabs(i_min_1.x-i_plus_1.x);
+    double x_pyth = pow(x, 2);
+    double y_pyth = pow(y, 2);
+    double base = sqrt(x_pyth + y_pyth);
+
+    // calculate gradient
+    double k = (i_min_1.y-i_plus_1.y)/(i_min_1.x-i_plus_1.x);
+    double k_norm = 0;
+    if (k != 0) {
+      k_norm = -1/k;
+    }
+
+    double d = i_min_1.y - k * i_min_1.x;
+    double old_d_norm = old_p.y - k_norm * old_p.x;
+    double new_d_norm = new_p.y - k_norm * new_p.x;
+
+    double old_x_norm = (old_d_norm - d)/(k-k_norm);
+    double old_y_norm = k_norm * old_x_norm + old_d_norm;
+
+    double new_x_norm = (new_d_norm - d)/(k-k_norm);
+    double new_y_norm = k_norm * new_x_norm + new_d_norm;
+
+    double old_pow_x = pow(old_x_norm - old_p.x,2);
+    double old_pow_y = pow(old_y_norm - old_p.y,2);
+
+    double new_pow_x = pow(new_x_norm - new_p.x,2);
+    double new_pow_y = pow(new_y_norm - new_p.y,2);
+
+    double old_norm_dist = sqrt(old_pow_x + old_pow_y);
+    double new_norm_dist = sqrt(new_pow_x + new_pow_y);
+
+    cout << "New" << endl;
+    cout << new_norm_dist << endl;
+    cout << "Old" << endl;
+    cout << old_norm_dist << endl;
+
+
+    double newDelta = 0.5 * base * (new_norm_dist - old_norm_dist);
+
+    cout << "New Delta" << endl;
+    cout << newDelta << endl;
+
+    cout << "Old Delta" << endl;
+    cout << delta_A << endl;
+
+    return newDelta;
+
+    // Implementation using trigonometry (not correct!)
+
+    /*double alpha = atan(std::fabs(old_y)/std::fabs(old_x));
+    //if (std::fabs((i_min_1.y-i_plus_1.y)/2) > old_y)
+    double beta = atan(std::fabs(i_min_1.y-i_plus_1.y)/std::fabs(i_min_1.x-i_plus_1.x));
+    double gama = 180-alpha-beta;
+
+    double old_x_pyth = pow(old_x, 2);
+    double old_y_pyth = pow(old_y, 2);
+    double old_dist = sqrt(old_x_pyth + old_y_pyth);
+    double old_norm = old_dist * sin(gama);
+
+    alpha = atan(std::fabs(new_y)/std::fabs(new_x));
+    beta = atan(std::fabs(i_min_1.y-i_plus_1.y)/std::fabs(i_min_1.x-i_plus_1.x));
+    gama = 180-alpha-beta;
+    double new_x_pyth = pow(new_x, 2);
+    double new_y_pyth = pow(new_y, 2);
+    double new_dist = sqrt(new_x_pyth + new_y_pyth);
+    double new_norm = new_dist * sin(gama);
+
+    double x = std::fabs(i_min_1.x-i_plus_1.x);
+    double y = std::fabs(i_min_1.x-i_plus_1.x);
+    double x_pyth = pow(x, 2);
+    double y_pyth = pow(y, 2);
+    double dist = sqrt(x_pyth + y_pyth);*/
+
+    //double new_Delta = 0.5 * dist * (new_norm - old_norm);
+
+    /*cout << "new" << endl;
+    cout << new_norm << endl;
+    cout << "old" << endl;
+    cout << old_norm << endl;
+    cout << "New Delta" << endl;
+    cout << new_Delta << endl;
+    cout << delta_A <<
+
+    //if (std::fabs(new_norm) >= old_norm) {
+      /*if (new_norm >= 0) {
+
+      } else {
+
+      }*/
+      /*cout << "bigger" << endl;
+      //return delta_A;
+      cout << delta_A << endl;
+    } else {
+      //-delta_A;
+      cout << "small" << endl;
+      cout << delta_A << endl;
+    }
+
+     return -new_Delta;
+  }*/
+
+  /*if (old_p.x < new_p.x && old_p.y < new_p.y) {
+    return -delta_A;
+  }
+}*/
+
+  cout << "no" << endl;
+  cout << delta_A << endl;
+  return delta_A;
+
+}
+
+
 
 class CellWallCurve {
 	friend class Node;
