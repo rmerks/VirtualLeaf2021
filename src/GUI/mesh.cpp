@@ -946,16 +946,13 @@ public:
 		  }
 	}
 
-	int checkAngle() {
+	bool checkAngle() {
 		double angle = (*from-*over).Angle((*to-*over));
-		if (WALL_COLLAPS_ANGLE > angle ) {
-			return over->Index();
-		}
-		return -1;
+		return WALL_COLLAPS_ANGLE > angle;
 	}
 
 	void checkAngle(std::list<CellWallCurve> &toSharpNode) {
-		if (to!= NULL && checkAngle() > 0){
+		if (to!= NULL && checkAngle()){
 			toSharpNode.push_back(*this);
 		}
 	}
