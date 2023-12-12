@@ -1032,20 +1032,23 @@ public:
 	 * wall. We remove this spike if the angle between a-c and b-c gets to small. We do this
 	 * by replacing a-c and with a new wall a-b.
 	 */
-	void removeSpike() {
+	bool removeSpike() {
 		Cell * c1 = cellBehindLongerWall();
 		Cell * c2 = cell;
 		Cell * c3 = cellBehindShorterWall();
 		Node * a = longerWall();
 		Node * b = a == to? from : to;
 		Node * c = over;
+		if (c1->Index() == -1 ||c2->Index() == -1 ||c3->Index() == -1) {
+			cout << "border case\n";
+		}
 		if (c->Value() ==  2) {
 			// TODO delete node, spike into the cell itself
 			cout << " innser spike ";
 			cout << " c2=" << c2->Index() ;
 			c2->removeNode(c);
 			c2->correctNeighbors();
-			return;
+			return true;
 		}
 		if (a==b) {
 			cout << " merged node ";
@@ -1063,10 +1066,10 @@ public:
 				cout << " c3=" << c3->Index() ;
 			else
 				cout << " c3=NULL";
-			return;
+			return false;
 		}
 
-		if (c2->Index()==-1) {
+ 		if (c2->Index()==-1) {
 			cout<< " boundary node spike ";
 			cout << " c2=" << c2->Index() ;
 		}
@@ -1085,7 +1088,7 @@ public:
 				if (wallc1ToC == NULL|| wallc3ToC==NULL) {
 					cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
 					cout << " not handled case\n";
-					return;
+					return false;
 				}
 			}
 
@@ -1100,7 +1103,9 @@ public:
 			if (a->BoundaryP() && b->BoundaryP() && c->BoundaryP() ) {
 				c->UnsetBoundary();
 			}
-
+			if (a->BoundaryP() && !b->BoundaryP() && c->BoundaryP() ) {
+				b->SetBoundary();
+			}
 			if (wallc1c3 != NULL) {
 				cout << " wallc1c3=" << wallc1c3->N1()->Index() << "->" << wallc1c3->N2()->Index() << " wallc1c2=" << wallc1c2->N1()->Index() << "->" << wallc1c2->N2()->Index() << " wallc2c3=" << wallc2c3->N1()->Index() << "->" << wallc2c3->N2()->Index()<<"\n";
 				wallc1c3->replaceNode(c,b);
@@ -1118,7 +1123,7 @@ public:
 			c1->correctNeighbors();
 			c2->correctNeighbors();
 			c3->correctNeighbors();
-
+			return true;
 		} else {
 			// a new wall is nessesary
 			cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
@@ -1138,6 +1143,7 @@ public:
 				cout << " wallc2c3=NULL\n";
 			}
 			cout << " new wall nessesary ";
+			return false;
 		}
 	}
 
@@ -1201,11 +1207,16 @@ void Mesh::WallCollapse(void) {
 	toSharpNode.unique(eqCellWallCurve);
 	if (toSharpNode.size()>0) {
 		cout << "to sharp: \n";
+		bool anySpikeRemoved=false;
 		for (CellWallCurve sharpCurve : toSharpNode) {
-			sharpCurve.removeSpike();
+			if (sharpCurve.removeSpike()){
+				anySpikeRemoved=true;
+			}
 			cout << ' ' << sharpCurve.Index() << '\n';
 		}
-	//	RepairBoundaryPolygon();
+		if (anySpikeRemoved) {
+			RepairBoundaryPolygon();
+		}
 		cout << "end spike\n";
 	}
 }
