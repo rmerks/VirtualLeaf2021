@@ -2147,6 +2147,7 @@ void Cell::correctNeighbors() {
   n3=second;
   n2->correctNeighbors(this->Index(), n1, n3);
   ConstructNeighborList();
+  RecalcArea();
 }
 
 /* finis */
