@@ -60,6 +60,7 @@ HEADERS = \
  random.h \
  simplugin.h \
  UniqueMessage.h \
+    spring.h \
  vector.h \
  nodebase.h \
  wallbase.h \
@@ -78,6 +79,7 @@ SOURCES = \
  random.cpp \
  simplugin.cpp \
  UniqueMessage.cpp \
+ spring.cpp \
  vector.cpp \
  nodebase.cpp \
  wallbase.cpp \

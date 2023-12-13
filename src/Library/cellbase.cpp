@@ -46,6 +46,7 @@
 #include "mesh.h"
 #include "sqr.h"
 #include "tiny.h"
+#include "spring.h"
 
 static const std::string _module_id("$Id$");
 
@@ -94,6 +95,11 @@ CellBase::CellBase(QObject *parent) :
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
+  place_springs = false;
+  sigma_springs = 0.33;
+  reference_springs = 0;
+  spring_stiffness = 0.;
+  spring_target_length = 0.;
 }
 
 
@@ -176,6 +182,11 @@ CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
   div_counter = src.div_counter;
   flag_for_divide = src.flag_for_divide;
   division_axis = src.division_axis;
+  place_springs = src.place_springs;
+  sigma_springs = src.sigma_springs;
+  reference_springs = src.reference_springs;
+  spring_stiffness = src.spring_stiffness;
+  spring_target_length = src.spring_target_length;
 }
 
 
@@ -217,6 +228,11 @@ CellBase CellBase::operator=(const CellBase &src)
   div_counter = src.div_counter;
   flag_for_divide = src.flag_for_divide;
   division_axis = src.division_axis;
+  place_springs = src.place_springs;
+  sigma_springs = src.sigma_springs;
+  reference_springs = src.reference_springs;
+  spring_stiffness = src.spring_stiffness;
+  spring_target_length = src.spring_target_length;
   return *this;
 }
 
@@ -665,6 +681,69 @@ bool CellBase::stopWallElementInfo(WallElementInfo * info) {
 
 
 
+void CellBase::AddSpringToCell(CellBase *c, Spring *s) {
+  springs.push_back( s );
+}
+
+void CellBase::SetSpringStiffness(double value){
+    spring_stiffness = value;
+}
+
+void CellBase::SetSpringTargetLength(double length){
+    spring_target_length = length;
+}
+
+
+void CellBase::SetSprings(void){
+    CellBase c;
+    springs.clear();
+    Vector ref_vec = GetRefVecSprings();
+    std::normal_distribution<float> d(0, sigma_springs);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    for (list<Node *>::iterator i=nodes.begin(); i!=nodes.end(); i++) {
+      Vector rel_node=*(*i);
+
+      for (list<Node *>::iterator j=nodes.begin(); j!=nodes.end(); j++) {
+
+          // I need this to make sure that I don't pick the identical node to set the spring
+          Node *previous;
+          if (j!=nodes.begin()) {
+            list<Node *>::iterator previous_iterator=j;
+            previous_iterator--;
+            previous=*previous_iterator;
+          } else {
+            previous=nodes.back();
+          }
+          Vector pot_spring = rel_node - *(*j) ;
+          Vector norm_pot_spring = pot_spring.Norm();
+          Vector pot_spring_prev = rel_node - *previous;
+          Vector norm_pot_spring_prev = pot_spring_prev.Norm();
+
+          double cos_angle_ref = InnerProduct(ref_vec, norm_pot_spring);
+          double cos_angle_ref_prev = InnerProduct(ref_vec, norm_pot_spring_prev);
+
+
+          if (cos_angle_ref * cos_angle_ref_prev <= 0. ) {
+               if(*(*j) != rel_node ){ // && rel_node !=*previous){
+
+                   double sample_rel = d(gen);
+
+                   if((cos_angle_ref - sample_rel) < (cos_angle_ref_prev - sample_rel)){
+                       Spring *s = new Spring(*i,*j,&c);
+                       AddSpringToCell(&c,s);
+                   }
+                   else if((cos_angle_ref - sample_rel) > (cos_angle_ref_prev - sample_rel)){
+                       Spring *s = new Spring(*i,previous,&c);
+                       AddSpringToCell(&c,s);
+                   }
+              }
+
+
+         }
+     }
+    }
+}
 
 
 /* finis*/

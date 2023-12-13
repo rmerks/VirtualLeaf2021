@@ -53,6 +53,7 @@ class NodeSet;
 class WallElementInfo;
 class WallElement;
 class NodeBase;
+class Spring;
 
 struct ParentInfo {
 
@@ -95,6 +96,7 @@ class CellBase :  public QObject, public Vector
   friend class WallElement;
   friend class WallElementInfo;
   friend class SimPluginInterface;
+  friend class Spring;
 
  public:
   CellBase(QObject *parent=0);
@@ -228,6 +230,25 @@ class CellBase :  public QObject, public Vector
   }
 
 
+
+  // Here are the functions needed for anisotropic growth
+  inline void SetRefVecSprings(Vector ref_vec) {reference_springs = ref_vec;}
+  inline Vector GetRefVecSprings() {return reference_springs;}
+  inline void PlaceSprings() {place_springs= true;}
+  void SetSigmaSprings(double value) {sigma_springs = value;}
+  double getSigmaSprings() {return this->sigma_springs;};
+  void SetSprings(void);
+  void AddSpringToCell (CellBase *c, Spring *s);
+  void CheckSprings(void);
+  void SetSpringStiffness(double value);
+  void SetSpringTargetLength(double length);
+  double GetSpringStiffness() const
+  {
+      return spring_stiffness;
+  }
+  double GetSpringTargetLength() const {
+      return spring_target_length;
+  }
 
 
 
@@ -461,6 +482,8 @@ class CellBase :  public QObject, public Vector
   inline double NewChem(int c) const { return new_chem[c]; }
 
   list<Node *> nodes;
+  Spring* getSpring(void) const;
+  Spring *s1;
   void ConstructNeighborList(void);
   long wall_list_index (Wall *elem) const;
 
@@ -474,6 +497,7 @@ class CellBase :  public QObject, public Vector
   list<CellBase *> neighbors;
 
   list<Wall *> walls;
+  list<Spring *> springs;
 
   double *chem;
   double *new_chem;
@@ -484,6 +508,9 @@ class CellBase :  public QObject, public Vector
   double target_length;
   double lambda_celllength;
   double wall_stiffness; // Lebovka et al
+  double sigma_springs; // sigma for the normal distribution describing spring orientation
+  double spring_stiffness;
+  double spring_target_length;
 
   double stiffness; // stiffness like in Hogeweg (2000)
 
@@ -492,8 +519,11 @@ class CellBase :  public QObject, public Vector
   bool at_boundary; 
   bool dead; 
   bool flag_for_divide;
+  bool place_springs; // bool determining if springs are placed or not
+
 
   Vector *division_axis;
+  Vector reference_springs; // reference vector for spring placement, orthogonal to spring direction!
   int cell_type;
 
   // for length constraint
