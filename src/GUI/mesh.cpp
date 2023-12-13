@@ -902,6 +902,7 @@ class CellWallCurve {
 	friend class Node;
 	friend class CellBase;
 	Cell * cell;
+
 	Node * from=NULL;
 	Node * over=NULL;
 	Node * to=NULL;
@@ -946,15 +947,37 @@ public:
 		  }
 	}
 
+	bool checkBudEnd(Node * node,std::list<CellWallCurve> &toSharpNode) {
+		if (to == NULL||over == NULL||from == NULL) {
+			return false;
+		}
+		bool isBudEnd = false;
+		Node *tFrom = from;
+		Node *tOver = over;
+		Node *tTo = node;
+		if (WALL_COLLAPS_ANGLE*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
+			tOver = to;
+			tTo=node;
+			if (WALL_COLLAPS_ANGLE*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
+				isBudEnd =true;
+			}
+		}
+		if (isBudEnd)
+			toSharpNode.push_back(*this);
+		return isBudEnd;
+	}
+
 	bool checkAngle() {
 		double angle = (*from-*over).Angle((*to-*over));
 		return WALL_COLLAPS_ANGLE > angle;
 	}
 
-	void checkAngle(std::list<CellWallCurve> &toSharpNode) {
+	bool checkAngle(std::list<CellWallCurve> &toSharpNode) {
 		if (to!= NULL && checkAngle()){
 			toSharpNode.push_back(*this);
+			return true;
 		}
+		return false;
 	}
 
 	void reset() {
@@ -1033,6 +1056,10 @@ public:
 		Cell * c1 = cellBehindLongerWall();
 		Cell * c2 = cell;
 		Cell * c3 = cellBehindShorterWall();
+		if (c1==NULL ||c2 == NULL) {
+			cout << "can't find cells behind walls cell=" << cell->Index() << " node=" << over->Index();
+			return false;
+		}
 		Node * a = longerWall();
 		Node * b = a == to? from : to;
 		Node * c = over;
@@ -1189,16 +1216,26 @@ void Mesh::WallCollapse(void) {
 		curve.shift(*j);
 		curve.shift(*(++j));
 		curve.shift(*(++j));
-		first = curve.getFrom();
-		second = curve.getOver();
 		while (j!=cell.nodes.end()) {
-			curve.checkAngle(toSharpNode);
-			curve.shift(*(++j));
+			bool toSharp = curve.checkAngle(toSharpNode);
+			Node *nextNode = *(++j);
+			if (!toSharp && j!=cell.nodes.end()){
+				curve.checkBudEnd(nextNode,toSharpNode);
+			}
+			curve.shift(nextNode);
 		}
-		curve.setTo(first);
-		curve.checkAngle(toSharpNode);
-		curve.shift(second);
-		curve.checkAngle(toSharpNode);
+		j=cell.nodes.begin();
+		Node *nextNode =*j;
+		curve.setTo(nextNode);
+		nextNode = *(++j);
+		if (!curve.checkAngle(toSharpNode)){
+			curve.checkBudEnd(nextNode,toSharpNode);
+		}
+		curve.shift(nextNode);
+		nextNode = *(++j);
+		if (!curve.checkAngle(toSharpNode)){
+			curve.checkBudEnd(nextNode,toSharpNode);
+		}
 	}
 	toSharpNode.sort(cmpCellWallCurve);
 	toSharpNode.unique(eqCellWallCurve);

@@ -1883,10 +1883,16 @@ void Cell::DrawCenter(QGraphicsScene *c) const {
   // Maginfication derived similarly to that in nodeitem.cpp
   // Why not use Cell::Magnification()?
   const double mag = par.node_mag;
-
+  int indicator = (CellType()+1)&3;
+  int dimm=((CellType()+1)&(12))<<2;
+  int intensity = 255 - (255/3)*dimm;
+  int red=  indicator == 1?intensity:0;
+  int green=  indicator == 2?intensity:0;
+  int blue=  indicator == 3?intensity:0;
+    QColor color(red, green, blue, 255);
   // construct an ellipse
   QGraphicsEllipseItem *disk = new QGraphicsEllipseItem ( -1*mag, -1*mag, 2*mag, 2*mag, 0);
-  disk->setBrush( QColor("forest green") );
+  disk->setBrush(color);
   disk->setZValue(5);
   Vector centroid=Centroid();
   disk -> setPos((offset[0]+centroid.x)*factor,(offset[1]+centroid.y)*factor);
