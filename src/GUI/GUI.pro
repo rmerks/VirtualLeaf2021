@@ -120,6 +120,7 @@ $${VLEAFLIBDIR}/cellbase.h \
  $${VLEAFLIBDIR}/vector.h \
  $${VLEAFLIBDIR}/nodebase.h \
  $${VLEAFLIBDIR}/wallbase.h \
+ $${VLEAFLIBDIR}/spring.h \
  wall.h \
  wallitem.h \
  $${VLEAFLIBDIR}/warning.h \
@@ -160,6 +161,7 @@ $${VLEAFLIBDIR}/nodebase.cpp \
 $${VLEAFLIBDIR}/wallbase.cpp \
 $${VLEAFLIBDIR}/wallelement.cpp \
 $${VLEAFLIBDIR}/wallelementinfo.cpp \
+$${VLEAFLIBDIR}/spring.cpp \
  wallitem.cpp \
 $${VLEAFLIBDIR}/warning.cpp \
  $$MAINSRC
