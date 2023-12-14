@@ -129,7 +129,6 @@ class Cell : public CellBase
   void Apoptose(void); // Cell kills itself
   list<Wall *>::iterator RemoveWall( Wall *w );
   void AddWall( Wall *w );
-  void InsertWall( Wall *w );
 
   void Draw(QGraphicsScene *c, QString tooltip = "");
 
@@ -146,11 +145,11 @@ class Cell : public CellBase
   void DrawWalls(QGraphicsScene *c) const;
   void DrawValence(QGraphicsScene *c) const;
   void EmitValues(double t);
-  void removeNode(Node * node);
-  void insertNodeAfterFirst(Node * position1, Node * position2, Node * newNode);
-  void correctNeighbors();
-
-
+  void insertNodeAfterFirst(NodeBase * position1, NodeBase * position2, NodeBase * newNode);
+  virtual void correctNeighbors();
+  virtual WallBase* newWall(NodeBase* from,NodeBase* to,CellBase * other);
+  virtual void InsertWall( WallBase *w );
+  virtual CellBase* getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over);
  signals:
   void ChemMonValue(double t, double *x);
 

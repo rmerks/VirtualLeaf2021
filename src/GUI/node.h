@@ -107,21 +107,12 @@ class Node : public NodeBase {
 
   virtual ~Node() {}
 
-  inline int Index(void) const { return index; }
+  virtual int Index(void);
 
   inline bool IndexEquals(int i) { return i == index; }
 
-  inline bool BoundaryP(void) const { return boundary; }
-
-  inline void SetBoundary(void) { boundary = true; }
-
-  inline void UnsetBoundary(void) { boundary = false; }
-
   inline void SetSAM(void) { sam = true; }
 
-  inline void toggleBoundary(void) {
-    boundary = !boundary;
-  }
 
 
   Cell &getCell(const Neighbor &i);
@@ -139,6 +130,7 @@ class Node : public NodeBase {
   inline int CellsSize(void) const { return owners.size(); }
 
   inline int Value(void) const { return owners.size(); }
+  virtual int countNeighbors(void);
 
   void Fix(void) { fixed=true; }
 
@@ -171,7 +163,7 @@ class Node : public NodeBase {
   }
 
   void correctNeighbors(int cellIndex, Node* n1, Node* n3);
-  void removeCell(CellBase * cell);
+  virtual void removeCell(CellBase * cell);
   void addCell(CellBase * cell);
 
   //!\brief Calculate angles with neighboring vertices
@@ -192,7 +184,6 @@ class Node : public NodeBase {
   NodeSet *node_set; 
   // fixed nodes cannot move. E.g. to represent the petiole
   bool fixed;
-  bool boundary; // true if node is at the edge of the leaf
   bool sam; // true if node is connected to the shoot
   bool dead;
   bool marked;

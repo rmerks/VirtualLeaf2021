@@ -26,10 +26,27 @@ class NodeBase : public Vector {
 			  delete *i;
 		  }
 	  }
+	  virtual void removeCell(CellBase * cell) ;
 
 	  WallElement* getWallElement(CellBase *);
 
 	  WallElement* insertWallElement(CellBase *);
+
+	  virtual int Index(void);
+	  virtual int countNeighbors(void);
+
+	  inline bool BoundaryP(void) const { return boundary; }
+
+	  inline void SetBoundary(void) { boundary = true; }
+
+	  inline void UnsetBoundary(void) { boundary = false; }
+
+	  inline void toggleBoundary(void) {
+	    boundary = !boundary;
+	  }
+
+	  bool boundary; // true if node is at the edge of the leaf
+
 };
 
 #endif /* NODEBASE_H_ */

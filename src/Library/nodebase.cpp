@@ -21,7 +21,10 @@ NodeBase::NodeBase(const NodeBase &src) : Vector(src)
 {
 }
 
+int NodeBase::Index(void) { return -1; }
 
+void NodeBase::removeCell(CellBase * cell) {
+}
 
 WallElement* NodeBase::getWallElement(CellBase * c) {
 	  for (vector<WallElement*>::iterator i=wallElements.begin(); i!=wallElements.end(); i++) {
@@ -39,5 +42,6 @@ WallElement* NodeBase::insertWallElement(CellBase* cell) {
 }
 
 
-
-
+int NodeBase::countNeighbors(void){
+	return 0;
+}

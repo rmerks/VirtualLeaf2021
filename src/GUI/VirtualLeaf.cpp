@@ -70,7 +70,7 @@ bool useGUI;
 
 class PrintNode {
 public:
-  void operator() (const Node &n) const 
+  void operator() (Node &n) const
   {
     cerr << n.Index() << ": " << n <<  endl;
   }
@@ -266,8 +266,9 @@ TIMESTEP {
 
   if(DynamicCellsP()) {
 
-	mesh.WallCollapse();
+    mesh.WallCollapse();
     mesh.WallRelaxation();
+
 
     dh = mesh.DisplaceNodes();
 

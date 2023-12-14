@@ -299,4 +299,9 @@ bool WallBase::IntersectsWithDivisionPlaneP(const Vector &p1, const Vector &p2)
   else return false;
 }
 
+void WallBase::replaceNode(NodeBase* oldN, NodeBase* newN) {
+	if (((Node *)oldN) == n1) n1=(Node *)newN; else if (((Node *)oldN) ==n2) n2=(Node *)newN;
+}
+
+
 /* finis */

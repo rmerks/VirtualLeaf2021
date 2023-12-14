@@ -109,6 +109,7 @@ Node::Node(const Node &src) : NodeBase(src)
   dead = src.dead;
 }
 
+int Node::Index(void) { return index; }
 
 Cell &Node::getCell(const Neighbor &i)
 {
@@ -237,4 +238,8 @@ void Node::addCell(CellBase * cell) {
 	owners.push_back( Neighbor( (Cell*)cell, NULL, NULL ) );
 }
 
+
+int Node::countNeighbors(void) {
+	return owners.size();
+}
 /* finis */

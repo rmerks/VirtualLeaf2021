@@ -34,6 +34,7 @@
 
 #include "vector.h"
 #include "parameter.h"
+#include "cellwallcurve.h"
 #include "nodebase.h"
 #include "wall.h"
 #include "warning.h"
@@ -53,6 +54,7 @@ class NodeSet;
 class WallElementInfo;
 class WallElement;
 class NodeBase;
+class CellWallCurve;
 
 struct ParentInfo {
 
@@ -227,9 +229,12 @@ class CellBase :  public QObject, public Vector
     return sum;
   }
 
-
-
-
+  virtual void correctNeighbors();
+  virtual void removeNode(NodeBase * node) ;
+  virtual WallBase* newWall(NodeBase* from,NodeBase* to,CellBase * other);
+  virtual void insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode);
+  virtual void InsertWall( WallBase *w );
+  virtual CellBase* getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over);
 
   QList<WallBase *> getWalls(void) {
     QList<WallBase *> wall_list;
@@ -439,6 +444,7 @@ class CellBase :  public QObject, public Vector
   void fillWallElementInfo(WallElementInfo * info,Node* from,Node* to) ;
   bool stopWallElementInfo(WallElementInfo * info);
   inline void removeWall(Wall * wall) {walls.remove(wall);}
+  void attachToCell(CellWallCurve * curve);
 
  protected:
   // (define a list of Node* iterators)
@@ -515,6 +521,7 @@ class CellBase :  public QObject, public Vector
 
   bool marked;
   int div_counter;
+  CellWallCurve * curvedWallElementToHandle;
 
 };
 

@@ -94,6 +94,7 @@ CellBase::CellBase(QObject *parent) :
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
+  curvedWallElementToHandle= new CellWallCurve();
 }
 
 
@@ -135,6 +136,7 @@ CellBase::CellBase(double x,double y,double z) : QObject(), Vector(x,y,z)
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
+  curvedWallElementToHandle= new CellWallCurve();
 }
 
 CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
@@ -176,6 +178,7 @@ CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
   div_counter = src.div_counter;
   flag_for_divide = src.flag_for_divide;
   division_axis = src.division_axis;
+  curvedWallElementToHandle = new CellWallCurve();
 }
 
 
@@ -508,6 +511,25 @@ double CellBase::CalcLength(Vector *long_axis, double *width)  const
   return 4*sqrt(lambda_b/my_area);
 }
 
+WallBase* CellBase::newWall(NodeBase* from,NodeBase* to,CellBase * other){
+	return NULL;
+}
+
+CellBase* CellBase::getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over) {
+	return NULL;
+}
+
+void CellBase::insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode) {
+  std::_List_iterator<Node*> indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
+      return node->Index()==position1->Index()||node->Index()==position2->Index();
+  });
+  if (indexOfC == this->nodes.begin() && (this->nodes.back()==position1||this->nodes.back()==position2)) {
+    this->nodes.insert(indexOfC,(Node*)newNode);
+  }else {
+    indexOfC++;
+    this->nodes.insert(indexOfC,(Node*)newNode);
+  }
+}
 
 void CellBase::ConstructNeighborList(void)
 {
@@ -663,8 +685,16 @@ bool CellBase::stopWallElementInfo(WallElementInfo * info) {
 	return info->isStop();
 }
 
+void CellBase::removeNode(NodeBase * node) {
+  this->nodes.remove((Node*)node);
+  node->removeCell(this);
+}
 
+void CellBase::InsertWall( WallBase *w ){
+	//implemented in sub class
+}
 
-
+void CellBase::attachToCell(CellWallCurve * curve) {curvedWallElementToHandle->set(curve);};
+void CellBase::correctNeighbors() {}
 
 /* finis*/

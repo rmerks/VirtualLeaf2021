@@ -893,304 +893,12 @@ double Mesh::DisplaceNodes(void) {
   return sum_dh;
 }
 
-/**
- * At what angle should the walls collapse together? and what would be the properties?
- */
-#define WALL_COLLAPS_ANGLE Pi/18.
-
-class CellWallCurve {
-	friend class Node;
-	friend class CellBase;
-	Cell * cell;
-
-	Node * from=NULL;
-	Node * over=NULL;
-	Node * to=NULL;
-
-	Wall* findWallBetweenEndingAt(Cell *&c1, Cell *&c2, Node *&c) {
-		Wall *wallBetween = NULL;
-		Wall **pwallBetween = &wallBetween;
-		c1->LoopWalls([this, c1, c2, c, pwallBetween](auto wall) {
-			if (isWallBetweenEndingAt(wall, c1, c2, c)) {
-				// this wall now ends at b instead of c
-				(*pwallBetween) = wall;
-			}
-		}
-		);
-		return wallBetween;
-	}
-
-	Wall* otherWallEndingAt(Cell *c3, Node *&c, Wall *&wallc2c3) {
-		Wall *wallc3ToC;
-		Wall **pwallc3ToC = &wallc3ToC;
-		c3->LoopWalls([this, c, wallc2c3, pwallc3ToC](auto wall) {
-			if ((wall->N1() == c || wall->N2() == c) && wall != wallc2c3) {
-				(*pwallc3ToC) = wall;
-			}
-		}
-		);
-		return wallc3ToC;
-	}
-
-public:
-	void shift(Node * node) {
-		  if (from == NULL) {
-			  from=node;
-		  } else if (over == NULL) {
-			  over=node;
-		  } else if (to==NULL) {
-			  to = node;
-		  } else {
-			  from=over;
-			  over=to;
-			  to=node;
-		  }
-	}
-
-	bool checkBudEnd(Node * node,std::list<CellWallCurve> &toSharpNode) {
-		if (to == NULL||over == NULL||from == NULL) {
-			return false;
-		}
-		bool isBudEnd = false;
-		Node *tFrom = from;
-		Node *tOver = over;
-		Node *tTo = node;
-		if (WALL_COLLAPS_ANGLE*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
-			tOver = to;
-			tTo=node;
-			if (WALL_COLLAPS_ANGLE*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
-				isBudEnd =true;
-			}
-		}
-		if (isBudEnd)
-			toSharpNode.push_back(*this);
-		return isBudEnd;
-	}
-
-	bool checkAngle() {
-		double angle = (*from-*over).Angle((*to-*over));
-		return WALL_COLLAPS_ANGLE > angle;
-	}
-
-	bool checkAngle(std::list<CellWallCurve> &toSharpNode) {
-		if (to!= NULL && checkAngle()){
-			toSharpNode.push_back(*this);
-			return true;
-		}
-		return false;
-	}
-
-	void reset() {
-		cell=NULL;
-		from=NULL;
-		over=NULL;
-		to=NULL;
-	}
-
-	int Index() {
-		return over->Index();
-	}
-
-	void setCell(Cell * aCell) {
-		cell = aCell;
-	}
-
-	void setTo(Node * node) {
-		to = node;
-	}
-
-	Node* getFrom()  {
-		return from;
-	}
-
-	Node* getOver() {
-		return over;
-	}
-
-	Node* getTo() {
-		return to;
-	}
-
-	Node* longerWall() {
-		int fromNorm = (*from-*over).Norm();
-		int toNorm = (*to-*over).Norm();
-		if (fromNorm>toNorm) {
-			return from;
-		}else {
-			return to;
-		}
-	}
-
-	Cell* cellBehindLongerWall() {
-		Node * lw = longerWall();
-		return cellBehindWallToNode(lw);
-	}
-
-	Cell* cellBehindShorterWall() {
-		Node * lw = longerWall();
-		Node * sw = lw == to? from : to;
-		return cellBehindWallToNode(sw);
-	}
-
-	Cell* cellBehindWallToNode(Node * spikeEnd) {
-		Cell* result = NULL;
-		Cell** presult = &result;
-		spikeEnd->LoopNeighbors([this,presult](auto neighbor1) {
-			if (neighbor1.getCell()->Index() != this->cell->Index()) {
-				this->over->LoopNeighbors([neighbor1,this,presult](auto neighbor2) {
-					if (neighbor1.getCell()->Index() == neighbor2.getCell()->Index()) {
-						(*presult) = neighbor2.getCell();
-					}
-				});
-			}
-		});
-		return result;
-	}
-	/**
-	 * Now we collapse the spike by letting the longer wall end at the end of the shorter wall.
-	 * Assume a sharp spike in a wall from node a to c (a-c) to b (c-b). were a-c is the longer
-	 * wall. We remove this spike if the angle between a-c and b-c gets to small. We do this
-	 * by replacing a-c and with a new wall a-b.
-	 */
-	bool removeSpike() {
-		Cell * c1 = cellBehindLongerWall();
-		Cell * c2 = cell;
-		Cell * c3 = cellBehindShorterWall();
-		if (c1==NULL ||c2 == NULL) {
-			cout << "can't find cells behind walls cell=" << cell->Index() << " node=" << over->Index();
-			return false;
-		}
-		Node * a = longerWall();
-		Node * b = a == to? from : to;
-		Node * c = over;
-		if (c1->Index() == -1 ||c2->Index() == -1 ||c3->Index() == -1) {
-			cout << "border case\n";
-		}
-		if (c->Value() ==  2) {
-			// TODO delete node, spike into the cell itself
-			cout << " innser spike ";
-			cout << " c2=" << c2->Index() ;
-			c2->removeNode(c);
-			c2->correctNeighbors();
-			return true;
-		}
-		if (a==b) {
-			cout << " merged node ";
-		}
-		//we go over the c2 walls, here is the spike
-		if (c1 == NULL||c3 == NULL|| c1==c3) {
-			// unknow case
-			cout<< " not handled spike "<< (c1==c3?"eq ":"");
-			if (c1!= NULL)
-				cout << " c1=" << c1->Index() ;
-			else
-				cout << " c1=NULL";
-			cout << " c2=" << c2->Index() ;
-			if (c3!= NULL)
-				cout << " c3=" << c3->Index() ;
-			else
-				cout << " c3=NULL";
-			return false;
-		}
-
- 		if (c2->Index()==-1) {
-			cout<< " boundary node spike ";
-			cout << " c2=" << c2->Index() ;
-		}
-		Wall *wallc1c2 = findWallBetweenEndingAt(c1, c2, c);
-		Wall * wallc2c3 = findWallBetweenEndingAt(c2,c3,c);
-		//for the extending wall we need a existing wall between c1 and c3 that ends at c.
-		Wall * wallc1c3 = findWallBetweenEndingAt(c1,c3,c);
-
-		if (wallc1c2 != NULL&&wallc2c3 != NULL) {
-			Wall * wallc1ToC = NULL;
-			Wall * wallc3ToC = NULL;
-			if (wallc1c3 == NULL) {
-				// more than 3 cells in point c, now c1 and c3 are separated by other cells.
-				wallc1ToC = otherWallEndingAt(c1, c, wallc1c2);
-				wallc3ToC = otherWallEndingAt(c3, c, wallc2c3);
-				if (wallc1ToC == NULL|| wallc3ToC==NULL) {
-					cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
-					cout << " not handled case\n";
-					return false;
-				}
-			}
-
-			// we extend the existing wall from c to b.
-			cout << " spike removed\n";
-			cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
-			cout << " c1=" << c1->Index() << " c2=" << c2->Index()<< " c3=" << c3->Index()<<"\n";
-
-			c2->removeNode(c);
-			// add b node to c1 after a or c depending who comes first
-			c1->insertNodeAfterFirst(c,a,b);
-			if (a->BoundaryP() && b->BoundaryP() && c->BoundaryP() ) {
-				c->UnsetBoundary();
-			}
-			if (a->BoundaryP() && !b->BoundaryP() && c->BoundaryP() ) {
-				b->SetBoundary();
-			}
-			if (wallc1c3 != NULL) {
-				cout << " wallc1c3=" << wallc1c3->N1()->Index() << "->" << wallc1c3->N2()->Index() << " wallc1c2=" << wallc1c2->N1()->Index() << "->" << wallc1c2->N2()->Index() << " wallc2c3=" << wallc2c3->N1()->Index() << "->" << wallc2c3->N2()->Index()<<"\n";
-				wallc1c3->replaceNode(c,b);
-			} else {
-				wallc1c3 = new Wall(c,b,c1,c3);
-				wallc1c3->CopyWallContents(*wallc1c2);
-				wallc1c3->SetLength();
-				c1->InsertWall(wallc1c3);
-				c3->InsertWall(wallc1c3);
-			}
-			wallc1c2->replaceNode(c,b);
-			wallc1c2->SetLength();
-			wallc2c3->replaceNode(c,b);
-			wallc2c3->SetLength();
-			c1->correctNeighbors();
-			c2->correctNeighbors();
-			c3->correctNeighbors();
-			return true;
-		} else {
-			// a new wall is nessesary
-			cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
-			if (wallc1c3!= NULL) {
-				cout << " wallc1c3=" << wallc1c3->N1()->Index() << "->" << wallc1c3->N2()->Index()<<"\n";
-			} else {
-				cout << " wallc1c3=NULL\n";
-			}
-			if (wallc1c2!= NULL) {
-				cout << " wallc1c2=" << wallc1c2->N1()->Index() << "->" << wallc1c2->N2()->Index()<<"\n";
-			} else {
-				cout << " wallc1c2=NULL\n";
-			}
-			if (wallc2c3!= NULL) {
-				cout << " wallc2c3=" << wallc2c3->N1()->Index() << "->" << wallc2c3->N2()->Index()<<"\n";
-			} else {
-				cout << " wallc2c3=NULL\n";
-			}
-			cout << " new wall nessesary ";
-			return false;
-		}
-	}
-
-	bool isWallBetweenEndingAt(Wall * wall, Cell* cell1, Cell* cell2, Node * node) {
-		return (wall->N1() == node || wall->N2() == node) &&
-				((wall->C1() == cell1 && wall->C2() == cell2) || (wall->C1() == cell2 && wall->C2() == cell1));
-
-	}
-};
 
 
-
-bool cmpCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
-	return b.Index() - a.Index();
-}
-
-bool eqCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
-	return b.Index() == a.Index();
-}
 
 void Mesh::WallCollapse(void) {
-	std::list<CellWallCurve> toSharpNode;
 	CellWallCurve curve;
+	bool anyCurveFlattend=false;
 	Node * first=NULL;
 	Node * second=NULL;
 	curve.reset();
@@ -1202,12 +910,12 @@ void Mesh::WallCollapse(void) {
 		}else if (second==NULL) {
 			second=node;
 		}
-		curve.checkAngle(toSharpNode);
+		curve.checkAngle();
 	}
 	curve.shift(first);
-	curve.checkAngle(toSharpNode);
+	curve.checkAngle();
 	curve.shift(second);
-	curve.checkAngle(toSharpNode);
+	curve.checkAngle();
 	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
 		Cell &cell(**i);
 		curve.reset();
@@ -1217,10 +925,10 @@ void Mesh::WallCollapse(void) {
 		curve.shift(*(++j));
 		curve.shift(*(++j));
 		while (j!=cell.nodes.end()) {
-			bool toSharp = curve.checkAngle(toSharpNode);
+			bool toSharp = curve.checkAngle();
 			Node *nextNode = *(++j);
 			if (!toSharp && j!=cell.nodes.end()){
-				curve.checkBudEnd(nextNode,toSharpNode);
+				curve.checkBudEnd(nextNode);
 			}
 			curve.shift(nextNode);
 		}
@@ -1228,25 +936,25 @@ void Mesh::WallCollapse(void) {
 		Node *nextNode =*j;
 		curve.setTo(nextNode);
 		nextNode = *(++j);
-		if (!curve.checkAngle(toSharpNode)){
-			curve.checkBudEnd(nextNode,toSharpNode);
+		if (!curve.checkAngle()){
+			curve.checkBudEnd(nextNode);
 		}
 		curve.shift(nextNode);
 		nextNode = *(++j);
-		if (!curve.checkAngle(toSharpNode)){
-			curve.checkBudEnd(nextNode,toSharpNode);
+		if (!curve.checkAngle()){
+			curve.checkBudEnd(nextNode);
 		}
 	}
-	toSharpNode.sort(cmpCellWallCurve);
-	toSharpNode.unique(eqCellWallCurve);
-	if (toSharpNode.size()>0) {
+	if (1>0) {
 		cout << "to sharp: \n";
 		bool anySpikeRemoved=false;
-		for (CellWallCurve sharpCurve : toSharpNode) {
-			if (sharpCurve.removeSpike()){
+		for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
+			Cell &cell(**i);
+			if (cell.curvedWallElementToHandle->removeSpike()){
 				anySpikeRemoved=true;
+				cout << ' ' << cell.curvedWallElementToHandle->Index() << '\n';
 			}
-			cout << ' ' << sharpCurve.Index() << '\n';
+			cell.curvedWallElementToHandle->reset();
 		}
 		if (anySpikeRemoved) {
 			RepairBoundaryPolygon();

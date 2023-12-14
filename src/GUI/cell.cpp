@@ -2062,19 +2062,34 @@ void Cell::SetWallLengths(void)
   }
 }
 
-void Cell::InsertWall( Wall *w )
+CellBase* Cell::getOtherWallElementSide(NodeBase *spikeEnd, NodeBase *over) {
+	for (list<Neighbor>::iterator nb = ((Node*) spikeEnd)->owners.begin();
+			nb != ((Node*) spikeEnd)->owners.end(); nb++) {
+		if (nb->cell != this) {
+			for (list<Neighbor>::iterator nb2 = ((Node*) over)->owners.begin();
+					nb2 != ((Node*) over)->owners.end(); nb2++) {
+				if (nb2->cell == nb->cell) {
+					return nb2->cell;
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
+void Cell::InsertWall( WallBase *w )
 {
 	list<Wall *>::iterator it;
 	if ((it=find_if ( walls.begin(), walls.end(),
 		[w](auto wall){
 			return wall->N1() == w->N2();
 		} )) == walls.end() ) {
-		walls.insert(it, w);
+		walls.insert(it, (Wall*)w);
 	} else {
-		walls.push_back( w );
+		walls.push_back( (Wall*)w );
 	}
     if (find ( m->walls.begin(), m->walls.end(), w ) == m->walls.end() ) {
-    	m->walls.push_back(w);
+    	m->walls.push_back((Wall*)w);
 	}
 
 }
@@ -2115,22 +2130,13 @@ void Cell::EmitValues(double t)
   emit ChemMonValue(t, chem);
 }
 
-void Cell::removeNode(Node * node) {
-  this->nodes.remove(node);
-  node->removeCell(this);
+void Cell::insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode) {
+  CellBase::insertNodeAfterFirst(position1,position2, newNode);
+  ((Node*)newNode)->addCell(this);
 }
 
-void Cell::insertNodeAfterFirst(Node * position1,Node * position2, Node * newNode) {
-  std::_List_iterator<Node*> indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
-      return node->Index()==position1->Index()||node->Index()==position2->Index();
-  });
-  if (indexOfC == this->nodes.begin() && (this->nodes.back()==position1||this->nodes.back()==position2)) {
-    this->nodes.insert(indexOfC,newNode);
-  }else {
-    indexOfC++;
-    this->nodes.insert(indexOfC,newNode);
-  }
-  newNode->addCell(this);
+WallBase* Cell::newWall(NodeBase* from,NodeBase* to,CellBase * other) {
+  return new Wall((Node*)from, (Node*)to, this, other);
 }
 
 void Cell::correctNeighbors() {
