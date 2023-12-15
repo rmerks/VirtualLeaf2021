@@ -266,7 +266,7 @@ TIMESTEP {
 
   if(DynamicCellsP()) {
 
-    mesh.WallCollapse();
+
     mesh.WallRelaxation();
 
 

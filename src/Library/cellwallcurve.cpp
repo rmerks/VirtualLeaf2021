@@ -11,6 +11,7 @@ void CellWallCurve::set(CellWallCurve *other) {
 	from = other->from;
 	over = other->over;
 	to = other->to;
+	borderCase=other->borderCase;
 }
 
 	WallBase* CellWallCurve::findWallBetweenEndingAt(CellBase *&c1, CellBase *&c2, NodeBase *&c) {
@@ -105,6 +106,7 @@ void CellWallCurve::attachToCell() {
 		from=NULL;
 		over=NULL;
 		to=NULL;
+		borderCase=false;
 	}
 
 	int CellWallCurve::Index() {
@@ -184,6 +186,7 @@ void CellWallCurve::attachToCell() {
 		NodeBase * b = a == to? from : to;
 		NodeBase * c = over;
 		if (c1->Index() == -1 ||c2->Index() == -1 ||c3->Index() == -1) {
+			borderCase = true;
 			cout << "border case\n";
 		}
 		if (c->countNeighbors() ==  2) {

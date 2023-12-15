@@ -945,22 +945,6 @@ void Mesh::WallCollapse(void) {
 			curve.checkBudEnd(nextNode);
 		}
 	}
-	if (1>0) {
-		cout << "to sharp: \n";
-		bool anySpikeRemoved=false;
-		for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
-			Cell &cell(**i);
-			if (cell.curvedWallElementToHandle->removeSpike()){
-				anySpikeRemoved=true;
-				cout << ' ' << cell.curvedWallElementToHandle->Index() << '\n';
-			}
-			cell.curvedWallElementToHandle->reset();
-		}
-		if (anySpikeRemoved) {
-			RepairBoundaryPolygon();
-		}
-		cout << "end spike\n";
-	}
 }
 
 

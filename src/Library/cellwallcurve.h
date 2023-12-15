@@ -43,7 +43,7 @@ class CellWallCurve {
 	friend class NodeBase;
 	friend class CellBase;
 
-
+	bool borderCase;
 
 	CellBase * cell;
 
@@ -61,6 +61,7 @@ public:
 	CellWallCurve() {
 		reset();
 	}
+	bool isBorderCase() {return borderCase;};
 	void set(CellWallCurve * other);
 	void shift(NodeBase * node) ;
 	bool checkBudEnd(NodeBase * node) ;
