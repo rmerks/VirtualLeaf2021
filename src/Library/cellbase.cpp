@@ -94,7 +94,7 @@ CellBase::CellBase(QObject *parent) :
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
-  curvedWallElementToHandle= new CellWallCurve();
+  curvedWallElementToHandle= new CellWallCurve(0);
 }
 
 
@@ -136,7 +136,7 @@ CellBase::CellBase(double x,double y,double z) : QObject(), Vector(x,y,z)
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
-  curvedWallElementToHandle= new CellWallCurve();
+  curvedWallElementToHandle= new CellWallCurve(0.);
 }
 
 CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
@@ -178,7 +178,7 @@ CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
   div_counter = src.div_counter;
   flag_for_divide = src.flag_for_divide;
   division_axis = src.division_axis;
-  curvedWallElementToHandle = new CellWallCurve();
+  curvedWallElementToHandle = new CellWallCurve(0.);
 }
 
 

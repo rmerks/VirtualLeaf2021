@@ -213,8 +213,8 @@ class Mesh {
     }
   }
 
-  void DoCellHouseKeeping(void) {
-	WallCollapse();
+  void DoCellHouseKeeping(double potential_slide_angle) {
+	WallCollapse(potential_slide_angle);
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
@@ -260,7 +260,7 @@ class Mesh {
 
   double DisplaceNodes(void);
   void WallRelaxation(void);
-  void WallCollapse(void);
+  void WallCollapse(double potential_slide_angle);
 
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);

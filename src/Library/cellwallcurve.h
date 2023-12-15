@@ -44,6 +44,7 @@ class CellWallCurve {
 	friend class CellBase;
 
 	bool borderCase;
+	double potential_slide_angle;
 
 	CellBase * cell;
 
@@ -58,7 +59,8 @@ class CellWallCurve {
 	void attachToCell();
 
 public:
-	CellWallCurve() {
+	CellWallCurve(double potential_slide_angle) {
+		this->potential_slide_angle = potential_slide_angle;
 		reset();
 	}
 	bool isBorderCase() {return borderCase;};

@@ -113,6 +113,7 @@
   double k2van3;
   double dt;
   double rd_dt;
+  double potential_slide_angle;
   bool movie;
   int nit;
   double maxt;

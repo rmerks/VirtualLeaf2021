@@ -1,7 +1,6 @@
 /**
  * At what angle should the walls collapse together? and what would be the properties?
  */
-#define WALL_COLLAPS_ANGLE M_PI/18.
 
 
 #include "cellwallcurve.h"
@@ -12,6 +11,7 @@ void CellWallCurve::set(CellWallCurve *other) {
 	over = other->over;
 	to = other->to;
 	borderCase=other->borderCase;
+	potential_slide_angle= other->potential_slide_angle;
 }
 
 	WallBase* CellWallCurve::findWallBetweenEndingAt(CellBase *&c1, CellBase *&c2, NodeBase *&c) {
@@ -63,10 +63,10 @@ void CellWallCurve::set(CellWallCurve *other) {
 		NodeBase *tFrom = from;
 		NodeBase *tOver = over;
 		NodeBase *tTo = node;
-		if (WALL_COLLAPS_ANGLE*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
+		if (potential_slide_angle*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
 			tOver = to;
 			tTo=node;
-			if (WALL_COLLAPS_ANGLE*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
+			if (potential_slide_angle*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
 				isBudEnd =true;
 			}
 		}
@@ -77,7 +77,7 @@ void CellWallCurve::set(CellWallCurve *other) {
 
 	bool CellWallCurve::checkAngleInternal() {
 		double angle = (*from-*over).Angle((*to-*over));
-		return WALL_COLLAPS_ANGLE > angle;
+		return potential_slide_angle > angle;
 	}
 
 void CellWallCurve::attachToCell() {

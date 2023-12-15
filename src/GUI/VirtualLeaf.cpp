@@ -282,7 +282,7 @@ TIMESTEP {
     if ( (-dh) < par.energy_threshold) {
 
       mesh.IncreaseCellCapacityIfNecessary();
-      mesh.DoCellHouseKeeping();
+      mesh.DoCellHouseKeeping(par.potential_slide_angle);
       //mesh.LoopCurrentCells(mem_fn(&plugin->CellHouseKeeping)); // this includes cell division
 
       // Reaction diffusion	
