@@ -142,6 +142,7 @@ Parameter::Parameter() {
   dt = 0.1;
   rd_dt = 1.0;
   potential_slide_angle = M_PI/18.;
+  compatibility_level = 255;
   movie = false;
   nit = 100000;
   maxt = 1000.;
@@ -313,6 +314,7 @@ void Parameter::Read(const char *filename) {
   potential_slide_angle = fgetpar(fp, "potential_slide_angle", M_PI/18., true);
   movie = bgetpar(fp, "movie", false, true);
   nit = igetpar(fp, "nit", 100000, true);
+  compatibility_level = igetpar(fp, "compatibility_level", 255, true);
   maxt = fgetpar(fp, "maxt", 1000., true);
   rseed = igetpar(fp, "rseed", -1, true);
   constituous_expansion_limit = igetpar(fp, "constituous_expansion_limit", 16, true);
@@ -448,6 +450,7 @@ void Parameter::Write(ostream &os) const {
   os << " potential_slide_angle = " << potential_slide_angle << endl;
   os << " movie = " << sbool(movie) << endl;
   os << " nit = " << nit << endl;
+  os << " compatibility_level = " << compatibility_level << endl;
   os << " maxt = " << maxt << endl;
   os << " rseed = " << rseed << endl;
   os << " constituous_expansion_limit = " << constituous_expansion_limit << endl;
@@ -1280,6 +1283,14 @@ text << sbool(movie);
 }
 {
   QDomElement xmlpar = doc.createElement("par");
+  xmlpar.setAttribute("name","compatibility_level" );
+  xmlparameter.appendChild(xmlpar);
+  ostringstream text;
+    text << compatibility_level;
+  xmlpar.setAttribute("val",text.str().c_str());
+}
+{
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","maxt" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1919,6 +1930,10 @@ movie = strtobool(valc);
 if (!strcmp(namec, "nit")) {
   nit = standardlocale.toInt(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'nit' from XML file.",valc); }
+}
+if (!strcmp(namec, "compatibility_level")) {
+  compatibility_level = standardlocale.toInt(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'compatibility_level' from XML file.",valc); }
 }
 if (!strcmp(namec, "maxt")) {
   maxt = standardlocale.toDouble(valc, &ok);

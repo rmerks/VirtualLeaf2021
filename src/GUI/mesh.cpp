@@ -827,8 +827,9 @@ double Mesh::DisplaceNodes(void) {
     double bl_minus_1 = 0.0;
     double bl_plus_1 = 0.0;
 
-    calculateWallStiffness(&c, *i, &w_w1, &w_w2, &bl_minus_1, &bl_plus_1);
-
+    if (activateWallStiffnessHamiltonian()) {
+    	calculateWallStiffness(&c, *i, &w_w1, &w_w2, &bl_minus_1, &bl_plus_1);
+    }
     if (bl_minus_1>0 && bl_plus_1>0) {
         w1 = cell_w * (w_w1);
         w2 = cell_w * (w_w2);

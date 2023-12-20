@@ -266,7 +266,7 @@ TIMESTEP {
 
   if(DynamicCellsP()) {
 
-
+	mesh.CompatibilityLevel(par.compatibility_level);
     mesh.WallRelaxation();
 
 

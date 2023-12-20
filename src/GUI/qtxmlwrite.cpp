@@ -1058,6 +1058,7 @@ void Mesh::XMLReadPars(const QDomElement &a_node)
   par.XMLRead(root_node);
   Seed(par.rseed);
   MakeDir(par.datadir);
+  CompatibilityLevel(par.compatibility_level);
 }
 
 void Mesh::XMLReadGeometry(const QDomElement root_node)

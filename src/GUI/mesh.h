@@ -75,6 +75,11 @@ template<class P> P& deref_ptr ( P *obj) { return *obj; }
 
 class DeltaIntgrl;
 
+
+#define WALL_STIFFNESS_HAMILTONIAN 1
+#define WALL_SLIDING_HAMILTONIAN 3
+
+
 class Mesh {
 
   friend class Cell;
@@ -261,7 +266,8 @@ class Mesh {
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void WallCollapse(double potential_slide_angle);
-
+  void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
+  bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);
   int NEqs(void) {     int nwalls = walls.size();
@@ -432,6 +438,8 @@ class Mesh {
   vector<Cell *> cells;
   vector<Node *> nodes;
   list<Wall *> walls; // we need to erase elements from this container frequently, hence a list.
+  int compatibility_level;
+
  public:
   vector<NodeSet *> node_sets;
  private:
