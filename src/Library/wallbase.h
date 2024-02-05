@@ -195,6 +195,7 @@ class WallBase {
   Vector VizFlux(void);
   bool IntersectsWithDivisionPlaneP(const Vector &p1, const Vector &p2);
   void SetTransToNewTrans( void );
+  bool isHasStartOrEnd(Node * node);
 
  private:
 };

@@ -266,6 +266,35 @@ class CellBase :  public QObject, public Vector
 			f(&info);
   }
 
+  template<class Op> void LoopWallElementsOfWall(Wall* wall, Op f) {
+			WallElementInfo info;
+			list <Node *>::iterator i=nodes.begin();
+			Node * first=*i;
+			Node * from=first;
+			Node * to=*(++i);
+			bool start = false;
+			while (i!=nodes.end()) {
+				if (wall->isHasStartOrEnd(from)) {
+					if (start) {
+						return;
+					} else {
+						start = true;
+					}
+				}
+				if (start) {
+					fillWallElementInfo(&info,from,to);
+		        	f(&info);
+					if (stopWallElementInfo(&info)) {
+		        		return;
+		        	}
+				}
+		        from=to;
+		        to=*(++i);
+			}
+			fillWallElementInfo(&info,from,first);
+			f(&info);
+  }
+
   template<class Op> void LoopWalls(Op f) {
     for (list <Wall *>::iterator i=walls.begin();i!=walls.end();i++) {
       f(*i);

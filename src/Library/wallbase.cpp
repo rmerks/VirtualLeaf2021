@@ -303,5 +303,7 @@ void WallBase::replaceNode(NodeBase* oldN, NodeBase* newN) {
 	if (((Node *)oldN) == n1) n1=(Node *)newN; else if (((Node *)oldN) ==n2) n2=(Node *)newN;
 }
 
-
+bool WallBase::isHasStartOrEnd(Node * node) {
+	return node->Index() == n1->Index() || node->Index() == n2->Index();
+}
 /* finis */
