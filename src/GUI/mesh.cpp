@@ -995,12 +995,8 @@ void Mesh::calculateWallStiffness(CellBase* c, Node* node, double *w_p1,double *
 }
 
 
-void splitWallElements(WallElementInfo *base,Node* new_node) {
-	WallElement * newWallElement = new_node->insertWallElement(base->getCell());
-	WallElementInfo sub;
-	base->getCell()->fillWallElementInfo(&sub, new_node, (Node*)base->getTo());
-	base->divide(&sub);
-}
+
+
 
 void Mesh::InsertNode(Edge &e) {
 
@@ -1156,22 +1152,7 @@ void Mesh::InsertNode(Edge &e) {
     c++;
   }
 
-
-  for (list<Neighbor>::const_iterator owner=new_node->owners.begin(); owner!=new_node->owners.end(); owner++) {
-	  if (e.first->getWallElement(owner->cell)!= NULL){
-		  WallElementInfo info;
-		  owner->cell->fillWallElementInfo(&info, e.first, e.second);
-		  if (info.hasWallElement()) {
-			  splitWallElements(&info,new_node);
-		  }
-	  }if(e.second->getWallElement(owner->cell)!= NULL){
-		  WallElementInfo info;
-		  owner->cell->fillWallElementInfo(&info, e.second, e.first);
-		  if (info.hasWallElement()) {
-			  splitWallElements(&info,new_node);
-		  }
-	  }
-  }
+  new_node->splittWallElementsBetween(e.first, e.second);
 }
 
 

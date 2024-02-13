@@ -28,11 +28,11 @@ WallElement* WallElementInfo::getWallElement(){
 	return wallElement;
 } ;
 
-void WallElementInfo::divide(WallElementInfo* other){
+void WallElementInfo::divide(WallElementInfo* other,double ratio){
 	other->getWallElement()->setStiffness(wallElement->getStiffness());
 	double length = wallElement->getBaseLength();
-	other->getWallElement()->setBaseLength(length/2.);
-	wallElement->setBaseLength(length/2.);
+	other->getWallElement()->setBaseLength(length*ratio);
+	wallElement->setBaseLength(length*(1.-ratio));
     other->setLength();
     setLength();
 }
@@ -84,4 +84,5 @@ bool WallElementInfo::hasCounterWall(WallElementInfo * other) {
 */
 double WallElementInfo::getBaseLength() {return this->getWallElement()->getBaseLength();};
 void WallElementInfo::updateBaseLength() {this->getWallElement()->setBaseLength(this->length/1.2);};
+void WallElementInfo::relax() {this->getWallElement()->setBaseLength(this->length);};
 bool WallElementInfo::plasticStretch() {return this->length > 1.2*this->getWallElement()->getBaseLength();};

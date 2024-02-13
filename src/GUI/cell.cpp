@@ -1022,6 +1022,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 
   // note that wall nodes need to run in inverse order in parent
   list<Node *>::iterator ins_pos = daughter->nodes.end();
+
   for (int i=1;i<=n;i++) {
     Node *node=
       m->AddNode( new Node( new_node[0] + i*element_length*nodevec ) );
@@ -1160,10 +1161,80 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 		attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N2());
 	}
 
+    this->splittWallElementsBetween(new_node_ind[0],  daughter);
 
-  m->plugin->OnDivide(&parent_info, daughter, this);
+	this->splittWallElementsBetween(new_node_ind[1], daughter);
 
-  daughter->div_counter=(++div_counter);
+	m->plugin->OnDivide(&parent_info, daughter, this);
+
+	daughter->div_counter=(++div_counter);
+}
+
+void Cell::findBeforeAfter(Node * node, Node ** before, Node**after) {
+	for (list<Node *>::iterator i=this->nodes.begin(); i!=this->nodes.end(); i++) {
+	    list<Node *>::const_iterator next=i;
+	    next++;
+	    if (next == this->nodes.end()) {
+	      next = this->nodes.begin();
+	    }
+	    if (*next == node) {
+	    	(*before) = *i;
+	    }
+	    if (*i == node) {
+	    	(*after) = *next;
+	    }
+	}
+}
+
+Cell* Cell::findOtherCell(Cell*other,  Node * node,  Node * node2) {
+	for (list<Neighbor>::const_iterator n=node->owners.begin(); n!=node->owners.end(); n++) {
+		if (n->cell != this && n->cell != other) {
+			return n->cell;
+		}
+	}
+	if (other== NULL) {
+		for (list<Neighbor>::const_iterator n=node2->owners.begin(); n!=node2->owners.end(); n++) {
+		   if (n->cell != this && n->cell != other) {
+			   return n->cell;
+		   }
+	   }
+	}
+}
+
+void Cell::splitWallElements(Node* from,Node* over,Node* to, bool relax) {
+	if (from->getWallElement(this) != NULL) {
+		double baseLength = ((*from)-(*over)).Norm();
+		double ratio = 	baseLength/(baseLength +((*to)-(*over)).Norm());
+		WallElementInfo info;
+		this->fillWallElementInfo(&info, from, to);
+		if (info.hasWallElement()) {
+			if (relax) {
+				info.relax();
+			}
+			over->splitWallElements(&info,ratio);
+			if (relax) {
+				this->fillWallElementInfo(&info, over, to);
+				info.relax();
+			}
+		}
+	}
+}
+
+void Cell::splittWallElementsBetween(Node* node, Cell* daughter) {
+	Node * before1 = NULL;
+	Node * after1 = NULL;
+	findBeforeAfter(node,&before1,&after1);
+	Node * before2 = NULL;
+	Node * after2 = NULL;
+	findBeforeAfter(node,&before2,&after2);
+	Cell* other = findOtherCell(daughter,after1,after2);
+	this->splitWallElements(before1,node,after1,true);
+	daughter->splitWallElements(before2,node,after2,true);
+	if (after1==before2) {
+		after1=after2;
+		before2=before1;
+	}
+	other->splitWallElements(after1,node,before2,false);
 }
 
 // Move the whole cell

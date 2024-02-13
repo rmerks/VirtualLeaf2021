@@ -172,6 +172,11 @@ class Cell : public CellBase
   Wall* getBoundaryWallAt(Node * node);
   Node * attachFreeWallEnd(Cell * cellWithOtherWalls, Cell * cellWithSingleWalls, Wall * wall, Node * loseWallNode);
   Wall * findWall(Node * n1, Node * n2);
+  void splittWallElementsBetween(Node* node, Cell* daughter);
+
+  void findBeforeAfter(Node * node, Node ** before, Node**after);
+  Cell* findOtherCell(Cell*other,  Node * node,  Node * node2);
+  void splitWallElements(Node* from,Node* over,Node* to, bool relax);
 
 };
 
