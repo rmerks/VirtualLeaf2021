@@ -182,11 +182,11 @@
       <node n="1"/>
       <node n="0"/>     
       <chem n="2">
-        <val v="2.251808"/>
+        <val v="0.251808"/>
         <val v="0.481961"/>
       </chem>
     </cell>
-    <boundary_polygon index="-1" area="1000" target_area="1000" target_length="60" lambda_celllength="0" stiffness="0" fixed="false" pin_fixed="false" at_boundary="false" dead="false" source="false" boundary="None" div_counter="0" cell_type="0S">
+    <boundary_polygon index="-1" area="1000" target_area="1000" target_length="60" lambda_celllength="0" stiffness="0" fixed="false" pin_fixed="false" at_boundary="false" dead="false" source="false" boundary="None" div_counter="0" cell_type="0">
       <node n="9"/>
       <node n="8"/>
       <node n="7"/>
@@ -196,7 +196,7 @@
       <node n="3"/>
       <node n="2"/>
       <node n="1"/>
-      <node n="0"/>   
+      <node n="0"/>
       <chem n="2">
         <val v="0"/>
         <val v="0"/>

@@ -583,11 +583,6 @@ double Mesh::DisplaceNodes(void) {
 	
     Cell &c=*((Cell *)(cit->cell));
 
-    cout << "area" << endl;
-    cout << c.area << endl;
-    cout << "recalc" << endl;
-    cout << c.RecalcArea() << endl;
-
 
 	if (c.MoveSelfIntersectsP(&node,  new_p )) {
 		
@@ -609,8 +604,10 @@ double Mesh::DisplaceNodes(void) {
 
 	//if (cit->cell>=0) {
 	if (!cit->cell->BoundaryPolP()) {
-      double delta_A = this->CalculateDeltaA(new_p, old_p, i_min_1, i_plus_1);
+      //double delta_A = this->CalculateDeltaA(new_p, old_p, i_min_1, i_plus_1);
 
+      double delta_A = 0.5 * ( ( new_p.x - old_p.x ) * (i_min_1.y - i_plus_1.y) +
+                              ( new_p.y - old_p.y ) * ( i_plus_1.x - i_min_1.x ) );
 
 	  area_dh +=  delta_A * (2 * c.target_area - 2 * c.area + delta_A);
 
@@ -769,11 +766,11 @@ double Mesh::DisplaceNodes(void) {
 
 	  static int count=0;
 	  // Insertion of nodes (cell wall yielding)
-	  if (!node.fixed) {
-	    if (old_l1 > par.yielding_threshold*Node::target_length && !cit->nb1->fixed) {
+      if (!node.fixed) {
+        if (old_l1 > par.yielding_threshold*Node::target_length && !cit->nb1->fixed) {
 	      node_insertion_queue.push( Edge(cit->nb1, &node) );
 	    }
-	    if (old_l2 > par.yielding_threshold*Node::target_length && !cit->nb2->fixed) {
+        if (old_l2 > par.yielding_threshold*Node::target_length && !cit->nb2->fixed) {
 	      node_insertion_queue.push( Edge(&node, cit->nb2 ) );
 	    }
 	    count++;
@@ -929,7 +926,7 @@ double Mesh::DisplaceNodes(void) {
   return sum_dh;
 }
 
-double Mesh::CalculateDeltaA(Vector &new_p, Vector &old_p, Vector &i_min_1, Vector &i_plus_1) {
+/*double Mesh::CalculateDeltaA(Vector &new_p, Vector &old_p, Vector &i_min_1, Vector &i_plus_1) {
   double delta_A = 0.5 * ( ( new_p.x - old_p.x ) * (i_min_1.y - i_plus_1.y) +
                           ( new_p.y - old_p.y ) * ( i_plus_1.x - i_min_1.x ) );
 
@@ -963,7 +960,7 @@ double Mesh::CalculateDeltaA(Vector &new_p, Vector &old_p, Vector &i_min_1, Vect
   double y = std::fabs(i_min_1.x-i_plus_1.x);
   double x_pyth = pow(x, 2);
   double y_pyth = pow(y, 2);
-  double base = sqrt(x_pyth + y_pyth);*/
+  double base = sqrt(x_pyth + y_pyth);
 
   // Implementation with normal vector of i_min_1-old_p vector
   double x_norm = (new_p.y - old_p.y)*(i_min_1.y-old_p.y)*(old_p.x-i_min_1.x)/((new_p.x*(old_p.x-i_min_1.x)*(old_p.x-i_min_1.x))-(old_p.x*(old_p.y-i_min_1.y)*(i_min_1.y-old_p.y)));
@@ -1186,13 +1183,13 @@ double Mesh::CalculateDeltaA(Vector &new_p, Vector &old_p, Vector &i_min_1, Vect
   /*if (old_p.x < new_p.x && old_p.y < new_p.y) {
     return -delta_A;
   }
-}*/
+}
 
   cout << "no" << endl;
   cout << delta_A << endl;
   return delta_A;
 
-}
+}*/
 
 
 
@@ -1559,6 +1556,11 @@ void splitWallElements(WallElementInfo *base,Node* new_node) {
 
 void Mesh::InsertNode(Edge &e) {
 
+    WallElement* elinf = e.first->getWallElement(e.first->owners.front().getCell());
+
+  if (elinf->getStiffness() > 1) {
+        cout << "break" << endl;
+  }
 
   // Construct a new node in the middle of the edge
   Node *new_node = AddNode( new Node ( ( *e.first + *e.second )/2 ) );

@@ -42,8 +42,11 @@ void AuxinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, C
     double area1 = daughter1->Area(), area2 = daughter2->Area();
     double tot_area = area1 + area2;
 
+    //cout << daughter1->Chemical(0) << endl;
     daughter1->SetChemical(0,daughter1->Chemical(0)*(area1/tot_area));
     daughter2->SetChemical(0,daughter2->Chemical(0)*(area2/tot_area));
+    daughter1->SetChemical(0, 1);
+    daughter2->SetChemical(0, 1);
 
     // After divisions, parent and daughter cells get a standard stock of PINs.
     daughter1->SetChemical(1, par->initval[1]);
@@ -69,24 +72,56 @@ void AuxinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
 
 void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
 {
-
-    //cout << "Calc" << endl;
-    //cout << c->CalcArea() << endl;
-
-    //cout << "Target" << endl;
-    //cout << c->TargetArea() << endl;
-
-
     if (c->Boundary()==CellBase::None) {
+        c->LoopWallElements([](auto wallElementInfo){
+            if(wallElementInfo->hasWallElement()){
+                Vector* y = new Vector(0, 1, 0);
+                Vector* direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, wallElementInfo->getTo()->y - wallElementInfo->getFrom()->y, 0);
+                double angle = (direction->Angle(*y))*180/3.1415926536;
+                cout << angle << endl;
+                /*if (direction->x == 0) {
+                    angle = 90;
+                } else {
+                    angle = atan(direction->y/direction->x)*180/3.1415926536;
+                }*/
+                if (angle <= 55 || angle >= 125) {
+                    WallElement* we = wallElementInfo->getWallElement();
+                    we->setStiffness(4);
+                } else if (angle >= 65 || angle <=115){
+                    WallElement* we = wallElementInfo->getWallElement();
+                    we->setStiffness(1);
+                }
+            }
+        });
+
+        /*        c->LoopWallElements([](auto wallElementInfo){
+            if(wallElementInfo->hasWallElement()){
+                Vector direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, )
+                if (std::fabs(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x) < 5) {
+                    WallElement* we = wallElementInfo->getWallElement();
+                    we->setStiffness(4);
+                } else {
+                    WallElement* we = wallElementInfo->getWallElement();
+                    we->setStiffness(1);
+                }
+            }
+        });*/
+
         if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ) {
             c->SetChemical(0,0);
             c->Divide();
+            //Vector* v = new Vector(1,0,0);
+            //c->DivideOverAxis(*v);
         }
+
+        //WallElementInfo info;
+        //info.getFrom()->x;
+        //info.getTo()->x;
+
+        //cout << we->getBaseLength() << endl;
+
         // expand according to auxin concentration
         c->EnlargeTargetArea(par->auxin_dependent_growth?(c->Chemical(0)/(1.+c->Chemical(0)))*par->cell_expansion_rate:par->cell_expansion_rate);
-        //cout << c->GetWallStiffness() << endl;
-        //cout << c->Chemical(0) << endl;
-        //cout << c->TargetArea() << endl;
     }
 }
 
