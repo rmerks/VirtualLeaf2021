@@ -1199,42 +1199,112 @@ Cell* Cell::findOtherCell(Cell*other,  Node * node,  Node * node2) {
 		   }
 	   }
 	}
+	return NULL;
 }
 
-void Cell::splitWallElements(Node* from,Node* over,Node* to, bool relax) {
-	if (from->getWallElement(this) != NULL) {
-		double baseLength = ((*from)-(*over)).Norm();
-		double ratio = 	baseLength/(baseLength +((*to)-(*over)).Norm());
-		WallElementInfo info;
-		this->fillWallElementInfo(&info, from, to);
-		if (info.hasWallElement()) {
-			if (relax) {
-				info.relax();
-			}
-			over->splitWallElements(&info,ratio);
-			if (relax) {
-				this->fillWallElementInfo(&info, over, to);
-				info.relax();
-			}
-		}
+/**
+ * find neighbour cell for splittWallElementsBetween
+ */
+Cell* Cell::findNeighbourCellOnDivide(Cell* daughter,Node* node,Node * before1,Node * after1 ,Node * before2,Node * after2) {
+	Cell* other = findOtherCell(daughter, before1, after2);
+	if (other == NULL) {
+		other = findOtherCell(daughter, after1, before2);
 	}
+	return other;
 }
-
+/**
+ *          o before1
+ *          |         THIS
+ *          |
+ *          |     after1
+ * OTHER    +-----o
+ *          |     before2
+ *          |
+ *          |         DOUGHTER
+ *          o after2
+ *
+ * blow the reverse case (on the other side)
+ *
+ *              o after1
+ *   THIS       |
+ *              |
+ * before1      |
+ *        o-----+   OTHER
+ * after2       |
+ *              |
+ *  DOUGHTER    |
+ *              o before2
+ *
+ */
 void Cell::splittWallElementsBetween(Node* node, Cell* daughter) {
 	Node * before1 = NULL;
 	Node * after1 = NULL;
-	findBeforeAfter(node,&before1,&after1);
 	Node * before2 = NULL;
 	Node * after2 = NULL;
-	findBeforeAfter(node,&before2,&after2);
-	Cell* other = findOtherCell(daughter,after1,after2);
-	this->splitWallElements(before1,node,after1,true);
-	daughter->splitWallElements(before2,node,after2,true);
-	if (after1==before2) {
-		after1=after2;
-		before2=before1;
+	this->findBeforeAfter(node, &before1, &after1);
+	daughter->findBeforeAfter(node, &before2, &after2);
+
+	// find the other node on the outside of the split
+	Cell* other = findNeighbourCellOnDivide(daughter, node, before1, after1, before2, after2);
+
+	// get wall element info of the walls that are now splitt.
+	WallElementInfo oldInfoB1ToA2_B2A1;
+	WallElementInfo oldInfoA2ToB1_A1B2;
+	this->fillWallElementInfo(&oldInfoB1ToA2_B2A1, before1, after2);
+	bool reverse = false;
+	if (oldInfoB1ToA2_B2A1.hasWallElement()) {
+		other->fillWallElementInfo(&oldInfoA2ToB1_A1B2, after2, before1);
+	} else {
+		this->fillWallElementInfo(&oldInfoB1ToA2_B2A1, before2, after1);
+		other->fillWallElementInfo(&oldInfoA2ToB1_A1B2, after1, before2);
+		reverse=true;
 	}
-	other->splitWallElements(after1,node,before2,false);
+	//save a backup of the data to distribute the data over the new parts.
+	WallElement weB1A2_B2A1= *(oldInfoB1ToA2_B2A1.getWallElement());
+	oldInfoB1ToA2_B2A1.setWallElement(&weB1A2_B2A1);
+	WallElement weA2B1_A1B2= *(oldInfoA2ToB1_A1B2.getWallElement());
+	oldInfoA2ToB1_A1B2.setWallElement(&weA2B1_A1B2);
+
+	double length = oldInfoA2ToB1_A1B2.getLength();
+	double baseLengthOutside = oldInfoA2ToB1_A1B2.getBaseLength();
+	double baseLengthInside = oldInfoB1ToA2_B2A1.getBaseLength();
+
+	double patrialLengthBefore =  ((*before1) - (*node)).Norm();
+	double patrialLengthAfter =  ((*after2) - (*node)).Norm();
+	double ratio = patrialLengthBefore / (patrialLengthBefore+patrialLengthAfter);
+
+	WallElementInfo element;
+	if (!reverse) {
+		this->fillWallElementInfo(&element, before1, node);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
+		this->fillWallElementInfo(&element, node, after1);
+		element.updateBaseLength();
+		daughter->fillWallElementInfo(&element, before2, node);
+		element.updateBaseLength();
+		daughter->fillWallElementInfo(&element, node, after2);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
+		if (!other->BoundaryPolP()) {
+			other->fillWallElementInfo(&element, after2, node);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
+			other->fillWallElementInfo(&element, node, before2);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
+		}
+	} else {
+		this->fillWallElementInfo(&element, before1, node);
+		element.updateBaseLength();
+		this->fillWallElementInfo(&element, node, after1);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
+		daughter->fillWallElementInfo(&element, before2, node);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
+		daughter->fillWallElementInfo(&element, node, after2);
+		element.updateBaseLength();
+		if (!other->BoundaryPolP()) {
+			other->fillWallElementInfo(&element, after1, node);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
+			other->fillWallElementInfo(&element, node, before2);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
+		}
+	}
 }
 
 // Move the whole cell

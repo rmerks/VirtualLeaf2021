@@ -841,7 +841,6 @@ double Mesh::DisplaceNodes(void) {
         		bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1)) +
                 elastic_modulus * w2 *
 				bl_plus_1 *(DSQR(new_l2/bl_plus_1 - 1)-DSQR(old_l2/bl_plus_1 - 1));
-
     }
     else {
     	length_dh +=2*Node::target_length * (
@@ -984,13 +983,18 @@ void extractWallData(WallElementInfo* wallElementInfo,double *w,double* bl){
 
 void Mesh::calculateWallStiffness(CellBase* c, Node* node, double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
 	c->LoopWallElements([node,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
+		int points = 0;
 		if (wallElementInfo->isTo(node)) {
             extractWallData(wallElementInfo,w_p1,bl_minus_1);
+            points++;
 		} else	if (wallElementInfo->isFrom(node)) {
             extractWallData(wallElementInfo,w_p2,bl_plus_1);
-            //stop the loop, as we do not need to go further.
-            wallElementInfo->stopLoop();
+            points++;
         }
+		if (points == 2) {
+            //stop the loop, as we do not need to go further.
+        	wallElementInfo->stopLoop();
+		}
 	});
 }
 

@@ -176,7 +176,7 @@ class Cell : public CellBase
 
   void findBeforeAfter(Node * node, Node ** before, Node**after);
   Cell* findOtherCell(Cell*other,  Node * node,  Node * node2);
-  void splitWallElements(Node* from,Node* over,Node* to, bool relax);
+  Cell* findNeighbourCellOnDivide(Cell* daughter,Node* node,Node * before1,Node * after1 ,Node * before2,Node * after2);
 
 };
 

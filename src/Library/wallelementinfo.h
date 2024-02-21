@@ -57,6 +57,8 @@ public:
     void relax();
     bool plasticStretch();
 
+    void updateFrom(WallElementInfo* original,double ratio);
+
 };
 
 #endif /* WALLELEMENTINFO_H_ */
