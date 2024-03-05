@@ -22,6 +22,7 @@
 #include <QDebug>
 
 #include <string>
+#include "pi.h"
 #include "cell.h"
 #include "node.h"
 #include "mesh.h"
@@ -319,6 +320,138 @@ bool Cell::DivideOverGivenLine(const Vector v1, const Vector v2, bool fix_cellwa
   DivideWalls(new_node_locations, v1, v2, fix_cellwall, node_set);
 
   return true;
+}
+void Cell::checkCellLooseWallEnds(Wall * wall,bool&n1Connected,bool&n2Connected) {
+	n1Connected = false;
+	n2Connected = false;
+	// check free swinging wall
+	for (list<Wall *>::iterator w = walls.begin(); w!=walls.end(); w++) {
+		  Wall* other = *w;
+		  if (wall != other && (wall->N1()==other->N1() ||wall->N1()==other->N2() )){
+			  n1Connected=true;
+		  }
+		  if (wall != other && (wall->N2()==other->N1() ||wall->N2()==other->N2() )){
+			  n2Connected=true;
+		  }
+		  if (n1Connected&& n2Connected) {
+			  break;
+		  }
+	}
+}
+
+Neighbor Cell::getNeighbor(Node * node) {
+	  Neighbor result;
+	  Neighbor * presult=&result;
+	  node->LoopNeighbors([this,presult](auto neighbor){
+		  if (neighbor.cell == this) {
+			  (*presult) = neighbor;
+		  }
+	  });
+	  return result;
+}
+
+Wall* Cell::getBoundaryWallAt(Node * node) {
+	Wall* wall=NULL;
+	Wall** pwall=&wall;
+	 this->LoopWalls([node,pwall,this](auto wall){
+		 if ((wall->N1()==node ||wall->N1()==node)&& (wall->C1()==this->m->boundary_polygon ||wall->C2()==this->m->boundary_polygon) ) {
+			 *pwall=wall;
+		 }
+	 });
+	  return wall;
+}
+
+Node * Cell::followNeighborsToWall(Node * n1, Node * n2, double &distance) {
+	bool isWallEnd=false;
+	bool* pisWallEnd=&isWallEnd;
+	 this->LoopWalls([n2,pisWallEnd](auto wall){
+		 if (wall->N1()==n2 ||wall->N2()==n2) {
+			 *pisWallEnd=true;
+		 }
+	 });
+	 if (isWallEnd) {
+		 return n2;
+	 }else {
+		 Neighbor neighbor = getNeighbor(n2);
+		 distance+=((*n1)-(*n2)).Norm();
+		 Node * other =  neighbor.nb1 == n1?neighbor.nb2:neighbor.nb1;
+		 return followNeighborsToWall( n2, other, distance);
+	 }
+}
+
+Wall * Cell::findWall(Node * n1, Node * n2) {
+	Wall* splittWall = NULL;
+	Wall** psplittWall = &splittWall;
+
+	LoopWalls([psplittWall,n1,n2](auto wallToSplit) {
+		if (wallToSplit->N1() == n1 && wallToSplit->N2() == n2) {
+			(*psplittWall)=wallToSplit;
+		}
+		if (wallToSplit->N2() == n1 && wallToSplit->N1() == n2) {
+			(*psplittWall)=wallToSplit;
+		}
+	});
+	return splittWall;
+}
+
+Node* Cell::attachFreeWallEnd(Cell * cellWithOtherWalls, Cell * cellWithSingleWalls, Wall * wall, Node * loseWallNode) {
+	Neighbor neighbors = cellWithOtherWalls->getNeighbor(loseWallNode);
+	cout << "wall needed (n1) after devision in cell " << Index() << "\n";
+	double distance1=0.0;
+	Node * startOfOtherWall1 = cellWithOtherWalls->followNeighborsToWall(loseWallNode, neighbors.nb1, distance1);
+	double distance2=0.0;
+	Node * startOfOtherWall2 = cellWithOtherWalls->followNeighborsToWall(loseWallNode, neighbors.nb2, distance2);
+	if (!loseWallNode->BoundaryP()) {
+		cout << "!BoundaryP\n" ;
+		// ok this is not good we are inside the cell structure and missed the wall to split
+		// but this wall must be between startOfOtherWall1 and startOfOtherWall2 so we find it and split it up
+		Wall* splittWall = findWall(startOfOtherWall1,startOfOtherWall2);
+
+		if (splittWall == NULL) {
+			cout << "!BoundaryP but no wall to split...\n" ;
+			return NULL;
+		} else {
+			// this node must have 3 neighbors, we need the 3e one.
+			Cell* opposedCell = NULL;
+			Cell** popposedCell = &opposedCell;
+			loseWallNode->LoopNeighbors([popposedCell,cellWithOtherWalls,cellWithSingleWalls](auto neighbors){
+				if (neighbors.getCell() != cellWithOtherWalls && neighbors.getCell() != cellWithSingleWalls) {
+					(*popposedCell) = neighbors.getCell();
+				}
+			});
+			double orgLength=splittWall->Length();
+			Wall * connectWall = new Wall(startOfOtherWall1, loseWallNode, cellWithSingleWalls, opposedCell );
+			splittWall->replaceNode(startOfOtherWall1, loseWallNode);
+			connectWall->CopyWallContents(*splittWall);
+			connectWall->SetLength();
+			connectWall->CorrectTransporters(orgLength);
+			splittWall->SetLength();
+			splittWall->CorrectTransporters(orgLength);
+			opposedCell->AddWall(connectWall);
+			cellWithOtherWalls->AddWall(connectWall);
+			cellWithSingleWalls->AddWall(connectWall);
+			connectWall->CorrectWall();
+			return NULL;
+		}
+	}
+
+	Node * startOfOtherWall = distance1<distance2?startOfOtherWall1:startOfOtherWall2 ;
+	cout << "wall needed from " << loseWallNode->Index() << " to " << startOfOtherWall->Index() << "\n";
+	Wall * connectWall = new Wall(startOfOtherWall, loseWallNode, cellWithSingleWalls, m->boundary_polygon );
+	Wall * donorWall = cellWithOtherWalls->getBoundaryWallAt(startOfOtherWall);
+	connectWall->SetLength();
+	double orgLength=connectWall->Length();
+	if (donorWall!=NULL) {
+	  connectWall->CopyWallContents(*donorWall);
+	  orgLength += donorWall->Length();
+	  donorWall->CorrectTransporters(orgLength);
+	}
+	connectWall->CorrectTransporters(orgLength);
+
+	cellWithSingleWalls->AddWall(connectWall);
+	m->boundary_polygon->AddWall(connectWall);
+	connectWall->CorrectWall();
+	return startOfOtherWall;
 }
 
 // Core division procedure
@@ -639,6 +772,9 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
       // (can we have more than one neighboring cell here??)
       if (c!=owners.end()) { 
 	neighbor_cell = c->cell;
+	if (c->cell == NULL) {
+		cout << "error";
+	}
 	if (!c->cell->BoundaryPolP()) {
 
 	  // find correct position in the cells node list
@@ -886,6 +1022,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 
   // note that wall nodes need to run in inverse order in parent
   list<Node *>::iterator ins_pos = daughter->nodes.end();
+
   for (int i=1;i<=n;i++) {
     Node *node=
       m->AddNode( new Node( new_node[0] + i*element_length*nodevec ) );
@@ -993,9 +1130,181 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
   ConstructNeighborList();
   daughter->ConstructNeighborList();
 
-  m->plugin->OnDivide(&parent_info, daughter, this);
+  	/**
+     * Here we reconnect the wall elements if they got lose ends, if both ends are lose then
+     * the original wall has to be deleted.
+     *
+     * Important we need to distribute the properties over the newly created walls.
+     */
+	bool n1Connected;
+	bool n2Connected;
+	checkCellLooseWallEnds(wall,n1Connected,n2Connected);
+	Cell * cellWithOtherWalls = this;
+	Cell * cellWithSingleWalls = daughter;
+	if (walls.size() < daughter->walls.size()) {
+		cellWithOtherWalls = daughter;
+		cellWithSingleWalls = this;
+	}
+	if (!n1Connected && !n2Connected) {
+			Node * fist = attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N1());
+			Node * second = attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N2());
+			Wall * wallToRemove = findWall(fist, second);
+			if (wallToRemove != NULL) {
+				m->walls.remove(wallToRemove);
+				wallToRemove->c1->removeWall(wallToRemove);
+				wallToRemove->c2->removeWall(wallToRemove);
+				delete wallToRemove;
+			}
+	} else if (!n1Connected) {
+		attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N1());
+	} else if (!n2Connected) {
+		attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N2());
+	}
 
-  daughter->div_counter=(++div_counter);
+    this->splittWallElementsBetween(new_node_ind[0],  daughter);
+
+	this->splittWallElementsBetween(new_node_ind[1], daughter);
+
+	m->plugin->OnDivide(&parent_info, daughter, this);
+
+	daughter->div_counter=(++div_counter);
+}
+
+void Cell::findBeforeAfter(Node * node, Node ** before, Node**after) {
+	for (list<Node *>::iterator i=this->nodes.begin(); i!=this->nodes.end(); i++) {
+	    list<Node *>::const_iterator next=i;
+	    next++;
+	    if (next == this->nodes.end()) {
+	      next = this->nodes.begin();
+	    }
+	    if (*next == node) {
+	    	(*before) = *i;
+	    }
+	    if (*i == node) {
+	    	(*after) = *next;
+	    }
+	}
+}
+
+Cell* Cell::findOtherCell(Cell*other,  Node * node,  Node * node2) {
+	for (list<Neighbor>::const_iterator n=node->owners.begin(); n!=node->owners.end(); n++) {
+		if (n->cell != this && n->cell != other) {
+			return n->cell;
+		}
+	}
+	if (other== NULL) {
+		for (list<Neighbor>::const_iterator n=node2->owners.begin(); n!=node2->owners.end(); n++) {
+		   if (n->cell != this && n->cell != other) {
+			   return n->cell;
+		   }
+	   }
+	}
+	return NULL;
+}
+
+/**
+ * find neighbour cell for splittWallElementsBetween
+ */
+Cell* Cell::findNeighbourCellOnDivide(Cell* daughter,Node* node,Node * before1,Node * after1 ,Node * before2,Node * after2) {
+	Cell* other = findOtherCell(daughter, before1, after2);
+	if (other == NULL) {
+		other = findOtherCell(daughter, after1, before2);
+	}
+	return other;
+}
+/**
+ *          o before1
+ *          |         THIS
+ *          |
+ *          |     after1
+ * OTHER    +-----o
+ *          |     before2
+ *          |
+ *          |         DOUGHTER
+ *          o after2
+ *
+ * blow the reverse case (on the other side)
+ *
+ *              o after1
+ *   THIS       |
+ *              |
+ * before1      |
+ *        o-----+   OTHER
+ * after2       |
+ *              |
+ *  DOUGHTER    |
+ *              o before2
+ *
+ */
+void Cell::splittWallElementsBetween(Node* node, Cell* daughter) {
+	Node * before1 = NULL;
+	Node * after1 = NULL;
+	Node * before2 = NULL;
+	Node * after2 = NULL;
+	this->findBeforeAfter(node, &before1, &after1);
+	daughter->findBeforeAfter(node, &before2, &after2);
+
+	// find the other node on the outside of the split
+	Cell* other = findNeighbourCellOnDivide(daughter, node, before1, after1, before2, after2);
+
+	// get wall element info of the walls that are now splitt.
+	WallElementInfo oldInfoB1ToA2_B2A1;
+	WallElementInfo oldInfoA2ToB1_A1B2;
+	this->fillWallElementInfo(&oldInfoB1ToA2_B2A1, before1, after2);
+	bool reverse = false;
+	if (oldInfoB1ToA2_B2A1.hasWallElement()) {
+		other->fillWallElementInfo(&oldInfoA2ToB1_A1B2, after2, before1);
+	} else {
+		this->fillWallElementInfo(&oldInfoB1ToA2_B2A1, before2, after1);
+		other->fillWallElementInfo(&oldInfoA2ToB1_A1B2, after1, before2);
+		reverse=true;
+	}
+	//save a backup of the data to distribute the data over the new parts.
+	WallElement weB1A2_B2A1= *(oldInfoB1ToA2_B2A1.getWallElement());
+	oldInfoB1ToA2_B2A1.setWallElement(&weB1A2_B2A1);
+	WallElement weA2B1_A1B2= *(oldInfoA2ToB1_A1B2.getWallElement());
+	oldInfoA2ToB1_A1B2.setWallElement(&weA2B1_A1B2);
+
+	double length = oldInfoA2ToB1_A1B2.getLength();
+	double baseLengthOutside = oldInfoA2ToB1_A1B2.getBaseLength();
+	double baseLengthInside = oldInfoB1ToA2_B2A1.getBaseLength();
+
+	double patrialLengthBefore =  ((*before1) - (*node)).Norm();
+	double patrialLengthAfter =  ((*after2) - (*node)).Norm();
+	double ratio = patrialLengthBefore / (patrialLengthBefore+patrialLengthAfter);
+
+	WallElementInfo element;
+	if (!reverse) {
+		this->fillWallElementInfo(&element, before1, node);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
+		this->fillWallElementInfo(&element, node, after1);
+		element.updateBaseLength();
+		daughter->fillWallElementInfo(&element, before2, node);
+		element.updateBaseLength();
+		daughter->fillWallElementInfo(&element, node, after2);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
+		if (!other->BoundaryPolP()) {
+			other->fillWallElementInfo(&element, after2, node);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
+			other->fillWallElementInfo(&element, node, before2);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
+		}
+	} else {
+		this->fillWallElementInfo(&element, before1, node);
+		element.updateBaseLength();
+		this->fillWallElementInfo(&element, node, after1);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
+		daughter->fillWallElementInfo(&element, before2, node);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
+		daughter->fillWallElementInfo(&element, node, after2);
+		element.updateBaseLength();
+		if (!other->BoundaryPolP()) {
+			other->fillWallElementInfo(&element, after1, node);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
+			other->fillWallElementInfo(&element, node, before2);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
+		}
+	}
 }
 
 // Move the whole cell
@@ -1631,23 +1940,47 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
 
   CellItem* p = new CellItem(this, c);
 
-  QPolygonF pa(nodes.size());
   int cc=0;
+  int* pcc=&cc;
+  QPolygonF pa(nodes.size());
+  QPolygonF *ppa =&pa;
+  LoopWallElements([p,pcc,ppa,c](auto wallElementInfo){
+  	wallElementInfo->getWallElement();
+  	Vector start =  *wallElementInfo->getFrom();
+  	Vector end =  *wallElementInfo->getTo();
+    Vector edgevec = end-start;
+	Vector edgevecNormalised = edgevec.Normalised();
+    Vector perp = edgevecNormalised.Perp2D();
 
-  for (list<Node *>::const_iterator n=nodes.begin(); n!=nodes.end(); n++) {
-    Node *i=*n;
+    Vector offs = Cell::Offset();
+    double factor = Cell::Factor();
+    double stiffness = wallElementInfo->stiffness();
+    if (std::isnan(stiffness)) {
+    	stiffness=1.0;
+    }
 
-    pa[cc++] = QPointF((qreal)((offset[0]+i->x)*factor),
-              (qreal)((offset[1]+i->y)*factor) );
-  }
+	Vector startEndOffset = edgevecNormalised * stiffness * 0.25 * factor;
+    Vector thicknessOffset = (-1) * stiffness * 0.5 * factor * perp;
+    Vector from = ( offs + start)  * factor + thicknessOffset + startEndOffset;
+    Vector to = ( offs + end)  * factor + thicknessOffset - startEndOffset;
 
+
+    QGraphicsLineItem *line = new QGraphicsLineItem((qreal)(from.x), (qreal)(from.y ),(qreal)(to.x), (qreal)(to.y ),p);
+    line->setPen(QPen( QColor(par.cell_outline_color),stiffness,Qt::SolidLine,Qt::RoundCap, Qt::BevelJoin));
+    line->setZValue(2);
+     c->addItem(line);
+    line->show();
+
+
+    (*ppa)[(*pcc)++] = QPointF((qreal)(from.x), (qreal)(from.y ));
+  });
 
   QColor cell_color;
 
   m->plugin->SetCellColor(this,&cell_color);
 
   p->setPolygon(pa);
-  p->setPen(par.outlinewidth>=0?QPen( QColor(par.cell_outline_color),par.outlinewidth):QPen(Qt::NoPen));
+  p->setPen(QPen(Qt::NoPen));
   p->setBrush( cell_color );
   p->setZValue(1);
 
@@ -1658,15 +1991,49 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
   p->show();
 }
 
+void Cell::DrawMiddleLamella(QGraphicsScene *c, QString tooltip){
+    QGraphicsPathItem *middle = new QGraphicsPathItem;
+    QPainterPath path;
+    int cc=0;
+
+    for (list<Node *>::const_iterator n=nodes.begin(); n!=nodes.end(); n++) {
+        Node *i=*n;
+        if(cc ==0){
+            path.moveTo(QPointF(i->x, i->y));
+        }
+        else{
+      path.lineTo(QPointF(i->x, i->y));
+        }
+      cc++;
+    }
+
+
+    middle->setPath(path);
+    middle->setPen(QPen(QColor("white"),0.1));
+    middle->setZValue(3);
+
+    if (!tooltip.isEmpty()) {
+      middle->setToolTip(tooltip);
+    }
+    c->addItem(middle);
+    middle->show();
+}
+
 
 void Cell::DrawCenter(QGraphicsScene *c) const {
   // Maginfication derived similarly to that in nodeitem.cpp
   // Why not use Cell::Magnification()?
   const double mag = par.node_mag;
-
+  int indicator = (CellType()+1)&3;
+  int dimm=((CellType()+1)&(12))<<2;
+  int intensity = 255 - (255/3)*dimm;
+  int red=  indicator == 1?intensity:0;
+  int green=  indicator == 2?intensity:0;
+  int blue=  indicator == 3?intensity:0;
+    QColor color(red, green, blue, 255);
   // construct an ellipse
   QGraphicsEllipseItem *disk = new QGraphicsEllipseItem ( -1*mag, -1*mag, 2*mag, 2*mag, 0);
-  disk->setBrush( QColor("forest green") );
+  disk->setBrush(color);
   disk->setZValue(5);
   Vector centroid=Centroid();
   disk -> setPos((offset[0]+centroid.x)*factor,(offset[1]+centroid.y)*factor);
@@ -1836,7 +2203,37 @@ void Cell::SetWallLengths(void)
   }
 }
 
+CellBase* Cell::getOtherWallElementSide(NodeBase *spikeEnd, NodeBase *over) {
+	for (list<Neighbor>::iterator nb = ((Node*) spikeEnd)->owners.begin();
+			nb != ((Node*) spikeEnd)->owners.end(); nb++) {
+		if (nb->cell != this) {
+			for (list<Neighbor>::iterator nb2 = ((Node*) over)->owners.begin();
+					nb2 != ((Node*) over)->owners.end(); nb2++) {
+				if (nb2->cell == nb->cell) {
+					return nb2->cell;
+				}
+			}
+		}
+	}
+	return NULL;
+}
 
+void Cell::InsertWall( WallBase *w )
+{
+	list<Wall *>::iterator it;
+	if ((it=find_if ( walls.begin(), walls.end(),
+		[w](auto wall){
+			return wall->N1() == w->N2();
+		} )) == walls.end() ) {
+		walls.insert(it, (Wall*)w);
+	} else {
+		walls.push_back( (Wall*)w );
+	}
+    if (find ( m->walls.begin(), m->walls.end(), w ) == m->walls.end() ) {
+    	m->walls.push_back((Wall*)w);
+	}
+
+}
 //! Add Wall w to the list of Walls
 void Cell::AddWall( Wall *w )
 {
@@ -1872,6 +2269,38 @@ void Cell::EmitValues(double t)
 {
   //  cerr << "Attempting to emit " << t << ", " << chem[0] << ", " << chem[1] << endl;
   emit ChemMonValue(t, chem);
+}
+
+void Cell::insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode) {
+  CellBase::insertNodeAfterFirst(position1,position2, newNode);
+  ((Node*)newNode)->addCell(this);
+}
+
+WallBase* Cell::newWall(NodeBase* from,NodeBase* to,CellBase * other) {
+  return new Wall((Node*)from, (Node*)to, this, other);
+}
+
+void Cell::correctNeighbors() {
+  list<Node*>::iterator nit=this->nodes.begin();
+  Node* n1 = *nit;
+  Node* n2 = *(++nit);
+  Node* n3 = *(++nit);
+  Node* first = n1;
+  Node* second = n2;
+  while (nit != this->nodes.end()) {
+    n2->correctNeighbors(this->Index(), n1, n3);
+    n1=n2;
+    n2=n3;
+    n3=*(++nit);
+  }
+  n3=first;
+  n2->correctNeighbors(this->Index(), n1, n3);
+  n1=n2;
+  n2=n3;
+  n3=second;
+  n2->correctNeighbors(this->Index(), n1, n3);
+  ConstructNeighborList();
+  RecalcArea();
 }
 
 /* finis */

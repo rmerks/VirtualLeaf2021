@@ -34,9 +34,15 @@
 
 #include "vector.h"
 #include "parameter.h"
+#include "cellwallcurve.h"
+#include "nodebase.h"
 #include "wall.h"
 #include "warning.h"
 #include "assert.h"
+#include "wallelementinfo.h"
+
+
+//#include "wallelementinfo.h"
 
 extern Parameter par;
 using namespace std;
@@ -45,6 +51,10 @@ class Mesh;
 class Node;
 class CellBase;
 class NodeSet;
+class WallElementInfo;
+class WallElement;
+class NodeBase;
+class CellWallCurve;
 
 struct ParentInfo {
 
@@ -66,9 +76,9 @@ class CellsStaticDatamembers {
     base_area = 0.;
   }
   ~CellsStaticDatamembers() {
-#ifdef QDEBUG
+/*#ifdef QDEBUG
     qDebug() << "Oops! Desctructor of CellsStaticDatamembers called" << endl;
-#endif
+#endif*/
   }
   int ncells;
   int nchem;
@@ -84,6 +94,8 @@ class CellBase :  public QObject, public Vector
   friend class CellInfo;
   friend class Node;
   friend class WallBase;
+  friend class WallElement;
+  friend class WallElementInfo;
   friend class SimPluginInterface;
 
  public:
@@ -195,6 +207,10 @@ class CellBase :  public QObject, public Vector
 
   inline double Area(void) const { return area; }
 
+  inline double SetWallStiffness(double value_stiffness) {return wall_stiffness = value_stiffness;}
+
+  inline double GetWallStiffness(void) const {return wall_stiffness;}
+
   inline void Divide(void) { flag_for_divide = true; }
 
   inline void DivideOverAxis(const Vector &v)
@@ -210,9 +226,15 @@ class CellBase :  public QObject, public Vector
 	 w++) {
       sum +=  (*w)->Length();
     }
-
     return sum;
   }
+
+  virtual void correctNeighbors();
+  virtual void removeNode(NodeBase * node) ;
+  virtual WallBase* newWall(NodeBase* from,NodeBase* to,CellBase * other);
+  virtual void insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode);
+  virtual void InsertWall( WallBase *w );
+  virtual CellBase* getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over);
 
   QList<WallBase *> getWalls(void) {
     QList<WallBase *> wall_list;
@@ -222,6 +244,61 @@ class CellBase :  public QObject, public Vector
       wall_list << *i;
     }
     return wall_list;
+  }
+
+
+  template<class Op> void LoopWallElements(Op f) {
+			WallElementInfo info;
+			list <Node *>::iterator i=nodes.begin();
+			Node * first=*i;
+			Node * from=first;
+			Node * to=*(++i);
+			while (i!=nodes.end()) {
+				fillWallElementInfo(&info,from,to);
+		        f(&info);
+				if (stopWallElementInfo(&info)) {
+		        	return;
+		        }
+		        from=to;
+		        to=*(++i);
+			}
+			fillWallElementInfo(&info,from,first);
+			f(&info);
+  }
+
+  template<class Op> void LoopWallElementsOfWall(Wall* wall, Op f) {
+			WallElementInfo info;
+			list <Node *>::iterator i=nodes.begin();
+			Node * first=*i;
+			Node * from=first;
+			Node * to=*(++i);
+			bool start = false;
+			while (i!=nodes.end()) {
+				if (wall->isHasStartOrEnd(from)) {
+					if (start) {
+						return;
+					} else {
+						start = true;
+					}
+				}
+				if (start) {
+					fillWallElementInfo(&info,from,to);
+		        	f(&info);
+					if (stopWallElementInfo(&info)) {
+		        		return;
+		        	}
+				}
+		        from=to;
+		        to=*(++i);
+			}
+			fillWallElementInfo(&info,from,first);
+			f(&info);
+  }
+
+  template<class Op> void LoopWalls(Op f) {
+    for (list <Wall *>::iterator i=walls.begin();i!=walls.end();i++) {
+      f(*i);
+    }
   }
 
   void Dump(ostream &os) const;
@@ -393,6 +470,10 @@ class CellBase :  public QObject, public Vector
   inline double TargetLength() const { return target_length; } 
 
   static inline CellsStaticDatamembers *GetStaticDataMemberPointer(void) { return static_data_members; }
+  void fillWallElementInfo(WallElementInfo * info,Node* from,Node* to) ;
+  bool stopWallElementInfo(WallElementInfo * info);
+  inline void removeWall(Wall * wall) {walls.remove(wall);}
+  void attachToCell(CellWallCurve * curve);
 
  protected:
   // (define a list of Node* iterators)
@@ -414,7 +495,6 @@ class CellBase :  public QObject, public Vector
   }
   inline double NewChem(int c) const { return new_chem[c]; }
 
- protected:
   list<Node *> nodes;
   void ConstructNeighborList(void);
   long wall_list_index (Wall *elem) const;
@@ -438,6 +518,7 @@ class CellBase :  public QObject, public Vector
   double target_area;
   double target_length;
   double lambda_celllength;
+  double wall_stiffness; // Lebovka et al
 
   double stiffness; // stiffness like in Hogeweg (2000)
 
@@ -469,6 +550,8 @@ class CellBase :  public QObject, public Vector
 
   bool marked;
   int div_counter;
+  CellWallCurve * curvedWallElementToHandle;
+
 };
 
 ostream &operator<<(ostream &os, const CellBase &v);

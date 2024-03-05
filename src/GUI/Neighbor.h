@@ -57,6 +57,8 @@ class Neighbor {
   bool Eq(Neighbor&) const;
   Cell* getCell(void) const;
   void XMLAdd(QDomDocument &doc, QDomElement &e) const;
+  void setPrevious(Node * nb);
+  void setNext(Node * nb);
 
   ostream &print(ostream &os) const;
 };

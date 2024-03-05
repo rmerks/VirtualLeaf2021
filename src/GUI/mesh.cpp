@@ -493,6 +493,46 @@ void Mesh::Clear(void) {
 #endif
 }
 
+double Mesh::CellSpecificStiffnessOneSide(Node *nb,set<int> &nodeown) {
+    // determines the list of cells belonging to the node and its neighbors
+    set<int> nb1own;
+    vector<int> intersection_no_nb1;
+    for (list<Neighbor>::iterator c=nb->owners.begin(); c!=nb->owners.end(); c++) {
+      nb1own.insert(c->cell->Index());
+    }
+    set_intersection(nodeown.begin(), nodeown.end(), nb1own.begin(), nb1own.end(), back_inserter(intersection_no_nb1));
+
+	double cell_w=0.;
+    // uses the cell specific stiffness values to calculate length_dh as introduced in Lebovka et al
+    for (list<Neighbor>::iterator c=nb->owners.begin(); c!=nb->owners.end(); c++) {
+      if (std::find(intersection_no_nb1.begin(), intersection_no_nb1.end(), c->cell->Index()) != intersection_no_nb1.end()) {
+    	  cell_w += (c->cell->Index() !=-1?c->cell->GetWallStiffness():par.rel_perimeter_stiffness);
+      }
+      if (std::isnan(cell_w)) {
+    	  break;
+      }
+    }
+    return cell_w;
+}
+void Mesh::updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node) {
+
+	// update areas of cells
+	list<DeltaIntgrl>::const_iterator  di_it = delta_intgrl_list->begin();
+	for (list<Neighbor>::iterator cit=node->owners.begin(); cit!=node->owners.end(); ( cit++) ) {
+	  if (!cit->cell->BoundaryPolP()) {
+	    cit->cell->area -= di_it->area;
+	    if (par.lambda_celllength) {
+		cit->cell->intgrl_x -= di_it->ix;
+		cit->cell->intgrl_y -= di_it->iy;
+		cit->cell->intgrl_xx -= di_it->ixx;
+		cit->cell->intgrl_xy -= di_it->ixy;
+		cit->cell->intgrl_yy -= di_it->iyy;
+	    }
+	    di_it++;
+	  }
+	}
+}
+
 double Mesh::DisplaceNodes(void) {
 
   MyUrand r(shuffled_nodes.size());
@@ -510,7 +550,7 @@ double Mesh::DisplaceNodes(void) {
     Node &node(**i);
 
     // Do not allow displacement if fixed
-    //if (node.fixed) continue;
+    if (node.fixed) continue;
 
     if (node.DeadP()) continue;
 
@@ -545,8 +585,8 @@ double Mesh::DisplaceNodes(void) {
       //   calculate energy difference
 
       double area_dh=0.;
-      double length_dh=0.;
       double bending_dh=0.;
+      double length_dh=0.;
       double cell_length_dh=0.;
       double alignment_dh=0.;
 
@@ -576,28 +616,7 @@ double Mesh::DisplaceNodes(void) {
 	
 	Vector i_min_1 = *(cit->nb1);
 	//Vector i_plus_1 = m->getNode(cit->nb2);
-	Vector i_plus_1 = *(cit->nb2);
-
-
-	// We must double the weights for the perimeter (otherwise they start bulging...)
-	double w1, w2;
-	if (node.boundary && cit->nb1->boundary) 
-#ifdef FLEMING
-	  w1 = par.rel_perimeter_stiffness;
-#else
-	w1=2;
-#endif
-	else
-	  w1 = 1;
-
-	if (node.boundary && cit->nb2->boundary) 
-#ifdef FLEMING
-	  w2 = par.rel_perimeter_stiffness;
-#else
-	w2 = 2;
-#endif
-	else 
-	  w2 = 1;
+    Vector i_plus_1 = *(cit->nb2);
 
 	//if (cit->cell>=0) {
 	if (!cit->cell->BoundaryPolP()) {
@@ -773,18 +792,64 @@ double Mesh::DisplaceNodes(void) {
 	  }
 
 
-	
-	  length_dh += 2*Node::target_length * ( w1*(old_l1 - new_l1) + 
-						 w2*(old_l2 - new_l2) ) +
-	    w1*(DSQR(new_l1) 
-		- DSQR(old_l1)) 
-	    + w2*(DSQR(new_l2) 
-		  - DSQR(old_l2));
+    // We must double the weights for the perimeter (otherwise they start bulging...)
+    double w1, w2;
+#ifdef FLEMING
+  	if (node.boundary && cit->nb1->boundary)
+  	  w1 = par.rel_perimeter_stiffness;
+  	else
+  	  w1 = 1;
+  	if (node.boundary && cit->nb2->boundary)
+  	  w2 = par.rel_perimeter_stiffness;
+  	else
+  	  w2 = 1;
+
+#else
+  	if (node.boundary && cit->nb1->boundary)
+  		w1=2;
+  	else
+  		w1 = 1;
+  	if (node.boundary && cit->nb2->boundary)
+  		w2 = 2;
+  	else
+  		w2 = 1;
+#endif
 
 
-	 
+    // Cell specific wall stiffness
+    double cell_w = cit->cell->GetWallStiffness();
+    w1 = w1*cell_w;
+    w2 = w2*cell_w;
 
 
+    double w_w1 = 1;
+    double w_w2 = 1;
+    double bl_minus_1 = 0.0;
+    double bl_plus_1 = 0.0;
+
+    if (activateWallStiffnessHamiltonian()) {
+    	calculateWallStiffness(&c, *i, &w_w1, &w_w2, &bl_minus_1, &bl_plus_1);
+    }
+    if (bl_minus_1>0 && bl_plus_1>0) {
+        w1 = cell_w * (w_w1);
+        w2 = cell_w * (w_w2);
+        //check if wall elements are defined and pick the appropriate length_dh
+
+            double elastic_modulus = 50;
+            length_dh +=
+        		elastic_modulus * w1 *
+        		bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1)) +
+                elastic_modulus * w2 *
+				bl_plus_1 *(DSQR(new_l2/bl_plus_1 - 1)-DSQR(old_l2/bl_plus_1 - 1));
+    }
+    else {
+    	length_dh +=2*Node::target_length * (
+    			w1*(old_l1 - new_l1) +
+    			w2*(old_l2 - new_l2) ) +
+        		w1*(DSQR(new_l1) - DSQR(old_l1)) +
+				w2*(DSQR(new_l2) - DSQR(old_l2));
+	}
+//    cout << node << "\t" << bl_minus_1 <<  "\t" << bl_plus_1 <<  "\t" << w_w1 <<  "\t" << w_w2 << "\n";
 	}
 
 	// bending energy also holds for outer boundary
@@ -805,69 +870,19 @@ double Mesh::DisplaceNodes(void) {
 	  bending_dh += DSQR(1/r2 - 1/r1);
 
 	}
-
-
       }
-
-     
-		
-
       dh = 	area_dh + cell_length_dh +
-	par.lambda_length * length_dh + par.bend_lambda * bending_dh + par.alignment_lambda * alignment_dh;
+      par.lambda_length * length_dh + par.bend_lambda * bending_dh + par.alignment_lambda * alignment_dh;
 
          //(length_constraint_after - length_constraint_before);
 
-      if (node.fixed) {
+	  if (dh<-sum_stiff || RANDOM()<exp((-dh-sum_stiff)/par.T)) {
+		updateAreasOfCells(&delta_intgrl_list, &node) ;
 
-	// search the fixed cell to which this node belongs
-	// and displace these cells as a whole
-	// WARNING: undefined things will happen for connected fixed cells...
-	for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
-	  if (!c->cell->BoundaryPolP() && c->cell->FixedP()) {
-	    sum_dh+=c->cell->Displace(rx,ry,0);
-	  }
-	}
-      } else {
+		node.x = new_p.x;
+		node.y = new_p.y;
 
-
-	if (dh<-sum_stiff || RANDOM()<exp((-dh-sum_stiff)/par.T)) {
-
-	  // update areas of cells
-	  list<DeltaIntgrl>::const_iterator di_it = delta_intgrl_list.begin();
-	  for (list<Neighbor>::iterator cit=node.owners.begin(); cit!=node.owners.end(); ( cit++) ) {
-	    if (!cit->cell->BoundaryPolP()) {
-	      cit->cell->area -= di_it->area;
-	      if (par.lambda_celllength) {
-		cit->cell->intgrl_x -= di_it->ix;
-		cit->cell->intgrl_y -= di_it->iy;
-		cit->cell->intgrl_xx -= di_it->ixx;
-		cit->cell->intgrl_xy -= di_it->ixy;
-		cit->cell->intgrl_yy -= di_it->iyy;
-	      }
-	      di_it++;
-	    }
-	  }
-
-//	  double old_nodex, old_nodey;
-
-    //  old_nodex=node.x;
-     // old_nodey=node.y;
-
-	  node.x = new_p.x;
-	  node.y = new_p.y;
-
-	  for (list<Neighbor>::iterator cit=node.owners.begin();
-	       cit!=node.owners.end();
-	       ( cit++) ) {
-
-	    /*   if (cit->cell >= 0 && cells[cit->cell].SelfIntersect()) {
-		 node.x = old_nodex;		       
-		 node.y = old_nodey;
-		 goto next_node;
-		 }*/
-	  }
-	  sum_dh += dh;
-	}  
+		sum_dh += dh;
       }
     } 
   next_node:
@@ -877,6 +892,114 @@ double Mesh::DisplaceNodes(void) {
 
   return sum_dh;
 }
+
+
+
+
+void Mesh::WallCollapse(double potential_slide_angle) {
+	CellWallCurve curve(potential_slide_angle);
+	bool anyCurveFlattend=false;
+	Node * first=NULL;
+	Node * second=NULL;
+	curve.reset();
+	curve.setCell(boundary_polygon);
+	for (Node * node : boundary_polygon->nodes) {
+		curve.shift(node);
+		if (first==NULL) {
+			first=node;
+		}else if (second==NULL) {
+			second=node;
+		}
+		curve.checkAngle();
+	}
+	curve.shift(first);
+	curve.checkAngle();
+	curve.shift(second);
+	curve.checkAngle();
+	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
+		Cell &cell(**i);
+		curve.reset();
+		curve.setCell(&cell);
+		list <Node *>::iterator j=cell.nodes.begin();
+		curve.shift(*j);
+		curve.shift(*(++j));
+		curve.shift(*(++j));
+		while (j!=cell.nodes.end()) {
+			bool toSharp = curve.checkAngle();
+			Node *nextNode = *(++j);
+			if (!toSharp && j!=cell.nodes.end()){
+				curve.checkBudEnd(nextNode);
+			}
+			curve.shift(nextNode);
+		}
+		j=cell.nodes.begin();
+		Node *nextNode =*j;
+		curve.setTo(nextNode);
+		nextNode = *(++j);
+		if (!curve.checkAngle()){
+			curve.checkBudEnd(nextNode);
+		}
+		curve.shift(nextNode);
+		nextNode = *(++j);
+		if (!curve.checkAngle()){
+			curve.checkBudEnd(nextNode);
+		}
+	}
+}
+
+
+void Mesh::WallRelaxation(void) {
+	// as we relax every wall element independently no re-scuffling is necessary.
+	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
+		Cell &cell(**i);
+
+		// check lengths of wall elements and apply plastic deformation
+		cell.LoopWallElements([](auto wallElementInfo){
+			if(wallElementInfo->hasWallElement()){
+				if(wallElementInfo->plasticStretch()){
+					wallElementInfo->updateBaseLength();
+                } else if(std::isnan(wallElementInfo->getBaseLength())){
+                    wallElementInfo->getWallElement()->setBaseLength(wallElementInfo->getLength()/1.2);
+                }
+			}
+		});
+	}
+}
+
+void extractWallData(WallElementInfo* wallElementInfo,double *w,double* bl){
+	double stiffness=.0;
+	double base_length=.0;
+	if (wallElementInfo->hasWallElement()) {
+		stiffness = wallElementInfo->getWallElement()->getStiffness();
+		base_length = wallElementInfo->getBaseLength();
+	} else {
+		stiffness = wallElementInfo->getCell()->GetWallStiffness();
+	}
+	if (!std::isnan(stiffness)){
+		(*w) += stiffness;
+		(*bl) += base_length;
+	}
+}
+
+void Mesh::calculateWallStiffness(CellBase* c, Node* node, double *w_p1,double *w_p2, double* bl_minus_1, double* bl_plus_1) {
+	c->LoopWallElements([node,w_p1,w_p2,bl_minus_1,bl_plus_1](auto wallElementInfo){
+		int points = 0;
+		if (wallElementInfo->isTo(node)) {
+            extractWallData(wallElementInfo,w_p1,bl_minus_1);
+            points++;
+		} else	if (wallElementInfo->isFrom(node)) {
+            extractWallData(wallElementInfo,w_p2,bl_plus_1);
+            points++;
+        }
+		if (points == 2) {
+            //stop the loop, as we do not need to go further.
+        	wallElementInfo->stopLoop();
+		}
+	});
+}
+
+
+
 
 
 void Mesh::InsertNode(Edge &e) {
@@ -1033,6 +1156,7 @@ void Mesh::InsertNode(Edge &e) {
     c++;
   }
 
+  new_node->splittWallElementsBetween(e.first, e.second);
 }
 
 
@@ -1358,6 +1482,9 @@ void Mesh::RepairBoundaryPolygon(void) {
     boundary_node->Mark();
     boundary_polygon->nodes.push_back(boundary_node);
     next_boundary_node = findNextBoundaryNode(boundary_node);
+    if (next_boundary_node == NULL) {
+    	cout << "boundary null\n";
+    }
   } while ( !next_boundary_node->Marked() );
 
 
@@ -1835,7 +1962,7 @@ void Mesh::DrawNodes(QGraphicsScene *c) const {
     item->setZValue(5);
     item->show();
     item ->setPos(((Cell::offset[0]+i->x)*Cell::factor),
-		  ((Cell::offset[1]+i->y)*Cell::factor) );
+          ((Cell::offset[1]+i->y)*Cell::factor) );
   }
 }
 

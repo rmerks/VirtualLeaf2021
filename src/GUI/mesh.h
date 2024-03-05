@@ -28,6 +28,7 @@
 #define _MESH_H_
 
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <queue>
 #include <iterator>
@@ -71,6 +72,12 @@ template<class T, class C = deque<T> > class unique_queue : public queue<T,C> {
 };
 
 template<class P> P& deref_ptr ( P *obj) { return *obj; }
+
+class DeltaIntgrl;
+
+
+#define WALL_STIFFNESS_HAMILTONIAN 1
+#define WALL_SLIDING_HAMILTONIAN 3
 
 
 class Mesh {
@@ -140,7 +147,7 @@ class Mesh {
     for (vector <Cell *>::iterator i=cells.begin();
 	 i!=cells.end();
 	 i++) {
-      f(**i);
+      f(*i);
     }
   }
 
@@ -158,7 +165,7 @@ class Mesh {
     for (vector <Cell *>::iterator i=current_cells.begin();
 	 i!=current_cells.end();
 	 i++) {
-      f(**i);
+      f(*i);
 
     }
   }
@@ -167,7 +174,7 @@ class Mesh {
     for (vector<Node *>::iterator i=nodes.begin();
 	 i!=nodes.end();
 	 i++) {
-      f(**i); 
+      f(*i);
     }
   }
 
@@ -199,7 +206,7 @@ class Mesh {
     for (vector<Cell *>::iterator i=cells.begin();
 	 i!=cells.end();
 	 i++) {
-      f(**i,g); 
+      f(*i,g);
     }
   }
 
@@ -207,29 +214,46 @@ class Mesh {
     for (vector<Cell *>::iterator i=cells.begin();
 	 i!=cells.end();
 	 i++) {
-      f(**i,g,h); 
+      f(*i,g,h);
     }
   }
 
-  void DoCellHouseKeeping(void) {
+  void DoCellHouseKeeping(double potential_slide_angle) {
+	WallCollapse(potential_slide_angle);
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
-	 i != current_cells.end();
-	 i ++) {
-      plugin->CellHouseKeeping(*i);
-
-      // Call functions of Cell that cannot be called from CellBase, including Division
-      if ((*i)->flag_for_divide) {
-	if ((*i)->division_axis) {
-	  (*i)->DivideOverAxis(*(*i)->division_axis);
-	  delete (*i)->division_axis;
-	  (*i)->division_axis = 0;
-	} else {
-	  (*i)->Divide();
-	}
-	(*i)->flag_for_divide=false;
-      }
+    		i != current_cells.end();
+    		i ++) {
+    	plugin->CellHouseKeeping(*i);
     }
+    for (vector<Cell *>::iterator i = current_cells.begin();
+    		i != current_cells.end();
+    		i ++) {
+	bool anyBorderSpikeRemoved=false;
+    if ((*i)->curvedWallElementToHandle->removeSpike()){
+    	anyBorderSpikeRemoved=(*i)->curvedWallElementToHandle->isBorderCase();
+    	cout << ' ' << (*i)->curvedWallElementToHandle->Index() << '\n';
+	}
+    (*i)->curvedWallElementToHandle->reset();
+    if (anyBorderSpikeRemoved) {
+    	RepairBoundaryPolygon();
+    } else {
+      // Call functions of Cell that cannot be called from CellBase, including Division
+    	if ((*i)->flag_for_divide) {
+    		if ((*i)->division_axis) {
+    			(*i)->DivideOverAxis(*(*i)->division_axis);
+    			delete (*i)->division_axis;
+    			(*i)->division_axis = 0;
+    		} else {
+    			(*i)->Divide();
+    		}
+    		(*i)->flag_for_divide=false;
+    	}
+    }
+}
+
+
+
   }
 
   // Apply "f" to cell i
@@ -240,6 +264,10 @@ class Mesh {
   }
 
   double DisplaceNodes(void);
+  void WallRelaxation(void);
+  void WallCollapse(double potential_slide_angle);
+  void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
+  bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);
   int NEqs(void) {     int nwalls = walls.size();
@@ -405,11 +433,13 @@ class Mesh {
   Node* findNextBoundaryNode(Node*);
 
  private:
-
+  list<Node *>* cellNodes(Cell * cell) ;
   // Data members
   vector<Cell *> cells;
   vector<Node *> nodes;
   list<Wall *> walls; // we need to erase elements from this container frequently, hence a list.
+  int compatibility_level;
+
  public:
   vector<NodeSet *> node_sets;
  private:
@@ -421,6 +451,7 @@ class Mesh {
   SimPluginInterface *plugin;
 
   // Private member functions
+  double CellSpecificStiffnessOneSide(Node *nb,set<int> &nodeown);
   void AddNodeToCell(Cell *c, Node *n, Node *nb1 , Node *nb2);
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);
@@ -443,6 +474,9 @@ class Mesh {
 
   void CircumCircle(double x1,double y1,double x2,double y2,double x3,double y3,
 		    double *xc,double *yc,double *r);
+  void calculateWallStiffness(CellBase *c,Node* node, double *w_p1,double *w_p2, double *bl_minus_1, double *bl_plus_1);
+
+  void updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node);
 };
 #endif
 

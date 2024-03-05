@@ -141,6 +141,8 @@ Parameter::Parameter() {
   k2van3 = 0.3;
   dt = 0.1;
   rd_dt = 1.0;
+  potential_slide_angle = M_PI/18.;
+  compatibility_level = 255;
   movie = false;
   nit = 100000;
   maxt = 1000.;
@@ -309,8 +311,10 @@ void Parameter::Read(const char *filename) {
   k2van3 = fgetpar(fp, "k2van3", 0.3, true);
   dt = fgetpar(fp, "dt", 0.1, true);
   rd_dt = fgetpar(fp, "rd_dt", 1.0, true);
+  potential_slide_angle = fgetpar(fp, "potential_slide_angle", M_PI/18., true);
   movie = bgetpar(fp, "movie", false, true);
   nit = igetpar(fp, "nit", 100000, true);
+  compatibility_level = igetpar(fp, "compatibility_level", 255, true);
   maxt = fgetpar(fp, "maxt", 1000., true);
   rseed = igetpar(fp, "rseed", -1, true);
   constituous_expansion_limit = igetpar(fp, "constituous_expansion_limit", 16, true);
@@ -443,8 +447,10 @@ void Parameter::Write(ostream &os) const {
   os << " k2van3 = " << k2van3 << endl;
   os << " dt = " << dt << endl;
   os << " rd_dt = " << rd_dt << endl;
+  os << " potential_slide_angle = " << potential_slide_angle << endl;
   os << " movie = " << sbool(movie) << endl;
   os << " nit = " << nit << endl;
+  os << " compatibility_level = " << compatibility_level << endl;
   os << " maxt = " << maxt << endl;
   os << " rseed = " << rseed << endl;
   os << " constituous_expansion_limit = " << constituous_expansion_limit << endl;
@@ -1253,6 +1259,14 @@ text << sbool(copy_wall);
 }
 {
   QDomElement xmlpar = doc.createElement("par");
+  xmlpar.setAttribute("name","potential_slide_angle" );
+  xmlparameter.appendChild(xmlpar);
+  ostringstream text;
+    text << potential_slide_angle;
+  xmlpar.setAttribute("val",text.str().c_str());
+}
+{
+  QDomElement xmlpar = doc.createElement("par");
   xmlpar.setAttribute("name","movie" );
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
@@ -1265,6 +1279,14 @@ text << sbool(movie);
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << nit;
+  xmlpar.setAttribute("val",text.str().c_str());
+}
+{
+  QDomElement xmlpar = doc.createElement("par");
+  xmlpar.setAttribute("name","compatibility_level" );
+  xmlparameter.appendChild(xmlpar);
+  ostringstream text;
+    text << compatibility_level;
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {
@@ -1898,12 +1920,20 @@ if (!strcmp(namec, "rd_dt")) {
   rd_dt = standardlocale.toDouble(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'rd_dt' from XML file.",valc); }
 }
+if (!strcmp(namec, "potential_slide_angle")) {
+	potential_slide_angle = standardlocale.toDouble(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to double while reading parameter 'potential_slide_angle' from XML file.",valc); }
+}
 if (!strcmp(namec, "movie")) {
 movie = strtobool(valc);
 }
 if (!strcmp(namec, "nit")) {
   nit = standardlocale.toInt(valc, &ok);
   if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'nit' from XML file.",valc); }
+}
+if (!strcmp(namec, "compatibility_level")) {
+  compatibility_level = standardlocale.toInt(valc, &ok);
+  if (!ok) { MyWarning::error("Read error: cannot convert string \"%s\" to integer while reading parameter 'compatibility_level' from XML file.",valc); }
 }
 if (!strcmp(namec, "maxt")) {
   maxt = standardlocale.toDouble(valc, &ok);

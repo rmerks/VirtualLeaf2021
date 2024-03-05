@@ -2,6 +2,7 @@ TEMPLATE = subdirs
 
 SUBDIRS = \
 Meinhardt \
+Infection \
 #MyModel \
 AuxinGrowth \
 Turing \
