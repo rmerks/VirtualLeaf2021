@@ -774,7 +774,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 	neighbor_cell = c->cell;
 	if (c->cell == NULL) {
 		cout << "error";
-	}
+	} else
 	if (!c->cell->BoundaryPolP()) {
 
 	  // find correct position in the cells node list

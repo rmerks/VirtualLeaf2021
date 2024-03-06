@@ -1484,6 +1484,7 @@ void Mesh::RepairBoundaryPolygon(void) {
     next_boundary_node = findNextBoundaryNode(boundary_node);
     if (next_boundary_node == NULL) {
     	cout << "boundary null\n";
+    	break;
     }
   } while ( !next_boundary_node->Marked() );
 
