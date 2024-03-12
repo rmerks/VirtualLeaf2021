@@ -188,8 +188,8 @@ class Mesh:
                 toDo.remove(startWall)
                 continue
             firstCellWall = CellWall(startWall.cells[0],startWall.cells[1],startWall.node1)
-            if (len(firstCellWall.walls)>1):
-                print(len(firstCellWall.walls))
+#            if (len(firstCellWall.walls)>1):
+#                print(len(firstCellWall.walls))
             for wall in firstCellWall.walls:
                 if wall in toDo:
                     toDo.remove(wall)

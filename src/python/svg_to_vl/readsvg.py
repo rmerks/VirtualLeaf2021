@@ -4,13 +4,9 @@ import re
 import cellmodel
 import path
 from math import sqrt
+import argparse
 
-
-template = '/home/ritchie/Desktop/leaf.blob.xml'
-svgFileName= '/home/ritchie/Desktop/gall_temp/root_draw_plain'
-#svgFileName= '/home/ritchie/Desktop/test'
 namespaces = {'inkscape': 'http://www.inkscape.org/namespaces/inkscape','svg': 'http://www.w3.org/2000/svg'}
-
 
 def parseSvg(svgFileName):
     mytree = ET.parse(svgFileName+'.svg')
@@ -60,32 +56,44 @@ def readNodesFromSvg(svgFileName, mesh):
         for y in x.findall('svg:path',namespaces):
             readNodesFromPath(mesh,y,curr)
 
-      
-mesh = cellmodel.Mesh() 
-readNodesFromSvg(svgFileName, mesh)
+#template = '/home/ritchie/Desktop/leaf.blob.xml'
+#svgFileName= '/home/ritchie/Desktop/gall_temp/root_draw_plain'
+#svgFileName= '/home/ritchie/Desktop/test'
 
-mesh.reduceParallelWalls()
-mesh.defineInnerCells()
-mesh.defineCellWalls()
+def convertSVG(svgFileName,template,scaleFactor):      
+    mesh = cellmodel.Mesh() 
+    if not (scaleFactor is None):
+        mesh.pixelScale = float(scaleFactor)
+    readNodesFromSvg(svgFileName, mesh)
+    mesh.reduceParallelWalls()
+    mesh.defineInnerCells()
+    mesh.defineCellWalls()
+    tree = mesh.toXml()
+    templateTree=ET.parse(template).getroot()
+    for node in templateTree:
+        for newNode in tree:
+            if node.tag == newNode.tag:
+                node.clear()
+                node.attrib = newNode.attrib
+                for child in newNode:
+                    node.append(child)
+    pretty=minidom.parseString(ET.tostring(templateTree, encoding='utf8', method='xml')).toprettyxml(indent = "   ")
+    with open(svgFileName+'.xml', "w") as f:
+        f.write(pretty)
+    print ("virtual-leaf-file = "+svgFileName+'.xml', end='\n')
 
 
-
-tree = mesh.toXml()
-
-templateTree=ET.parse(template).getroot()
-
-for node in templateTree:
-    for newNode in tree:
-        if node.tag == newNode.tag:
-            node.clear()
-            node.attrib = newNode.attrib
-            for child in newNode:
-                node.append(child)
-            
-    
-
-pretty=minidom.parseString(ET.tostring(templateTree, encoding='utf8', method='xml')).toprettyxml(indent = "   ")
-
-with open(svgFileName+'.xml', "w") as f:
-    f.write(pretty)
-
+parser=argparse.ArgumentParser(prog='readsvg',
+                    description='converting cells drawn in svg files to VirtualLeaf xml start files. The svg file should be specified without extension, the resulting xml file will be stored next to the svg file.',
+                    epilog='For more information see our recent publication.')
+parser.add_argument("-i","--svg-file")
+parser.add_argument("-t","--template-file")
+parser.add_argument("-s","--scale-factor")
+args=parser.parse_args()
+if args.svg_file is None or args.template_file is None:
+    parser.print_help()
+else:
+    print ("svg-file = ", args.svg_file, end='\n')
+    print ("template-file = ", args.template_file, end='\n')
+    print ("scale = ", args.scale_factor, end='\n')
+    convertSVG(args.svg_file, args.template_file, args.scale_factor)
