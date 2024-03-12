@@ -23,7 +23,7 @@ class Mesh:
         self.wallNr=0
         self.cellNr=0
         self.mul=0.75
-        self.pixelScale=10.
+        self.pixelScale=5.
         
     def setScale(self, onePersentScale):
         self.mul=onePersentScale*self.pixelScale;
@@ -92,7 +92,7 @@ class Mesh:
                 if len(nodeWalls) == 2 and nodeWalls[0].length() < wall.length() and nodeWalls[1].length() < wall.length():
                     #triagle
                     area = nodeWalls[0].areaOfTriangle(nodeWalls[1])
-                    if area < 4.:
+                    if area < (3.*self.pixelScale*self.pixelScale):
                         nodeWalls.append(wall)
                         wallsToSplit.append(nodeWalls)
         return wallsToSplit
@@ -102,7 +102,7 @@ class Mesh:
                if (wall[2] in cell.walls):
                    index = cell.walls.index(wall[2])
                    after=(index+1)%len(cell.walls);
-                   if wall[1] in cell.walls[after].node1.walls:
+                   if wall[1] in cell.walls[after].sharedNode(wall[2]).walls:
                        cell.walls.remove(wall[2])
                        wall[2].cells.remove(cell)
                        cell.walls.insert(index,wall[1])
@@ -211,7 +211,9 @@ class Node:
         return sqrt(pow(self.x-x,2) + pow(self.y-y,2))
 
     def distanceO(self, other):
-        return sqrt(pow(self.x-other.x,2) + pow(self.y-other.y,2))
+        deltax = self.x-other.x;
+        deltay = self.y-other.y;
+        return sqrt(deltax*deltax + deltay*deltay)
             
     def addWall(self, wall):
         self.walls.append(wall)
@@ -344,6 +346,12 @@ class Wall:
     def addCell(self, cell):
         if cell not in self.cells:
             self.cells.append(cell)
+            
+    def sharedNode(self, otherWall):
+        if self.node1 == otherWall.node1 or self.node2 == otherWall.node1:
+            return otherWall.node1
+        if self.node1 == otherWall.node2 or self.node2 == otherWall.node2:
+            return otherWall.node2
         
     def isBorder(self):
         return len(self.cells) < 2
