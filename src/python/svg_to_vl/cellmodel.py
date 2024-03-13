@@ -71,7 +71,7 @@ class Mesh:
         if another:
             for cell in self.cells:
                 if cell.retryDefineInnerCell() == None:
-                    print("not successful, defining an inner cell!")
+                    print("not successful, defining an inner cell! around nr = " + str(cell.getNr()) + " pos(" + str(cell.firstNode.x) + "," + str(cell.firstNode.y) + ")")
         self.removeCircumverence()
         
     def wallsToSplit(self):
@@ -92,7 +92,7 @@ class Mesh:
                 if len(nodeWalls) == 2 and nodeWalls[0].length() < wall.length() and nodeWalls[1].length() < wall.length():
                     #triagle
                     area = nodeWalls[0].areaOfTriangle(nodeWalls[1])
-                    if area < (3.*self.pixelScale*self.pixelScale):
+                    if area < (4.*self.pixelScale*self.pixelScale):
                         nodeWalls.append(wall)
                         wallsToSplit.append(nodeWalls)
         return wallsToSplit
@@ -134,7 +134,7 @@ class Mesh:
                 stopLoop=True
         
              
-    def numberWalls(self):
+    def numberAll(self):
         nr = 0
         for wall in self.walls:
             wall.nr = nr
@@ -143,7 +143,10 @@ class Mesh:
         for wall in self.cellWalls:
             wall.nr = nr
             nr=nr+1
-                        
+        nr = 0
+        for cell in self.cells:
+            cell.nr = nr
+            nr=nr+1                        
                         
     def removeCircumverence(self):
         longest = 0.0
@@ -198,7 +201,7 @@ class Mesh:
             self.cellWalls.append(firstCellWall)
         for wall in self.cellWalls:
             wall.addToCells()
-        self.numberWalls()
+        self.numberAll()
         
 class Node:
     def __init__(self,x,y,nr):
