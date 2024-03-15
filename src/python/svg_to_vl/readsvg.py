@@ -60,10 +60,12 @@ def readNodesFromSvg(svgFileName, mesh):
 #svgFileName= '/home/ritchie/Desktop/gall_temp/root_draw_plain'
 #svgFileName= '/home/ritchie/Desktop/test'
 
-def convertSVG(svgFileName,template,scaleFactor):      
+def convertSVG(svgFileName,template,scaleFactor,colormap):      
     mesh = cellmodel.Mesh() 
     if not (scaleFactor is None):
         mesh.pixelScale = float(scaleFactor)
+    if not (colormap is None):
+        mesh.setColormap(colormap)
     readNodesFromSvg(svgFileName, mesh)
     mesh.reduceParallelWalls()
     mesh.defineInnerCells()
@@ -89,6 +91,9 @@ parser=argparse.ArgumentParser(prog='readsvg',
 parser.add_argument("-i","--svg-file")
 parser.add_argument("-t","--template-file")
 parser.add_argument("-s","--scale-factor")
+parser.add_argument("-c","--color-map")
+
+#ffffff,1,2,3,4:
 args=parser.parse_args()
 if args.svg_file is None or args.template_file is None:
     parser.print_help()
@@ -96,4 +101,9 @@ else:
     print ("svg-file = ", args.svg_file, end='\n')
     print ("template-file = ", args.template_file, end='\n')
     print ("scale = ", args.scale_factor, end='\n')
-    convertSVG(args.svg_file, args.template_file, args.scale_factor)
+    print ("colormap = ", args.color_map, end='\n')
+    convertSVG(args.svg_file, args.template_file, args.scale_factor, args.color_map)
+    
+    
+    
+    

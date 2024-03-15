@@ -12,6 +12,24 @@ from vtkmodules.numpy_interface.algorithms import area
 from sympy.polys.polytools import nroots
 from pip._vendor.typing_extensions import Self
 
+class ColorSpec:
+    
+    def __init__(self,color):
+        colorspit = color.split(',')
+        self.hexcolor = '#'+colorspit[0]
+        self.cellType = colorspit[1]
+        self.chems = list()
+        for chemString in colorspit[2:]:
+            self.chems.append(float(chemString))
+            
+    def isType(self,other):
+        return other == self.hexcolor
+            
+    def boundary(self):
+        if self.hexcolor == "#ffffff":
+            return 2
+        return 0
+        
 class Mesh:
 
     def __init__(self):
@@ -19,11 +37,21 @@ class Mesh:
         self.cellWalls=list()
         self.nodes=list()
         self.cells=list()
+        self.colorSpecs=list()
         self.nodeNr=0
         self.wallNr=0
         self.cellNr=0
         self.mul=0.75
         self.pixelScale=5.
+        self.setColormap("ffffff,1,2.251808,0.481961:0000f8,2,2.251808,0.481961:009000,3,2.251808,0.481961:ff0000,3,2.251808,0.481961")
+        
+    def setColormap(self,colormap):
+        self.colorSpecs = list()
+        self.colorSpecs.append(ColorSpec("000000,0"))
+        colors = colormap.split(':')
+        for color in colors:
+            self.colorSpecs.append(ColorSpec(color))
+            
         
     def setScale(self, onePersentScale):
         self.mul=onePersentScale*self.pixelScale;
@@ -494,32 +522,28 @@ class Cell:
         for wall in self.walls:
             if wall.isBorder():
                 border = 1
-        cellType = "0"
-        boundary = 0 # None
-        if self.type == "#ffffff":
-            cellType = "1"
-            boundary = 2 # SOURCESINK 
-        if self.type == "#0000f8":
-            cellType = "2"
-        if self.type == "#009000":
-            cellType = "3"
-        self.toXmlI("cell",cellNodes,border,boundary,cellType,self.nr,self.type == "#000000")
+        cellType = self.mesh.colorSpecs[0]
+        for colorSpec in self.mesh.colorSpecs:
+            if (colorSpec.isType(self.type)):
+                cellType = colorSpec
 
-    def toXmlI(self,nodeName,cellNodes,border,boundary,cellType,nr,fixed):  
+        self.toXmlI("cell",cellNodes,border,cellType,self.nr,self.type == "#000000")
+
+    def toXmlI(self,nodeName,cellNodes,border,cellType,nr,fixed):  
         geo = self.getGeometry()   
         if not geo:
             return  
         if geo[2]:
             self.walls.reverse()
         cellNode = ET.SubElement(cellNodes, nodeName \
-                                 , boundary=str(boundary) \
-                                 , cell_type=cellType \
+                                 , boundary=str(cellType.boundary()) \
+                                 , cell_type=cellType.cellType \
                                  , target_area=str(geo[0]) \
                                  , lambda_celllength="0" \
                                  , at_boundary=str(border==0).lower() \
                                  , dead="false" \
                                  , target_length=str(geo[1]) \
-                                 , stiffness="0" \
+                                 , stiffness="1" \
                                  , index=str(nr) \
                                  , source="false" \
                                  , pin_fixed=str(fixed).lower() \
@@ -539,9 +563,13 @@ class Cell:
 #        for wall in self.walls:
         for wall in self.cellWalls:
             ET.SubElement(cellNode, "wall" , w=str(wall.getNr()))
-
+        if (len(cellType.chems)>0):    
+            chemEt = ET.SubElement(cellNode, "chem" , n=str(len(cellType.chems)))
+            for chem in cellType.chems:
+                ET.SubElement(chemEt, "val" , v=str(chem))
+ 
     def toBoundaryBolygon(self,cellNodes):
-        self.toXmlI("boundary_polygon",cellNodes,0,0,"0",-1,False)
+        self.toXmlI("boundary_polygon",cellNodes,0,self.mesh.colorSpecs[0],-1,False)
 
     def getGeometry(self):
         nextNode = self.firstNode

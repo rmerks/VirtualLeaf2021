@@ -898,7 +898,6 @@ double Mesh::DisplaceNodes(void) {
 
 void Mesh::WallCollapse(double potential_slide_angle) {
 	CellWallCurve curve(potential_slide_angle);
-	bool anyCurveFlattend=false;
 	Node * first=NULL;
 	Node * second=NULL;
 	curve.reset();
