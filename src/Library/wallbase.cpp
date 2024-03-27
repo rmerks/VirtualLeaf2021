@@ -62,6 +62,7 @@ WallBase::WallBase(Node *sn1, Node *sn2, CellBase *sc1, CellBase *sc2)
   }
 #endif
 
+
   c1 = sc1;
   c2 = sc2;
   c1WallStiffness = std::nan("1");

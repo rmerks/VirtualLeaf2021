@@ -48,11 +48,17 @@ void Infection::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase 
 void Infection::SetCellColor(CellBase *c, QColor *color) {
 	// add cell coloring rules here
     double col_inf = c->Chemical(0) / (0.8);
+    double col_inf2 = c->Chemical(0) / (1000000.0);
     if (col_inf > 1.0) {
     	col_inf = 1.0;
     }
-    color->setRgbF(1-col_inf, 1, 1);
+    if (col_inf2 > 0.99) {
+        col_inf2 = 0.99;
+    }
+    color->setRgbF(0 + col_inf, 0.01 + col_inf2, 0.5);
+
     //color->setHsv(static_cast<int>((1.0-redness)*60.), 222, 222);
+
 }
 
 void Infection::CellHouseKeeping(CellBase *c) {
@@ -97,7 +103,7 @@ void Infection::CelltoCellTransport(Wall *w, double *dchem_c1, double *dchem_c2)
     getLengthAndStiffness(w,&length,&stiffness);
     double wlength = w->Length();
 
-    double diffusionCoef = 0.00001/stiffness;
+    double diffusionCoef = 0.000001/stiffness;
 
     if(!w->C1()->BoundaryPolP() && !w->C2()->BoundaryPolP()){
     	double phi = length * diffusionCoef * ( w->C2()->Chemical(0) - w->C1()->Chemical(0) );
@@ -113,6 +119,8 @@ void Infection::WallDynamics(Wall *w, double *dw1, double *dw2) {
 void Infection::CellDynamics(CellBase *c, double *dchem) {
 	// add biochemical networks for intracellular reactions here
     dchem[0] = 0.01 * c->Chemical(0) - 0.001 * c->Chemical(0);
+
+
 }
 
 

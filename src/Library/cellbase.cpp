@@ -542,11 +542,16 @@ void CellBase::ConstructNeighborList(void)
 
        wit!=walls.end();
        wit++) {
-
+		CellBase * newNeighbor=NULL;
     if ((*wit)->C1() != this) {
-      neighbors.push_back((*wit)->C1());
+    	newNeighbor=(*wit)->C1();
     } else {
-      neighbors.push_back((*wit)->C2());
+    	newNeighbor=(*wit)->C2();
+    }
+    if (newNeighbor != NULL) {
+    	neighbors.push_back(newNeighbor);
+    } else {
+    	cout << "neighbor of " << index << " is NULL " << endl;
     }
 
   }

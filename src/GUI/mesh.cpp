@@ -835,7 +835,6 @@ double Mesh::DisplaceNodes(void) {
         w2 = cell_w * (w_w2);
         //check if wall elements are defined and pick the appropriate length_dh
 
-            double elastic_modulus = 50;
             length_dh +=
         		elastic_modulus * w1 *
         		bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1)) +
@@ -898,7 +897,6 @@ double Mesh::DisplaceNodes(void) {
 
 void Mesh::WallCollapse(double potential_slide_angle) {
 	CellWallCurve curve(potential_slide_angle);
-	bool anyCurveFlattend=false;
 	Node * first=NULL;
 	Node * second=NULL;
 	curve.reset();
@@ -1484,6 +1482,7 @@ void Mesh::RepairBoundaryPolygon(void) {
     next_boundary_node = findNextBoundaryNode(boundary_node);
     if (next_boundary_node == NULL) {
     	cout << "boundary null\n";
+    	break;
     }
   } while ( !next_boundary_node->Marked() );
 

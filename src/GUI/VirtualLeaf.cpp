@@ -267,6 +267,7 @@ TIMESTEP {
   if(DynamicCellsP()) {
 
 	mesh.CompatibilityLevel(par.compatibility_level);
+	mesh.ElasticModulus(par.elastic_modulus);
     mesh.WallRelaxation();
 
 

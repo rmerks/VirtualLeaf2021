@@ -179,7 +179,7 @@ void CellWallCurve::attachToCell() {
 		CellBase * c2 = cell;
 		CellBase * c3 = cellBehindShorterWall();
 		if (c1==NULL ||c3 == NULL) {
-			cout << "can't find cells behind walls cell=" << cell->Index() << " node=" << over->Index();
+			cout << "can't find cells behind walls cell=" << cell->Index() << " node=" << over->Index() << "\n";
 			return false;
 		}
 		NodeBase * a = longerWall();
