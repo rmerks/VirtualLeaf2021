@@ -265,6 +265,7 @@ class Mesh {
 
   double DisplaceNodes(void);
   void WallRelaxation(void);
+  void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
   void WallCollapse(double potential_slide_angle);
   void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
   bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
@@ -439,7 +440,7 @@ class Mesh {
   vector<Node *> nodes;
   list<Wall *> walls; // we need to erase elements from this container frequently, hence a list.
   int compatibility_level;
-
+  double elastic_modulus;
  public:
   vector<NodeSet *> node_sets;
  private:

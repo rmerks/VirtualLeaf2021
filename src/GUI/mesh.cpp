@@ -835,7 +835,6 @@ double Mesh::DisplaceNodes(void) {
         w2 = cell_w * (w_w2);
         //check if wall elements are defined and pick the appropriate length_dh
 
-            double elastic_modulus = 50;
             length_dh +=
         		elastic_modulus * w1 *
         		bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1)) +
