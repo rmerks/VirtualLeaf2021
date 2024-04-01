@@ -268,6 +268,7 @@ TIMESTEP {
 
 	mesh.CompatibilityLevel(par.compatibility_level);
 	mesh.ElasticModulus(par.elastic_modulus);
+	mesh.PotentialSlideAngle(par.potential_slide_angle);
     mesh.WallRelaxation();
 
 
@@ -283,7 +284,7 @@ TIMESTEP {
     if ( (-dh) < par.energy_threshold) {
 
       mesh.IncreaseCellCapacityIfNecessary();
-      mesh.DoCellHouseKeeping(par.potential_slide_angle);
+      mesh.DoCellHouseKeeping();
       //mesh.LoopCurrentCells(mem_fn(&plugin->CellHouseKeeping)); // this includes cell division
 
       // Reaction diffusion	

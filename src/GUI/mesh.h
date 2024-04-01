@@ -218,8 +218,8 @@ class Mesh {
     }
   }
 
-  void DoCellHouseKeeping(double potential_slide_angle) {
-	WallCollapse(potential_slide_angle);
+  void DoCellHouseKeeping() {
+	WallCollapse();
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
@@ -266,7 +266,8 @@ class Mesh {
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
-  void WallCollapse(double potential_slide_angle);
+  void PotentialSlideAngle(double potential_slide_angle) {this->potential_slide_angle=potential_slide_angle;}
+  void WallCollapse();
   void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
   bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
 
@@ -441,6 +442,7 @@ class Mesh {
   list<Wall *> walls; // we need to erase elements from this container frequently, hence a list.
   int compatibility_level;
   double elastic_modulus;
+  double potential_slide_angle;
  public:
   vector<NodeSet *> node_sets;
  private:

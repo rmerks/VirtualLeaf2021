@@ -895,7 +895,7 @@ double Mesh::DisplaceNodes(void) {
 
 
 
-void Mesh::WallCollapse(double potential_slide_angle) {
+void Mesh::WallCollapse() {
 	CellWallCurve curve(potential_slide_angle);
 	Node * first=NULL;
 	Node * second=NULL;
@@ -1465,7 +1465,8 @@ void Mesh::RepairBoundaryPolygon(void) {
   // other than the one passed to it, the original node is the first
   // boundary node.
   for (Node* node : nodes) {
-    if ((findNextBoundaryNode(node))->index != node->index){
+		Node *nextNode = findNextBoundaryNode(node);
+		if (nextNode && (nextNode)->index != node->index) {
       next_boundary_node = node;
       break;
     }
