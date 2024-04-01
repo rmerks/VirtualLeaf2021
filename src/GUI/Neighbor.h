@@ -61,6 +61,14 @@ class Neighbor {
   void setNext(Node * nb);
 
   ostream &print(ostream &os) const;
+
+  Neighbor& operator=(const Neighbor& that)
+  {
+	  cell = that.cell;
+	  nb1= that.nb1;
+	  nb2= that.nb2;
+      return *this;
+  }
 };
 
 // Overload the << operator 

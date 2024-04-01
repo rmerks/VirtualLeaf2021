@@ -1265,10 +1265,6 @@ void Cell::splittWallElementsBetween(Node* node, Cell* daughter) {
 	WallElement weA2B1_A1B2= *(oldInfoA2ToB1_A1B2.getWallElement());
 	oldInfoA2ToB1_A1B2.setWallElement(&weA2B1_A1B2);
 
-	double length = oldInfoA2ToB1_A1B2.getLength();
-	double baseLengthOutside = oldInfoA2ToB1_A1B2.getBaseLength();
-	double baseLengthInside = oldInfoB1ToA2_B2A1.getBaseLength();
-
 	double patrialLengthBefore =  ((*before1) - (*node)).Norm();
 	double patrialLengthAfter =  ((*after2) - (*node)).Norm();
 	double ratio = patrialLengthBefore / (patrialLengthBefore+patrialLengthAfter);

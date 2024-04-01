@@ -143,7 +143,7 @@ Parameter::Parameter() {
   rd_dt = 1.0;
   elastic_modulus = 50.;
   potential_slide_angle = M_PI/18.;
-  compatibility_level = 255;
+  compatibility_level = 0xFFFF;
   movie = false;
   nit = 100000;
   maxt = 1000.;
@@ -316,7 +316,7 @@ void Parameter::Read(const char *filename) {
   elastic_modulus = fgetpar(fp, "elastic_modulus", 50., true);
   movie = bgetpar(fp, "movie", false, true);
   nit = igetpar(fp, "nit", 100000, true);
-  compatibility_level = igetpar(fp, "compatibility_level", 255, true);
+  compatibility_level = igetpar(fp, "compatibility_level", 0xFFFF, true);
   maxt = fgetpar(fp, "maxt", 1000., true);
   rseed = igetpar(fp, "rseed", -1, true);
   constituous_expansion_limit = igetpar(fp, "constituous_expansion_limit", 16, true);
