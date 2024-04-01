@@ -77,7 +77,7 @@ class DeltaIntgrl;
 
 
 #define WALL_STIFFNESS_HAMILTONIAN 1
-#define WALL_SLIDING_HAMILTONIAN 3
+#define WALL_SLIDING 3
 
 
 class Mesh {
@@ -219,7 +219,9 @@ class Mesh {
   }
 
   void DoCellHouseKeeping() {
-	WallCollapse();
+	if (activateWallSliding()) {
+		WallCollapse();
+	}
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
@@ -229,30 +231,31 @@ class Mesh {
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
     		i ++) {
-	bool anyBorderSpikeRemoved=false;
-    if ((*i)->curvedWallElementToHandle->removeSpike()){
-    	anyBorderSpikeRemoved=(*i)->curvedWallElementToHandle->isBorderCase();
-    	cout << ' ' << (*i)->curvedWallElementToHandle->Index() << '\n';
-	}
-    (*i)->curvedWallElementToHandle->reset();
-    if (anyBorderSpikeRemoved) {
-    	RepairBoundaryPolygon();
-    } else {
-      // Call functions of Cell that cannot be called from CellBase, including Division
-    	if ((*i)->flag_for_divide) {
-    		if ((*i)->division_axis) {
-    			(*i)->DivideOverAxis(*(*i)->division_axis);
-    			delete (*i)->division_axis;
-    			(*i)->division_axis = 0;
-    		} else {
-    			(*i)->Divide();
-    		}
-    		(*i)->flag_for_divide=false;
+    	bool anyBorderSpikeRemoved=false;
+    	if ((*i)->curvedWallElementToHandle->removeSpike()){
+    		anyBorderSpikeRemoved=(*i)->curvedWallElementToHandle->isBorderCase();
+    		cout << ' ' << (*i)->curvedWallElementToHandle->Index() << '\n';
+    	}
+    	(*i)->curvedWallElementToHandle->reset();
+    	if (anyBorderSpikeRemoved) {
+    		RepairBoundaryPolygon();
     	}
     }
-}
-
-
+    for (vector<Cell *>::iterator i = current_cells.begin();
+    		i != current_cells.end();
+    		i ++) {
+		// Call functions of Cell that cannot be called from CellBase, including Division
+		if ((*i)->flag_for_divide) {
+			if ((*i)->division_axis) {
+				(*i)->DivideOverAxis(*(*i)->division_axis);
+				delete (*i)->division_axis;
+				(*i)->division_axis = 0;
+			} else {
+				(*i)->Divide();
+			}
+			(*i)->flag_for_divide=false;
+		}
+    }
 
   }
 
@@ -270,6 +273,7 @@ class Mesh {
   void WallCollapse();
   void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
   bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
+  bool activateWallSliding() {return (this->compatibility_level & WALL_SLIDING) != 0;}
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);
   int NEqs(void) {     int nwalls = walls.size();
