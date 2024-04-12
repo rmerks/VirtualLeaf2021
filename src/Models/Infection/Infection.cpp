@@ -52,10 +52,10 @@ void Infection::SetCellColor(CellBase *c, QColor *color) {
     if (col_inf > 1.0) {
     	col_inf = 1.0;
     }
-    if (col_inf2 > 0.99) {
-        col_inf2 = 0.99;
+    if (col_inf2 > 0.4) {
+        col_inf2 = 0.4;
     }
-    color->setRgbF(0 + col_inf, 0.01 + col_inf2, 0.5);
+    color->setRgbF(0 + col_inf - col_inf2, 1 - col_inf2, 0);
 
     //color->setHsv(static_cast<int>((1.0-redness)*60.), 222, 222);
 
