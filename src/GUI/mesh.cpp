@@ -533,6 +533,71 @@ void Mesh::updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node)
 	}
 }
 
+Cell * Mesh::getOtherCell(Cell* c,Node* node1,Node * node2) {
+    for (list<Neighbor>::iterator nb1=node1->owners.begin(); nb1!=node1->owners.end(); nb1++) {
+    	if (nb1->getCell() != c) {
+    		for (list<Neighbor>::iterator nb2=node2->owners.begin(); nb2!=node2->owners.end(); nb2++) {
+        		if (nb1->getCell() == nb2->getCell()){
+        			return nb1->getCell();
+        		}
+        	}
+    	}
+    }
+    return NULL;
+}
+
+int debugNode = -1;
+
+double Mesh::SlideWallElement(Cell* c,Node* prev,Node* fromNode,Node* toNode) {
+if (fromNode->countNeighbors() == 3) {
+	//this is a slideable situation
+	//double delta_A_org = 0.5*abs (
+	//		prev->x * (fromNode->y - toNode->y)
+	//		+ fromNode->x * (toNode->y - prev->y)
+	//		+ toNode->x * (prev->y - fromNode->y));
+	if (debugNode==fromNode->Index()) {
+		cout <<"debug \n";
+	}
+	//i_min_1 -> new_p    -> i_plus_1 -> old_p
+	//prev    -> fromNode -> toNode   -> prev
+	double delta_A = - 0.5 * ( ( fromNode->x - prev->x ) * (prev->y - toNode->y) +
+				   ( fromNode->y - prev->y ) * ( toNode->x - prev->x ) );
+
+	Cell* c2= getOtherCell(c,prev,fromNode);
+	if (c2 != NULL) {
+	double dh_area= - delta_A * (2 * c->target_area - 2 * c->area - delta_A)+
+					delta_A * (2 * c2->target_area - 2 * c2->area + delta_A);
+
+	// now how big is dh_area for moving back to the old position.
+	double dh_area_back=  delta_A * (2 * c->target_area - 2 * (c->area - delta_A)+ delta_A)
+					- delta_A * (2 * c2->target_area - 2 * (c2->area + delta_A) - delta_A);
+
+	if (delta_A>0.0 && dh_area >  dh_area_back) {
+// here the condition to activate sliding
+cout <<"dh_area "<<dh_area<<" dh_area_back "<<dh_area_back<<" nodes "<<prev->Index()<<","<<fromNode->Index()<<","<<toNode->Index()<<"\n";
+	}
+	}
+}
+return 0.0;
+}
+
+
+double Mesh::SlideWallElements(void) {
+  for (vector<Cell *>::iterator i=cells.begin(); i!=cells.end(); i++) {
+	Cell *c = *i;
+	Node* prev = *(--(c->nodes.end()));
+	Node** prevp = &prev;
+	c->LoopWallElements([this,c,prevp](auto wallElementInfo){
+		Node* prev = *prevp;
+		Node* fromNode = ((Node*)wallElementInfo->getFrom());
+		Node* toNode = ((Node*)wallElementInfo->getTo());
+		SlideWallElement(c,prev,fromNode,toNode);
+		*prevp=fromNode;
+	});
+  }
+  return 0.0;
+}
+
 double Mesh::DisplaceNodes(void) {
 
   MyUrand r(shuffled_nodes.size());
