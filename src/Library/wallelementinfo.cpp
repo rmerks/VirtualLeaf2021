@@ -28,11 +28,11 @@ WallElement* WallElementInfo::getWallElement(){
 	return wallElement;
 } ;
 
-void WallElementInfo::divide(WallElementInfo* other){
+void WallElementInfo::divide(WallElementInfo* other,double ratio){
 	other->getWallElement()->setStiffness(wallElement->getStiffness());
 	double length = wallElement->getBaseLength();
-	other->getWallElement()->setBaseLength(length/2.);
-	wallElement->setBaseLength(length/2.);
+    other->getWallElement()->setBaseLength(length*ratio);
+    wallElement->setBaseLength(length*(1.-ratio));
     other->setLength();
     setLength();
 }
@@ -57,31 +57,20 @@ double WallElementInfo::calcLength() const{
     return length;
 }
 
-/*
-bool WallElementInfo::hasCounterWall(WallElementInfo * other) {
-	//find the wall on the connected cell, must be in the other direction along the same nodes
-	bool found = false;
-	bool* pfound = &found;
-	for (list<Neighbor>::iterator c=((Node*)from)->owners.begin(); c!=((Node*)from)->owners.end(); c++) {
-         c->getCell()->LoopWallElements([this,other,pfound](auto wallElementInfo){
-			 bool toIsFrom = to == wallElementInfo->from;
-			 bool fromIsTo = from == wallElementInfo->to;
-			 if (toIsFrom && fromIsTo) {
-				 wallElementInfo->getCell()->fillWallElementInfo(other, ((Node*)to), ((Node*)from));
-				 wallElementInfo->stopLoop();
-				 *pfound=true;
-			 }else  if (toIsFrom || fromIsTo) {
-				 // true case can not happen any more
-				 wallElementInfo->stopLoop();
-			 }
-		 });
-		 if (found) {
-			 return true;
-		 }
-	}
-	return false;
+void WallElementInfo::updateFrom(WallElementInfo* original,double ratio) {
+    double stiffness = original->stiffness();
+    double base_length = original->stiffness();
+    if (!isnan(stiffness)) {
+        this->getWallElement()->setStiffness(stiffness);
+    }
+    if (!isnan(base_length)) {
+        this->getWallElement()->setBaseLength(base_length*ratio);
+    } else {
+        updateBaseLength();
+    }
 }
-*/
+
 double WallElementInfo::getBaseLength() {return this->getWallElement()->getBaseLength();};
 void WallElementInfo::updateBaseLength() {this->getWallElement()->setBaseLength(this->length/1.2);};
+void WallElementInfo::relax() {this->getWallElement()->setBaseLength(this->length);};
 bool WallElementInfo::plasticStretch() {return this->length > 1.2*this->getWallElement()->getBaseLength();};

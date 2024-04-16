@@ -87,10 +87,10 @@ void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
                 if (angle <= 55 || angle >= 125) {
                     WallElement* we = wallElementInfo->getWallElement();
                     we->setStiffness(4);
-                } else if (angle >= 65 || angle <=115){
+                }/* else if (angle >= 65 || angle <=115){
                     WallElement* we = wallElementInfo->getWallElement();
                     we->setStiffness(1);
-                }
+                }*/
             }
         });
 
