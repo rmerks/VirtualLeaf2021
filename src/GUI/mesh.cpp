@@ -852,7 +852,7 @@ double Mesh::DisplaceNodes(void) {
 	// first implementation. Can probably be done more efficiently
 	// calculate circumcenter radius (gives local curvature)
 	// the ideal bending state is flat... (K=0)
-		  {
+	if (abs(par.bend_lambda) > 0.01)	  {
 	  // strong bending energy to resist "cleaving" by division planes
 	  double r1, r2, xc, yc;
 	  CircumCircle(i_min_1.x, i_min_1.y, old_p.x, old_p.y, i_plus_1.x, i_plus_1.y,
