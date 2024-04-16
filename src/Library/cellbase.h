@@ -199,10 +199,6 @@ class CellBase :  public QObject, public Vector
 
   inline double TargetArea(void) { return target_area; }
 
-  inline void SetStiffness(double stiff) { stiffness = stiff; }
-
-  inline double Stiffness(void) { return stiffness; }
-
   inline double EnlargeTargetArea(double da) { return target_area+=da; }
 
   inline double Area(void) const { return area; }
@@ -519,8 +515,6 @@ class CellBase :  public QObject, public Vector
   double target_length;
   double lambda_celllength;
   double wall_stiffness; // Lebovka et al
-
-  double stiffness; // stiffness like in Hogeweg (2000)
 
   bool fixed;
   bool pin_fixed;

@@ -592,7 +592,6 @@ double Mesh::DisplaceNodes(void) {
 
       double old_l1=0.,old_l2=0.,new_l1=0.,new_l2=0.;
 
-      double sum_stiff=0.;
       double dh=0.;
 
       for (list<Neighbor>::const_iterator cit=node.owners.begin(); cit!=node.owners.end(); cit++) {
@@ -610,8 +609,6 @@ double Mesh::DisplaceNodes(void) {
 	  goto next_node;
 	}
 
-	// summing stiffnesses of cells. Move has to overcome this minimum required energy.
-	sum_stiff += c.stiffness;
 	// area - (area after displacement): see notes for derivation
 	
 	Vector i_min_1 = *(cit->nb1);
@@ -875,7 +872,7 @@ double Mesh::DisplaceNodes(void) {
 
          //(length_constraint_after - length_constraint_before);
 
-	  if (dh<-sum_stiff || RANDOM()<exp((-dh-sum_stiff)/par.T)) {
+	  if (RANDOM()<exp((-dh)/par.T)) {
 		updateAreasOfCells(&delta_intgrl_list, &node) ;
 
 		node.x = new_p.x;
