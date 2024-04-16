@@ -266,6 +266,7 @@ class Mesh {
     f(cells[i]);
   }
 
+  double SlideWallElements(void);
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
@@ -462,6 +463,8 @@ class Mesh {
   void AddNodeToCell(Cell *c, Node *n, Node *nb1 , Node *nb2);
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);
+  Cell * getOtherCell(Cell* c,Node* node1,Node * node2);
+  double SlideWallElement(Cell* c,Node* prev,Node* fromNode,Node* toNode) ;
   inline Node *AddNode(Node *n) {
     nodes.push_back(n);
     shuffled_nodes.push_back(n);
