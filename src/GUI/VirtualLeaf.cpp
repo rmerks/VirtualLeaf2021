@@ -271,7 +271,7 @@ TIMESTEP {
 	mesh.PotentialSlideAngle(par.potential_slide_angle);
     mesh.WallRelaxation();
 
-
+    double dhwall = mesh.SlideWallElements();
     dh = mesh.DisplaceNodes();
 
     // Only allow for node insertion, cell division and cell growth
