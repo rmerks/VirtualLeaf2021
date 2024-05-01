@@ -548,7 +548,275 @@ Cell * Mesh::getOtherCell(Cell* c,Node* node1,Node * node2) {
 
 int debugNode = -1;
 
-double Mesh::SlideWallElement(Cell* c,Node* prev,Node* fromNode,Node* toNode) {
+double cross(const Vector & v1, const Vector & v2)
+{
+    return (v1.x*v2.y) - (v1.y*v2.x);
+}
+
+//https://isaaclo97.github.io/en/resources/codes/circumcircle.html
+double ccRadius_old	(const Node& A, const Node& B, const Node& C) {
+	double result =
+	 (B-A).Norm()*(C-B).Norm()*(A-C).Norm()/
+			abs(cross((B-A),(C-A)))/2;
+	if (isnan(result)) {
+		cout << "bloed\n";
+	}
+	return result;
+}
+
+//http://dx.doi.org/10.1016/j.cis.2014.01.018
+// radius of circle with center on line B-C and connecting at 10% of the shortest line (A-B ode A-C)
+// and sharing one point with the other line. This we define the kissing circle
+double ccRadius(const Vector& A, const Vector& B, const Vector& C) {
+	Vector AC = C-A;
+	Vector AB = B-A;
+
+	Vector ACpoint = A+AC.Normalised();
+	Vector ABpoint = A+AB.Normalised();
+	Vector ACperp = AC.Perp2D();
+	Vector ABperp = AB.Perp2D();
+
+
+	double an = (ACpoint.x - ABpoint.y)/ABperp.x
+			+(ABpoint.y*ACperp.x-ACpoint.y*ACperp.x)/(ACperp.y*ABperp.x);
+
+	double az = 1 - (ABperp.y*ACperp.x)/(ACperp.y*ABperp.x);
+
+	double a = an/az;
+
+//	double b = (ABpoint.y - ACpoint.y + a * ABperp.y) / ACperp.y;
+
+//	Vector r1 = ACpoint+(ACperp*b);
+	Vector r2 = ABpoint+(ABperp*a);
+
+	return (A-r2).Norm();
+
+}
+
+bool Mesh::findOtherSide(Cell * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3) {
+	list <Node *>::iterator i=c->nodes.begin();
+	 * w0=*i;
+	 * w1=*(++i);
+	 * w2=*(++i);
+	 * w3=*(++i);
+	Node * o0=*w0;
+	Node * o1=*w1;
+	Node * o2=*w2;
+	while (i!=c->nodes.end()) {
+		if(*w1==z1 && *w2==z2) {return true;}
+	    *w0=*w1;
+	    *w1=*w2;
+	    *w2=*w3;
+	    *w3=*(++i);
+	}
+	*w3=o0;
+	if(*w1==z1 && *w2==z2) {return true;}
+	*w0=*w1;
+	*w1=*w2;
+	*w2=*w3;
+	*w3=o1;
+	if(*w1==z1 && *w2==z2) {return true;}
+	*w0=*w1;
+	*w1=*w2;
+	*w2=*w3;
+	*w3=o2;
+	if(*w1==z1 && *w2==z2) {return true;}
+	*w0=NULL;
+	*w1=NULL;
+	*w2=NULL;
+	*w3=NULL;
+	return false;
+}
+double lambda_for_shift=0.1;
+
+double Mesh::SlideWallElement3(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+
+	Node * o0;
+	Node * o1;
+	Node * o2;
+	Node * o3;
+	Cell* c2= getOtherCell(c,w1,w2);
+	if (findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
+//now check how profitable the move of wall element w1-w2 to w1-w3
+//this changes also cell c2 where wall element o1->o2 will be replaced
+//by wall elements o1->w3 and w3->o2 all other surrounding cells will remain
+//unchanged.
+//
+// angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
+// angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
+
+// should we include ideal radius (=radius of circle with area that is equal to cell area)
+//normieren
+		double dh =
+				DSQR(1.0/ccRadius(*w0,*w1,*w2))-DSQR(1.0/ccRadius(*w0,*w1,*w3))+
+				DSQR(1.0/ccRadius(*w1,*w2,*w3))-DSQR(1.0/ccRadius(*o1,*w3,*o2))+
+				DSQR(1.0/ccRadius(*w2,*w3,*w4))-DSQR(1.0/ccRadius(*w1,*w3,*w4))+
+				DSQR(1.0/ccRadius(*o0,*o1,*o2))-DSQR(1.0/ccRadius(*o0,*o1,*w3))+
+				DSQR(1.0/ccRadius(*o1,*o2,*o3))-DSQR(1.0/ccRadius(*w3,*o2,*o3));
+		cout <<"  dh="<<dh<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
+		if (RANDOM()<exp((lambda_for_shift*-dh)/par.T)) {
+			cout <<"move  "<<w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<"\n";
+		}
+	}
+	return 0.0;
+}
+double extractData(WallElement *we,double & base_length,double &stiffness) {
+if (we != NULL) {
+	base_length += we->getBaseLength();
+	if (std::isnan(we->getStiffness()) ) {
+		stiffness+=we->getCell()->GetWallStiffness();
+	}else {
+		stiffness+=we->getStiffness();
+	}
+}else {
+	base_length=std::nan("1");
+	stiffness=std::nan("1");
+}
+}
+double Mesh::SlideWallElement(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+
+	Node * o0;
+	Node * o1;
+	Node * o2;
+	Node * o3;
+	Cell* c2= getOtherCell(c,w1,w2);
+	if (findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
+//now check how profitable the move of wall element w1-w2 to w1-w3
+//this changes also cell c2 where wall element o1->o2 will be replaced
+//by wall elements o1->w3 and w3->o2 all other surrounding cells will remain
+//unchanged.
+//
+// angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
+// angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
+
+		//length of w wall before the slide and after
+		double old_l1 = (*w1-*w0).Norm()+(*w2-*w1).Norm()+(*w3-*w2).Norm()+(*w4-*w3).Norm();
+		double new_l1 = (*w1-*w0).Norm()+(*w3-*w1).Norm()+(*w4-*w3).Norm();
+		//length of o wall before the slide and after
+		double old_l2 = (*o1-*o0).Norm()+(*o2-*o1).Norm()+(*o3-*o2).Norm();
+		double new_l2 = (*o1-*o0).Norm()+(*w3-*o1).Norm()+(*o2-*w3).Norm()+(*o3-*o2).Norm();
+
+
+	    double ww1, ww2;
+	  	if (w2->boundary && w3->boundary) {
+	  		ww1 = 2;
+	  		ww2 = 2;
+	  	} else {
+	  		ww1 = 1;
+	  		ww2 = 1;
+	  	}
+
+	    // Cell specific wall stiffness
+	    double cell_w = c->GetWallStiffness();
+	    double cell2_w = c2->GetWallStiffness();
+	    ww1 = ww1*cell_w;
+	    ww2 = ww2*cell2_w;
+
+	    double w_w1 = 1;
+	    double w_w2 = 1;
+	    double bl_w = 0.0;
+	    double bl_o = 0.0;
+
+	    if (activateWallStiffnessHamiltonian()) {
+	    	double stiffness=0;
+	    	double base_length=0;
+			extractData(w0->getWallElement(c),base_length,stiffness);
+			extractData(w1->getWallElement(c),base_length,stiffness);
+			extractData(w2->getWallElement(c),base_length,stiffness);
+			extractData(w3->getWallElement(c),base_length,stiffness);
+			bl_w=base_length; //base_length of w0 upto w4
+			w_w1=stiffness/4.;
+	    	stiffness=0;
+	    	base_length=0;
+			extractData(o0->getWallElement(c2),base_length,stiffness);
+			extractData(o1->getWallElement(c2),base_length,stiffness);
+			extractData(o2->getWallElement(c2),base_length,stiffness);
+			bl_o=base_length;//base_length of o0 upto w3
+			w_w2=stiffness/3.;
+	    }
+	    double length_dh;
+	    if (!std::isnan(bl_w) && !std::isnan(bl_o)&& !std::isnan(w_w1)&& !std::isnan(w_w2)) {
+	        ww1 = cell_w * (w_w1);
+	        ww2 = cell_w * (w_w2);
+	        //check if wall elements are defined and pick the appropriate length_dh
+
+	        length_dh =
+	        		elastic_modulus * ww1 *
+	        		bl_w *(DSQR(new_l1/bl_w - 1)-DSQR(old_l1/bl_w - 1)) +
+	                elastic_modulus * ww2 *
+					bl_o *(DSQR(new_l2/bl_o - 1)-DSQR(old_l2/bl_o - 1));
+	    } else {
+	    	length_dh =2*Node::target_length * (
+	    			ww1*(old_l1 - new_l1) +
+	    			ww2*(old_l2 - new_l2) ) +
+	        		ww1*(DSQR(new_l1) - DSQR(old_l1)) +
+					ww2*(DSQR(new_l2) - DSQR(old_l2));
+		}
+
+		double delta_A = - 0.5 * ( ( w1->x - w2->x ) * (w2->y - w3->y) +
+					   ( w1->y - w2->y ) * ( w3->x - w2->x ) );
+
+		double area_dh = delta_A * (2 * c->target_area - 2 * c->area - delta_A) +
+						 delta_A * (2 * c->target_area - 2 * c->area - delta_A);
+
+		//area_dh divided by 2 because we use thwo cells in the hamitonian.
+	    double dh = area_dh/2.  + par.lambda_length * length_dh;
+		  if (RANDOM()<exp((-dh)/par.T)) {
+				cout << w1->Index()<<"->" <<w2->Index()<< "\t"<< w2->Index()<<"->" <<w3->Index()<< "\t" << dh << "\n";
+
+		  }
+
+		}
+	return 0.0;
+}
+
+double Mesh::SlideWallElements(void) {
+
+	  for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
+		Cell *c = *ii;
+list <Node *>::iterator i=c->nodes.begin();
+Node * w0=*i;
+Node * w1=*(++i);
+Node * w2=*(++i);
+Node * w3=*(++i);
+Node * w4=*(++i);
+Node * o0=w0;
+Node * o1=w1;
+Node * o2=w2;
+Node * o3=w3;
+while (i!=c->nodes.end()) {
+	SlideWallElement(c,w0,w1,w2,w3,w4) ;
+    w0=w1;
+    w1=w2;
+    w2=w3;
+    w3=w4;
+    w4=*(++i);
+}
+w4=o0;
+SlideWallElement(c,w0,w1,w2,w3,w4) ;
+w0=w1;
+w1=w2;
+w2=w3;
+w3=w4;
+w4=o1;
+SlideWallElement(c,w0,w1,w2,w3,w4) ;
+w0=w1;
+w1=w2;
+w2=w3;
+w3=w4;
+w4=o2;
+SlideWallElement(c,w0,w1,w2,w3,w4) ;
+w0=w1;
+w1=w2;
+w2=w3;
+w3=w4;
+w4=o3;
+SlideWallElement(c,w0,w1,w2,w3,w4) ;
+	  }
+return 0.0;
+}
+
+double Mesh::SlideWallElement2(Cell* c,Node* prev,Node* fromNode,Node* toNode) {
 if (fromNode->countNeighbors() == 3) {
 	//this is a slideable situation
 	//double delta_A_org = 0.5*abs (
@@ -582,7 +850,7 @@ return 0.0;
 }
 
 
-double Mesh::SlideWallElements(void) {
+double Mesh::SlideWallElements2(void) {
   for (vector<Cell *>::iterator i=cells.begin(); i!=cells.end(); i++) {
 	Cell *c = *i;
 	Node* prev = *(--(c->nodes.end()));
@@ -591,10 +859,21 @@ double Mesh::SlideWallElements(void) {
 		Node* prev = *prevp;
 		Node* fromNode = ((Node*)wallElementInfo->getFrom());
 		Node* toNode = ((Node*)wallElementInfo->getTo());
-		SlideWallElement(c,prev,fromNode,toNode);
+		SlideWallElement2(c,prev,fromNode,toNode);
 		*prevp=fromNode;
 	});
   }
+
+	Cell *c = boundary_polygon;
+	Node* prev = *(--(c->nodes.end()));
+	Node** prevp = &prev;
+	c->LoopWallElements([this,c,prevp](auto wallElementInfo){
+		Node* prev = *prevp;
+		Node* fromNode = ((Node*)wallElementInfo->getFrom());
+		Node* toNode = ((Node*)wallElementInfo->getTo());
+		SlideWallElement2(c,prev,fromNode,toNode);
+		*prevp=fromNode;
+	});
   return 0.0;
 }
 
@@ -879,7 +1158,7 @@ double Mesh::DisplaceNodes(void) {
 
 
     // Cell specific wall stiffness
-    double cell_w = cit->cell->GetWallStiffness();
+    double cell_w = c.GetWallStiffness();
     w1 = w1*cell_w;
     w2 = w2*cell_w;
 
