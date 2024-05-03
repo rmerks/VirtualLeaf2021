@@ -760,8 +760,8 @@ double Mesh::SlideWallElement(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* 
 						 delta_A * (2 * c->target_area - 2 * c->area - delta_A);
 
 		//area_dh divided by 2 because we use thwo cells in the hamitonian.
-	    double dh = area_dh/2.  + par.lambda_length * length_dh;
-		  if (RANDOM()<exp((-dh)/par.T)) {
+        double dh = area_dh  + par.lambda_length * length_dh;
+          if (dh < 0  || RANDOM()<exp((-dh)/par.T)) {
 				cout << w1->Index()<<"->" <<w2->Index()<< "\t"<< w2->Index()<<"->" <<w3->Index()<< "\t" << dh << "\n";
 
 		  }
@@ -1216,7 +1216,7 @@ double Mesh::DisplaceNodes(void) {
 
          //(length_constraint_after - length_constraint_before);
 
-	  if (RANDOM()<exp((-dh)/par.T)) {
+      if (dh < 0 || RANDOM()<exp((-dh)/par.T)) {
 		updateAreasOfCells(&delta_intgrl_list, &node) ;
 
 		node.x = new_p.x;
