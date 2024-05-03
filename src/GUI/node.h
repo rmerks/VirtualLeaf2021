@@ -33,11 +33,12 @@
 #include <qcolor.h>
 #include <iostream>
 #endif
-#include "vector.h"
+#include "nodebase.h"
 #include "random.h"
 #include "parameter.h"
 #include "cell.h"
 #include "modelelement.h"
+#include "wallelement.h"
 
 #include <QVector>
 
@@ -82,7 +83,7 @@ class Edge {
 class NodeSet;
 
 // this class is a node in a cell wall
-class Node : public Vector {
+class Node : public NodeBase {
 
   friend class Mesh;
   friend class CellBase;
@@ -91,6 +92,7 @@ class Node : public Vector {
   friend class Wall;
   friend class NodeSet;
   friend class FigureEditor;
+  friend class WallElementInfo;
 
  public:
   Node(void);
@@ -105,21 +107,12 @@ class Node : public Vector {
 
   virtual ~Node() {}
 
-  inline int Index(void) const { return index; }
+  virtual int Index(void);
 
   inline bool IndexEquals(int i) { return i == index; }
 
-  inline bool BoundaryP(void) const { return boundary; }
-
-  inline void SetBoundary(void) { boundary = true; }
-
-  inline void UnsetBoundary(void) { boundary = false; }
-
   inline void SetSAM(void) { sam = true; }
 
-  inline void toggleBoundary(void) {
-    boundary = !boundary;
-  }
 
 
   Cell &getCell(const Neighbor &i);
@@ -137,6 +130,7 @@ class Node : public Vector {
   inline int CellsSize(void) const { return owners.size(); }
 
   inline int Value(void) const { return owners.size(); }
+  virtual int countNeighbors(void);
 
   void Fix(void) { fixed=true; }
 
@@ -162,6 +156,18 @@ class Node : public Vector {
 
   inline bool SamP(void) const { return sam; }
 
+  template<class Op> void LoopNeighbors(Op f) {
+	for (list<Neighbor>::iterator it=this->owners.begin(); it!=this->owners.end(); ++it) {
+      f(*it);
+    }
+  }
+
+  void correctNeighbors(int cellIndex, Node* n1, Node* n3);
+  virtual void removeCell(CellBase * cell);
+  void addCell(CellBase * cell);
+  void splitWallElements(WallElementInfo *base,double ratioOfBase);
+  void splittWallElementsBetween(Node *from, Node *to);
+
   //!\brief Calculate angles with neighboring vertices
   //! Sum of angles should be 2*Pi
   QVector<qreal> NeighbourAngles(void);
@@ -180,7 +186,6 @@ class Node : public Vector {
   NodeSet *node_set; 
   // fixed nodes cannot move. E.g. to represent the petiole
   bool fixed;
-  bool boundary; // true if node is at the edge of the leaf
   bool sam; // true if node is connected to the shoot
   bool dead;
   bool marked;

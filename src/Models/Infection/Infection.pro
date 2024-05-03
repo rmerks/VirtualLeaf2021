@@ -29,7 +29,7 @@ INCLUDEPATH += ../../../include
 
 DEFINES = QTGRAPHICS
 DESTDIR = $${BINDIR}/models
-TARGET = auxingrowth
+TARGET = Infection
 QMAKE_CXXFLAGS += -Wno-write-strings
 QMAKE_CXXFLAGS += -Wno-unused-parameter
 QMAKE_CXXFLAGS_DEBUG += -g3

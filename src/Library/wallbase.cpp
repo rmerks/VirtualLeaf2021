@@ -64,6 +64,8 @@ WallBase::WallBase(Node *sn1, Node *sn2, CellBase *sc1, CellBase *sc2)
 
   c1 = sc1;
   c2 = sc2;
+  c1WallStiffness = std::nan("1");
+  c2WallStiffness = std::nan("1");
 
   n1 = sn1;
   n2 = sn2;
@@ -90,6 +92,8 @@ WallBase::WallBase(Node *sn1, Node *sn2, CellBase *sc1, CellBase *sc2)
 
 void WallBase::CopyWallContents(const WallBase &src)
 {
+	c1WallStiffness = src.c1WallStiffness;
+	c2WallStiffness = src.c2WallStiffness;
 
   for (int i=0; i<CellBase::NChem(); i++) {
     if (transporters1) {
@@ -160,6 +164,15 @@ void WallBase::SwapWallContents(WallBase *src)
   tmp_wall_type = src->wall_type;
   src->wall_type = wall_type;
   wall_type = tmp_wall_type;
+
+  double tmpStiffness = src->c1WallStiffness;
+  src->c1WallStiffness=c1WallStiffness;
+  c1WallStiffness=tmpStiffness;
+
+  tmpStiffness = src->c2WallStiffness;
+  src->c2WallStiffness=c2WallStiffness;
+  c2WallStiffness=tmpStiffness;
+
 }
 
 bool WallBase::SAM_P(void)
@@ -253,6 +266,21 @@ Vector WallBase::getInfluxVector(CellBase *c)
     return ( Vector(*n1) - Vector(*n2) ).Normalised().Perp2D();
   }
 }
+void WallBase::calculateDirectWallStiffNess(Node* nb, double* stiffness,int* count_p) {
+	// if this wall is connected to nb then assign the wall stiffness
+	if (this->n1==nb || this->n2==nb ) {
+		if (std::isnan(this->c1WallStiffness)) {
+			*count_p += 1;
+			*stiffness += std::max(this->c1->GetWallStiffness(), this->c2WallStiffness);
+		} else if (std::isnan(this->c2WallStiffness)) {
+			*count_p += 1;
+			*stiffness += std::max(this->c2->GetWallStiffness(), this->c1WallStiffness);
+		} else {
+			*count_p += 1;
+			*stiffness += std::max(this->c1WallStiffness, this->c2WallStiffness);
+		}
+	}
+}
 
 //! \brief Test if this wall intersects with division plane p1 -> p2 
 bool WallBase::IntersectsWithDivisionPlaneP(const Vector &p1, const Vector &p2)
@@ -271,4 +299,11 @@ bool WallBase::IntersectsWithDivisionPlaneP(const Vector &p1, const Vector &p2)
   else return false;
 }
 
+void WallBase::replaceNode(NodeBase* oldN, NodeBase* newN) {
+	if (((Node *)oldN) == n1) n1=(Node *)newN; else if (((Node *)oldN) ==n2) n2=(Node *)newN;
+}
+
+bool WallBase::isHasStartOrEnd(Node * node) {
+	return node->Index() == n1->Index() || node->Index() == n2->Index();
+}
 /* finis */
