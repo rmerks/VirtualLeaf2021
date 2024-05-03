@@ -87,12 +87,14 @@ CellBase::CellBase(QObject *parent) :
   fixed = false;
   pin_fixed = false;
   stiffness = 0;
+  wall_stiffness = 1;
   marked = false;
   dead = false;
   div_counter=0;
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
+  curvedWallElementToHandle= new CellWallCurve(0);
 }
 
 
@@ -127,12 +129,14 @@ CellBase::CellBase(double x,double y,double z) : QObject(), Vector(x,y,z)
   at_boundary=false;
   pin_fixed = false;
   stiffness = 0;
+  wall_stiffness = 1;
   marked=false;
   dead  = false;
   div_counter = 0;
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
+  curvedWallElementToHandle= new CellWallCurve(0.);
 }
 
 CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
@@ -167,12 +171,14 @@ CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
   at_boundary=src.at_boundary;
   pin_fixed = src.pin_fixed;
   stiffness = src.stiffness;
+  wall_stiffness = src.wall_stiffness;
   marked = src.marked;
   dead = src.dead;
   cell_type = src.cell_type;
   div_counter = src.div_counter;
   flag_for_divide = src.flag_for_divide;
   division_axis = src.division_axis;
+  curvedWallElementToHandle = new CellWallCurve(0.);
 }
 
 
@@ -207,6 +213,7 @@ CellBase CellBase::operator=(const CellBase &src)
   at_boundary=src.at_boundary;
   pin_fixed = src.pin_fixed;
   stiffness = src.stiffness;
+  wall_stiffness = src.wall_stiffness;
   marked = src.marked;
   dead = src.dead;
   cell_type = src.cell_type;
@@ -504,6 +511,25 @@ double CellBase::CalcLength(Vector *long_axis, double *width)  const
   return 4*sqrt(lambda_b/my_area);
 }
 
+WallBase* CellBase::newWall(NodeBase* from,NodeBase* to,CellBase * other){
+	return NULL;
+}
+
+CellBase* CellBase::getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over) {
+	return NULL;
+}
+
+void CellBase::insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode) {
+  std::_List_iterator<Node*> indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
+      return node->Index()==position1->Index()||node->Index()==position2->Index();
+  });
+  if (indexOfC == this->nodes.begin() && (this->nodes.back()==position1||this->nodes.back()==position2)) {
+    this->nodes.insert(indexOfC,(Node*)newNode);
+  }else {
+    indexOfC++;
+    this->nodes.insert(indexOfC,(Node*)newNode);
+  }
+}
 
 void CellBase::ConstructNeighborList(void)
 {
@@ -647,5 +673,28 @@ double CellBase::ExactCircumference(void) const
 
   return circumference;
 } 
+void CellBase::fillWallElementInfo(WallElementInfo * info, Node* from,Node* to) {
+	WallElement* we =(from)->getWallElement(this);
+	info->setWallElement(we);
+	info->setNodes(from,to);
+	info->setCell(this);
+    info->setLength();
+}
+
+bool CellBase::stopWallElementInfo(WallElementInfo * info) {
+	return info->isStop();
+}
+
+void CellBase::removeNode(NodeBase * node) {
+  this->nodes.remove((Node*)node);
+  node->removeCell(this);
+}
+
+void CellBase::InsertWall( WallBase *w ){
+	//implemented in sub class
+}
+
+void CellBase::attachToCell(CellWallCurve * curve) {curvedWallElementToHandle->set(curve);};
+void CellBase::correctNeighbors() {}
 
 /* finis*/

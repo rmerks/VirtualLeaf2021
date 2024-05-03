@@ -20,7 +20,7 @@
 #
 
 CONFIG += release
-CONFIG -= debug
+CONFIG += debug
 CONFIG += staticlib
 
 QT += widgets xml
@@ -61,7 +61,11 @@ HEADERS = \
  simplugin.h \
  UniqueMessage.h \
  vector.h \
+ nodebase.h \
+ cellwallcurve.h \
  wallbase.h \
+ wallelement.h \
+ wallelementinfo.h \
  warning.h \
 vleafmodel.h \
 flux_function.h
@@ -76,7 +80,11 @@ SOURCES = \
  simplugin.cpp \
  UniqueMessage.cpp \
  vector.cpp \
+ nodebase.cpp \
+ cellwallcurve.cpp \
  wallbase.cpp \
+ wallelement.cpp \
+ wallelementinfo.cpp \
  warning.cpp
 
 # Create parameter.cpp from *.tmpl file

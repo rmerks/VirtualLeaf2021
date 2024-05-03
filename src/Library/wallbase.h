@@ -31,6 +31,7 @@
 #include "vector.h"
 
 class Node;
+class NodeBase;
 class CellBase;
 
 using namespace std;
@@ -87,7 +88,7 @@ class WallBase {
  protected:
   int wall_index;
   WallType wall_type;
-
+  double c1WallStiffness, c2WallStiffness;
 
  public:
   WallBase(Node *sn1, Node *sn2, CellBase *sc1, CellBase *sc2); 
@@ -96,6 +97,8 @@ class WallBase {
   WallBase(const WallBase &src) {
     c1 = src.c1;
     c2 = src.c2;
+    c1WallStiffness = src.c1WallStiffness;
+    c2WallStiffness = src.c2WallStiffness;
     transporters1 = src.transporters1;
     transporters2 = src.transporters2;
     new_transporters1 = src.new_transporters1;
@@ -129,7 +132,8 @@ class WallBase {
   inline void setNewTransporters2(int ch, double val) { new_transporters2[ch]=val; }
   inline double Transporters1(int ch) { return transporters1[ch]; }
   inline double Transporters2(int ch) { return transporters2[ch]; }
-
+  void calculateDirectWallStiffNess(Node* nb, double* stiffness, int* count_p);
+  void replaceNode(NodeBase* oldN, NodeBase* newN);
   //! Return true if the WallBase adheres to the SAM (shoot apical meristem)
   bool SAM_P(void);
   // NB. Not checked. If cell is not found, it returns transporters2[ch]!!
@@ -191,6 +195,7 @@ class WallBase {
   Vector VizFlux(void);
   bool IntersectsWithDivisionPlaneP(const Vector &p1, const Vector &p2);
   void SetTransToNewTrans( void );
+  bool isHasStartOrEnd(Node * node);
 
  private:
 };

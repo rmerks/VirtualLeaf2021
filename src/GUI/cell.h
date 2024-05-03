@@ -33,6 +33,7 @@
 #include "wall.h"
 #include "warning.h"
 #include "cellbase.h"
+#include "Neighbor.h"
 //#include "cell.h"
 
 #include <QGraphicsScene>
@@ -136,6 +137,7 @@ class Cell : public CellBase
   void DrawIndex(QGraphicsScene *c) const;
   void DrawCenter(QGraphicsScene *c) const;
   void DrawNodes(QGraphicsScene *c) const;
+  void DrawMiddleLamella(QGraphicsScene *c, QString tooltip = "");
 
   void DrawAxis(QGraphicsScene *c) const;
   void DrawStrain(QGraphicsScene *c) const;
@@ -143,7 +145,11 @@ class Cell : public CellBase
   void DrawWalls(QGraphicsScene *c) const;
   void DrawValence(QGraphicsScene *c) const;
   void EmitValues(double t);
-
+  void insertNodeAfterFirst(NodeBase * position1, NodeBase * position2, NodeBase * newNode);
+  virtual void correctNeighbors();
+  virtual WallBase* newWall(NodeBase* from,NodeBase* to,CellBase * other);
+  virtual void InsertWall( WallBase *w );
+  virtual CellBase* getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over);
  signals:
   void ChemMonValue(double t, double *x);
 
@@ -160,6 +166,18 @@ class Cell : public CellBase
   Mesh *m;
   void ConstructConnections(void);
   void SetWallLengths(void);
+  void checkCellLooseWallEnds(Wall * wall,bool&n1Connected,bool&n2Connected);
+  Node * followNeighborsToWall(Node * n1, Node * n2, double &distance);
+  Neighbor getNeighbor(Node * node);
+  Wall* getBoundaryWallAt(Node * node);
+  Node * attachFreeWallEnd(Cell * cellWithOtherWalls, Cell * cellWithSingleWalls, Wall * wall, Node * loseWallNode);
+  Wall * findWall(Node * n1, Node * n2);
+  void splittWallElementsBetween(Node* node, Cell* daughter);
+
+  void findBeforeAfter(Node * node, Node ** before, Node**after);
+  Cell* findOtherCell(Cell*other,  Node * node,  Node * node2);
+  Cell* findNeighbourCellOnDivide(Cell* daughter,Node* node,Node * before1,Node * after1 ,Node * before2,Node * after2);
+
 };
 
 

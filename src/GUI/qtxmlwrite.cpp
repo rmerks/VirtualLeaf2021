@@ -204,6 +204,14 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
       //text << (*i)->Index();
       //xmlNewProp(node_xml, BAD_CAST "n", BAD_CAST text.str().c_str());
       node_xml.setAttribute("n",standardlocale.toString((*i)->Index()));
+      WallElement * wallElement = (*i)->getWallElement((CellBase*)this);
+      if (wallElement != NULL)  {
+    	  node_xml.setAttribute("stiffness",
+					standardlocale.toString(wallElement->getStiffness()));
+    	  node_xml.setAttribute("base_length",
+					standardlocale.toString(wallElement->getBaseLength()));
+      }
+
        xmlcell.appendChild(node_xml);
     }
   }
@@ -363,10 +371,27 @@ int Cell::XMLRead(QDomElement &cur)
   bool ok;
 
   vector<int> tmp_nodes;
+  vector<double> tmp_stiffness;
+  vector<double> tmp_base_length;
+
+
 
   while(!n.isNull()) {
       if (n.tagName()=="node") {
-              QString nc=n.attribute("n");
+          QString nc=n.attribute("n");
+          QString stiffness_att=n.attribute("stiffness");
+          QString base_length_att=n.attribute("base_length");
+
+          if (!stiffness_att.isEmpty()) {
+        	  tmp_stiffness.push_back(standardlocale.toDouble(stiffness_att));
+          } else {
+        	  tmp_stiffness.push_back(std::nan("1"));
+          }
+          if (!base_length_att.isEmpty()) {
+        	  tmp_base_length.push_back(standardlocale.toDouble(base_length_att));
+          } else {
+        	  tmp_base_length.push_back(std::nan("1"));
+          }
    // if ((!xmlStrcmp(n->name, (const xmlChar *)"node"))) {
       //xmlChar *nc = xmlGetProp(n, BAD_CAST "n");
 
@@ -383,11 +408,25 @@ int Cell::XMLRead(QDomElement &cur)
 
   int nnodes = tmp_nodes.size();
   for (int i=0;i<nnodes;i++) {
+	Node * new_node = m->nodes[tmp_nodes[i]];
     m->AddNodeToCell( this,
-              m->nodes[tmp_nodes[i]],
+    		  new_node,
               m->nodes[tmp_nodes[(nnodes+i-1)%nnodes]],
               m->nodes[tmp_nodes[(i+1)%nnodes]] );
-
+    if (std::isnan(tmp_stiffness[i])) {
+    	WallElement * wallElement = new_node->getWallElement(this);
+    	if (wallElement == NULL) {
+    		wallElement = new_node->insertWallElement(this);
+    	}
+    	wallElement->setStiffness(tmp_stiffness[i]);
+    }
+    if (std::isnan(tmp_base_length[i])) {
+    	WallElement * wallElement = new_node->getWallElement(this);
+    	if (wallElement == NULL) {
+    		wallElement = new_node->insertWallElement(this);
+    	}
+    	wallElement->setBaseLength(tmp_base_length[i]);
+    }
   }
 
  // n = cur->xmlChildrenNode;
@@ -1019,6 +1058,7 @@ void Mesh::XMLReadPars(const QDomElement &a_node)
   par.XMLRead(root_node);
   Seed(par.rseed);
   MakeDir(par.datadir);
+  CompatibilityLevel(par.compatibility_level);
 }
 
 void Mesh::XMLReadGeometry(const QDomElement root_node)

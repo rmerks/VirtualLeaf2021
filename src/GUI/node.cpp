@@ -57,7 +57,7 @@ ostream &operator<<(ostream &os, const Neighbor &n) {
 }
 
 
-Node::Node(void) : Vector()
+Node::Node(void) : NodeBase()
 {
   index=(nnodes++);
   node_set =0;
@@ -67,7 +67,7 @@ Node::Node(void) : Vector()
   dead=false;
 }
 
-Node::Node(int ind) : Vector()
+Node::Node(int ind) : NodeBase()
 {
   node_set =0;
   index=ind;
@@ -77,7 +77,7 @@ Node::Node(int ind) : Vector()
   dead=false;
 }
 
-Node::Node(const Vector &src) : Vector(src)
+Node::Node(const Vector &src) : NodeBase(src)
 {
   node_set = 0;
   index=(nnodes++);
@@ -87,7 +87,7 @@ Node::Node(const Vector &src) : Vector(src)
   dead = false;
 }
 
-Node::Node(double x,double y, double z) : Vector (x,y,z)
+Node::Node(double x,double y, double z) : NodeBase (x,y,z)
 {
   node_set = 0;
   index=(nnodes++);
@@ -97,7 +97,7 @@ Node::Node(double x,double y, double z) : Vector (x,y,z)
   dead = false;
 }
 
-Node::Node(const Node &src) : Vector(src)
+Node::Node(const Node &src) : NodeBase(src)
 {
   node_set=0;
   owners=src.owners;
@@ -109,6 +109,7 @@ Node::Node(const Node &src) : Vector(src)
   dead = src.dead;
 }
 
+int Node::Index(void) { return index; }
 
 Cell &Node::getCell(const Neighbor &i)
 {
@@ -206,7 +207,6 @@ QVector<qreal> Node::NeighbourAngles(void)
   return angles;
 }
 
-
 #endif
 
 ostream &operator<<(ostream &os, const Node &n) {
@@ -214,4 +214,64 @@ ostream &operator<<(ostream &os, const Node &n) {
   return os;
 }
 
+void Node::correctNeighbors(int cellIndex, Node* n1, Node* n3) {
+	for (list<Neighbor>::iterator it=this->owners.begin(); it!=this->owners.end(); ++it) {
+		Neighbor &nb=*it;
+		if (nb.CellEquals(cellIndex)) {
+			if (nb.nb1!=n1) {
+				nb.nb1=n1;
+			}
+			if (nb.nb2!=n3) {
+				nb.nb2=n3;
+			}
+		}
+	}
+}
+void Node::removeCell(CellBase * cell) {
+	owners.erase(
+	std::remove_if(owners.begin(), owners.end(),
+			[this,cell](const Neighbor & o) { return o.CellEquals(cell->index); }),
+			this->owners.end());
+}
+
+void Node::addCell(CellBase * cell) {
+	owners.push_back( Neighbor( (Cell*)cell, NULL, NULL ) );
+}
+
+
+int Node::countNeighbors(void) {
+	return owners.size();
+}
+
+
+void Node::splitWallElements(WallElementInfo *base,double ratioOfBase) {
+	WallElement * newWallElement = this->insertWallElement(base->getCell());
+	WallElementInfo sub;
+	base->getCell()->fillWallElementInfo(&sub, this, (Node*)base->getTo());
+	base->divide(&sub,(1.-ratioOfBase));
+}
+
+void Node::splittWallElementsBetween(Node *from, Node *to) {
+	double original = ((*to)-(*from)).Norm();
+	double fromPart = ((*from)-(*this)).Norm()/original;
+	double toPart = ((*to)-(*this)).Norm()/original;
+
+	for (list<Neighbor>::const_iterator owner = this->owners.begin();
+			owner != this->owners.end(); owner++) {
+		if (from->getWallElement(owner->cell) != NULL) {
+			WallElementInfo info;
+			owner->cell->fillWallElementInfo(&info, from, to);
+			if (info.hasWallElement()) {
+				splitWallElements(&info,fromPart);
+			}
+		}
+		if (to->getWallElement(owner->cell) != NULL) {
+			WallElementInfo info;
+			owner->cell->fillWallElementInfo(&info, to, from);
+			if (info.hasWallElement()) {
+				splitWallElements(&info,toPart);
+			}
+		}
+	}
+}
 /* finis */
