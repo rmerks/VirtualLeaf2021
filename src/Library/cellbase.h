@@ -246,7 +246,6 @@ class CellBase :  public QObject, public Vector
     return wall_list;
   }
 
-
   template<class Op> void LoopWallElements(Op f) {
 			WallElementInfo info;
 			list <Node *>::iterator i=nodes.begin();
@@ -297,9 +296,13 @@ class CellBase :  public QObject, public Vector
 
   template<class Op> void LoopWalls(Op f) {
     for (list <Wall *>::iterator i=walls.begin();i!=walls.end();i++) {
+
+  template<class Op> void LoopNeighbors(Op f) {
+    for (list <CellBase *>::iterator i=neighbors.begin();i!=neighbors.end();i++) {
       f(*i);
     }
   }
+
 
   void Dump(ostream &os) const;
 
