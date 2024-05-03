@@ -169,7 +169,7 @@
     <node x="-2.5" y="-8.5" fixed="false" boundary="true" sam="false"/>
     <node x="-2.5" y="18.5" fixed="false" boundary="true" sam="false"/>
   </nodes>
-  <cells n="1" offsetx="0" offsety="0" magnification="1" base_area="450" nchem="2">
+  <cells n="1" offsetx="0" offsety="0" magnification="1" base_area="450" nchem="4">
     <cell index="0" area="450" target_area="450" target_length="60" lambda_celllength="0" stiffness="1" fixed="false" pin_fixed="false" at_boundary="true" dead="false" source="false" boundary="None" div_counter="0" cell_type="1">
       <node n="9"/>
       <node n="8"/>

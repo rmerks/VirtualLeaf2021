@@ -1116,6 +1116,8 @@ void Mesh::XMLReadGeometry(const QDomElement root_node)
       //xmlChar *offsetyc = cur.attribute("offsety");
       QString offsetxc = cur.attribute("offsetx","0");
       QString offsetyc = cur.attribute("offsety","0");
+      QString nchem = cur.attribute("nchem", "0");
+
 
       double ox=standardlocale.toDouble(offsetxc, &ok);
       if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable (offsetxc) );
@@ -1123,6 +1125,7 @@ void Mesh::XMLReadGeometry(const QDomElement root_node)
       double oy=standardlocale.toDouble(offsetyc, &ok);
       if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(offsetyc) );
       Cell::setOffset(ox, oy);
+      Cell::SetNChem(standardlocale.toDouble(nchem, &ok));
     //  xmlFree(offsetxc);
 //      xmlFree(offsetyc);
 

@@ -1561,11 +1561,11 @@ void Mesh::calculateWallStiffness(CellBase* c, Node* node, double *w_p1,double *
 
 void Mesh::InsertNode(Edge &e) {
 
-    WallElement* elinf = e.first->getWallElement(e.first->owners.front().getCell());
+    /*WallElement* elinf = e.first->getWallElement(e.first->owners.front().getCell());
 
   if (elinf->getStiffness() > 1) {
         cout << "break" << endl;
-  }
+  }*/
 
   // Construct a new node in the middle of the edge
   Node *new_node = AddNode( new Node ( ( *e.first + *e.second )/2 ) );

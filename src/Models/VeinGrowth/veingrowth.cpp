@@ -42,11 +42,19 @@ void AuxinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, C
     double area1 = daughter1->Area(), area2 = daughter2->Area();
     double tot_area = area1 + area2;
 
-    //cout << daughter1->Chemical(0) << endl;
     daughter1->SetChemical(0,daughter1->Chemical(0)*(area1/tot_area));
     daughter2->SetChemical(0,daughter2->Chemical(0)*(area2/tot_area));
     daughter1->SetChemical(0, 1);
     daughter2->SetChemical(0, 1);
+
+    /*daughter1->SetNewChem(2, 0);
+    daughter2->SetNewChem(2, 0);
+
+    daughter1->SetNewChem(3, 0);
+    daughter2->SetNewChem(3, 0);*/
+
+    // After division, the growth direction of the parent cell (if it exists) is inherited by the daugther cells
+    // The growth direction is saved in the chemicals: Chemical[2]= x-direction, Chemical[3] = y-direction
 
     // After divisions, parent and daughter cells get a standard stock of PINs.
     daughter1->SetChemical(1, par->initval[1]);
@@ -72,19 +80,47 @@ void AuxinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
 
 void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
 {
+    cout << c->NChem() << endl;
     if (c->Boundary()==CellBase::None) {
-        c->LoopWallElements([](auto wallElementInfo){
+        // set growth direction if available, if not then compute it
+        Vector growth_direction = Vector(0 ,1 ,0);
+        if (c->CountNeighbors() > 1 ) {
+            if (c->Chemical(3) == 0 && c->Chemical(4) == 0) {
+                double highest_auxin = 0;
+                CellBase *target_cell;
+                 c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
+                    //cout << neighbor->Chemical(0) << endl;
+                    if (highest_auxin < neighbor->Chemical(0) /*&& neighbor->CellType() != 1*/) {
+                        highest_auxin = neighbor->Chemical(0);
+                        target_cell = neighbor;
+                    }
+                });
+                growth_direction = target_cell->Centroid() - c->Centroid();
+                //growth_direction = Vector(target_cell->x - c->x, target_cell->y - c->y, 0);
+                c->SetNewChem(2, growth_direction.x);
+                c->SetNewChem(3, growth_direction.y);
+                //cout << c->NChem() << endl;
+                //growth_direction = new Vector(0, 1, 0);
+            } else {
+                //growth_direction = Vector(0, 1, 0);
+                growth_direction = Vector(c->Chemical(3), c->Chemical(4), 0);
+            }
+        }/* else {
+            growth_direction = Vector(0 ,1 ,0);
+        }*/
+
+        // wall stiffness manipulation
+        c->LoopWallElements([&growth_direction](auto wallElementInfo){
             if(wallElementInfo->hasWallElement()){
-                Vector* y = new Vector(0, 1, 0);
-                Vector* direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, wallElementInfo->getTo()->y - wallElementInfo->getFrom()->y, 0);
-                double angle = (direction->Angle(*y))*180/3.1415926536;
-                cout << angle << endl;
+                //Vector* y = new Vector(0, 1, 0);
+                Vector* we_direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, wallElementInfo->getTo()->y - wallElementInfo->getFrom()->y, 0);
+                double we_angle = (we_direction->Angle(growth_direction))*180/3.1415926536;
                 /*if (direction->x == 0) {
                     angle = 90;
                 } else {
                     angle = atan(direction->y/direction->x)*180/3.1415926536;
                 }*/
-                if (angle <= 55 || angle >= 125) {
+                if (we_angle <= 55 || we_angle >= 125) {
                     WallElement* we = wallElementInfo->getWallElement();
                     we->setStiffness(4);
                 }/* else if (angle >= 65 || angle <=115){
@@ -108,7 +144,7 @@ void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
         });*/
 
         if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ) {
-            c->SetChemical(0,0);
+            //c->SetChemical(0, 0);
             c->Divide();
             //Vector* v = new Vector(1,0,0);
             //c->DivideOverAxis(*v);

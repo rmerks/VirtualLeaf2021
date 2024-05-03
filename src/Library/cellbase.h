@@ -55,7 +55,6 @@ class WallElement;
 class NodeBase;
 
 struct ParentInfo {
-
   Vector polarization;
   double PINmembrane;
   double PINendosome;
@@ -263,6 +262,12 @@ class CellBase :  public QObject, public Vector
 
   template<class Op> void LoopWalls(Op f) {
     for (list <Wall *>::iterator i=walls.begin();i!=walls.end();i++) {
+      f(*i);
+    }
+  }
+
+  template<class Op> void LoopNeighbors(Op f) {
+    for (list <CellBase *>::iterator i=neighbors.begin();i!=neighbors.end();i++) {
       f(*i);
     }
   }
