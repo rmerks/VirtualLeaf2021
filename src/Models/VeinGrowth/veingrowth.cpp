@@ -91,8 +91,8 @@ void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
                 });
                 growth_direction = target_cell->Centroid() - c->Centroid();
                 //growth_direction = Vector(target_cell->x - c->x, target_cell->y - c->y, 0);
-                c->SetNewChem(2, growth_direction.x);
-                c->SetNewChem(3, growth_direction.y);
+                c->SetChemical(2, growth_direction.x);
+                c->SetChemical(3, growth_direction.y);
                 //cout << c->NChem() << endl;
                 //growth_direction = new Vector(0, 1, 0);
             } else {
