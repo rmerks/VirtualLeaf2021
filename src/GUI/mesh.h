@@ -466,7 +466,7 @@ class Mesh {
   void InsertNode(Edge &e);
   Cell * getOtherCell(Cell* c,Node* node1,Node * node2);
   double SlideWallElement2(Cell* c,Node* prev,Node* fromNode,Node* toNode) ;
-  double SlideWallElement(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
+  double SlideWallElement(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4,double baseLength,double length) ;
   double SlideWallElement3(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
   bool findOtherSide(Cell * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
   inline Node *AddNode(Node *n) {
