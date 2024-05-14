@@ -468,6 +468,7 @@ class Mesh {
   double SlideWallElement2(Cell* c,Node* prev,Node* fromNode,Node* toNode) ;
   double SlideWallElement(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4,double baseLength,double length) ;
   double SlideWallElement3(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
+  double SlideCellWallElements(Cell *c);
   bool findOtherSide(Cell * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
   inline Node *AddNode(Node *n) {
     nodes.push_back(n);

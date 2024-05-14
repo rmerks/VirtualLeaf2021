@@ -564,32 +564,33 @@ double ccRadius_old	(const Node& A, const Node& B, const Node& C) {
 	return result;
 }
 
-//http://dx.doi.org/10.1016/j.cis.2014.01.018
-// radius of circle with center on line B-C and connecting at 10% of the shortest line (A-B ode A-C)
-// and sharing one point with the other line. This we define the kissing circle
-double ccRadius(const Vector& A, const Vector& B, const Vector& C) {
-	Vector AC = C-A;
-	Vector AB = B-A;
 
-	Vector ACpoint = A+AC.Normalised();
-	Vector ABpoint = A+AB.Normalised();
+double b_cocient(const Vector& AC, const Vector& AB,const Vector& ACperp, const Vector& ABperp) {
+	double b=((AC.x-AB.x)/ABperp.x + ((AB.y-AC.y)/ACperp.y)*(ACperp.x/ABperp.x))*((ACperp.y*ABperp.x)/(ACperp.y*ABperp.x-ABperp.y*ACperp.x));
+	return b;
+}
+
+//http://dx.doi.org/10.1016/j.cis.2014.01.018
+// radius of circle with center on line B-C and connecting at norm of the lines (A-B ode A-C)
+// and sharing one point with the other line. This we define the kissing circle
+double ccRadius(const Vector& B, const Vector& A, const Vector& C) {
+	Vector AC = (C-A).Normalised();
+	Vector AB = (B-A).Normalised();
+
+	Vector ACpoint = A+AC;
+	Vector ABpoint = A+AB;
 	Vector ACperp = AC.Perp2D();
 	Vector ABperp = AB.Perp2D();
+	double b_new = b_cocient(ACpoint,ABpoint,ACperp,ABperp);
+	double a_new = b_cocient(ABpoint,ACpoint,ABperp,ACperp);
 
+	Vector AM1=ACpoint+ACperp*a_new;
+	Vector AM2=ABpoint+ABperp*b_new;
 
-	double an = (ACpoint.x - ABpoint.y)/ABperp.x
-			+(ABpoint.y*ACperp.x-ACpoint.y*ACperp.x)/(ACperp.y*ABperp.x);
+	double r1 = (ACpoint-AM1).Norm();
+	double r2 = (ABpoint-AM1).Norm();
 
-	double az = 1 - (ABperp.y*ACperp.x)/(ACperp.y*ABperp.x);
-
-	double a = an/az;
-
-//	double b = (ABpoint.y - ACpoint.y + a * ABperp.y) / ACperp.y;
-
-//	Vector r1 = ACpoint+(ACperp*b);
-	Vector r2 = ABpoint+(ABperp*a);
-
-	return (A-r2).Norm();
+	return r1;
 
 }
 
@@ -603,24 +604,24 @@ bool Mesh::findOtherSide(Cell * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node
 	Node * o1=*w1;
 	Node * o2=*w2;
 	while (i!=c->nodes.end()) {
-		if(*w1==z1 && *w2==z2) {return true;}
+		if(*w1==z1 && *w2==z2||*w2==z1 && *w1==z2) {return true;}
 	    *w0=*w1;
 	    *w1=*w2;
 	    *w2=*w3;
 	    *w3=*(++i);
 	}
 	*w3=o0;
-	if(*w1==z1 && *w2==z2) {return true;}
+	if(*w1==z1 && *w2==z2||*w2==z1 && *w1==z2) {return true;}
 	*w0=*w1;
 	*w1=*w2;
 	*w2=*w3;
 	*w3=o1;
-	if(*w1==z1 && *w2==z2) {return true;}
+	if(*w1==z1 && *w2==z2||*w2==z1 && *w1==z2) {return true;}
 	*w0=*w1;
 	*w1=*w2;
 	*w2=*w3;
 	*w3=o2;
-	if(*w1==z1 && *w2==z2) {return true;}
+	if(*w1==z1 && *w2==z2||*w2==z1 && *w1==z2) {return true;}
 	*w0=NULL;
 	*w1=NULL;
 	*w2=NULL;
@@ -635,6 +636,11 @@ double Mesh::SlideWallElement3(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node*
 	Node * o1;
 	Node * o2;
 	Node * o3;
+
+	double angle = (*w1-*w2).Angle((*w3-*w2));
+	if ( potential_slide_angle*1.1 > angle) {
+		cout <<"  border\n";
+	}
 	Cell* c2= getOtherCell(c,w1,w2);
 	if (findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
 //now check how profitable the move of wall element w1-w2 to w1-w3
@@ -647,15 +653,32 @@ double Mesh::SlideWallElement3(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node*
 
 // should we include ideal radius (=radius of circle with area that is equal to cell area)
 //normieren
-		double dh =
-				DSQR(1.0/ccRadius(*w0,*w1,*w2))-DSQR(1.0/ccRadius(*w0,*w1,*w3))+
-				DSQR(1.0/ccRadius(*w1,*w2,*w3))-DSQR(1.0/ccRadius(*o1,*w3,*o2))+
-				DSQR(1.0/ccRadius(*w2,*w3,*w4))-DSQR(1.0/ccRadius(*w1,*w3,*w4))+
-				DSQR(1.0/ccRadius(*o0,*o1,*o2))-DSQR(1.0/ccRadius(*o0,*o1,*w3))+
-				DSQR(1.0/ccRadius(*o1,*o2,*o3))-DSQR(1.0/ccRadius(*w3,*o2,*o3));
-		cout <<"  dh="<<dh<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
-		if (RANDOM()<exp((lambda_for_shift*-dh)/par.T)) {
-			cout <<"move  "<<w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<"\n";
+		double r1 = ccRadius(*w0,*w1,*w2);
+		double r2 = ccRadius(*w1,*w2,*w3);
+		double r3 = ccRadius(*w2,*w3,*w4);
+		if (r2 < r1 && r2 < r3) {
+
+		double energy_before2 =
+				1./(r1)+
+				1./(r2)+
+				1./(r3)+
+				1./((ccRadius(*o0,*o1,*o2)))+
+				1./((ccRadius(*o1,*o2,*o3)));
+		double energy_after2 =
+				1./((ccRadius(*w0,*w1,*w3)))+
+				1./((ccRadius(*o1,*w3,*o2)))+
+				1./((ccRadius(*w1,*w3,*w4)))+
+				1./((ccRadius(*o0,*o1,*w3)))+
+				1./((ccRadius(*w3,*o2,*o3)));
+
+		double angle = (*w1-*w2).Angle((*w3-*w2));
+		double dh1 = exp(energy_after2-energy_before2*1.5+12.);
+		if (RANDOM()>(dh1))		{
+			 cout <<"#"<<dh1<<"#";
+			cout <<"move-1  "<<w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<<(energy_after2-energy_before2)<<"\n";
+			cout <<"  angle=" << angle << " radius=" << r2<<"\n";
+			cout <<"  energy_before2="<<energy_before2<<"  energy_after2="<<energy_after2<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
+		}
 		}
 	}
 	return 0.0;
@@ -782,17 +805,13 @@ double Mesh::SlideWallElement(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* 
 		}
 	return 0.0;
 }
-
-double Mesh::SlideWallElements(void) {
-
-	  for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
-		Cell *c = *ii;
-		double baseLength=0;
-		double length=0;
-		c->LoopWallElements([this,&baseLength,&length](auto wallElementInfo){
-			baseLength += wallElementInfo->getBaseLength();
-			length += wallElementInfo->getLength();
-		});
+double Mesh::SlideCellWallElements(Cell *c) {
+	double baseLength=0;
+	double length=0;
+	c->LoopWallElements([this,&baseLength,&length](auto wallElementInfo){
+		baseLength += wallElementInfo->getBaseLength();
+		length += wallElementInfo->getLength();
+	});
 
 list <Node *>::iterator i=c->nodes.begin();
 Node * w0=*i;
@@ -805,34 +824,42 @@ Node * o1=w1;
 Node * o2=w2;
 Node * o3=w3;
 while (i!=c->nodes.end()) {
-	SlideWallElement(c,w0,w1,w2,w3,w4,baseLength,length) ;
-    w0=w1;
-    w1=w2;
-    w2=w3;
-    w3=w4;
-    w4=*(++i);
+SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+w0=w1;
+w1=w2;
+w2=w3;
+w3=w4;
+w4=*(++i);
 }
 w4=o0;
-SlideWallElement(c,w0,w1,w2,w3,w4,baseLength,length) ;
+SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 w0=w1;
 w1=w2;
 w2=w3;
 w3=w4;
 w4=o1;
-SlideWallElement(c,w0,w1,w2,w3,w4,baseLength,length) ;
+SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 w0=w1;
 w1=w2;
 w2=w3;
 w3=w4;
 w4=o2;
-SlideWallElement(c,w0,w1,w2,w3,w4,baseLength,length) ;
+SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 w0=w1;
 w1=w2;
 w2=w3;
 w3=w4;
 w4=o3;
-SlideWallElement(c,w0,w1,w2,w3,w4,baseLength,length) ;
+SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+
+}
+double Mesh::SlideWallElements(void) {
+
+	  for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
+		Cell *c = *ii;
+		SlideCellWallElements(c);
 	  }
+	  SlideCellWallElements(boundary_polygon);
 return 0.0;
 }
 
