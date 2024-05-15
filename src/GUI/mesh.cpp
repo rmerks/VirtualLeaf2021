@@ -533,7 +533,7 @@ void Mesh::updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node)
 	}
 }
 
-Cell * Mesh::getOtherCell(Cell* c,Node* node1,Node * node2) {
+CellBase * Mesh::getOtherCell(CellBase* c,Node* node1,Node * node2) {
     for (list<Neighbor>::iterator nb1=node1->owners.begin(); nb1!=node1->owners.end(); nb1++) {
     	if (nb1->getCell() != c) {
     		for (list<Neighbor>::iterator nb2=node2->owners.begin(); nb2!=node2->owners.end(); nb2++) {
@@ -553,17 +553,6 @@ double cross(const Vector & v1, const Vector & v2)
     return (v1.x*v2.y) - (v1.y*v2.x);
 }
 
-//https://isaaclo97.github.io/en/resources/codes/circumcircle.html
-double ccRadius_old	(const Node& A, const Node& B, const Node& C) {
-	double result =
-	 (B-A).Norm()*(C-B).Norm()*(A-C).Norm()/
-			abs(cross((B-A),(C-A)))/2;
-	if (isnan(result)) {
-		cout << "bloed\n";
-	}
-	return result;
-}
-
 
 double b_cocient(const Vector& AC, const Vector& AB,const Vector& ACperp, const Vector& ABperp) {
 	double b=((AC.x-AB.x)/ABperp.x + ((AB.y-AC.y)/ACperp.y)*(ACperp.x/ABperp.x))*((ACperp.y*ABperp.x)/(ACperp.y*ABperp.x-ABperp.y*ACperp.x));
@@ -581,47 +570,55 @@ double ccRadius(const Vector& B, const Vector& A, const Vector& C) {
 	Vector ABpoint = A+AB;
 	Vector ACperp = AC.Perp2D();
 	Vector ABperp = AB.Perp2D();
-	double b_new = b_cocient(ACpoint,ABpoint,ACperp,ABperp);
+//	double b_new = b_cocient(ACpoint,ABpoint,ACperp,ABperp);
 	double a_new = b_cocient(ABpoint,ACpoint,ABperp,ACperp);
 
 	Vector AM1=ACpoint+ACperp*a_new;
-	Vector AM2=ABpoint+ABperp*b_new;
+//	Vector AM2=ABpoint+ABperp*b_new;
 
 	double r1 = (ACpoint-AM1).Norm();
-	double r2 = (ABpoint-AM1).Norm();
-
+//	double r2 = (ABpoint-AM1).Norm();
+// commented lines as check if r1==r2
 	return r1;
 
 }
 
-bool Mesh::findOtherSide(Cell * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3) {
+bool Mesh::findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3) {
 	list <Node *>::iterator i=c->nodes.begin();
-	 * w0=*i;
-	 * w1=*(++i);
-	 * w2=*(++i);
-	 * w3=*(++i);
+	* w0=*i;
+	* w1=*(++i);
+	* w2=*(++i);
+	* w3=*(++i);
 	Node * o0=*w0;
 	Node * o1=*w1;
 	Node * o2=*w2;
 	while (i!=c->nodes.end()) {
-		if(*w1==z1 && *w2==z2||*w2==z1 && *w1==z2) {return true;}
+		if ((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+			return true;
+		}
 	    *w0=*w1;
 	    *w1=*w2;
 	    *w2=*w3;
 	    *w3=*(++i);
 	}
 	*w3=o0;
-	if(*w1==z1 && *w2==z2||*w2==z1 && *w1==z2) {return true;}
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
 	*w0=*w1;
 	*w1=*w2;
 	*w2=*w3;
 	*w3=o1;
-	if(*w1==z1 && *w2==z2||*w2==z1 && *w1==z2) {return true;}
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
 	*w0=*w1;
 	*w1=*w2;
 	*w2=*w3;
 	*w3=o2;
-	if(*w1==z1 && *w2==z2||*w2==z1 && *w1==z2) {return true;}
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
 	*w0=NULL;
 	*w1=NULL;
 	*w2=NULL;
@@ -630,19 +627,15 @@ bool Mesh::findOtherSide(Cell * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node
 }
 double lambda_for_shift=0.1;
 
-double Mesh::SlideWallElement3(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+double Mesh::SlideWallElement(CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
 
 	Node * o0;
 	Node * o1;
 	Node * o2;
 	Node * o3;
 
-	double angle = (*w1-*w2).Angle((*w3-*w2));
-	if ( potential_slide_angle*1.1 > angle) {
-		cout <<"  border\n";
-	}
-	Cell* c2= getOtherCell(c,w1,w2);
-	if (findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
+	CellBase* c2 = getOtherCell(c,w1,w2);
+	if (c2 != NULL && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
 //now check how profitable the move of wall element w1-w2 to w1-w3
 //this changes also cell c2 where wall element o1->o2 will be replaced
 //by wall elements o1->w3 and w3->o2 all other surrounding cells will remain
@@ -651,277 +644,112 @@ double Mesh::SlideWallElement3(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node*
 // angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
 // angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
 
-// should we include ideal radius (=radius of circle with area that is equal to cell area)
-//normieren
 		double r1 = ccRadius(*w0,*w1,*w2);
 		double r2 = ccRadius(*w1,*w2,*w3);
 		double r3 = ccRadius(*w2,*w3,*w4);
 		if (r2 < r1 && r2 < r3) {
+			double energy_before =
+					1./(r1)+
+					1./(r2)+
+					1./(r3)+
+					1./((ccRadius(*o0,*o1,*o2)))+
+					1./((ccRadius(*o1,*o2,*o3)));
+			double energy_after =
+					1./((ccRadius(*w0,*w1,*w3)))+
+					1./((ccRadius(*o1,*w3,*o2)))+
+					1./((ccRadius(*w1,*w3,*w4)))+
+					1./((ccRadius(*o0,*o1,*w3)))+
+					1./((ccRadius(*w3,*o2,*o3)));
+			double dh = exp(energy_after-energy_before*1.5+12.);
+			if (RANDOM() > dh)		{
+				CellWallCurve curve(0);
+				curve.setCell(c);
+				curve.shift(w1);
+				curve.shift(w2);
+				curve.shift(w3);
+				curve.attachToCell();
 
-		double energy_before2 =
-				1./(r1)+
-				1./(r2)+
-				1./(r3)+
-				1./((ccRadius(*o0,*o1,*o2)))+
-				1./((ccRadius(*o1,*o2,*o3)));
-		double energy_after2 =
-				1./((ccRadius(*w0,*w1,*w3)))+
-				1./((ccRadius(*o1,*w3,*o2)))+
-				1./((ccRadius(*w1,*w3,*w4)))+
-				1./((ccRadius(*o0,*o1,*w3)))+
-				1./((ccRadius(*w3,*o2,*o3)));
-
-		double angle = (*w1-*w2).Angle((*w3-*w2));
-		double dh1 = exp(energy_after2-energy_before2*1.5+12.);
-		if (RANDOM()>(dh1))		{
-			 cout <<"#"<<dh1<<"#";
-			cout <<"move-1  "<<w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<<(energy_after2-energy_before2)<<"\n";
-			cout <<"  angle=" << angle << " radius=" << r2<<"\n";
-			cout <<"  energy_before2="<<energy_before2<<"  energy_after2="<<energy_after2<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
-		}
+				double angle = (*w1-*w2).Angle((*w3-*w2));
+				cout << "#" << dh << "#";
+				cout << "move-1  " << w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<<(energy_after-energy_before)<<"\n";
+				cout << "  angle=" << angle << " radius=" << r2<<"\n";
+				cout << "  energy_before=" << energy_before<<"  energy_after="<<energy_after<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
+			}
 		}
 	}
 	return 0.0;
 }
+
 double extractData(WallElement *we,double & base_length,double &stiffness) {
-if (we != NULL) {
-	base_length += we->getBaseLength();
-	if (std::isnan(we->getStiffness()) ) {
-		stiffness+=we->getCell()->GetWallStiffness();
+	if (we != NULL) {
+		base_length += we->getBaseLength();
+		if (std::isnan(we->getStiffness()) ) {
+			stiffness+=we->getCell()->GetWallStiffness();
+		} else {
+			stiffness+=we->getStiffness();
+		}
 	}else {
-		stiffness+=we->getStiffness();
+		base_length=std::nan("1");
+		stiffness=std::nan("1");
 	}
-}else {
-	base_length=std::nan("1");
-	stiffness=std::nan("1");
 }
+
+double Mesh::SlideCellWallElements(CellBase *c) {
+	// baseLength and length for future inclusion
+	//	double baseLength=0;
+	//	double length=0;
+	//	c->LoopWallElements([this,&baseLength,&length](auto wallElementInfo){
+	//		baseLength += wallElementInfo->getBaseLength();
+	//		length += wallElementInfo->getLength();
+	//	});
+
+	list <Node *>::iterator i=c->nodes.begin();
+	Node * w0=*i;
+	Node * w1=*(++i);
+	Node * w2=*(++i);
+	Node * w3=*(++i);
+	Node * w4=*(++i);
+	Node * o0=w0;
+	Node * o1=w1;
+	Node * o2=w2;
+	Node * o3=w3;
+	while (i!=c->nodes.end()) {
+		SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+		w0=w1;
+		w1=w2;
+		w2=w3;
+		w3=w4;
+		w4=*(++i);
+	}
+	w4=o0;
+	SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o1;
+	SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o2;
+	SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o3;
+	SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 }
-double Mesh::SlideWallElement(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4, double baseLength, double length) {
 
-	Node * o0;
-	Node * o1;
-	Node * o2;
-	Node * o3;
-	Cell* c2= getOtherCell(c,w1,w2);
-	if (findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
-
-		double c2_baseLength=0;
-		double c2_length=0;
-		c2->LoopWallElements([this,&c2_baseLength,&c2_length](auto wallElementInfo){
-			c2_baseLength += wallElementInfo->getBaseLength();
-			c2_length += wallElementInfo->getLength();
-		});
-
-
-//now check how profitable the move of wall element w1-w2 to w1-w3
-//this changes also cell c2 where wall element o1->o2 will be replaced
-//by wall elements o1->w3 and w3->o2 all other surrounding cells will remain
-//unchanged.
-//
-// angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
-// angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
-
-		//length of w wall before the slide and after
-		double old_l1 = (*w1-*w0).Norm()+(*w2-*w1).Norm()+(*w3-*w2).Norm()+(*w4-*w3).Norm();
-		double rest_l1 = length - old_l1;
-		double new_l1 = (*w1-*w0).Norm()+(*w3-*w1).Norm()+(*w4-*w3).Norm();
-		//length of o wall before the slide and after
-		double old_l2 = (*o1-*o0).Norm()+(*o2-*o1).Norm()+(*o3-*o2).Norm();
-		double rest_l2 = c2_length - old_l2;
-		double new_l2 = (*o1-*o0).Norm()+(*w3-*o1).Norm()+(*o2-*w3).Norm()+(*o3-*o2).Norm();
-
-
-	    double ww1, ww2;
-	  	if (w2->boundary && w3->boundary) {
-	  		ww1 = 2;
-	  		ww2 = 2;
-	  	} else {
-	  		ww1 = 1;
-	  		ww2 = 1;
-	  	}
-
-	    // Cell specific wall stiffness
-	    double cell_w = c->GetWallStiffness();
-	    double cell2_w = c2->GetWallStiffness();
-	    ww1 = ww1*cell_w;
-	    ww2 = ww2*cell2_w;
-
-	    double w_w1 = 1;
-	    double w_w2 = 1;
-	    double bl_w = 0.0;
-	    double bl_o = 0.0;
-	    double bl_w_rest = 0.0;
-	    double bl_o_rest = 0.0;
-
-	    if (activateWallStiffnessHamiltonian()) {
-	    	double stiffness=0;
-	    	double base_length=0;
-			extractData(w0->getWallElement(c),base_length,stiffness);
-			extractData(w1->getWallElement(c),base_length,stiffness);
-			extractData(w2->getWallElement(c),base_length,stiffness);
-			extractData(w3->getWallElement(c),base_length,stiffness);
-			bl_w=base_length; //base_length of w0 upto w4
-			bl_w_rest = baseLength - bl_w;
-			w_w1=stiffness/4.;
-	    	stiffness=0;
-	    	base_length=0;
-			extractData(o0->getWallElement(c2),base_length,stiffness);
-			extractData(o1->getWallElement(c2),base_length,stiffness);
-			extractData(o2->getWallElement(c2),base_length,stiffness);
-			bl_o=base_length;//base_length of o0 upto w3
-			bl_o_rest = c2_baseLength - bl_o;
-			w_w2=stiffness/3.;
-	    }
-	    double length_dh;
-	    if (!std::isnan(bl_w) && !std::isnan(bl_o)&& !std::isnan(w_w1)&& !std::isnan(w_w2)) {
-	        ww1 = cell_w * (w_w1);
-	        ww2 = cell_w * (w_w2);
-	        //check if wall elements are defined and pick the appropriate length_dh
-
-	        length_dh =
-	        		elastic_modulus * ww1 *
-	        		bl_w *(DSQR((new_l1 + rest_l1)/(bl_w + bl_w_rest) - 1)-DSQR((old_l1+ rest_l1)/(bl_w+ bl_w_rest) - 1)) +
-	                elastic_modulus * ww2 *
-					bl_o *(DSQR((new_l2 + rest_l2)/(bl_o +bl_o_rest) - 1)-DSQR((old_l2 + rest_l2)/(bl_o+bl_o_rest) - 1));
-	    } else {
-	    	length_dh =2*Node::target_length * (
-	    			ww1*(old_l1 - new_l1) +
-	    			ww2*(old_l2 - new_l2) ) +
-	        		ww1*(DSQR(new_l1 + rest_l1) - DSQR(old_l1 + rest_l1)) +
-					ww2*(DSQR(new_l2 + rest_l2) - DSQR(old_l2 + rest_l2));
-		}
-
-		double delta_A = - 0.5 * ( ( w1->x - w2->x ) * (w2->y - w3->y) +
-					   ( w1->y - w2->y ) * ( w3->x - w2->x ) );
-
-		double area_dh = delta_A * (2 * c->target_area - 2 * c->area - delta_A) +
-						 delta_A * (2 * c->target_area - 2 * c->area - delta_A);
-
-		//area_dh divided by 2 because we use thwo cells in the hamitonian.
-        double dh = area_dh  + par.lambda_length * length_dh;
-          if (/*dh < 0  || */RANDOM()<exp((-dh)/par.T)) {
-				cout << w1->Index()<<"->" <<w2->Index()<< "\t"<< w2->Index()<<"->" <<w3->Index()<< "\t" << dh << "\n";
-		  }
-		}
-	return 0.0;
-}
-double Mesh::SlideCellWallElements(Cell *c) {
-	double baseLength=0;
-	double length=0;
-	c->LoopWallElements([this,&baseLength,&length](auto wallElementInfo){
-		baseLength += wallElementInfo->getBaseLength();
-		length += wallElementInfo->getLength();
-	});
-
-list <Node *>::iterator i=c->nodes.begin();
-Node * w0=*i;
-Node * w1=*(++i);
-Node * w2=*(++i);
-Node * w3=*(++i);
-Node * w4=*(++i);
-Node * o0=w0;
-Node * o1=w1;
-Node * o2=w2;
-Node * o3=w3;
-while (i!=c->nodes.end()) {
-SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
-w0=w1;
-w1=w2;
-w2=w3;
-w3=w4;
-w4=*(++i);
-}
-w4=o0;
-SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
-w0=w1;
-w1=w2;
-w2=w3;
-w3=w4;
-w4=o1;
-SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
-w0=w1;
-w1=w2;
-w2=w3;
-w3=w4;
-w4=o2;
-SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
-w0=w1;
-w1=w2;
-w2=w3;
-w3=w4;
-w4=o3;
-SlideWallElement3(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
-
-}
 double Mesh::SlideWallElements(void) {
-
-	  for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
+	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
 		Cell *c = *ii;
 		SlideCellWallElements(c);
-	  }
-	  SlideCellWallElements(boundary_polygon);
-return 0.0;
-}
-
-double Mesh::SlideWallElement2(Cell* c,Node* prev,Node* fromNode,Node* toNode) {
-if (fromNode->countNeighbors() == 3) {
-	//this is a slideable situation
-	//double delta_A_org = 0.5*abs (
-	//		prev->x * (fromNode->y - toNode->y)
-	//		+ fromNode->x * (toNode->y - prev->y)
-	//		+ toNode->x * (prev->y - fromNode->y));
-	if (debugNode==fromNode->Index()) {
-		cout <<"debug \n";
 	}
-	//i_min_1 -> new_p    -> i_plus_1 -> old_p
-	//prev    -> fromNode -> toNode   -> prev
-	double delta_A = - 0.5 * ( ( fromNode->x - prev->x ) * (prev->y - toNode->y) +
-				   ( fromNode->y - prev->y ) * ( toNode->x - prev->x ) );
-
-	Cell* c2= getOtherCell(c,prev,fromNode);
-	if (c2 != NULL) {
-	double dh_area= - delta_A * (2 * c->target_area - 2 * c->area - delta_A)+
-					delta_A * (2 * c2->target_area - 2 * c2->area + delta_A);
-
-	// now how big is dh_area for moving back to the old position.
-	double dh_area_back=  delta_A * (2 * c->target_area - 2 * (c->area - delta_A)+ delta_A)
-					- delta_A * (2 * c2->target_area - 2 * (c2->area + delta_A) - delta_A);
-
-	if (delta_A>0.0 && dh_area >  dh_area_back) {
-		// here the condition to activate sliding
-		cout <<"dh_area "<<dh_area<<" dh_area_back "<<dh_area_back<<" nodes "<<prev->Index()<<","<<fromNode->Index()<<","<<toNode->Index()<<"\n";
-		}
-	}
-}
-return 0.0;
-}
-
-
-double Mesh::SlideWallElements2(void) {
-  for (vector<Cell *>::iterator i=cells.begin(); i!=cells.end(); i++) {
-	Cell *c = *i;
-	Node* prev = *(--(c->nodes.end()));
-	Node** prevp = &prev;
-	c->LoopWallElements([this,c,prevp](auto wallElementInfo){
-		Node* prev = *prevp;
-		Node* fromNode = ((Node*)wallElementInfo->getFrom());
-		Node* toNode = ((Node*)wallElementInfo->getTo());
-		SlideWallElement2(c,prev,fromNode,toNode);
-		*prevp=fromNode;
-	});
-  }
-
-	Cell *c = boundary_polygon;
-	Node* prev = *(--(c->nodes.end()));
-	Node** prevp = &prev;
-	c->LoopWallElements([this,c,prevp](auto wallElementInfo){
-		Node* prev = *prevp;
-		Node* fromNode = ((Node*)wallElementInfo->getFrom());
-		Node* toNode = ((Node*)wallElementInfo->getTo());
-		SlideWallElement2(c,prev,fromNode,toNode);
-		*prevp=fromNode;
-	});
-  return 0.0;
+	SlideCellWallElements(boundary_polygon);
+	return 0.0;
 }
 
 double Mesh::DisplaceNodes(void) {
@@ -1279,60 +1107,6 @@ double Mesh::DisplaceNodes(void) {
 
   return sum_dh;
 }
-
-
-
-
-void Mesh::WallCollapse() {
-	CellWallCurve curve(potential_slide_angle);
-	Node * first=NULL;
-	Node * second=NULL;
-	curve.reset();
-	curve.setCell(boundary_polygon);
-	for (Node * node : boundary_polygon->nodes) {
-		curve.shift(node);
-		if (first==NULL) {
-			first=node;
-		}else if (second==NULL) {
-			second=node;
-		}
-		curve.checkAngle();
-	}
-	curve.shift(first);
-	curve.checkAngle();
-	curve.shift(second);
-	curve.checkAngle();
-	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
-		Cell &cell(**i);
-		curve.reset();
-		curve.setCell(&cell);
-		list <Node *>::iterator j=cell.nodes.begin();
-		curve.shift(*j);
-		curve.shift(*(++j));
-		curve.shift(*(++j));
-		while (j!=cell.nodes.end()) {
-			bool toSharp = curve.checkAngle();
-			Node *nextNode = *(++j);
-			if (!toSharp && j!=cell.nodes.end()){
-				curve.checkBudEnd(nextNode);
-			}
-			curve.shift(nextNode);
-		}
-		j=cell.nodes.begin();
-		Node *nextNode =*j;
-		curve.setTo(nextNode);
-		nextNode = *(++j);
-		if (!curve.checkAngle()){
-			curve.checkBudEnd(nextNode);
-		}
-		curve.shift(nextNode);
-		nextNode = *(++j);
-		if (!curve.checkAngle()){
-			curve.checkBudEnd(nextNode);
-		}
-	}
-}
-
 
 void Mesh::WallRelaxation(void) {
 	// as we relax every wall element independently no re-scuffling is necessary.

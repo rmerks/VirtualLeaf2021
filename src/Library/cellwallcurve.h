@@ -44,7 +44,6 @@ class CellWallCurve {
 	friend class CellBase;
 
 	bool borderCase;
-	double potential_slide_angle;
 
 	CellBase * cell;
 
@@ -56,19 +55,16 @@ class CellWallCurve {
 	WallBase* findWallBetweenEndingAt(CellBase *&c1, CellBase *&c2, NodeBase *&c);
 
 	WallBase* otherWallEndingAt(CellBase *c3, NodeBase *&c, WallBase *&wallc2c3);
-	void attachToCell();
 
 public:
 	CellWallCurve(double potential_slide_angle) {
-		this->potential_slide_angle = potential_slide_angle;
 		reset();
 	}
 	bool isBorderCase() {return borderCase;};
+	void attachToCell();
 	void set(CellWallCurve * other);
 	void shift(NodeBase * node) ;
 	bool checkBudEnd(NodeBase * node) ;
-	bool checkAngle() ;
-	bool checkAngleInternal() ;
 	void reset() ;
 	int Index() ;
 	void setCell(CellBase * aCell) ;

@@ -219,9 +219,6 @@ class Mesh {
   }
 
   void DoCellHouseKeeping() {
-	if (activateWallSliding()) {
-		WallCollapse();
-	}
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
@@ -267,12 +264,10 @@ class Mesh {
   }
 
   double SlideWallElements(void);
-  double SlideWallElements2(void);
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
   void PotentialSlideAngle(double potential_slide_angle) {this->potential_slide_angle=potential_slide_angle;}
-  void WallCollapse();
   void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
   bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
   bool activateWallSliding() {return (this->compatibility_level & WALL_SLIDING) != 0;}
@@ -464,12 +459,10 @@ class Mesh {
   void AddNodeToCell(Cell *c, Node *n, Node *nb1 , Node *nb2);
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);
-  Cell * getOtherCell(Cell* c,Node* node1,Node * node2);
-  double SlideWallElement2(Cell* c,Node* prev,Node* fromNode,Node* toNode) ;
-  double SlideWallElement(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4,double baseLength,double length) ;
-  double SlideWallElement3(Cell* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
-  double SlideCellWallElements(Cell *c);
-  bool findOtherSide(Cell * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
+  CellBase * getOtherCell(CellBase* c,Node* node1,Node * node2);
+  double SlideWallElement(CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
+  double SlideCellWallElements(CellBase *c);
+  bool findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
   inline Node *AddNode(Node *n) {
     nodes.push_back(n);
     shuffled_nodes.push_back(n);

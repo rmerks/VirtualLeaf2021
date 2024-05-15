@@ -271,7 +271,7 @@ TIMESTEP {
 	mesh.PotentialSlideAngle(par.potential_slide_angle);
     mesh.WallRelaxation();
 
-    double dhwall = mesh.SlideWallElements();
+
     dh = mesh.DisplaceNodes();
 
     // Only allow for node insertion, cell division and cell growth
@@ -282,7 +282,9 @@ TIMESTEP {
     mesh.InsertNodes(); // (this amounts to cell wall yielding)
 
     if ( (-dh) < par.energy_threshold) {
-
+    	if (mesh.activateWallSliding()) {
+    		  double dhwall = mesh.SlideWallElements();
+    	}
       mesh.IncreaseCellCapacityIfNecessary();
       mesh.DoCellHouseKeeping();
       //mesh.LoopCurrentCells(mem_fn(&plugin->CellHouseKeeping)); // this includes cell division

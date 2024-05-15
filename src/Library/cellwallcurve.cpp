@@ -11,7 +11,6 @@ void CellWallCurve::set(CellWallCurve *other) {
 	over = other->over;
 	to = other->to;
 	borderCase=other->borderCase;
-	potential_slide_angle= other->potential_slide_angle;
 }
 
 	WallBase* CellWallCurve::findWallBetweenEndingAt(CellBase *&c1, CellBase *&c2, NodeBase *&c) {
@@ -55,51 +54,20 @@ void CellWallCurve::set(CellWallCurve *other) {
 		  }
 	}
 
-	bool CellWallCurve::checkBudEnd(NodeBase * node) {
-		if (to == NULL||over == NULL||from == NULL) {
-			return false;
+
+	void CellWallCurve::attachToCell() {
+		CellBase *toAdd = cell;
+		if (toAdd != NULL && toAdd->Index() == -1) {
+			toAdd = cellBehindLongerWall();
 		}
-		bool isBudEnd = false;
-		NodeBase *tFrom = from;
-		NodeBase *tOver = over;
-		NodeBase *tTo = node;
-		if (potential_slide_angle*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
-			tOver = to;
-			tTo=node;
-			if (potential_slide_angle*2 > (*tFrom-*tOver).Angle((*tTo-*tOver))) {
-				isBudEnd =true;
-			}
+		if (toAdd != NULL && toAdd->Index() == -1) {
+			toAdd = cellBehindShorterWall();
 		}
-		if (isBudEnd)
-			attachToCell();
-		return isBudEnd;
+		if (toAdd != NULL) {
+			toAdd->attachToCell(this);
+		}
 	}
 
-	bool CellWallCurve::checkAngleInternal() {
-		double angle = (*from-*over).Angle((*to-*over));
-		return potential_slide_angle > angle;
-	}
-
-void CellWallCurve::attachToCell() {
-	CellBase *toAdd = cell;
-	if (toAdd != NULL && toAdd->Index() == -1) {
-		toAdd = cellBehindLongerWall();
-	}
-	if (toAdd != NULL && toAdd->Index() == -1) {
-		toAdd = cellBehindShorterWall();
-	}
-	if (toAdd != NULL) {
-		toAdd->attachToCell(this);
-	}
-}
-
-	bool CellWallCurve::checkAngle() {
-		if (to!= NULL && checkAngleInternal()){
-			attachToCell();
-			return true;
-		}
-		return false;
-	}
 
 	void CellWallCurve::reset() {
 		cell=NULL;
