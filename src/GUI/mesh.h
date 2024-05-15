@@ -225,17 +225,26 @@ class Mesh {
     		i ++) {
     	plugin->CellHouseKeeping(*i);
     }
+
+    std::list<int> nodeList = {};
+
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
     		i ++) {
     	bool anyBorderSpikeRemoved=false;
-    	if ((*i)->curvedWallElementToHandle->removeSpike()){
-    		anyBorderSpikeRemoved=(*i)->curvedWallElementToHandle->isBorderCase();
-    		cout << ' ' << (*i)->curvedWallElementToHandle->Index() << '\n';
+
+    	CellWallCurve* curvedWallElementToHandle = (*i)->curvedWallElementToHandle;
+       	if (!(*i)->flag_for_divide) {
+    	if (curvedWallElementToHandle->removeSpike()){
+    		anyBorderSpikeRemoved=curvedWallElementToHandle->isBorderCase();
+    		cout << ' ' << curvedWallElementToHandle->Index() << '\n';
     	}
     	(*i)->curvedWallElementToHandle->reset();
     	if (anyBorderSpikeRemoved) {
     		RepairBoundaryPolygon();
+    	}
+    	} else {
+    		curvedWallElementToHandle->reset();
     	}
     }
     for (vector<Cell *>::iterator i = current_cells.begin();

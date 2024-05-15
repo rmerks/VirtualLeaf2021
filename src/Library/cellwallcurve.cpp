@@ -260,6 +260,9 @@ void CellWallCurve::set(CellWallCurve *other) {
 			cout << " new wall nessesary ";
 			return false;
 		}
+		c1->curvedWallElementToHandle->reset();
+		c2->curvedWallElementToHandle->reset();
+		c3->curvedWallElementToHandle->reset();
 	}
 
 	bool CellWallCurve::isWallBetweenEndingAt(WallBase * wall, CellBase* cell1, CellBase* cell2, NodeBase * node) {

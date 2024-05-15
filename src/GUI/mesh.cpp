@@ -633,7 +633,9 @@ double Mesh::SlideWallElement(CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,No
 	Node * o1;
 	Node * o2;
 	Node * o3;
-
+if (w2->Index()==debugNode){
+	cout<<"*!";
+}
 	CellBase* c2 = getOtherCell(c,w1,w2);
 	if (c2 != NULL && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
 //now check how profitable the move of wall element w1-w2 to w1-w3
@@ -647,7 +649,7 @@ double Mesh::SlideWallElement(CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,No
 		double r1 = ccRadius(*w0,*w1,*w2);
 		double r2 = ccRadius(*w1,*w2,*w3);
 		double r3 = ccRadius(*w2,*w3,*w4);
-		if (r2 < r1 && r2 < r3) {
+	//	if (r2 < r1 && r2 < r3) {
 			double energy_before =
 					1./(r1)+
 					1./(r2)+
@@ -675,7 +677,7 @@ double Mesh::SlideWallElement(CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,No
 				cout << "  angle=" << angle << " radius=" << r2<<"\n";
 				cout << "  energy_before=" << energy_before<<"  energy_after="<<energy_after<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
 			}
-		}
+//		}
 	}
 	return 0.0;
 }

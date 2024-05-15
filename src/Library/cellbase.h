@@ -97,6 +97,7 @@ class CellBase :  public QObject, public Vector
   friend class WallElement;
   friend class WallElementInfo;
   friend class SimPluginInterface;
+  friend class CellWallCurve;
 
  public:
   CellBase(QObject *parent=0);
