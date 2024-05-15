@@ -627,15 +627,12 @@ bool Mesh::findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,
 }
 double lambda_for_shift=0.1;
 
-double Mesh::SlideWallElement(CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
 
 	Node * o0;
 	Node * o1;
 	Node * o2;
 	Node * o3;
-if (w2->Index()==debugNode){
-	cout<<"*!";
-}
 	CellBase* c2 = getOtherCell(c,w1,w2);
 	if (c2 != NULL && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
 //now check how profitable the move of wall element w1-w2 to w1-w3
@@ -645,44 +642,53 @@ if (w2->Index()==debugNode){
 //
 // angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
 // angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
-
 		double r1 = ccRadius(*w0,*w1,*w2);
 		double r2 = ccRadius(*w1,*w2,*w3);
 		double r3 = ccRadius(*w2,*w3,*w4);
-	//	if (r2 < r1 && r2 < r3) {
-			double energy_before =
-					1./(r1)+
-					1./(r2)+
-					1./(r3)+
-					1./((ccRadius(*o0,*o1,*o2)))+
-					1./((ccRadius(*o1,*o2,*o3)));
-			double energy_after =
-					1./((ccRadius(*w0,*w1,*w3)))+
-					1./((ccRadius(*o1,*w3,*o2)))+
-					1./((ccRadius(*w1,*w3,*w4)))+
-					1./((ccRadius(*o0,*o1,*w3)))+
-					1./((ccRadius(*w3,*o2,*o3)));
-			double dh = exp(energy_after-energy_before*1.5+12.);
-			if (RANDOM() > dh)		{
-				CellWallCurve curve(0);
-				curve.setCell(c);
-				curve.shift(w1);
-				curve.shift(w2);
-				curve.shift(w3);
-				curve.attachToCell();
+		double r4 = ccRadius(*w0,*w1,*w3);
+		double r5 = ccRadius(*w1,*w3,*w4);
+//		if (c->Index()==-1 && r2 < r4) {
+//			// special case, narrow hole to allow merging we disable the sub condition
+//		}
+		double energy_before =
+				1./(r1)+
+				1./(r2)+
+				1./(r3)+
+				1./((ccRadius(*o0,*o1,*o2)))+
+				1./((ccRadius(*o1,*o2,*o3)));
+		double energy_after =
+				1./(r4)+
+				1./((ccRadius(*o1,*w3,*o2)))+
+				1./(r5)+
+				1./((ccRadius(*o0,*o1,*w3)))+
+				1./((ccRadius(*w3,*o2,*o3)));
+		double dh = exp(energy_after-energy_before*1.5+12.);
+		if (RANDOM() > dh)		{
+			CellWallCurve curve;
+			curve.setCell(c);
+			curve.shift(w1);
+			curve.shift(w2);
+			curve.shift(w3);
+			curve.involved_nodes(w0,w4,o0,o1,o2,o3);
+			curve.setEneries(energy_before,energy_after);
 
-				double angle = (*w1-*w2).Angle((*w3-*w2));
+			for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
+				it->check_overlap(curve);
+			}
+			curves.push_back(curve);
+
+			double angle = (*w1-*w2).Angle((*w3-*w2));
+			if (debugNode>-1){
 				cout << "#" << dh << "#";
 				cout << "move-1  " << w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<<(energy_after-energy_before)<<"\n";
 				cout << "  angle=" << angle << " radius=" << r2<<"\n";
 				cout << "  energy_before=" << energy_before<<"  energy_after="<<energy_after<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
 			}
-//		}
+		}
 	}
-	return 0.0;
 }
 
-double extractData(WallElement *we,double & base_length,double &stiffness) {
+void extractData(WallElement *we,double & base_length,double &stiffness) {
 	if (we != NULL) {
 		base_length += we->getBaseLength();
 		if (std::isnan(we->getStiffness()) ) {
@@ -696,7 +702,7 @@ double extractData(WallElement *we,double & base_length,double &stiffness) {
 	}
 }
 
-double Mesh::SlideCellWallElements(CellBase *c) {
+void Mesh::SlideCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
 	// baseLength and length for future inclusion
 	//	double baseLength=0;
 	//	double length=0;
@@ -716,7 +722,7 @@ double Mesh::SlideCellWallElements(CellBase *c) {
 	Node * o2=w2;
 	Node * o3=w3;
 	while (i!=c->nodes.end()) {
-		SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+		SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 		w0=w1;
 		w1=w2;
 		w2=w3;
@@ -724,33 +730,33 @@ double Mesh::SlideCellWallElements(CellBase *c) {
 		w4=*(++i);
 	}
 	w4=o0;
-	SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o1;
-	SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o2;
-	SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o3;
-	SlideWallElement(c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
 }
 
-double Mesh::SlideWallElements(void) {
+double Mesh::SlideWallElements(list<CellWallCurve> & curves) {
 	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
 		Cell *c = *ii;
-		SlideCellWallElements(c);
+		SlideCellWallElements(curves,c);
 	}
-	SlideCellWallElements(boundary_polygon);
+	SlideCellWallElements(curves,boundary_polygon);
 	return 0.0;
 }
 

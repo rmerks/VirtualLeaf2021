@@ -13,6 +13,41 @@ void CellWallCurve::set(CellWallCurve *other) {
 	borderCase=other->borderCase;
 }
 
+bool CellWallCurve::check_overlap(NodeBase* other){
+	return
+		from ==other||
+		over==other||
+		to  ==other||
+		n1==other||
+		n2==other||
+		n3==other||
+		n4==other||
+		n5==other||
+		n6==other;
+}
+void CellWallCurve::check_overlap(CellWallCurve & other){
+	double otherSaving = other.enery_before-other.enery_after;
+	double mySaving = enery_before-enery_after;
+	bool overlap =
+		check_overlap(from)||
+		check_overlap(over)||
+		check_overlap(to)||
+		check_overlap(n1)||
+		check_overlap(n2)||
+		check_overlap(n3)||
+		check_overlap(n4)||
+		check_overlap(n5)||
+		check_overlap(n6);
+
+	if (overlap) {
+		if (mySaving>otherSaving || (cell!=NULL && cell->Index()==-1)) {
+			other.reset();
+		} else {
+			reset();
+		}
+	}
+}
+
 	WallBase* CellWallCurve::findWallBetweenEndingAt(CellBase *&c1, CellBase *&c2, NodeBase *&c) {
 		WallBase *wallBetween = NULL;
 		WallBase **pwallBetween = &wallBetween;
@@ -55,18 +90,6 @@ void CellWallCurve::set(CellWallCurve *other) {
 	}
 
 
-	void CellWallCurve::attachToCell() {
-		CellBase *toAdd = cell;
-		if (toAdd != NULL && toAdd->Index() == -1) {
-			toAdd = cellBehindLongerWall();
-		}
-		if (toAdd != NULL && toAdd->Index() == -1) {
-			toAdd = cellBehindShorterWall();
-		}
-		if (toAdd != NULL) {
-			toAdd->attachToCell(this);
-		}
-	}
 
 
 	void CellWallCurve::reset() {
@@ -75,6 +98,14 @@ void CellWallCurve::set(CellWallCurve *other) {
 		over=NULL;
 		to=NULL;
 		borderCase=false;
+		enery_after=0.;
+		enery_before=0.;
+		n1=NULL;
+		n2=NULL;
+		n3=NULL;
+		n4=NULL;
+		n5=NULL;
+		n6=NULL;
 	}
 
 	int CellWallCurve::Index() {
@@ -148,6 +179,10 @@ void CellWallCurve::set(CellWallCurve *other) {
 		CellBase * c3 = cellBehindShorterWall();
 		if (c1==NULL ||c3 == NULL) {
 			cout << "can't find cells behind walls cell=" << cell->Index() << " node=" << over->Index() << "\n";
+			return false;
+		}
+		//if the cell was selected for division then first divide
+		if (c1->flag_for_divide||c2->flag_for_divide||c3->flag_for_divide) {
 			return false;
 		}
 		NodeBase * a = longerWall();
@@ -260,9 +295,6 @@ void CellWallCurve::set(CellWallCurve *other) {
 			cout << " new wall nessesary ";
 			return false;
 		}
-		c1->curvedWallElementToHandle->reset();
-		c2->curvedWallElementToHandle->reset();
-		c3->curvedWallElementToHandle->reset();
 	}
 
 	bool CellWallCurve::isWallBetweenEndingAt(WallBase * wall, CellBase* cell1, CellBase* cell2, NodeBase * node) {

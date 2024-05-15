@@ -101,7 +101,6 @@ void Infection::CelltoCellTransport(Wall *w, double *dchem_c1, double *dchem_c2)
     double length = 0.0;
     double stiffness = 0.0;
     getLengthAndStiffness(w,&length,&stiffness);
-    double wlength = w->Length();
 
     double diffusionCoef = 0.000001/stiffness;
 

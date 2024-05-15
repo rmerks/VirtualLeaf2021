@@ -44,6 +44,9 @@ class CellWallCurve {
 	friend class CellBase;
 
 	bool borderCase;
+	double enery_before;
+	double enery_after;
+
 
 	CellBase * cell;
 
@@ -51,23 +54,35 @@ class CellWallCurve {
 	NodeBase * over=NULL;
 	NodeBase * to=NULL;
 
+	NodeBase* n1;NodeBase* n2;NodeBase* n3;NodeBase* n4;NodeBase* n5;NodeBase* n6;
+
 
 	WallBase* findWallBetweenEndingAt(CellBase *&c1, CellBase *&c2, NodeBase *&c);
 
 	WallBase* otherWallEndingAt(CellBase *c3, NodeBase *&c, WallBase *&wallc2c3);
-
+	bool check_overlap(NodeBase* other);
 public:
-	CellWallCurve(double potential_slide_angle) {
+	CellWallCurve() {
 		reset();
 	}
 	bool isBorderCase() {return borderCase;};
-	void attachToCell();
+	void setEneries(double before,double after) {enery_before=before;enery_after=after;};
 	void set(CellWallCurve * other);
+	void check_overlap(CellWallCurve & other);
+	void involved_nodes(NodeBase* n1,NodeBase* n2,NodeBase* n3,NodeBase* n4,NodeBase* n5,NodeBase* n6) {
+		this->n1=n1;
+		this->n2=n2;
+		this->n3=n3;
+		this->n4=n4;
+		this->n5=n5;
+		this->n6=n6;
+	}
 	void shift(NodeBase * node) ;
 	bool checkBudEnd(NodeBase * node) ;
 	void reset() ;
 	int Index() ;
 	void setCell(CellBase * aCell) ;
+	CellBase * getCell() {return cell;};
 	void setTo(NodeBase * node) ;
 	NodeBase* getFrom()  ;
 	NodeBase* getOver() ;

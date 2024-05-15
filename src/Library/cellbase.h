@@ -545,7 +545,6 @@ class CellBase :  public QObject, public Vector
 
   bool marked;
   int div_counter;
-  CellWallCurve * curvedWallElementToHandle;
 
 };
 

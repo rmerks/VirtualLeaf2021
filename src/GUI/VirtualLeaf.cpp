@@ -282,11 +282,12 @@ TIMESTEP {
     mesh.InsertNodes(); // (this amounts to cell wall yielding)
 
     if ( (-dh) < par.energy_threshold) {
+		list<CellWallCurve> curves;
     	if (mesh.activateWallSliding()) {
-    		  double dhwall = mesh.SlideWallElements();
+    		mesh.SlideWallElements(curves);
     	}
       mesh.IncreaseCellCapacityIfNecessary();
-      mesh.DoCellHouseKeeping();
+      mesh.DoCellHouseKeeping(curves);
       //mesh.LoopCurrentCells(mem_fn(&plugin->CellHouseKeeping)); // this includes cell division
 
       // Reaction diffusion	

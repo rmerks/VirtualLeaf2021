@@ -218,7 +218,7 @@ class Mesh {
     }
   }
 
-  void DoCellHouseKeeping() {
+  void DoCellHouseKeeping(list<CellWallCurve> curves) {
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
@@ -226,27 +226,17 @@ class Mesh {
     	plugin->CellHouseKeeping(*i);
     }
 
-    std::list<int> nodeList = {};
+    for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
+    	if (it->removeSpike()){
+    		bool anyBorderSpikeRemoved=it->isBorderCase();
+        		cout << ' ' << it->getCell()->Index() << '\n';
 
-    for (vector<Cell *>::iterator i = current_cells.begin();
-    		i != current_cells.end();
-    		i ++) {
-    	bool anyBorderSpikeRemoved=false;
-
-    	CellWallCurve* curvedWallElementToHandle = (*i)->curvedWallElementToHandle;
-       	if (!(*i)->flag_for_divide) {
-    	if (curvedWallElementToHandle->removeSpike()){
-    		anyBorderSpikeRemoved=curvedWallElementToHandle->isBorderCase();
-    		cout << ' ' << curvedWallElementToHandle->Index() << '\n';
-    	}
-    	(*i)->curvedWallElementToHandle->reset();
-    	if (anyBorderSpikeRemoved) {
-    		RepairBoundaryPolygon();
-    	}
-    	} else {
-    		curvedWallElementToHandle->reset();
-    	}
+            if (anyBorderSpikeRemoved) {
+            	RepairBoundaryPolygon();
+           	}
+        }
     }
+
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
     		i ++) {
@@ -272,7 +262,7 @@ class Mesh {
     f(cells[i]);
   }
 
-  double SlideWallElements(void);
+  double SlideWallElements(list<CellWallCurve> & curves);
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
@@ -469,8 +459,8 @@ class Mesh {
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);
   CellBase * getOtherCell(CellBase* c,Node* node1,Node * node2);
-  double SlideWallElement(CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
-  double SlideCellWallElements(CellBase *c);
+  void SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
+  void SlideCellWallElements(list<CellWallCurve> & curves,CellBase *c);
   bool findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
   inline Node *AddNode(Node *n) {
     nodes.push_back(n);
