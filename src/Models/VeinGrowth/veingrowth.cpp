@@ -44,8 +44,8 @@ void AuxinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, C
 
     daughter1->SetChemical(0,daughter1->Chemical(0)*(area1/tot_area));
     daughter2->SetChemical(0,daughter2->Chemical(0)*(area2/tot_area));
-    daughter1->SetChemical(0, 1);
-    daughter2->SetChemical(0, 1);
+    //daughter1->SetChemical(0, 1);
+    //daughter2->SetChemical(0, 1);
 
     // After division, the growth direction of the parent cell (if it exists) is inherited by the daugther cells
     // The growth direction is saved in the chemicals: Chemical[2]= x-direction, Chemical[3] = y-direction
@@ -74,25 +74,30 @@ void AuxinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
 
 void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
 {
-    cout << c->NChem() << endl;
     if (c->Boundary()==CellBase::None) {
         // set growth direction if available, if not then compute it
         Vector growth_direction = Vector(0 ,1 ,0);
         if (c->CountNeighbors() > 1 ) {
             if (c->Chemical(3) == 0 && c->Chemical(4) == 0) {
                 double highest_auxin = 0;
-                CellBase *target_cell;
+                CellBase *target_cell = NULL;
                  c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
                     //cout << neighbor->Chemical(0) << endl;
-                    if (highest_auxin < neighbor->Chemical(0) /*&& neighbor->CellType() != 1*/) {
+                    if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
                         highest_auxin = neighbor->Chemical(0);
                         target_cell = neighbor;
                     }
                 });
-                growth_direction = target_cell->Centroid() - c->Centroid();
-                //growth_direction = Vector(target_cell->x - c->x, target_cell->y - c->y, 0);
-                c->SetChemical(2, growth_direction.x);
-                c->SetChemical(3, growth_direction.y);
+                if (target_cell != NULL) {
+                     growth_direction = target_cell->Centroid() - c->Centroid();
+                     //growth_direction = Vector(target_cell->x - c->x, target_cell->y - c->y, 0);
+                     c->SetChemical(2, growth_direction.x);
+                     c->SetChemical(3, growth_direction.y);
+                } else {
+                    growth_direction = Vector(0, 1, 0);
+                     cout << "Error when evaluation neighbours in household!" << endl;
+                }
+
                 //cout << c->NChem() << endl;
                 //growth_direction = new Vector(0, 1, 0);
             } else {

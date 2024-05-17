@@ -56,9 +56,9 @@ class AuxinGrowthPlugin : public QObject, SimPluginInterface {
   // to be executed for coloring a cell
   virtual void SetCellColor(CellBase *c, QColor *color);	
   // return number of chemicals
-  virtual int NChem(void) { return 2; }
+  virtual int NChem(void) { return 4; }
 
-  virtual QString DefaultLeafML(void) { return QString("vein_growth.xml"); }
+  virtual QString DefaultLeafML(void) { return QString("procambium_1.xml"); }
  
  private:
   double complex_PijAj(CellBase *here, CellBase *nb, Wall *w);

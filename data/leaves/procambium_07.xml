@@ -1,0 +1,837 @@
+<?xml version="1.0" ?>
+<leaf name="/ufs/merks/VLeaf1.0/V1.0/data/leaves/auxin_growth.xml" date="Mon Nov 29 11:43:46 2010" simtime="11660">
+   
+  
+   <parameter>
+      
+    
+      <par name="arrowcolor" val="white"/>
+      
+    
+      <par name="arrowsize" val="10"/>
+      
+    
+      <par name="textcolor" val="red"/>
+      
+    
+      <par name="cellnumsize" val="1"/>
+      
+    
+      <par name="nodenumsize" val="1"/>
+      
+    
+      <par name="node_mag" val="1"/>
+      
+    
+      <par name="outlinewidth" val="1"/>
+      
+    
+      <par name="cell_outline_color" val="forestgreen"/>
+      
+    
+      <par name="resize_stride" val="10"/>
+      
+    
+      <par name="export_interval" val="0"/>
+      
+    
+      <par name="export_fn_prefix" val="cell."/>
+      
+    
+      <par name="storage_stride" val="100"/>
+      
+    
+      <par name="xml_storage_stride" val="500"/>
+      
+    
+      <par name="datadir" val="auxin_growth"/>
+      
+    
+      <par name="T" val="1"/>
+      
+    
+      <par name="lambda_length" val="100"/>
+      
+    
+      <par name="yielding_threshold" val="4"/>
+      
+    
+      <par name="lambda_celllength" val="0"/>
+      
+    
+      <par name="target_length" val="60"/>
+      
+    
+      <par name="cell_expansion_rate" val="10"/>
+      
+    
+      <par name="cell_div_expansion_rate" val="10"/>
+      
+    
+      <par name="auxin_dependent_growth" val="true"/>
+      
+    
+      <par name="ode_accuracy" val="0.0001"/>
+      
+    
+      <par name="mc_stepsize" val="0.4"/>
+      
+    
+      <par name="mc_cell_stepsize" val="0.2"/>
+      
+    
+      <par name="energy_threshold" val="1000"/>
+      
+    
+      <par name="bend_lambda" val="0"/>
+      
+    
+      <par name="alignment_lambda" val="0"/>
+      
+    
+      <par name="rel_cell_div_threshold" val="2"/>
+      
+    
+      <par name="rel_perimeter_stiffness" val="2"/>
+      
+    
+      <par name="collapse_node_threshold" val="0.05"/>
+      
+    
+      <par name="morphogen_div_threshold" val="0.2"/>
+      
+    
+      <par name="morphogen_expansion_threshold" val="0.01"/>
+      
+    
+      <par name="copy_wall" val="true"/>
+      
+    
+      <par name="source" val="0"/>
+      
+    
+      <par name="D">
+         
+      
+         <valarray>
+            
+        
+            <val v="1e-06"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+      
+         </valarray>
+         
+    
+      </par>
+      
+    
+      <par name="initval">
+         
+      
+         <valarray>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="1"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+      
+         </valarray>
+         
+    
+      </par>
+      
+    
+      <par name="k1" val="1"/>
+      
+    
+      <par name="k2" val="0.3"/>
+      
+    
+      <par name="r" val="1"/>
+      
+    
+      <par name="kr" val="1"/>
+      
+    
+      <par name="km" val="1"/>
+      
+    
+      <par name="Pi_tot" val="1"/>
+      
+    
+      <par name="transport" val="0.36"/>
+      
+    
+      <par name="ka" val="1"/>
+      
+    
+      <par name="pin_prod" val="0"/>
+      
+    
+      <par name="pin_prod_in_epidermis" val="0"/>
+      
+    
+      <par name="pin_breakdown" val="0"/>
+      
+    
+      <par name="pin_breakdown_internal" val="0.001"/>
+      
+    
+      <par name="aux1prod" val="0.001"/>
+      
+    
+      <par name="aux1prodmeso" val="0"/>
+      
+    
+      <par name="aux1decay" val="0.001"/>
+      
+    
+      <par name="aux1decaymeso" val="0.1"/>
+      
+    
+      <par name="aux1transport" val="0.036"/>
+      
+    
+      <par name="aux_cons" val="0"/>
+      
+    
+      <par name="aux_breakdown" val="0.0001"/>
+      
+    
+      <par name="kaux1" val="1"/>
+      
+    
+      <par name="kap" val="1"/>
+      
+    
+      <par name="leaf_tip_source" val="0.0001"/>
+      
+    
+      <par name="sam_efflux" val="0.0001"/>
+      
+    
+      <par name="sam_auxin" val="10"/>
+      
+    
+      <par name="sam_auxin_breakdown" val="0"/>
+      
+    
+      <par name="van3prod" val="0.002"/>
+      
+    
+      <par name="van3autokat" val="0.1"/>
+      
+    
+      <par name="van3sat" val="10"/>
+      
+    
+      <par name="k2van3" val="0.3"/>
+      
+    
+      <par name="dt" val="0.1"/>
+      
+    
+      <par name="rd_dt" val="10"/>
+      
+    
+      <par name="movie" val="true"/>
+      
+    
+      <par name="nit" val="100000"/>
+      
+    
+      <par name="maxt" val="1e+06"/>
+      
+    
+      <par name="rseed" val="-1"/>
+      
+    
+      <par name="constituous_expansion_limit" val="16"/>
+      
+    
+      <par name="vessel_inh_level" val="1"/>
+      
+    
+      <par name="vessel_expansion_rate" val="0.25"/>
+      
+    
+      <par name="d" val="0"/>
+      
+    
+      <par name="e" val="0"/>
+      
+    
+      <par name="f" val="0"/>
+      
+    
+      <par name="c" val="0"/>
+      
+    
+      <par name="mu" val="0"/>
+      
+    
+      <par name="nu" val="0"/>
+      
+    
+      <par name="rho0" val="0"/>
+      
+    
+      <par name="rho1" val="0"/>
+      
+    
+      <par name="c0" val="0"/>
+      
+    
+      <par name="gamma" val="0"/>
+      
+    
+      <par name="eps" val="0"/>
+      
+    
+      <par name="k">
+         
+      
+         <valarray>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+        
+            <val v="0"/>
+            
+      
+         </valarray>
+         
+    
+      </par>
+      
+    
+      <par name="i1" val="0"/>
+      
+    
+      <par name="i2" val="0"/>
+      
+    
+      <par name="i3" val="0"/>
+      
+    
+      <par name="i4" val="0"/>
+      
+    
+      <par name="i5" val="0"/>
+      
+    
+      <par name="s1" val=""/>
+      
+    
+      <par name="s2" val=""/>
+      
+    
+      <par name="s3" val=""/>
+      
+    
+      <par name="b1" val="false"/>
+      
+    
+      <par name="b2" val="false"/>
+      
+    
+      <par name="b3" val="false"/>
+      
+    
+      <par name="b4" val="false"/>
+      
+    
+      <par name="dir1" val="."/>
+      
+    
+      <par name="dir2" val="."/>
+      
+  
+   </parameter>
+   
+  
+   <nodes n="36" target_length="3.09017">
+      <node nr="0" x="-1.03184396" y="100.480352" sam="false" boundary="false" fixed="false"/>
+      <node nr="1" x="-0.7582561" y="115.345258" sam="false" boundary="true" fixed="false"/>
+      <node nr="2" x="3.4367477899999996" y="115.52765" sam="false" boundary="false" fixed="false"/>
+      <node nr="3" x="2.70718203" y="100.206764" sam="false" boundary="false" fixed="false"/>
+      <node nr="4" x="-5.135651289999999" y="100.845136" sam="false" boundary="false" fixed="false"/>
+      <node nr="5" x="-5.18124789" y="116.16601499999999" sam="false" boundary="false" fixed="false"/>
+      <node nr="6" x="-8.0696385" y="98.702702" sam="false" boundary="true" fixed="false"/>
+      <node nr="7" x="-10.713528" y="100.95968399999998" sam="false" boundary="true" fixed="false"/>
+      <node nr="8" x="-9.488311" y="105.022246" sam="false" boundary="true" fixed="false"/>
+      <node nr="9" x="-5.1678085199999995" y="104.50636699999998" sam="false" boundary="false" fixed="false"/>
+      <node nr="10" x="-12.132200499999998" y="109.08480799999998" sam="false" boundary="true" fixed="false"/>
+      <node nr="11" x="-8.456549499999998" y="112.11560499999997" sam="false" boundary="true" fixed="false"/>
+      <node nr="12" x="-5.232293639999999" y="112.88942699999997" sam="false" boundary="false" fixed="false"/>
+      <node nr="13" x="-13.0349919" y="115.597804" sam="false" boundary="true" fixed="false"/>
+      <node nr="14" x="-12.325656" y="119.080003" sam="false" boundary="true" fixed="false"/>
+      <node nr="15" x="-8.8434598" y="121.788373" sam="false" boundary="true" fixed="false"/>
+      <node nr="16" x="-4.651927630000001" y="119.337939" sam="false" boundary="true" fixed="false"/>
+      <node nr="17" x="0.4423961639999996" y="118.69309200000001" sam="false" boundary="true" fixed="false"/>
+      <node nr="18" x="-2.5239189500000005" y="121.98183200000001" sam="false" boundary="true" fixed="false"/>
+      <node nr="19" x="0.82930526" y="120.04727699999998" sam="false" boundary="true" fixed="false"/>
+      <node nr="20" x="5.1498092799999995" y="121.20800999999997" sam="false" boundary="true" fixed="false"/>
+      <node nr="21" x="7.9226693" y="118.43514899999998" sam="false" boundary="true" fixed="false"/>
+      <node nr="22" x="5.85914553" y="115.98471499999998" sam="false" boundary="true" fixed="false"/>
+      <node nr="23" x="11.1469246" y="112.76045899999998" sam="false" boundary="true" fixed="false"/>
+      <node nr="24" x="10.3086179" y="107.859591" sam="false" boundary="true" fixed="false"/>
+      <node nr="25" x="5.66569017" y="105.15121399999998" sam="false" boundary="true" fixed="false"/>
+      <node nr="26" x="2.9573154800000006" y="104.44187599999998" sam="false" boundary="false" fixed="false"/>
+      <node nr="27" x="11.0179545" y="105.796068" sam="false" boundary="true" fixed="false"/>
+      <node nr="28" x="14.2422098" y="102.82974800000002" sam="false" boundary="true" fixed="false"/>
+      <node nr="29" x="15.596397599999998" y="98.25130700000003" sam="false" boundary="true" fixed="false"/>
+      <node nr="30" x="10.9534691" y="93.09250300000002" sam="false" boundary="true" fixed="false"/>
+      <node nr="31" x="4.311502859999999" y="91.35140000000003" sam="false" boundary="true" fixed="false"/>
+      <node nr="32" x="2.1834941799999994" y="97.41300100000004" sam="false" boundary="true" fixed="false"/>
+      <node nr="33" x="-0.9762762800000002" y="91.286916" sam="false" boundary="true" fixed="false"/>
+      <node nr="34" x="-5.748174530000001" y="91.22244600000002" sam="false" boundary="true" fixed="false"/>
+      <node nr="35" x="-9.101400000000002" y="94.70462400000001" sam="false" boundary="true" fixed="false"/>
+   </nodes>
+   <cells n="11" magnfication="1" nchem="4" offsetx="0" offsety="0" base_area="0">
+      <cell boundary="2" cell_type="1" target_area="60.26785150288441" lambda_celllength="0" at_boundary="true" dead="false" target_length="19.491608946817834" stiffness="1" index="0" source="false" pin_fixed="false" area="60.26785150288441" fixed="false" div_counter="0">
+         <node n="0"/>
+         <node n="3"/>
+         <node n="26"/>
+         <node n="2"/>
+         <node n="1"/>
+         <wall w="0"/>
+         <wall w="1"/>
+         <wall w="2"/>
+         <wall w="15"/>
+         <wall w="17"/>
+         <chem n="2">
+            <val v="2.251808"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="2" cell_type="1" target_area="64.4146044902202" lambda_celllength="0" at_boundary="true" dead="false" target_length="19.657823251491273" stiffness="1" index="1" source="false" pin_fixed="false" area="64.4146044902202" fixed="false" div_counter="0">
+         <node n="0"/>
+         <node n="1"/>
+         <node n="5"/>
+         <node n="4"/>
+         <wall w="0"/>
+         <wall w="3"/>
+         <wall w="4"/>
+         <wall w="5"/>
+         <chem n="2">
+            <val v="2.251808"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="0" cell_type="2" target_area="25.444449786793943" lambda_celllength="0" at_boundary="false" dead="false" target_length="11.00372242340861" stiffness="1" index="2" source="false" pin_fixed="false" area="25.444449786793943" fixed="false" div_counter="0">
+         <node n="4"/>
+         <node n="9"/>
+         <node n="8"/>
+         <node n="7"/>
+         <node n="6"/>
+         <wall w="6"/>
+         <wall w="7"/>
+         <wall w="8"/>
+         <chem n="2">
+            <val v="0.8"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="0" cell_type="2" target_area="40.60191100947117" lambda_celllength="0" at_boundary="false" dead="false" target_length="13.14959440861025" stiffness="1" index="3" source="false" pin_fixed="false" area="40.60191100947117" fixed="false" div_counter="0">
+         <node n="9"/>
+         <node n="12"/>
+         <node n="11"/>
+         <node n="10"/>
+         <node n="8"/>
+         <wall w="7"/>
+         <wall w="9"/>
+         <wall w="10"/>
+         <chem n="2">
+            <val v="0.8"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="0" cell_type="2" target_area="55.75459503339565" lambda_celllength="0" at_boundary="false" dead="false" target_length="20.20408119585007" stiffness="1" index="4" source="false" pin_fixed="false" area="55.75459503339565" fixed="false" div_counter="0">
+         <node n="12"/>
+         <node n="5"/>
+         <node n="16"/>
+         <node n="15"/>
+         <node n="14"/>
+         <node n="13"/>
+         <node n="11"/>
+         <wall w="9"/>
+         <wall w="11"/>
+         <wall w="12"/>
+         <chem n="2">
+            <val v="0.8"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="0" cell_type="2" target_area="23.56705578307436" lambda_celllength="0" at_boundary="false" dead="false" target_length="11.229863194712024" stiffness="1" index="5" source="false" pin_fixed="false" area="23.56705578307436" fixed="false" div_counter="0">
+         <node n="5"/>
+         <node n="1"/>
+         <node n="17"/>
+         <node n="18"/>
+         <node n="16"/>
+         <wall w="5"/>
+         <wall w="11"/>
+         <chem n="2">
+            <val v="0.8"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="0" cell_type="2" target_area="33.741363273984916" lambda_celllength="0" at_boundary="false" dead="false" target_length="14.47517530025414" stiffness="1" index="6" source="false" pin_fixed="false" area="33.741363273984916" fixed="false" div_counter="0">
+         <node n="1"/>
+         <node n="2"/>
+         <node n="22"/>
+         <node n="21"/>
+         <node n="20"/>
+         <node n="19"/>
+         <wall w="1"/>
+         <wall w="13"/>
+         <chem n="2">
+            <val v="0.8"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="0" cell_type="2" target_area="67.11590581509928" lambda_celllength="0" at_boundary="false" dead="false" target_length="17.506583600895315" stiffness="1" index="7" source="false" pin_fixed="false" area="67.11590581509928" fixed="false" div_counter="0">
+         <node n="2"/>
+         <node n="26"/>
+         <node n="25"/>
+         <node n="24"/>
+         <node n="23"/>
+         <node n="22"/>
+         <wall w="13"/>
+         <wall w="14"/>
+         <wall w="15"/>
+         <chem n="2">
+            <val v="0.8"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="0" cell_type="2" target_area="140.59454416091955" lambda_celllength="0" at_boundary="false" dead="false" target_length="27.135161155848795" stiffness="1" index="8" source="false" pin_fixed="false" area="140.59454416091955" fixed="false" div_counter="0">
+         <node n="26"/>
+         <node n="3"/>
+         <node n="32"/>
+         <node n="31"/>
+         <node n="30"/>
+         <node n="29"/>
+         <node n="28"/>
+         <node n="27"/>
+         <node n="25"/>
+         <wall w="14"/>
+         <wall w="16"/>
+         <wall w="17"/>
+         <chem n="2">
+            <val v="0.8"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="0" cell_type="3" target_area="83.742703998988" lambda_celllength="0" at_boundary="false" dead="false" target_length="19.217508245396566" stiffness="1" index="9" source="false" pin_fixed="false" area="83.742703998988" fixed="false" div_counter="0">
+         <node n="3"/>
+         <node n="0"/>
+         <node n="4"/>
+         <node n="6"/>
+         <node n="35"/>
+         <node n="34"/>
+         <node n="33"/>
+         <node n="32"/>
+         <wall w="2"/>
+         <wall w="3"/>
+         <wall w="6"/>
+         <wall w="16"/>
+         <chem n="2">
+            <val v="1.9"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <cell boundary="2" cell_type="1" target_area="0.4824740498780616" lambda_celllength="0" at_boundary="true" dead="false" target_length="18.385715212802427" stiffness="1" index="10" source="false" pin_fixed="false" area="0.4824740498780616" fixed="false" div_counter="0">
+         <node n="4"/>
+         <node n="5"/>
+         <node n="12"/>
+         <node n="9"/>
+         <wall w="4"/>
+         <wall w="8"/>
+         <wall w="10"/>
+         <wall w="12"/>
+         <chem n="2">
+            <val v="2.251808"/>
+            <val v="0.481961"/>
+         </chem>
+      </cell>
+      <boundary_polygon boundary="0" cell_type="0" target_area="595.7274589047095" lambda_celllength="0" at_boundary="true" dead="false" target_length="59.68120321392412" stiffness="1" index="-1" source="false" pin_fixed="false" area="595.7274589047095" fixed="false" div_counter="0">
+         <node n="6"/>
+         <node n="35"/>
+         <node n="34"/>
+         <node n="33"/>
+         <node n="32"/>
+         <node n="31"/>
+         <node n="30"/>
+         <node n="29"/>
+         <node n="28"/>
+         <node n="27"/>
+         <node n="25"/>
+         <node n="24"/>
+         <node n="23"/>
+         <node n="22"/>
+         <node n="21"/>
+         <node n="20"/>
+         <node n="19"/>
+         <node n="1"/>
+         <node n="17"/>
+         <node n="18"/>
+         <node n="16"/>
+         <node n="15"/>
+         <node n="14"/>
+         <node n="13"/>
+         <node n="11"/>
+         <node n="10"/>
+         <node n="8"/>
+         <node n="7"/>
+      </boundary_polygon>
+   </cells>
+   <walls n="46">
+      <wall length="14.867423472342999" c1="0" c2="1" index="0" n1="0" n2="1" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="4.198967072838167" c1="0" c2="6" index="1" n1="1" n2="2" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="3.749021972146799" c1="0" c2="9" index="2" n1="3" n2="0" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="4.119988102946139" c1="1" c2="9" index="3" n1="0" n2="4" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="15.320946850066816" c1="1" c2="10" index="4" n1="4" n2="5" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="4.498499575131288" c1="1" c2="5" index="5" n1="5" n2="1" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="3.6329470671618056" c1="2" c2="9" index="6" n1="4" n2="6" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="4.351192115079172" c1="2" c2="3" index="7" n1="8" n2="9" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="3.661372218554428" c1="2" c2="10" index="8" n1="9" n2="4" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="3.3158145814306814" c1="3" c2="4" index="9" n1="11" n2="12" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="8.383308016189146" c1="3" c2="10" index="10" n1="12" n2="9" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="3.2157863423154502" c1="4" c2="5" index="11" n1="16" n2="5" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="3.2769855950762405" c1="4" c2="10" index="12" n1="5" n2="12" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="2.465140812404455" c1="6" c2="7" index="13" n1="22" n2="2" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="2.7997238898999663" c1="7" c2="8" index="14" n1="25" n2="26" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="11.096136287868326" c1="7" c2="0" index="15" n1="26" n2="2" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="2.842421619747228" c1="8" c2="9" index="16" n1="32" n2="3" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+      <wall length="4.242492238690917" c1="8" c2="0" index="17" n1="3" n2="26" wall_type="normal" viz_flux="0">
+         <transporters1/>
+         <transporters2/>
+      </wall>
+   </walls>
+   <nodesets n="0"/>
+   
+  
+   <settings>
+      
+    
+      <setting name="show_cell_centers" val="false"/>
+      
+    
+      <setting name="show_nodes" val="false"/>
+      
+    
+      <setting name="show_node_numbers" val="false"/>
+      
+    
+      <setting name="show_cell_numbers" val="false"/>
+      
+    
+      <setting name="show_border_cells" val="false"/>
+      
+    
+      <setting name="show_cell_axes" val="false"/>
+      
+    
+      <setting name="show_cell_strain" val="false"/>
+      
+    
+      <setting name="show_fluxes" val="true"/>
+      
+    
+      <setting name="show_walls" val="true"/>
+      
+    
+      <setting name="save_movie_frames" val="false"/>
+      
+    
+      <setting name="show_only_leaf_boundary" val="false"/>
+      
+    
+      <setting name="cell_growth" val="true"/>
+      
+    
+      <setting name="hide_cells" val="false"/>
+      
+    
+      <viewport m11="8.83883" m12="0" m21="0" m22="8.83883" dx="0" dy="0"/>
+      
+  
+   </settings>
+   
+
+</leaf>
