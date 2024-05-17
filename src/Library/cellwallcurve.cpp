@@ -185,6 +185,9 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 		if (c1->flag_for_divide||c2->flag_for_divide||c3->flag_for_divide) {
 			return false;
 		}
+		if (c1==c2 || c2==c3||c1==c3) {
+			return false;
+		}
 		NodeBase * a = longerWall();
 		NodeBase * b = a == to? from : to;
 		NodeBase * c = over;

@@ -627,12 +627,27 @@ bool Mesh::findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,
 }
 double lambda_for_shift=0.1;
 
+double getBaseLength(CellBase* c,NodeBase* n1, NodeBase * n2) {
+	WallElement* wallElement = n1->getWallElement(c);
+	if (wallElement == NULL) {
+		return ((*n1)-(*n2)).Norm();
+	}else {
+		return wallElement->getBaseLength();
+	}
+}
+
 void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
 
 	Node * o0;
 	Node * o1;
 	Node * o2;
 	Node * o3;
+	double angle = (*w1-*w2).SignedAngle((*w3-*w2));
+	if (angle>0&&c->BoundaryPolP()||angle<0&&!c->BoundaryPolP()) {
+		//we would bend inward and intersect cells
+		return;
+	}
+
 	CellBase* c2 = getOtherCell(c,w1,w2);
 	if (c2 != NULL && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
 //now check how profitable the move of wall element w1-w2 to w1-w3
@@ -662,8 +677,37 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 				1./(r5)+
 				1./((ccRadius(*o0,*o1,*w3)))+
 				1./((ccRadius(*w3,*o2,*o3)));
+
+		double length_before =
+				((*w0)-(*w1)).Norm()+
+				((*w1)-(*w2)).Norm()+
+				((*w2)-(*w3)).Norm()+
+				((*w3)-(*w4)).Norm()+
+				((*o0)-(*o1)).Norm()+
+				((*o1)-(*o2)).Norm()+
+				((*o2)-(*o3)).Norm();
+
+		double length_base =
+				getBaseLength(c, w0, w1)+
+				getBaseLength(c, w1, w2)+
+				getBaseLength(c, w2, w3)+
+				getBaseLength(c, w3, w4)+
+				getBaseLength(c2, o0, o1)+
+				getBaseLength(c2, o1, o2)+
+				getBaseLength(c2, o2, o3);
+
+		double length_after =
+				((*w0)-(*w1)).Norm()+
+				((*w1)-(*w3)).Norm()+
+				((*w3)-(*w4)).Norm()+
+				((*o0)-(*o1)).Norm()+
+				((*o1)-(*w3)).Norm()+
+				((*w3)-(*o2)).Norm()+
+				((*o2)-(*o3)).Norm();
+
 		double dh = exp(energy_after-energy_before*1.5+12.);
 		if (RANDOM() > dh)		{
+
 			CellWallCurve curve;
 			curve.setCell(c);
 			curve.shift(w1);
@@ -676,8 +720,6 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 				it->check_overlap(curve);
 			}
 			curves.push_back(curve);
-
-			double angle = (*w1-*w2).Angle((*w3-*w2));
 			if (debugNode>-1){
 				cout << "#" << dh << "#";
 				cout << "move-1  " << w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<<(energy_after-energy_before)<<"\n";
@@ -710,7 +752,9 @@ void Mesh::SlideCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
 	//		baseLength += wallElementInfo->getBaseLength();
 	//		length += wallElementInfo->getLength();
 	//	});
-
+if (c->nodes.size()<5) {
+	return;
+}
 	list <Node *>::iterator i=c->nodes.begin();
 	Node * w0=*i;
 	Node * w1=*(++i);
