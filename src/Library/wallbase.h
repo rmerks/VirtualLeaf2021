@@ -31,6 +31,7 @@
 #include "vector.h"
 
 class Node;
+class NodeBase;
 class CellBase;
 
 using namespace std;
@@ -132,7 +133,7 @@ class WallBase {
   inline double Transporters1(int ch) { return transporters1[ch]; }
   inline double Transporters2(int ch) { return transporters2[ch]; }
   void calculateDirectWallStiffNess(Node* nb, double* stiffness, int* count_p);
-  inline void replaceNode(Node* oldN, Node* newN) {if (oldN ==n1) n1=newN; else if (oldN ==n2) n2=newN;};
+  void replaceNode(NodeBase* oldN, NodeBase* newN);
   //! Return true if the WallBase adheres to the SAM (shoot apical meristem)
   bool SAM_P(void);
   // NB. Not checked. If cell is not found, it returns transporters2[ch]!!
@@ -194,6 +195,7 @@ class WallBase {
   Vector VizFlux(void);
   bool IntersectsWithDivisionPlaneP(const Vector &p1, const Vector &p2);
   void SetTransToNewTrans( void );
+  bool isHasStartOrEnd(Node * node);
 
  private:
 };

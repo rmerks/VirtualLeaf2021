@@ -31,7 +31,7 @@ WallElement* WallElementInfo::getWallElement(){
 void WallElementInfo::divide(WallElementInfo* other,double ratio){
 	other->getWallElement()->setStiffness(wallElement->getStiffness());
 	double length = wallElement->getBaseLength();
-    other->getWallElement()->setBaseLength(length*ratio);
+	other->getWallElement()->setBaseLength(length*ratio);
     wallElement->setBaseLength(length*(1.-ratio));
     other->setLength();
     setLength();
@@ -58,13 +58,13 @@ double WallElementInfo::calcLength() const{
 }
 
 void WallElementInfo::updateFrom(WallElementInfo* original,double ratio) {
-    double stiffness = original->stiffness();
+	double stiffness = original->stiffness();
     double base_length = original->stiffness();
     if (!isnan(stiffness)) {
-        this->getWallElement()->setStiffness(stiffness);
+    	this->getWallElement()->setStiffness(stiffness);
     }
     if (!isnan(base_length)) {
-        this->getWallElement()->setBaseLength(base_length*ratio);
+    	this->getWallElement()->setBaseLength(base_length*ratio);
     } else {
         updateBaseLength();
     }

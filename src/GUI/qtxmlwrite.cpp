@@ -130,13 +130,6 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
   }
 
   {
-   // ostringstream text;
-    //text << stiffness;
-    //xmlNewProp(xmlcell, BAD_CAST "stiffness", BAD_CAST text.str().c_str());
-         xmlcell.setAttribute("stiffness",standardlocale.toString(stiffness));
-  }
-
-  {
     //ostringstream text;
     //text << bool_name(fixed);
     //xmlNewProp(xmlcell, BAD_CAST "fixed", BAD_CAST text.str().c_str());
@@ -525,20 +518,6 @@ if (v_node.tagName() == "val") {
 
     }
   }
-
-  {
-    QString v_str = cur.attribute("stiffness");
-
-    if (v_str.isEmpty()) {
-      unique_warning("Token \"stiffness\" not found in xmlwrite.cpp at or around line no. 1063");
-    }
-     else {
-      stiffness=standardlocale.toDouble(v_str, &ok);
-      if (!ok) MyWarning::error("Could not convert \"%s\" to double in XMLRead.",qPrintable(v_str));
-
-    }
-  }
-
 
   {
     QString v_str = cur.attribute("fixed");
@@ -1058,6 +1037,7 @@ void Mesh::XMLReadPars(const QDomElement &a_node)
   par.XMLRead(root_node);
   Seed(par.rseed);
   MakeDir(par.datadir);
+  CompatibilityLevel(par.compatibility_level);
 }
 
 void Mesh::XMLReadGeometry(const QDomElement root_node)

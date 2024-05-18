@@ -74,6 +74,12 @@ template<class T, class C = deque<T> > class unique_queue : public queue<T,C> {
 
 template<class P> P& deref_ptr ( P *obj) { return *obj; }
 
+class DeltaIntgrl;
+
+
+#define WALL_STIFFNESS_HAMILTONIAN 1
+#define WALL_SLIDING 3
+
 
 class Mesh {
 
@@ -213,25 +219,41 @@ class Mesh {
     }
   }
 
-  void DoCellHouseKeeping(void) {
+  void DoCellHouseKeeping(list<CellWallCurve> curves) {
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
-	 i != current_cells.end();
-	 i ++) {
-      plugin->CellHouseKeeping(*i);
-
-      // Call functions of Cell that cannot be called from CellBase, including Division
-      if ((*i)->flag_for_divide) {
-	if ((*i)->division_axis) {
-	  (*i)->DivideOverAxis(*(*i)->division_axis);
-	  delete (*i)->division_axis;
-	  (*i)->division_axis = 0;
-	} else {
-	  (*i)->Divide();
-	}
-	(*i)->flag_for_divide=false;
-      }
+    		i != current_cells.end();
+    		i ++) {
+    	plugin->CellHouseKeeping(*i);
     }
+
+    for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
+    	if (it->removeSpike()){
+    		bool anyBorderSpikeRemoved=it->isBorderCase();
+        		cout << ' ' << it->getCell()->Index() << '\n';
+
+            if (anyBorderSpikeRemoved) {
+            	RepairBoundaryPolygon();
+           	}
+        }
+    }
+
+    for (vector<Cell *>::iterator i = current_cells.begin();
+    		i != current_cells.end();
+    		i ++) {
+		// Call functions of Cell that cannot be called from CellBase, including Division
+		if ((*i)->flag_for_divide) {
+			if ((*i)->division_axis) {
+				(*i)->DivideOverAxis(*(*i)->division_axis);
+				delete (*i)->division_axis;
+				(*i)->division_axis = 0;
+			} else {
+				(*i)->Divide();
+			}
+			(*i)->flag_for_divide=false;
+		}
+    }
+
   }
 
   // Apply "f" to cell i
@@ -241,12 +263,16 @@ class Mesh {
     f(cells[i]);
   }
 
+  double SlideWallElements(list<CellWallCurve> & curves);
   double DisplaceNodes(void);
   double CalculateDeltaA(Vector &new_p, Vector &old_p, Vector &i_min_1, Vector &i_plus_1);
   double getNormA(Vector &p);
   void WallRelaxation(void);
-  void WallCollapse(void);
-
+  void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
+  void PotentialSlideAngle(double potential_slide_angle) {this->potential_slide_angle=potential_slide_angle;}
+  void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
+  bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
+  bool activateWallSliding() {return (this->compatibility_level & WALL_SLIDING) != 0;}
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);
   int NEqs(void) {     int nwalls = walls.size();
@@ -417,6 +443,9 @@ class Mesh {
   vector<Cell *> cells;
   vector<Node *> nodes;
   list<Wall *> walls; // we need to erase elements from this container frequently, hence a list.
+  int compatibility_level;
+  double elastic_modulus;
+  double potential_slide_angle;
  public:
   vector<NodeSet *> node_sets;
  private:
@@ -432,6 +461,10 @@ class Mesh {
   void AddNodeToCell(Cell *c, Node *n, Node *nb1 , Node *nb2);
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);
+  CellBase * getOtherCell(CellBase* c,Node* node1,Node * node2);
+  void SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
+  void SlideCellWallElements(list<CellWallCurve> & curves,CellBase *c);
+  bool findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
   inline Node *AddNode(Node *n) {
     nodes.push_back(n);
     shuffled_nodes.push_back(n);
@@ -452,6 +485,8 @@ class Mesh {
   void CircumCircle(double x1,double y1,double x2,double y2,double x3,double y3,
 		    double *xc,double *yc,double *r);
   void calculateWallStiffness(CellBase *c,Node* node, double *w_p1,double *w_p2, double *bl_minus_1, double *bl_plus_1);
+
+  void updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node);
 };
 #endif
 

@@ -23,6 +23,8 @@ public:
 
 	double getStiffness() {return this->stiffness;};
 
+	CellBase * getCell() {return this->cell;};
+
 	void setBaseLength(double base_length) {this->base_length=base_length;};
 
 	double getBaseLength() {return this->base_length;};

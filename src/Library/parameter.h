@@ -113,6 +113,9 @@
   double k2van3;
   double dt;
   double rd_dt;
+  double elastic_modulus;
+  double potential_slide_angle;
+  int compatibility_level;
   bool movie;
   int nit;
   double maxt;

@@ -62,6 +62,7 @@ HEADERS = \
  UniqueMessage.h \
  vector.h \
  nodebase.h \
+ cellwallcurve.h \
  wallbase.h \
  wallelement.h \
  wallelementinfo.h \
@@ -80,6 +81,7 @@ SOURCES = \
  UniqueMessage.cpp \
  vector.cpp \
  nodebase.cpp \
+ cellwallcurve.cpp \
  wallbase.cpp \
  wallelement.cpp \
  wallelementinfo.cpp \

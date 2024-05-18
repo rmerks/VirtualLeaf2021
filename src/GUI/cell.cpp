@@ -774,7 +774,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 	neighbor_cell = c->cell;
 	if (c->cell == NULL) {
 		cout << "error";
-	}
+	} else
 	if (!c->cell->BoundaryPolP()) {
 
 	  // find correct position in the cells node list
@@ -1022,6 +1022,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 
   // note that wall nodes need to run in inverse order in parent
   list<Node *>::iterator ins_pos = daughter->nodes.end();
+
   for (int i=1;i<=n;i++) {
     Node *node=
       m->AddNode( new Node( new_node[0] + i*element_length*nodevec ) );
@@ -1129,6 +1130,12 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
   ConstructNeighborList();
   daughter->ConstructNeighborList();
 
+  	/**
+     * Here we reconnect the wall elements if they got lose ends, if both ends are lose then
+     * the original wall has to be deleted.
+     *
+     * Important we need to distribute the properties over the newly created walls.
+     */
 	bool n1Connected;
 	bool n2Connected;
 	checkCellLooseWallEnds(wall,n1Connected,n2Connected);
@@ -1154,56 +1161,56 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 		attachFreeWallEnd(cellWithOtherWalls,cellWithSingleWalls,wall,wall->N2());
 	}
 
-  this->splittWallElementsBetween(new_node_ind[0],  daughter);
+    this->splittWallElementsBetween(new_node_ind[0],  daughter);
 
-  this->splittWallElementsBetween(new_node_ind[1], daughter);
+	this->splittWallElementsBetween(new_node_ind[1], daughter);
 
-  m->plugin->OnDivide(&parent_info, daughter, this);
+	m->plugin->OnDivide(&parent_info, daughter, this);
 
-  daughter->div_counter=(++div_counter);
+	daughter->div_counter=(++div_counter);
 }
 
 void Cell::findBeforeAfter(Node * node, Node ** before, Node**after) {
-  for (list<Node *>::iterator i=this->nodes.begin(); i!=this->nodes.end(); i++) {
-        list<Node *>::const_iterator next=i;
-        next++;
-        if (next == this->nodes.end()) {
-                next = this->nodes.begin();
-        }
-        if (*next == node) {
-                (*before) = *i;
-        }
-        if (*i == node) {
-                (*after) = *next;
-        }
-  }
+	for (list<Node *>::iterator i=this->nodes.begin(); i!=this->nodes.end(); i++) {
+	    list<Node *>::const_iterator next=i;
+	    next++;
+	    if (next == this->nodes.end()) {
+	      next = this->nodes.begin();
+	    }
+	    if (*next == node) {
+	    	(*before) = *i;
+	    }
+	    if (*i == node) {
+	    	(*after) = *next;
+	    }
+	}
 }
 
 Cell* Cell::findOtherCell(Cell*other,  Node * node,  Node * node2) {
-  for (list<Neighbor>::const_iterator n=node->owners.begin(); n!=node->owners.end(); n++) {
-        if (n->cell != this && n->cell != other) {
-                return n->cell;
-        }
-  }
-  if (other== NULL) {
-        for (list<Neighbor>::const_iterator n=node2->owners.begin(); n!=node2->owners.end(); n++) {
-                if (n->cell != this && n->cell != other) {
-    return n->cell;
-                }
-        }
-  }
-  return NULL;
+	for (list<Neighbor>::const_iterator n=node->owners.begin(); n!=node->owners.end(); n++) {
+		if (n->cell != this && n->cell != other) {
+			return n->cell;
+		}
+	}
+	if (other== NULL) {
+		for (list<Neighbor>::const_iterator n=node2->owners.begin(); n!=node2->owners.end(); n++) {
+		   if (n->cell != this && n->cell != other) {
+			   return n->cell;
+		   }
+	   }
+	}
+	return NULL;
 }
 
 /**
  * find neighbour cell for splittWallElementsBetween
  */
 Cell* Cell::findNeighbourCellOnDivide(Cell* daughter,Node* node,Node * before1,Node * after1 ,Node * before2,Node * after2) {
-  Cell* other = findOtherCell(daughter, before1, after2);
-  if (other == NULL) {
-        other = findOtherCell(daughter, after1, before2);
-  }
-  return other;
+	Cell* other = findOtherCell(daughter, before1, after2);
+	if (other == NULL) {
+		other = findOtherCell(daughter, after1, before2);
+	}
+	return other;
 }
 /**
  *          o before1
@@ -1229,77 +1236,71 @@ Cell* Cell::findNeighbourCellOnDivide(Cell* daughter,Node* node,Node * before1,N
  *              o before2
  *
  */
-
 void Cell::splittWallElementsBetween(Node* node, Cell* daughter) {
-  Node * before1 = NULL;
-  Node * after1 = NULL;
-  findBeforeAfter(node,&before1,&after1);
-  Node * before2 = NULL;
-  Node * after2 = NULL;
-  this->findBeforeAfter(node, &before1, &after1);
-  daughter->findBeforeAfter(node, &before2, &after2);
+	Node * before1 = NULL;
+	Node * after1 = NULL;
+	Node * before2 = NULL;
+	Node * after2 = NULL;
+	this->findBeforeAfter(node, &before1, &after1);
+	daughter->findBeforeAfter(node, &before2, &after2);
 
-  // find the other node on the outside of the split
-  Cell* other = findNeighbourCellOnDivide(daughter, node, before1, after1, before2, after2);
+	// find the other node on the outside of the split
+	Cell* other = findNeighbourCellOnDivide(daughter, node, before1, after1, before2, after2);
 
-  // get wall element info of the walls that are now splitt.
-  WallElementInfo oldInfoB1ToA2_B2A1;
-  WallElementInfo oldInfoA2ToB1_A1B2;
-  this->fillWallElementInfo(&oldInfoB1ToA2_B2A1, before1, after2);
-  bool reverse = false;
-  if (oldInfoB1ToA2_B2A1.hasWallElement()) {
-        other->fillWallElementInfo(&oldInfoA2ToB1_A1B2, after2, before1);
-  } else {
-        this->fillWallElementInfo(&oldInfoB1ToA2_B2A1, before2, after1);
-        other->fillWallElementInfo(&oldInfoA2ToB1_A1B2, after1, before2);
-        reverse=true;
-  }
-  //save a backup of the data to distribute the data over the new parts.
-  WallElement weB1A2_B2A1= *(oldInfoB1ToA2_B2A1.getWallElement());
-  oldInfoB1ToA2_B2A1.setWallElement(&weB1A2_B2A1);
-  WallElement weA2B1_A1B2= *(oldInfoA2ToB1_A1B2.getWallElement());
-  oldInfoA2ToB1_A1B2.setWallElement(&weA2B1_A1B2);
+	// get wall element info of the walls that are now splitt.
+	WallElementInfo oldInfoB1ToA2_B2A1;
+	WallElementInfo oldInfoA2ToB1_A1B2;
+	this->fillWallElementInfo(&oldInfoB1ToA2_B2A1, before1, after2);
+	bool reverse = false;
+	if (oldInfoB1ToA2_B2A1.hasWallElement()) {
+		other->fillWallElementInfo(&oldInfoA2ToB1_A1B2, after2, before1);
+	} else {
+		this->fillWallElementInfo(&oldInfoB1ToA2_B2A1, before2, after1);
+		other->fillWallElementInfo(&oldInfoA2ToB1_A1B2, after1, before2);
+		reverse=true;
+	}
+	//save a backup of the data to distribute the data over the new parts.
+	WallElement weB1A2_B2A1= *(oldInfoB1ToA2_B2A1.getWallElement());
+	oldInfoB1ToA2_B2A1.setWallElement(&weB1A2_B2A1);
+	WallElement weA2B1_A1B2= *(oldInfoA2ToB1_A1B2.getWallElement());
+	oldInfoA2ToB1_A1B2.setWallElement(&weA2B1_A1B2);
 
-  double length = oldInfoA2ToB1_A1B2.getLength();
-  double baseLengthOutside = oldInfoA2ToB1_A1B2.getBaseLength();
-  double baseLengthInside = oldInfoB1ToA2_B2A1.getBaseLength();
+	double patrialLengthBefore =  ((*before1) - (*node)).Norm();
+	double patrialLengthAfter =  ((*after2) - (*node)).Norm();
+	double ratio = patrialLengthBefore / (patrialLengthBefore+patrialLengthAfter);
 
-  double patrialLengthBefore =  ((*before1) - (*node)).Norm();
-  double patrialLengthAfter =  ((*after2) - (*node)).Norm();
-  double ratio = patrialLengthBefore / (patrialLengthBefore+patrialLengthAfter);
-
-  WallElementInfo element;
-  if (!reverse) {
-        this->fillWallElementInfo(&element, before1, node);
-        element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
-        this->fillWallElementInfo(&element, node, after1);
-        element.updateBaseLength();
-        daughter->fillWallElementInfo(&element, before2, node);
-        element.updateBaseLength();
-        daughter->fillWallElementInfo(&element, node, after2);
-        element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
-        if (!other->BoundaryPolP()) {
-                other->fillWallElementInfo(&element, after2, node);
-                element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
-                other->fillWallElementInfo(&element, node, before2);
-                element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
-        }
-  } else {
-        this->fillWallElementInfo(&element, before1, node);
-        element.updateBaseLength();
-        this->fillWallElementInfo(&element, node, after1);
-        element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
-        daughter->fillWallElementInfo(&element, before2, node);
-        element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
-        daughter->fillWallElementInfo(&element, node, after2);
-        element.updateBaseLength();
-        if (!other->BoundaryPolP()) {
-                other->fillWallElementInfo(&element, after1, node);
-                element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
-                other->fillWallElementInfo(&element, node, before2);
-                element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
-        }
-  }
+	WallElementInfo element;
+	if (!reverse) {
+		this->fillWallElementInfo(&element, before1, node);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
+		this->fillWallElementInfo(&element, node, after1);
+		element.updateBaseLength();
+		daughter->fillWallElementInfo(&element, before2, node);
+		element.updateBaseLength();
+		daughter->fillWallElementInfo(&element, node, after2);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
+		if (!other->BoundaryPolP()) {
+			other->fillWallElementInfo(&element, after2, node);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
+			other->fillWallElementInfo(&element, node, before2);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
+		}
+	} else {
+		this->fillWallElementInfo(&element, before1, node);
+		element.updateBaseLength();
+		this->fillWallElementInfo(&element, node, after1);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
+		daughter->fillWallElementInfo(&element, before2, node);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
+		daughter->fillWallElementInfo(&element, node, after2);
+		element.updateBaseLength();
+		if (!other->BoundaryPolP()) {
+			other->fillWallElementInfo(&element, after1, node);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
+			other->fillWallElementInfo(&element, node, before2);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
+		}
+	}
 }
 
 // Move the whole cell
@@ -2019,10 +2020,16 @@ void Cell::DrawCenter(QGraphicsScene *c) const {
   // Maginfication derived similarly to that in nodeitem.cpp
   // Why not use Cell::Magnification()?
   const double mag = par.node_mag;
-
+  int indicator = (CellType()+1)&3;
+  int dimm=((CellType()+1)&(12))<<2;
+  int intensity = 255 - (255/3)*dimm;
+  int red=  indicator == 1?intensity:0;
+  int green=  indicator == 2?intensity:0;
+  int blue=  indicator == 3?intensity:0;
+    QColor color(red, green, blue, 255);
   // construct an ellipse
   QGraphicsEllipseItem *disk = new QGraphicsEllipseItem ( -1*mag, -1*mag, 2*mag, 2*mag, 0);
-  disk->setBrush( QColor("forest green") );
+  disk->setBrush(color);
   disk->setZValue(5);
   Vector centroid=Centroid();
   disk -> setPos((offset[0]+centroid.x)*factor,(offset[1]+centroid.y)*factor);
@@ -2192,19 +2199,34 @@ void Cell::SetWallLengths(void)
   }
 }
 
-void Cell::InsertWall( Wall *w )
+CellBase* Cell::getOtherWallElementSide(NodeBase *spikeEnd, NodeBase *over) {
+	for (list<Neighbor>::iterator nb = ((Node*) spikeEnd)->owners.begin();
+			nb != ((Node*) spikeEnd)->owners.end(); nb++) {
+		if (nb->cell != this) {
+			for (list<Neighbor>::iterator nb2 = ((Node*) over)->owners.begin();
+					nb2 != ((Node*) over)->owners.end(); nb2++) {
+				if (nb2->cell == nb->cell) {
+					return nb2->cell;
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
+void Cell::InsertWall( WallBase *w )
 {
 	list<Wall *>::iterator it;
 	if ((it=find_if ( walls.begin(), walls.end(),
 		[w](auto wall){
 			return wall->N1() == w->N2();
 		} )) == walls.end() ) {
-		walls.insert(it, w);
+		walls.insert(it, (Wall*)w);
 	} else {
-		walls.push_back( w );
+		walls.push_back( (Wall*)w );
 	}
     if (find ( m->walls.begin(), m->walls.end(), w ) == m->walls.end() ) {
-    	m->walls.push_back(w);
+    	m->walls.push_back((Wall*)w);
 	}
 
 }
@@ -2245,22 +2267,13 @@ void Cell::EmitValues(double t)
   emit ChemMonValue(t, chem);
 }
 
-void Cell::removeNode(Node * node) {
-  this->nodes.remove(node);
-  node->removeCell(this);
+void Cell::insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode) {
+  CellBase::insertNodeAfterFirst(position1,position2, newNode);
+  ((Node*)newNode)->addCell(this);
 }
 
-void Cell::insertNodeAfterFirst(Node * position1,Node * position2, Node * newNode) {
-  std::_List_iterator<Node*> indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
-      return node->Index()==position1->Index()||node->Index()==position2->Index();
-  });
-  if (indexOfC == this->nodes.begin() && (this->nodes.back()==position1||this->nodes.back()==position2)) {
-    this->nodes.insert(indexOfC,newNode);
-  }else {
-    indexOfC++;
-    this->nodes.insert(indexOfC,newNode);
-  }
-  newNode->addCell(this);
+WallBase* Cell::newWall(NodeBase* from,NodeBase* to,CellBase * other) {
+  return new Wall((Node*)from, (Node*)to, this, other);
 }
 
 void Cell::correctNeighbors() {
@@ -2283,6 +2296,7 @@ void Cell::correctNeighbors() {
   n3=second;
   n2->correctNeighbors(this->Index(), n1, n3);
   ConstructNeighborList();
+  RecalcArea();
 }
 
 /* finis */

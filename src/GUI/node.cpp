@@ -109,6 +109,7 @@ Node::Node(const Node &src) : NodeBase(src)
   dead = src.dead;
 }
 
+int Node::Index(void) { return index; }
 
 Cell &Node::getCell(const Neighbor &i)
 {
@@ -237,34 +238,40 @@ void Node::addCell(CellBase * cell) {
 	owners.push_back( Neighbor( (Cell*)cell, NULL, NULL ) );
 }
 
+
+int Node::countNeighbors(void) {
+	return owners.size();
+}
+
+
 void Node::splitWallElements(WallElementInfo *base,double ratioOfBase) {
-    WallElement * newWallElement = this->insertWallElement(base->getCell());
-    WallElementInfo sub;
-    base->getCell()->fillWallElementInfo(&sub, this, (Node*)base->getTo());
-    base->divide(&sub,(1.-ratioOfBase));
+	this->insertWallElement(base->getCell());
+	WallElementInfo sub;
+	base->getCell()->fillWallElementInfo(&sub, this, (Node*)base->getTo());
+	base->divide(&sub,(1.-ratioOfBase));
 }
 
 void Node::splittWallElementsBetween(Node *from, Node *to) {
-    double original = ((*to)-(*from)).Norm();
-    double fromPart = ((*from)-(*this)).Norm()/original;
-    double toPart = ((*to)-(*this)).Norm()/original;
+	double original = ((*to)-(*from)).Norm();
+	double fromPart = ((*from)-(*this)).Norm()/original;
+	double toPart = ((*to)-(*this)).Norm()/original;
 
-    for (list<Neighbor>::const_iterator owner = this->owners.begin();
-         owner != this->owners.end(); owner++) {
-        if (from->getWallElement(owner->cell) != NULL) {
-            WallElementInfo info;
-            owner->cell->fillWallElementInfo(&info, from, to);
-            if (info.hasWallElement()) {
-                splitWallElements(&info,fromPart);
-            }
-        }
-        if (to->getWallElement(owner->cell) != NULL) {
-            WallElementInfo info;
-            owner->cell->fillWallElementInfo(&info, to, from);
-            if (info.hasWallElement()) {
-                splitWallElements(&info,toPart);
-            }
-        }
-    }
+	for (list<Neighbor>::const_iterator owner = this->owners.begin();
+			owner != this->owners.end(); owner++) {
+		if (from->getWallElement(owner->cell) != NULL) {
+			WallElementInfo info;
+			owner->cell->fillWallElementInfo(&info, from, to);
+			if (info.hasWallElement()) {
+				splitWallElements(&info,fromPart);
+			}
+		}
+		if (to->getWallElement(owner->cell) != NULL) {
+			WallElementInfo info;
+			owner->cell->fillWallElementInfo(&info, to, from);
+			if (info.hasWallElement()) {
+				splitWallElements(&info,toPart);
+			}
+		}
+	}
 }
 /* finis */

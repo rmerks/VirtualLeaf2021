@@ -70,7 +70,7 @@ bool useGUI;
 
 class PrintNode {
 public:
-  void operator() (const Node &n) const 
+  void operator() (Node &n) const
   {
     cerr << n.Index() << ": " << n <<  endl;
   }
@@ -266,8 +266,11 @@ TIMESTEP {
 
   if(DynamicCellsP()) {
 
-	mesh.WallCollapse();
+	mesh.CompatibilityLevel(par.compatibility_level);
+	mesh.ElasticModulus(par.elastic_modulus);
+	mesh.PotentialSlideAngle(par.potential_slide_angle);
     mesh.WallRelaxation();
+
 
     dh = mesh.DisplaceNodes();
 
@@ -279,9 +282,12 @@ TIMESTEP {
     mesh.InsertNodes(); // (this amounts to cell wall yielding)
 
     if ( (-dh) < par.energy_threshold) {
-
+		list<CellWallCurve> curves;
+    	if (mesh.activateWallSliding()) {
+    		mesh.SlideWallElements(curves);
+    	}
       mesh.IncreaseCellCapacityIfNecessary();
-      mesh.DoCellHouseKeeping();
+      mesh.DoCellHouseKeeping(curves);
       //mesh.LoopCurrentCells(mem_fn(&plugin->CellHouseKeeping)); // this includes cell division
 
       // Reaction diffusion	
