@@ -5,3 +5,11 @@
 build-VirtualLeaf-Desktop_Qt_6_5_3_MinGW_64_bit-Debug/
 src/VirtualLeaf.pro.user
 
+**/*.o
+**/Makefile
+**/.project
+**/.cproject
+**/.pydevproject
+**/moc_*
+**/.settings/
+**/__pycache__/

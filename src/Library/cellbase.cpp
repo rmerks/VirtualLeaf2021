@@ -86,7 +86,6 @@ CellBase::CellBase(QObject *parent) :
   at_boundary=false;
   fixed = false;
   pin_fixed = false;
-  stiffness = 0;
   wall_stiffness = 1;
   marked = false;
   dead = false;
@@ -127,7 +126,6 @@ CellBase::CellBase(double x,double y,double z) : QObject(), Vector(x,y,z)
   fixed = false;
   at_boundary=false;
   pin_fixed = false;
-  stiffness = 0;
   wall_stiffness = 1;
   marked=false;
   dead  = false;
@@ -168,7 +166,6 @@ CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
   cellvec = src.cellvec;
   at_boundary=src.at_boundary;
   pin_fixed = src.pin_fixed;
-  stiffness = src.stiffness;
   wall_stiffness = src.wall_stiffness;
   marked = src.marked;
   dead = src.dead;
@@ -209,7 +206,6 @@ CellBase CellBase::operator=(const CellBase &src)
   cellvec = src.cellvec;
   at_boundary=src.at_boundary;
   pin_fixed = src.pin_fixed;
-  stiffness = src.stiffness;
   wall_stiffness = src.wall_stiffness;
   marked = src.marked;
   dead = src.dead;
@@ -508,6 +504,25 @@ double CellBase::CalcLength(Vector *long_axis, double *width)  const
   return 4*sqrt(lambda_b/my_area);
 }
 
+WallBase* CellBase::newWall(NodeBase* from,NodeBase* to,CellBase * other){
+	return NULL;
+}
+
+CellBase* CellBase::getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over) {
+	return NULL;
+}
+
+void CellBase::insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode) {
+  std::_List_iterator<Node*> indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
+      return node->Index()==position1->Index()||node->Index()==position2->Index();
+  });
+  if (indexOfC == this->nodes.begin() && (this->nodes.back()==position1||this->nodes.back()==position2)) {
+    this->nodes.insert(indexOfC,(Node*)newNode);
+  }else {
+    indexOfC++;
+    this->nodes.insert(indexOfC,(Node*)newNode);
+  }
+}
 
 void CellBase::ConstructNeighborList(void)
 {
@@ -520,11 +535,16 @@ void CellBase::ConstructNeighborList(void)
 
        wit!=walls.end();
        wit++) {
-
+		CellBase * newNeighbor=NULL;
     if ((*wit)->C1() != this) {
-      neighbors.push_back((*wit)->C1());
+    	newNeighbor=(*wit)->C1();
     } else {
-      neighbors.push_back((*wit)->C2());
+    	newNeighbor=(*wit)->C2();
+    }
+    if (newNeighbor != NULL) {
+    	neighbors.push_back(newNeighbor);
+    } else {
+    	cout << "neighbor of " << index << " is NULL " << endl;
     }
 
   }
@@ -663,8 +683,15 @@ bool CellBase::stopWallElementInfo(WallElementInfo * info) {
 	return info->isStop();
 }
 
+void CellBase::removeNode(NodeBase * node) {
+  this->nodes.remove((Node*)node);
+  node->removeCell(this);
+}
 
+void CellBase::InsertWall( WallBase *w ){
+	//implemented in sub class
+}
 
-
+void CellBase::correctNeighbors() {}
 
 /* finis*/

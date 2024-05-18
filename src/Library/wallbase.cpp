@@ -62,6 +62,7 @@ WallBase::WallBase(Node *sn1, Node *sn2, CellBase *sc1, CellBase *sc2)
   }
 #endif
 
+
   c1 = sc1;
   c2 = sc2;
   c1WallStiffness = std::nan("1");
@@ -299,4 +300,11 @@ bool WallBase::IntersectsWithDivisionPlaneP(const Vector &p1, const Vector &p2)
   else return false;
 }
 
+void WallBase::replaceNode(NodeBase* oldN, NodeBase* newN) {
+	if (((Node *)oldN) == n1) n1=(Node *)newN; else if (((Node *)oldN) ==n2) n2=(Node *)newN;
+}
+
+bool WallBase::isHasStartOrEnd(Node * node) {
+	return node->Index() == n1->Index() || node->Index() == n2->Index();
+}
 /* finis */

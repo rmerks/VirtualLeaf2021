@@ -38,23 +38,23 @@ static const std::string _module_id("$Id$");
 void AuxinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase *daughter2)
 {
 
-    // Auxin distributes between parent and daughter according to area
-    double area1 = daughter1->Area(), area2 = daughter2->Area();
-    double tot_area = area1 + area2;
-
-    daughter1->SetChemical(0,daughter1->Chemical(0)*(area1/tot_area));
-    daughter2->SetChemical(0,daughter2->Chemical(0)*(area2/tot_area));
-
-    // After divisions, parent and daughter cells get a standard stock of PINs.
-    daughter1->SetChemical(1, par->initval[1]);
-    daughter2->SetChemical(1, par->initval[1]);
-
-
-    // Reset transporter values of parent and daughter
-    QList<WallBase *> walls;
-    foreach(WallBase *w, walls) {
-        w->setTransporter(daughter1, 1, 0.);
-    }
+  // Auxin distributes between parent and daughter according to area
+  double area1 = daughter1->Area(), area2 = daughter2->Area();
+  double tot_area = area1 + area2;
+	
+  daughter1->SetChemical(0,daughter1->Chemical(0)*(area1/tot_area));
+  daughter2->SetChemical(0,daughter2->Chemical(0)*(area2/tot_area));
+	
+  // After divisions, parent and daughter cells get a standard stock of PINs.
+  daughter1->SetChemical(1, par->initval[1]);
+  daughter2->SetChemical(1, par->initval[1]);
+	
+	
+  // Reset transporter values of parent and daughter
+  QList<WallBase *> walls;
+  foreach(WallBase *w, walls) { 
+    w->setTransporter(daughter1, 1, 0.);
+  }
 }
 
 void AuxinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)

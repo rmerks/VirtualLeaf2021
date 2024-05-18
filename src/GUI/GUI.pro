@@ -119,6 +119,7 @@ $${VLEAFLIBDIR}/cellbase.h \
  $${VLEAFLIBDIR}/UniqueMessage.h \
  $${VLEAFLIBDIR}/vector.h \
  $${VLEAFLIBDIR}/nodebase.h \
+ $${VLEAFLIBDIR}/cellwallcurve.h \
  $${VLEAFLIBDIR}/wallbase.h \
  wall.h \
  wallitem.h \
@@ -158,6 +159,7 @@ $${VLEAFLIBDIR}/vector.cpp \
 $${VLEAFLIBDIR}/nodebase.cpp \
  wall.cpp \
 $${VLEAFLIBDIR}/wallbase.cpp \
+$${VLEAFLIBDIR}/cellwallcurve.cpp \
 $${VLEAFLIBDIR}/wallelement.cpp \
 $${VLEAFLIBDIR}/wallelementinfo.cpp \
  wallitem.cpp \

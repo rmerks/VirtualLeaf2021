@@ -515,6 +515,295 @@ double Mesh::CellSpecificStiffnessOneSide(Node *nb,set<int> &nodeown) {
     }
     return cell_w;
 }
+void Mesh::updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node) {
+
+	// update areas of cells
+	list<DeltaIntgrl>::const_iterator  di_it = delta_intgrl_list->begin();
+	for (list<Neighbor>::iterator cit=node->owners.begin(); cit!=node->owners.end(); ( cit++) ) {
+	  if (!cit->cell->BoundaryPolP()) {
+	    cit->cell->area -= di_it->area;
+	    if (par.lambda_celllength) {
+		cit->cell->intgrl_x -= di_it->ix;
+		cit->cell->intgrl_y -= di_it->iy;
+		cit->cell->intgrl_xx -= di_it->ixx;
+		cit->cell->intgrl_xy -= di_it->ixy;
+		cit->cell->intgrl_yy -= di_it->iyy;
+	    }
+	    di_it++;
+	  }
+	}
+}
+
+CellBase * Mesh::getOtherCell(CellBase* c,Node* node1,Node * node2) {
+    for (list<Neighbor>::iterator nb1=node1->owners.begin(); nb1!=node1->owners.end(); nb1++) {
+    	if (nb1->getCell() != c) {
+    		for (list<Neighbor>::iterator nb2=node2->owners.begin(); nb2!=node2->owners.end(); nb2++) {
+        		if (nb1->getCell() == nb2->getCell()){
+        			return nb1->getCell();
+        		}
+        	}
+    	}
+    }
+    return NULL;
+}
+
+int debugNode = -1;
+
+double cross(const Vector & v1, const Vector & v2)
+{
+    return (v1.x*v2.y) - (v1.y*v2.x);
+}
+
+
+double b_cocient(const Vector& AC, const Vector& AB,const Vector& ACperp, const Vector& ABperp) {
+	double b=((AC.x-AB.x)/ABperp.x + ((AB.y-AC.y)/ACperp.y)*(ACperp.x/ABperp.x))*((ACperp.y*ABperp.x)/(ACperp.y*ABperp.x-ABperp.y*ACperp.x));
+	return b;
+}
+
+//http://dx.doi.org/10.1016/j.cis.2014.01.018
+// radius of circle with center on line B-C and connecting at norm of the lines (A-B ode A-C)
+// and sharing one point with the other line. This we define the kissing circle
+double ccRadius(const Vector& B, const Vector& A, const Vector& C) {
+	Vector AC = (C-A).Normalised();
+	Vector AB = (B-A).Normalised();
+
+	Vector ACpoint = A+AC;
+	Vector ABpoint = A+AB;
+	Vector ACperp = AC.Perp2D();
+	Vector ABperp = AB.Perp2D();
+//	double b_new = b_cocient(ACpoint,ABpoint,ACperp,ABperp);
+	double a_new = b_cocient(ABpoint,ACpoint,ABperp,ACperp);
+
+	Vector AM1=ACpoint+ACperp*a_new;
+//	Vector AM2=ABpoint+ABperp*b_new;
+
+	double r1 = (ACpoint-AM1).Norm();
+//	double r2 = (ABpoint-AM1).Norm();
+// commented lines as check if r1==r2
+	return r1;
+
+}
+
+bool Mesh::findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3) {
+	list <Node *>::iterator i=c->nodes.begin();
+	* w0=*i;
+	* w1=*(++i);
+	* w2=*(++i);
+	* w3=*(++i);
+	Node * o0=*w0;
+	Node * o1=*w1;
+	Node * o2=*w2;
+	while (i!=c->nodes.end()) {
+		if ((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+			return true;
+		}
+	    *w0=*w1;
+	    *w1=*w2;
+	    *w2=*w3;
+	    *w3=*(++i);
+	}
+	*w3=o0;
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
+	*w0=*w1;
+	*w1=*w2;
+	*w2=*w3;
+	*w3=o1;
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
+	*w0=*w1;
+	*w1=*w2;
+	*w2=*w3;
+	*w3=o2;
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
+	*w0=NULL;
+	*w1=NULL;
+	*w2=NULL;
+	*w3=NULL;
+	return false;
+}
+double lambda_for_shift=0.1;
+
+double getBaseLength(CellBase* c,NodeBase* n1, NodeBase * n2) {
+	WallElement* wallElement = n1->getWallElement(c);
+	if (wallElement == NULL) {
+		return ((*n1)-(*n2)).Norm();
+	}else {
+		return wallElement->getBaseLength();
+	}
+}
+
+void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+
+	Node * o0;
+	Node * o1;
+	Node * o2;
+	Node * o3;
+	double angle = (*w1-*w2).SignedAngle((*w3-*w2));
+	if (angle>0&&c->BoundaryPolP()||angle<0&&!c->BoundaryPolP()) {
+		//we would bend inward and intersect cells
+		return;
+	}
+
+	CellBase* c2 = getOtherCell(c,w1,w2);
+	if (c2 != NULL && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
+//now check how profitable the move of wall element w1-w2 to w1-w3
+//this changes also cell c2 where wall element o1->o2 will be replaced
+//by wall elements o1->w3 and w3->o2 all other surrounding cells will remain
+//unchanged.
+//
+// angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
+// angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
+		double r1 = ccRadius(*w0,*w1,*w2);
+		double r2 = ccRadius(*w1,*w2,*w3);
+		double r3 = ccRadius(*w2,*w3,*w4);
+		double r4 = ccRadius(*w0,*w1,*w3);
+		double r5 = ccRadius(*w1,*w3,*w4);
+//		if (c->Index()==-1 && r2 < r4) {
+//			// special case, narrow hole to allow merging we disable the sub condition
+//		}
+		double energy_before =
+				1./(r1)+
+				1./(r2)+
+				1./(r3)+
+				1./((ccRadius(*o0,*o1,*o2)))+
+				1./((ccRadius(*o1,*o2,*o3)));
+		double energy_after =
+				1./(r4)+
+				1./((ccRadius(*o1,*w3,*o2)))+
+				1./(r5)+
+				1./((ccRadius(*o0,*o1,*w3)))+
+				1./((ccRadius(*w3,*o2,*o3)));
+
+		double length_before =
+				((*w0)-(*w1)).Norm()+
+				((*w1)-(*w2)).Norm()+
+				((*w2)-(*w3)).Norm()+
+				((*w3)-(*w4)).Norm()+
+				((*o0)-(*o1)).Norm()+
+				((*o1)-(*o2)).Norm()+
+				((*o2)-(*o3)).Norm();
+
+		double length_base =
+				getBaseLength(c, w0, w1)+
+				getBaseLength(c, w1, w2)+
+				getBaseLength(c, w2, w3)+
+				getBaseLength(c, w3, w4)+
+				getBaseLength(c2, o0, o1)+
+				getBaseLength(c2, o1, o2)+
+				getBaseLength(c2, o2, o3);
+
+		double length_after =
+				((*w0)-(*w1)).Norm()+
+				((*w1)-(*w3)).Norm()+
+				((*w3)-(*w4)).Norm()+
+				((*o0)-(*o1)).Norm()+
+				((*o1)-(*w3)).Norm()+
+				((*w3)-(*o2)).Norm()+
+				((*o2)-(*o3)).Norm();
+
+		double dh = exp(energy_after-energy_before*1.5+12.);
+		if (RANDOM() > dh)		{
+
+			CellWallCurve curve;
+			curve.setCell(c);
+			curve.shift(w1);
+			curve.shift(w2);
+			curve.shift(w3);
+			curve.involved_nodes(w0,w4,o0,o1,o2,o3);
+			curve.setEneries(energy_before,energy_after);
+
+			for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
+				it->check_overlap(curve);
+			}
+			curves.push_back(curve);
+			if (debugNode>-1){
+				cout << "#" << dh << "#";
+				cout << "move-1  " << w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<<(energy_after-energy_before)<<"\n";
+				cout << "  angle=" << angle << " radius=" << r2<<"\n";
+				cout << "  energy_before=" << energy_before<<"  energy_after="<<energy_after<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
+			}
+		}
+	}
+}
+
+void extractData(WallElement *we,double & base_length,double &stiffness) {
+	if (we != NULL) {
+		base_length += we->getBaseLength();
+		if (std::isnan(we->getStiffness()) ) {
+			stiffness+=we->getCell()->GetWallStiffness();
+		} else {
+			stiffness+=we->getStiffness();
+		}
+	}else {
+		base_length=std::nan("1");
+		stiffness=std::nan("1");
+	}
+}
+
+void Mesh::SlideCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
+	// baseLength and length for future inclusion
+	//	double baseLength=0;
+	//	double length=0;
+	//	c->LoopWallElements([this,&baseLength,&length](auto wallElementInfo){
+	//		baseLength += wallElementInfo->getBaseLength();
+	//		length += wallElementInfo->getLength();
+	//	});
+if (c->nodes.size()<5) {
+	return;
+}
+	list <Node *>::iterator i=c->nodes.begin();
+	Node * w0=*i;
+	Node * w1=*(++i);
+	Node * w2=*(++i);
+	Node * w3=*(++i);
+	Node * w4=*(++i);
+	Node * o0=w0;
+	Node * o1=w1;
+	Node * o2=w2;
+	Node * o3=w3;
+	while (i!=c->nodes.end()) {
+		SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+		w0=w1;
+		w1=w2;
+		w2=w3;
+		w3=w4;
+		w4=*(++i);
+	}
+	w4=o0;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o1;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o2;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o3;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+}
+
+double Mesh::SlideWallElements(list<CellWallCurve> & curves) {
+	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
+		Cell *c = *ii;
+		SlideCellWallElements(curves,c);
+	}
+	SlideCellWallElements(curves,boundary_polygon);
+	return 0.0;
+}
 
 double Mesh::DisplaceNodes(void) {
 
@@ -575,7 +864,6 @@ double Mesh::DisplaceNodes(void) {
 
       double old_l1=0.,old_l2=0.,new_l1=0.,new_l2=0.;
 
-      double sum_stiff=0.;
       double dh=0.;
 
       for (list<Neighbor>::const_iterator cit=node.owners.begin(); cit!=node.owners.end(); cit++) {
@@ -594,8 +882,6 @@ double Mesh::DisplaceNodes(void) {
 	  goto next_node;
 	}
 
-	// summing stiffnesses of cells. Move has to overcome this minimum required energy.
-	sum_stiff += c.stiffness;
 	// area - (area after displacement): see notes for derivation
 	
 	Vector i_min_1 = *(cit->nb1);
@@ -803,7 +1089,7 @@ double Mesh::DisplaceNodes(void) {
 
 
     // Cell specific wall stiffness
-    double cell_w = cit->cell->GetWallStiffness();
+    double cell_w = c.GetWallStiffness();
     w1 = w1*cell_w;
     w2 = w2*cell_w;
 
@@ -813,20 +1099,19 @@ double Mesh::DisplaceNodes(void) {
     double bl_minus_1 = 0.0;
     double bl_plus_1 = 0.0;
 
-    calculateWallStiffness(&c, *i, &w_w1, &w_w2, &bl_minus_1, &bl_plus_1);
-
+    if (activateWallStiffnessHamiltonian()) {
+    	calculateWallStiffness(&c, *i, &w_w1, &w_w2, &bl_minus_1, &bl_plus_1);
+    }
     if (bl_minus_1>0 && bl_plus_1>0) {
         w1 = cell_w * (w_w1);
         w2 = cell_w * (w_w2);
         //check if wall elements are defined and pick the appropriate length_dh
 
-            double elastic_modulus = 50;
             length_dh +=
         		elastic_modulus * w1 *
         		bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1)) +
                 elastic_modulus * w2 *
 				bl_plus_1 *(DSQR(new_l2/bl_plus_1 - 1)-DSQR(old_l2/bl_plus_1 - 1));
-
     }
     else {
     	length_dh +=2*Node::target_length * (
@@ -842,7 +1127,7 @@ double Mesh::DisplaceNodes(void) {
 	// first implementation. Can probably be done more efficiently
 	// calculate circumcenter radius (gives local curvature)
 	// the ideal bending state is flat... (K=0)
-		  {
+	if (abs(par.bend_lambda) > 0.01)	  {
 	  // strong bending energy to resist "cleaving" by division planes
 	  double r1, r2, xc, yc;
 	  CircumCircle(i_min_1.x, i_min_1.y, old_p.x, old_p.y, i_plus_1.x, i_plus_1.y,
@@ -858,64 +1143,17 @@ double Mesh::DisplaceNodes(void) {
 	}
       }
       dh = 	area_dh + cell_length_dh +
-	par.lambda_length * length_dh + par.bend_lambda * bending_dh + par.alignment_lambda * alignment_dh;
+      par.lambda_length * length_dh + par.bend_lambda * bending_dh + par.alignment_lambda * alignment_dh;
 
          //(length_constraint_after - length_constraint_before);
 
-      if (node.fixed) {
+      if (dh < 0 || RANDOM()<exp((-dh)/par.T)) {
+		updateAreasOfCells(&delta_intgrl_list, &node) ;
 
-	// search the fixed cell to which this node belongs
-	// and displace these cells as a whole
-	// WARNING: undefined things will happen for connected fixed cells...
-	for (list<Neighbor>::iterator c=node.owners.begin(); c!=node.owners.end(); c++) {
-	  if (!c->cell->BoundaryPolP() && c->cell->FixedP()) {
-	    sum_dh+=c->cell->Displace(rx,ry,0);
-	  }
-	}
-      } else {
+		node.x = new_p.x;
+		node.y = new_p.y;
 
-
-	if (dh<-sum_stiff || RANDOM()<exp((-dh-sum_stiff)/par.T)) {
-
-	  // update areas of cells
-	  list<DeltaIntgrl>::const_iterator di_it = delta_intgrl_list.begin();
-	  for (list<Neighbor>::iterator cit=node.owners.begin(); cit!=node.owners.end(); ( cit++) ) {
-	    if (!cit->cell->BoundaryPolP()) {
-	      cit->cell->area -= di_it->area;
-	      if (par.lambda_celllength) {
-		cit->cell->intgrl_x -= di_it->ix;
-		cit->cell->intgrl_y -= di_it->iy;
-		cit->cell->intgrl_xx -= di_it->ixx;
-		cit->cell->intgrl_xy -= di_it->ixy;
-		cit->cell->intgrl_yy -= di_it->iyy;
-	      }
-	      di_it++;
-	    }
-	  }
-
-//	  double old_nodex, old_nodey;
-
-    //  old_nodex=node.x;
-     // old_nodey=node.y;
-
-	  node.x = new_p.x;
-	  node.y = new_p.y;
-
-	  for (list<Neighbor>::iterator cit=node.owners.begin();
-	       cit!=node.owners.end();
-	       ( cit++) ) {
-
-	    /*   if (cit->cell >= 0 && cells[cit->cell].SelfIntersect()) {
-		 node.x = old_nodex;		       
-		 node.y = old_nodey;
-		 goto next_node;
-		 }*/
-
-
-	  }
-
-	  sum_dh += dh;
-	}  
+		sum_dh += dh;
       }
     } 
   next_node:
@@ -1192,315 +1430,6 @@ double Mesh::DisplaceNodes(void) {
 }*/
 
 
-
-class CellWallCurve {
-	friend class Node;
-	friend class CellBase;
-	Cell * cell;
-	Node * from=NULL;
-	Node * over=NULL;
-	Node * to=NULL;
-
-	Wall* findWallBetweenEndingAt(Cell *&c1, Cell *&c2, Node *&c) {
-		Wall *wallBetween = NULL;
-		Wall **pwallBetween = &wallBetween;
-		c1->LoopWalls([this, c1, c2, c, pwallBetween](auto wall) {
-			if (isWallBetweenEndingAt(wall, c1, c2, c)) {
-				// this wall now ends at b instead of c
-				(*pwallBetween) = wall;
-			}
-		}
-		);
-		return wallBetween;
-	}
-
-	Wall* otherWallEndingAt(Cell *c3, Node *&c, Wall *&wallc2c3) {
-		Wall *wallc3ToC;
-		Wall **pwallc3ToC = &wallc3ToC;
-		c3->LoopWalls([this, c, wallc2c3, pwallc3ToC](auto wall) {
-			if ((wall->N1() == c || wall->N2() == c) && wall != wallc2c3) {
-				(*pwallc3ToC) = wall;
-			}
-		}
-		);
-		return wallc3ToC;
-	}
-
-public:
-	void shift(Node * node) {
-		  if (from == NULL) {
-			  from=node;
-		  } else if (over == NULL) {
-			  over=node;
-		  } else if (to==NULL) {
-			  to = node;
-		  } else {
-			  from=over;
-			  over=to;
-			  to=node;
-		  }
-	}
-
-	int checkAngle() {
-		double angle = (*from-*over).Angle((*to-*over));
-		if (Pi/18. > angle ) {
-			return over->Index();
-		}
-		return -1;
-	}
-
-	void checkAngle(std::list<CellWallCurve> &toSharpNode) {
-		if (to!= NULL && checkAngle() > 0){
-			toSharpNode.push_back(*this);
-		}
-	}
-
-	void reset() {
-		cell=NULL;
-		from=NULL;
-		over=NULL;
-		to=NULL;
-	}
-
-	int Index() {
-		return over->Index();
-	}
-
-	void setCell(Cell * aCell) {
-		cell = aCell;
-	}
-
-	void setTo(Node * node) {
-		to = node;
-	}
-
-	Node* getFrom()  {
-		return from;
-	}
-
-	Node* getOver() {
-		return over;
-	}
-
-	Node* getTo() {
-		return to;
-	}
-
-	Node* longerWall() {
-		int fromNorm = (*from-*over).Norm();
-		int toNorm = (*to-*over).Norm();
-		if (fromNorm>toNorm) {
-			return from;
-		}else {
-			return to;
-		}
-	}
-
-	Cell* cellBehindLongerWall() {
-		Node * lw = longerWall();
-		return cellBehindWallToNode(lw);
-	}
-
-	Cell* cellBehindShorterWall() {
-		Node * lw = longerWall();
-		Node * sw = lw == to? from : to;
-		return cellBehindWallToNode(sw);
-	}
-
-	Cell* cellBehindWallToNode(Node * spikeEnd) {
-		Cell* result = NULL;
-		Cell** presult = &result;
-		spikeEnd->LoopNeighbors([this,presult](auto neighbor1) {
-			if (neighbor1.getCell()->Index() != this->cell->Index()) {
-				this->over->LoopNeighbors([neighbor1,this,presult](auto neighbor2) {
-					if (neighbor1.getCell()->Index() == neighbor2.getCell()->Index()) {
-						(*presult) = neighbor2.getCell();
-					}
-				});
-			}
-		});
-		return result;
-	}
-
-	void removeSpike() {
-		Cell * c1 = cellBehindLongerWall();
-		Cell * c2 = cell;
-		Cell * c3 = cellBehindShorterWall();
-		Node * a = longerWall();
-		Node * b = a == to? from : to;
-		Node * c = over;
-		if (c->Value() ==  2) {
-			// TODO delete node, spike into the cell itself
-			cout << " innser spike ";
-			cout << " c2=" << c2->Index() ;
-			c2->removeNode(c);
-			c2->correctNeighbors();
-			return;
-		}
-		if (a==b) {
-			cout << " merged node ";
-		}
-		//we go over the c2 walls, here is the spike
-		if (c1 == NULL||c3 == NULL|| c1==c3) {
-			// unknow case
-			cout<< " not handled spike "<< (c1==c3?"eq ":"");
-			if (c1!= NULL)
-				cout << " c1=" << c1->Index() ;
-			else
-				cout << " c1=NULL";
-			cout << " c2=" << c2->Index() ;
-			if (c3!= NULL)
-				cout << " c3=" << c3->Index() ;
-			else
-				cout << " c3=NULL";
-			return;
-		}
-
-		if (c2->Index()==-1) {
-			cout<< " boundary node spike ";
-			cout << " c2=" << c2->Index() ;
-		}
-		Wall *wallc1c2 = findWallBetweenEndingAt(c1, c2, c);
-		Wall * wallc2c3 = findWallBetweenEndingAt(c2,c3,c);
-		//for the extending wall we need a existing wall between c1 and c3 that ends at c.
-		Wall * wallc1c3 = findWallBetweenEndingAt(c1,c3,c);
-
-		if (wallc1c2 != NULL&&wallc2c3 != NULL) {
-			Wall * wallc1ToC = NULL;
-			Wall * wallc3ToC = NULL;
-			if (wallc1c3 == NULL) {
-				// more than 3 cells in point c, now c1 and c3 are separated by other cells.
-				wallc1ToC = otherWallEndingAt(c1, c, wallc1c2);
-				wallc3ToC = otherWallEndingAt(c3, c, wallc2c3);
-				if (wallc1ToC == NULL|| wallc3ToC==NULL) {
-					cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
-					cout << " not handled case\n";
-					return;
-				}
-			}
-
-			// we extend the existing wall from c to b.
-			cout << " spike removed\n";
-			cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
-			cout << " c1=" << c1->Index() << " c2=" << c2->Index()<< " c3=" << c3->Index()<<"\n";
-
-			c2->removeNode(c);
-			// add b node to c1 after a or c depending who comes first
-			c1->insertNodeAfterFirst(c,a,b);
-			if (a->BoundaryP() && b->BoundaryP() && c->BoundaryP() ) {
-				c->UnsetBoundary();
-			}
-
-			if (wallc1c3 != NULL) {
-				cout << " wallc1c3=" << wallc1c3->N1()->Index() << "->" << wallc1c3->N2()->Index() << " wallc1c2=" << wallc1c2->N1()->Index() << "->" << wallc1c2->N2()->Index() << " wallc2c3=" << wallc2c3->N1()->Index() << "->" << wallc2c3->N2()->Index()<<"\n";
-				wallc1c3->replaceNode(c,b);
-			} else {
-				wallc1c3 = new Wall(c,b,c1,c3);
-				wallc1c3->CopyWallContents(*wallc1c2);
-				wallc1c3->SetLength();
-				c1->InsertWall(wallc1c3);
-				c3->InsertWall(wallc1c3);
-			}
-			wallc1c2->replaceNode(c,b);
-			wallc1c2->SetLength();
-			wallc2c3->replaceNode(c,b);
-			wallc2c3->SetLength();
-			c1->correctNeighbors();
-			c2->correctNeighbors();
-			c3->correctNeighbors();
-
-		} else {
-			// a new wall is nessesary
-			cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
-			if (wallc1c3!= NULL) {
-				cout << " wallc1c3=" << wallc1c3->N1()->Index() << "->" << wallc1c3->N2()->Index()<<"\n";
-			} else {
-				cout << " wallc1c3=NULL\n";
-			}
-			if (wallc1c2!= NULL) {
-				cout << " wallc1c2=" << wallc1c2->N1()->Index() << "->" << wallc1c2->N2()->Index()<<"\n";
-			} else {
-				cout << " wallc1c2=NULL\n";
-			}
-			if (wallc2c3!= NULL) {
-				cout << " wallc2c3=" << wallc2c3->N1()->Index() << "->" << wallc2c3->N2()->Index()<<"\n";
-			} else {
-				cout << " wallc2c3=NULL\n";
-			}
-			cout << " new wall nessesary ";
-		}
-	}
-
-	bool isWallBetweenEndingAt(Wall * wall, Cell* cell1, Cell* cell2, Node * node) {
-		return (wall->N1() == node || wall->N2() == node) &&
-				((wall->C1() == cell1 && wall->C2() == cell2) || (wall->C1() == cell2 && wall->C2() == cell1));
-
-	}
-};
-
-
-
-bool cmpCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
-	return b.Index() - a.Index();
-}
-
-bool eqCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
-	return b.Index() == a.Index();
-}
-
-void Mesh::WallCollapse(void) {
-	std::list<CellWallCurve> toSharpNode;
-	CellWallCurve curve;
-	Node * first=NULL;
-	Node * second=NULL;
-	curve.reset();
-	curve.setCell(boundary_polygon);
-	for (Node * node : boundary_polygon->nodes) {
-		curve.shift(node);
-		if (first==NULL) {
-			first=node;
-		}else if (second==NULL) {
-			second=node;
-		}
-		curve.checkAngle(toSharpNode);
-	}
-	curve.shift(first);
-	curve.checkAngle(toSharpNode);
-	curve.shift(second);
-	curve.checkAngle(toSharpNode);
-	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
-		Cell &cell(**i);
-		curve.reset();
-		curve.setCell(&cell);
-		list <Node *>::iterator j=cell.nodes.begin();
-		curve.shift(*j);
-		curve.shift(*(++j));
-		curve.shift(*(++j));
-		first = curve.getFrom();
-		second = curve.getOver();
-		while (j!=cell.nodes.end()) {
-			curve.checkAngle(toSharpNode);
-			curve.shift(*(++j));
-		}
-		curve.setTo(first);
-		curve.checkAngle(toSharpNode);
-		curve.shift(second);
-		curve.checkAngle(toSharpNode);
-	}
-	toSharpNode.sort(cmpCellWallCurve);
-	toSharpNode.unique(eqCellWallCurve);
-	if (toSharpNode.size()>0) {
-		cout << "to sharp: \n";
-		for (CellWallCurve sharpCurve : toSharpNode) {
-			sharpCurve.removeSpike();
-			cout << ' ' << sharpCurve.Index() << '\n';
-		}
-	//	RepairBoundaryPolygon();
-		cout << "end spike\n";
-	}
-}
-
-
 void Mesh::WallRelaxation(void) {
 	// as we relax every wall element independently no re-scuffling is necessary.
 	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
@@ -1548,16 +1477,13 @@ void Mesh::calculateWallStiffness(CellBase* c, Node* node, double *w_p1,double *
             //stop the loop, as we do not need to go further.
             wallElementInfo->stopLoop();
         }
+		if (points == 2) {
+            //stop the loop, as we do not need to go further.
+        	wallElementInfo->stopLoop();
+		}
 	});
 }
 
-
-/*void splitWallElements(WallElementInfo *base,Node* new_node) {
-	WallElement * newWallElement = new_node->insertWallElement(base->getCell());
-	WallElementInfo sub;
-	base->getCell()->fillWallElementInfo(&sub, new_node, (Node*)base->getTo());
-	base->divide(&sub);
-}*/
 
 void Mesh::InsertNode(Edge &e) {
 
@@ -1718,22 +1644,6 @@ void Mesh::InsertNode(Edge &e) {
     c++;
   }
 
-
-  /*for (list<Neighbor>::const_iterator owner=new_node->owners.begin(); owner!=new_node->owners.end(); owner++) {
-	  if (e.first->getWallElement(owner->cell)!= NULL){
-		  WallElementInfo info;
-		  owner->cell->fillWallElementInfo(&info, e.first, e.second);
-		  if (info.hasWallElement()) {
-			  splitWallElements(&info,new_node);
-		  }
-	  }if(e.second->getWallElement(owner->cell)!= NULL){
-		  WallElementInfo info;
-		  owner->cell->fillWallElementInfo(&info, e.second, e.first);
-		  if (info.hasWallElement()) {
-			  splitWallElements(&info,new_node);
-		  }
-	  }
-  }*/
   new_node->splittWallElementsBetween(e.first, e.second);
 }
 
@@ -2045,7 +1955,8 @@ void Mesh::RepairBoundaryPolygon(void) {
   // other than the one passed to it, the original node is the first
   // boundary node.
   for (Node* node : nodes) {
-    if ((findNextBoundaryNode(node))->index != node->index){
+		Node *nextNode = findNextBoundaryNode(node);
+		if (nextNode && (nextNode)->index != node->index) {
       next_boundary_node = node;
       break;
     }
@@ -2062,6 +1973,7 @@ void Mesh::RepairBoundaryPolygon(void) {
     next_boundary_node = findNextBoundaryNode(boundary_node);
     if (next_boundary_node == NULL) {
     	cout << "boundary null\n";
+    	break;
     }
   } while ( !next_boundary_node->Marked() );
 

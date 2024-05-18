@@ -93,13 +93,11 @@ class NodeSet : public list<Node *> {
 
     // 2. Sum the current energy of these cells
     double old_energy=0.;
-    double sum_stiff = 0.;
     for ( list<Cell *>::const_iterator i = celllist.begin(); 
 	  i!=celllist.end();
 	  ++i ) {
 
       old_energy += (*i)->Energy();
-      sum_stiff += (*i)->Stiffness();
     }
 
     // 3. (Temporarily) move the set's nodes.
@@ -128,7 +126,7 @@ class NodeSet : public list<Node *> {
     list<int> new_areas;
 
     // cerr << "Nodeset says: dh = " << dh << " ...";
-    if (dh < -sum_stiff || RANDOM()<exp((-dh - sum_stiff)/par.T) ) {
+    if (RANDOM()<exp((-dh)/par.T) ) {
 
       // ACCEPT
       // recalculate areas of cells

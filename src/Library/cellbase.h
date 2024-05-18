@@ -34,6 +34,7 @@
 
 #include "vector.h"
 #include "parameter.h"
+#include "cellwallcurve.h"
 #include "nodebase.h"
 #include "wall.h"
 #include "warning.h"
@@ -53,6 +54,7 @@ class NodeSet;
 class WallElementInfo;
 class WallElement;
 class NodeBase;
+class CellWallCurve;
 
 struct ParentInfo {
   Vector polarization;
@@ -94,6 +96,7 @@ class CellBase :  public QObject, public Vector
   friend class WallElement;
   friend class WallElementInfo;
   friend class SimPluginInterface;
+  friend class CellWallCurve;
 
  public:
   CellBase(QObject *parent=0);
@@ -196,10 +199,6 @@ class CellBase :  public QObject, public Vector
 
   inline double TargetArea(void) { return target_area; }
 
-  inline void SetStiffness(double stiff) { stiffness = stiff; }
-
-  inline double Stiffness(void) { return stiffness; }
-
   inline double EnlargeTargetArea(double da) { return target_area+=da; }
 
   inline double Area(void) const { return area; }
@@ -226,9 +225,12 @@ class CellBase :  public QObject, public Vector
     return sum;
   }
 
-
-
-
+  virtual void correctNeighbors();
+  virtual void removeNode(NodeBase * node) ;
+  virtual WallBase* newWall(NodeBase* from,NodeBase* to,CellBase * other);
+  virtual void insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode);
+  virtual void InsertWall( WallBase *w );
+  virtual CellBase* getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over);
 
   QList<WallBase *> getWalls(void) {
     QList<WallBase *> wall_list;
@@ -253,6 +255,35 @@ class CellBase :  public QObject, public Vector
 				if (stopWallElementInfo(&info)) {
 		        	return;
 		        }
+		        from=to;
+		        to=*(++i);
+			}
+			fillWallElementInfo(&info,from,first);
+			f(&info);
+  }
+
+  template<class Op> void LoopWallElementsOfWall(Wall* wall, Op f) {
+			WallElementInfo info;
+			list <Node *>::iterator i=nodes.begin();
+			Node * first=*i;
+			Node * from=first;
+			Node * to=*(++i);
+			bool start = false;
+			while (i!=nodes.end()) {
+				if (wall->isHasStartOrEnd(from)) {
+					if (start) {
+						return;
+					} else {
+						start = true;
+					}
+				}
+				if (start) {
+					fillWallElementInfo(&info,from,to);
+		        	f(&info);
+					if (stopWallElementInfo(&info)) {
+		        		return;
+		        	}
+				}
 		        from=to;
 		        to=*(++i);
 			}
@@ -444,6 +475,7 @@ class CellBase :  public QObject, public Vector
   void fillWallElementInfo(WallElementInfo * info,Node* from,Node* to) ;
   bool stopWallElementInfo(WallElementInfo * info);
   inline void removeWall(Wall * wall) {walls.remove(wall);}
+  void attachToCell(CellWallCurve * curve);
 
  protected:
   // (define a list of Node* iterators)
@@ -489,8 +521,6 @@ class CellBase :  public QObject, public Vector
   double target_length;
   double lambda_celllength;
   double wall_stiffness; // Lebovka et al
-
-  double stiffness; // stiffness like in Hogeweg (2000)
 
   bool fixed;
   bool pin_fixed;

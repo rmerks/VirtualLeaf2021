@@ -45,6 +45,7 @@ public:
 	inline void stopLoop() {stop=true;};
 	inline bool isStop() {return stop;};
 	inline void setNodes(Vector* from,Vector* to) {this->from =from;this->to =to;};
+
     void divide(WallElementInfo * other, double ratio);
     double stiffness();
 
