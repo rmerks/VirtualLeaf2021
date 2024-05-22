@@ -511,7 +511,7 @@
       <node nr="34" x="-8.211677900000002" y="130.31778000000003" sam="false" boundary="true" fixed="false"/>
       <node nr="35" x="-13.002000000000002" y="135.29232000000002" sam="false" boundary="true" fixed="false"/>
    </nodes>
-   <cells n="11" magnfication="1" nchem="4" offsetx="0" offsety="0" base_area="0">
+   <cells n="11" magnfication="1" nchem="4" offsetx="0" offsety="0" base_area="293.893">
       <cell boundary="2" cell_type="1" target_area="122.99561531200901" lambda_celllength="0" at_boundary="true" dead="false" target_length="27.8451556383112" stiffness="1" index="0" source="false" pin_fixed="false" area="122.99561531200901" fixed="false" div_counter="0">
          <node n="0"/>
          <node n="3"/>
@@ -524,7 +524,7 @@
          <wall w="15"/>
          <wall w="17"/>
          <chem n="2">
-            <val v="2.251808"/>
+            <val v="1.3"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -538,7 +538,7 @@
          <wall w="4"/>
          <wall w="5"/>
          <chem n="2">
-            <val v="2.251808"/>
+            <val v="1.3"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -552,7 +552,7 @@
          <wall w="7"/>
          <wall w="8"/>
          <chem n="2">
-            <val v="0.8"/>
+            <val v="0.1"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -566,7 +566,7 @@
          <wall w="9"/>
          <wall w="10"/>
          <chem n="2">
-            <val v="0.8"/>
+            <val v="0.1"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -582,7 +582,7 @@
          <wall w="11"/>
          <wall w="12"/>
          <chem n="2">
-            <val v="0.8"/>
+            <val v="0.1"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -595,7 +595,7 @@
          <wall w="5"/>
          <wall w="11"/>
          <chem n="2">
-            <val v="0.8"/>
+            <val v="0.1"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -609,7 +609,7 @@
          <wall w="1"/>
          <wall w="13"/>
          <chem n="2">
-            <val v="0.8"/>
+            <val v="0.1"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -624,7 +624,7 @@
          <wall w="14"/>
          <wall w="15"/>
          <chem n="2">
-            <val v="0.8"/>
+            <val v="0.1"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -642,7 +642,7 @@
          <wall w="16"/>
          <wall w="17"/>
          <chem n="2">
-            <val v="0.8"/>
+            <val v="0.1"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -660,7 +660,7 @@
          <wall w="6"/>
          <wall w="16"/>
          <chem n="2">
-            <val v="1.9"/>
+            <val v="0.6"/>
             <val v="0.481961"/>
          </chem>
       </cell>
@@ -674,7 +674,7 @@
          <wall w="10"/>
          <wall w="12"/>
          <chem n="2">
-            <val v="2.251808"/>
+            <val v="1.3"/>
             <val v="0.481961"/>
          </chem>
       </cell>

@@ -35,7 +35,7 @@ static const std::string _module_id("$Id$");
 
 
 // To be executed after cell division
-void AuxinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase *daughter2)
+void VeinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase *daughter2)
 {
 
     // Auxin distributes between parent and daughter according to area
@@ -62,7 +62,7 @@ void AuxinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, C
     }
 }
 
-void AuxinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
+void VeinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
 {
 
     // Red: PIN1
@@ -72,62 +72,64 @@ void AuxinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
 
 
 
-void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
+void VeinGrowthPlugin::CellHouseKeeping(CellBase *c)
 {
     if (c->Boundary()==CellBase::None) {
-        // set growth direction if available, if not then compute it
-        Vector growth_direction = Vector(0 ,1 ,0);
-        if (c->CountNeighbors() > 1 ) {
-            if (c->Chemical(3) == 0 && c->Chemical(4) == 0) {
-                double highest_auxin = 0;
-                CellBase *target_cell = NULL;
-                 c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
-                    //cout << neighbor->Chemical(0) << endl;
-                    if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
-                        highest_auxin = neighbor->Chemical(0);
-                        target_cell = neighbor;
+        if (c->CellType() == 1) {
+            // set growth direction if available, if not then compute it
+            Vector growth_direction = Vector(0 ,1 ,0);
+            if (c->CountNeighbors() > 1 ) {
+                if (c->Chemical(3) == 0 && c->Chemical(4) == 0) {
+                    double highest_auxin = 0;
+                    CellBase *target_cell = NULL;
+                    c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
+                        //cout << neighbor->Chemical(0) << endl;
+                        if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
+                            highest_auxin = neighbor->Chemical(0);
+                            target_cell = neighbor;
+                        }
+                    });
+                    if (target_cell != NULL) {
+                        growth_direction = target_cell->Centroid() - c->Centroid();
+                        //growth_direction = Vector(target_cell->x - c->x, target_cell->y - c->y, 0);
+                        c->SetChemical(2, growth_direction.x);
+                        c->SetChemical(3, growth_direction.y);
+                    } else {
+                        growth_direction = Vector(0, 1, 0);
+                        cout << "Error when evaluation neighbours in household!" << endl;
                     }
-                });
-                if (target_cell != NULL) {
-                     growth_direction = target_cell->Centroid() - c->Centroid();
-                     //growth_direction = Vector(target_cell->x - c->x, target_cell->y - c->y, 0);
-                     c->SetChemical(2, growth_direction.x);
-                     c->SetChemical(3, growth_direction.y);
-                } else {
-                    growth_direction = Vector(0, 1, 0);
-                     cout << "Error when evaluation neighbours in household!" << endl;
-                }
 
-                //cout << c->NChem() << endl;
-                //growth_direction = new Vector(0, 1, 0);
-            } else {
-                //growth_direction = Vector(0, 1, 0);
-                growth_direction = Vector(c->Chemical(3), c->Chemical(4), 0);
-            }
-        }/* else {
+                    //cout << c->NChem() << endl;
+                    //growth_direction = new Vector(0, 1, 0);
+                } else {
+                    //growth_direction = Vector(0, 1, 0);
+                    growth_direction = Vector(c->Chemical(3), c->Chemical(4), 0);
+                }
+            }/* else {
             growth_direction = Vector(0 ,1 ,0);
         }*/
 
-        // wall stiffness manipulation
-        c->LoopWallElements([&growth_direction](auto wallElementInfo){
-            if(wallElementInfo->hasWallElement()){
-                //Vector* y = new Vector(0, 1, 0);
-                Vector* we_direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, wallElementInfo->getTo()->y - wallElementInfo->getFrom()->y, 0);
-                double we_angle = (we_direction->Angle(growth_direction))*180/3.1415926536;
-                /*if (direction->x == 0) {
+            // wall stiffness manipulation
+            c->LoopWallElements([&growth_direction](auto wallElementInfo){
+                if(wallElementInfo->hasWallElement()){
+                    //Vector* y = new Vector(0, 1, 0);
+                    Vector* we_direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, wallElementInfo->getTo()->y - wallElementInfo->getFrom()->y, 0);
+                    double we_angle = (we_direction->Angle(growth_direction))*180/3.1415926536;
+                    /*if (direction->x == 0) {
                     angle = 90;
                 } else {
                     angle = atan(direction->y/direction->x)*180/3.1415926536;
                 }*/
-                if (we_angle <= 55 || we_angle >= 125) {
-                    WallElement* we = wallElementInfo->getWallElement();
-                    we->setStiffness(4);
-                }/* else if (angle >= 65 || angle <=115){
+                    if (we_angle <= 30 || we_angle >= 150) {
+                        WallElement* we = wallElementInfo->getWallElement();
+                        we->setStiffness(4);
+                    } /*else if (we_angle >= 75 || we_angle <=105){
                     WallElement* we = wallElementInfo->getWallElement();
                     we->setStiffness(1);
                 }*/
-            }
-        });
+                }
+            });
+        }
 
         /*        c->LoopWallElements([](auto wallElementInfo){
             if(wallElementInfo->hasWallElement()){
@@ -141,6 +143,7 @@ void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
                 }
             }
         });*/
+
 
         if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ) {
             //c->SetChemical(0, 0);
@@ -160,7 +163,7 @@ void AuxinGrowthPlugin::CellHouseKeeping(CellBase *c)
     }
 }
 
-void AuxinGrowthPlugin::CelltoCellTransport(Wall *w, double *dchem_c1, double *dchem_c2)
+void VeinGrowthPlugin::CelltoCellTransport(Wall *w, double *dchem_c1, double *dchem_c2)
 {
 
     // leaf edge is const source of auxin
@@ -218,7 +221,7 @@ void AuxinGrowthPlugin::CelltoCellTransport(Wall *w, double *dchem_c1, double *d
 
 }
 
-void AuxinGrowthPlugin::WallDynamics(Wall *w, double *dw1, double *dw2)
+void VeinGrowthPlugin::WallDynamics(Wall *w, double *dw1, double *dw2)
 {
     // Cells polarize available PIN1 to Shoot Apical Meristem
     if (w->C2()->BoundaryPolP()) {
@@ -298,7 +301,7 @@ void AuxinGrowthPlugin::WallDynamics(Wall *w, double *dw1, double *dw2)
 }
 
 
-double AuxinGrowthPlugin::complex_PijAj(CellBase *here, CellBase *nb, Wall *w)
+double VeinGrowthPlugin::complex_PijAj(CellBase *here, CellBase *nb, Wall *w)
 {
     // gives the amount of complex "auxinreceptor-Pin1"  at the wall (at QSS)
     //return here.Chemical(1) * nb.Chemical(0) / ( par->km + here.Chemical(1));
@@ -311,7 +314,7 @@ double AuxinGrowthPlugin::complex_PijAj(CellBase *here, CellBase *nb, Wall *w)
 }
 
 
-void AuxinGrowthPlugin::CellDynamics(CellBase *c, double *dchem)
+void VeinGrowthPlugin::CellDynamics(CellBase *c, double *dchem)
 {
     // Note: Pi and Pij measured in numbers of molecules, not concentrations
     double dPidt = 0.;
@@ -320,7 +323,7 @@ void AuxinGrowthPlugin::CellDynamics(CellBase *c, double *dchem)
 
     // exocytosis regulated:
 
-    dPidt = -par->k1 * c->ReduceCellAndWalls<double>( far_3_arg_mem_fun( *this, &AuxinGrowthPlugin::complex_PijAj ) ) + par->k2 * sum_Pij;
+    dPidt = -par->k1 * c->ReduceCellAndWalls<double>( far_3_arg_mem_fun( *this, &VeinGrowthPlugin::complex_PijAj ) ) + par->k2 * sum_Pij;
 
     // production of PIN depends on auxin concentration
     dPidt +=  (c->AtBoundaryP()?par->pin_prod_in_epidermis:par->pin_prod) * c->Chemical(0) - c->Chemical(1) * par->pin_breakdown;

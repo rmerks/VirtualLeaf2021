@@ -20,8 +20,8 @@
  *
  */
 
-#ifndef _AUXINGROWTHPLUGIN_H_
-#define _AUXINGROWTHPLUGIN_H_
+#ifndef _VEINGROWTHPLUGIN_H_
+#define _VEINGROWTHPLUGIN_H_
 
 #include <QObject>
 #include <QtGui>
@@ -29,10 +29,10 @@
 #include "simplugin.h"
 
 
-class AuxinGrowthPlugin : public QObject, SimPluginInterface {
+class VeinGrowthPlugin : public QObject, SimPluginInterface {
   Q_OBJECT
   Q_INTERFACES(SimPluginInterface);
-    Q_PLUGIN_METADATA(IID "org.virtualleaf.auxingrowthplugin")
+    Q_PLUGIN_METADATA(IID "org.virtualleaf.veingrowthplugin")
 
 
  public:
@@ -58,7 +58,7 @@ class AuxinGrowthPlugin : public QObject, SimPluginInterface {
   // return number of chemicals
   virtual int NChem(void) { return 4; }
 
-  virtual QString DefaultLeafML(void) { return QString("procambium_1.xml"); }
+  virtual QString DefaultLeafML(void) { return QString("procambium.xml"); }
  
  private:
   double complex_PijAj(CellBase *here, CellBase *nb, Wall *w);
