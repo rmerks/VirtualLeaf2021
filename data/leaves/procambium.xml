@@ -523,15 +523,19 @@
          <wall w="2"/>
          <wall w="15"/>
          <wall w="17"/>
-         <chem n="2">
+         <chem n="4">
             <val v="1.9"/>
             <val v="0.481961"/>
+	    <val v="NAN"/>
+	    <val v="NAN"/>
          </chem>
       </cell>
       <cell boundary="2" cell_type="1" target_area="525.8335060426139" lambda_celllength="0" at_boundary="true" dead="false" target_length="56.16520928997506" stiffness="1" index="1" source="false" pin_fixed="false" area="525.8335060426139" fixed="false" div_counter="0">
          <node n="0"/>
          <node n="1"/>
          <node n="5"/>
+         <node n="12"/>
+         <node n="9"/>
          <node n="4"/>
          <wall w="0"/>
          <wall w="3"/>

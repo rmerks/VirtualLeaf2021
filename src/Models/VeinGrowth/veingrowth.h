@@ -58,7 +58,7 @@ class VeinGrowthPlugin : public QObject, SimPluginInterface {
   // return number of chemicals
   virtual int NChem(void) { return 4; }
 
-  virtual QString DefaultLeafML(void) { return QString("procambium.xml"); }
+  virtual QString DefaultLeafML(void) { return QString("fixed_procambium.xml"); }
  
  private:
   double complex_PijAj(CellBase *here, CellBase *nb, Wall *w);
