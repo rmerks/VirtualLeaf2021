@@ -630,9 +630,26 @@ double lambda_for_shift=0.1;
 double getBaseLength(CellBase* c,NodeBase* n1, NodeBase * n2) {
 	WallElement* wallElement = n1->getWallElement(c);
 	if (wallElement == NULL) {
-		return ((*n1)-(*n2)).Norm();
+		return ((*n1)-(*n2)).Norm()/1.2;
 	}else {
-		return wallElement->getBaseLength();
+		double base_length = wallElement->getBaseLength();
+		if (std::isnan(base_length)) {
+			return ((*n1)-(*n2)).Norm()/1.2;
+		}
+		return base_length;
+	}
+}
+
+double getStiffness(CellBase* c,NodeBase* n1) {
+	WallElement* wallElement = n1->getWallElement(c);
+	if (wallElement == NULL) {
+		return c->GetWallStiffness();
+	}else {
+		double stiffness = wallElement->getStiffness();
+		if (std::isnan(stiffness)) {
+			return c->GetWallStiffness();
+		}
+		return stiffness;
 	}
 }
 
@@ -678,35 +695,45 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 				1./((ccRadius(*o0,*o1,*w3)))+
 				1./((ccRadius(*w3,*o2,*o3)));
 
-		double length_before =
-				((*w0)-(*w1)).Norm()+
-				((*w1)-(*w2)).Norm()+
-				((*w2)-(*w3)).Norm()+
-				((*w3)-(*w4)).Norm()+
-				((*o0)-(*o1)).Norm()+
-				((*o1)-(*o2)).Norm()+
-				((*o2)-(*o3)).Norm();
+		// the length contraint just needs to be calculated for the wall elements that change length
+		double wl1=((*w1)-(*w2)).Norm();
+		double wl2=((*w3)-(*w2)).Norm();
+		double wl3=((*w1)-(*w3)).Norm();
+		double s_bef = wl1;
+		double s_aft = wl3+wl2;
 
-		double length_base =
-				getBaseLength(c, w0, w1)+
-				getBaseLength(c, w1, w2)+
-				getBaseLength(c, w2, w3)+
-				getBaseLength(c, w3, w4)+
-				getBaseLength(c2, o0, o1)+
-				getBaseLength(c2, o1, o2)+
-				getBaseLength(c2, o2, o3);
+		double r_bef = wl1+wl2;
+		double r_aft = wl3;
 
-		double length_after =
-				((*w0)-(*w1)).Norm()+
-				((*w1)-(*w3)).Norm()+
-				((*w3)-(*w4)).Norm()+
-				((*o0)-(*o1)).Norm()+
-				((*o1)-(*w3)).Norm()+
-				((*w3)-(*o2)).Norm()+
-				((*o2)-(*o3)).Norm();
+		double length_before = wl1+wl2+wl1;
+
+		double stiffness = (
+				getStiffness(c, w1)*wl1+
+				getStiffness(c, w2)*wl2+
+				getStiffness(c2, o2)*wl1
+				) / length_before;
+
+		 double s_base = getBaseLength(c2, w1, w2);
+		 double r_base = getBaseLength(c, w1, w2) + getBaseLength(c2, w2, w3);
+
+        double length_dh = exp(-(
+    		elastic_modulus * stiffness * c->GetWallStiffness() *
+			(
+			(s_base) *(
+					 DSQR(s_aft/s_base - 1)
+					-DSQR(s_bef/s_base - 1)
+			) -
+			(s_base)*(
+					 DSQR(r_aft/r_base - 1)
+					-DSQR(r_bef/r_base - 1)
+			))));
 
 		double dh = exp(energy_after-energy_before*1.5+12.);
-		if (RANDOM() > dh)		{
+
+		if (debugNode == w2->Index()||debugNode == w2->Index()) {
+			cout << "";
+		}
+		if (RANDOM() > min(dh,length_dh))		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
@@ -726,6 +753,9 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 				cout << "  angle=" << angle << " radius=" << r2<<"\n";
 				cout << "  energy_before=" << energy_before<<"  energy_after="<<energy_after<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
 			}
+		}else if ( (s_bef+r_bef) > (s_aft+r_aft)){
+			cout << "?" << dh << "?";
+
 		}
 	}
 }
