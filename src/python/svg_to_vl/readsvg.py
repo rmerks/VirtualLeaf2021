@@ -19,7 +19,7 @@ def parseCoordinates(curr, coord, absolute):
         return [xy[0],xy[1]]
     else:
         return [curr[0]+xy[0],curr[1]+xy[1]]
-    
+
 def getStrokeFromStyle(style):
     style = re.split(';|:', style)
     return style[style.index('stroke')+1]
@@ -41,7 +41,7 @@ def readNodesFromPath(mesh,node,curr):
     mcell.addClosingWall()
     curr[0]=reset[0]
     curr[1]=reset[1]
-    
+
 
 def readNodesFromSvg(svgFileName, mesh):
     curr = [0.0, 0.0]
@@ -49,7 +49,7 @@ def readNodesFromSvg(svgFileName, mesh):
     myroot = mytree.getroot()
     viewBox = myroot.get("viewBox","0 0 100 100").split(' ');
     mesh.setScale(((float(viewBox[2]) - float(viewBox[0])) / 120 + (float(viewBox[3]) - float(viewBox[1])) / 120)/2.)
-    
+
     for y in myroot.findall('svg:path',namespaces):
         readNodesFromPath(mesh,y,curr)
     for x in myroot.findall('svg:g',namespaces):
@@ -60,8 +60,8 @@ def readNodesFromSvg(svgFileName, mesh):
 #svgFileName= '/home/ritchie/Desktop/gall_temp/root_draw_plain'
 #svgFileName= '/home/ritchie/Desktop/test'
 
-def convertSVG(svgFileName,template,scaleFactor,colormap):      
-    mesh = cellmodel.Mesh() 
+def convertSVG(svgFileName,template,scaleFactor,colormap):
+    mesh = cellmodel.Mesh()
     if not (scaleFactor is None):
         mesh.pixelScale = float(scaleFactor)
     if not (colormap is None):
@@ -103,7 +103,6 @@ else:
     print ("scale = ", args.scale_factor, end='\n')
     print ("colormap = ", args.color_map, end='\n')
     convertSVG(args.svg_file, args.template_file, args.scale_factor, args.color_map)
-    
-    
-    
-    
+
+
+

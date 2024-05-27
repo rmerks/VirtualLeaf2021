@@ -716,7 +716,7 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 		 double s_base = getBaseLength(c2, w1, w2);
 		 double r_base = getBaseLength(c, w1, w2) + getBaseLength(c2, w2, w3);
 
-        double length_dh = exp(-(
+        double length_dh = (
     		elastic_modulus * stiffness * c->GetWallStiffness() *
 			(
 			(s_base) *(
@@ -726,14 +726,15 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 			(s_base)*(
 					 DSQR(r_aft/r_base - 1)
 					-DSQR(r_bef/r_base - 1)
-			))));
+            )));
 
-		double dh = exp(energy_after-energy_before*1.5+12.);
+        double dh_bending = energy_after-energy_before;
 
 		if (debugNode == w2->Index()||debugNode == w2->Index()) {
 			cout << "";
 		}
-		if (RANDOM() > min(dh,length_dh))		{
+        double dh = dh_bending + length_dh;
+        if (dh < 0 || RANDOM()<exp((-dh)/par.T))		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
