@@ -660,7 +660,7 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 	Node * o2;
 	Node * o3;
 	double angle = (*w1-*w2).SignedAngle((*w3-*w2));
-	if (angle>0&&c->BoundaryPolP()||angle<0&&!c->BoundaryPolP()) {
+	if ((angle>0&&c->BoundaryPolP())||(angle<0&&!c->BoundaryPolP())) {
 		//we would bend inward and intersect cells
 		return;
 	}
@@ -734,7 +734,7 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 			cout << "";
 		}
         double dh = dh_bending + length_dh;
-        if (dh < 0 || RANDOM()< min(exp((-dh_bending)/par.T),exp((-length_dh)/par.T)))		{
+        if (RANDOM()< min(exp((-dh_bending)/par.T),exp((-length_dh)/par.T)))		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
