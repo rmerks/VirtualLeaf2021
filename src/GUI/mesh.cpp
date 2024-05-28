@@ -728,13 +728,13 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 					-DSQR(r_bef/r_base - 1)
             )));
 
-        double dh_bending = energy_after-energy_before;
+		double dh_bending = -(energy_after-energy_before*1.5+12.);
 
 		if (debugNode == w2->Index()||debugNode == w2->Index()) {
 			cout << "";
 		}
         double dh = dh_bending + length_dh;
-        if (dh < 0 || RANDOM()<exp((-dh)/par.T))		{
+        if (dh < 0 || RANDOM()< min(exp((-dh_bending)/par.T),exp((-length_dh)/par.T)))		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
