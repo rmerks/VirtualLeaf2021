@@ -218,7 +218,7 @@ class Mesh {
     }
   }
 
-  void DoCellHouseKeeping(list<CellWallCurve> curves) {
+  void DoCellHouseKeeping(list<CellWallCurve>& curves) {
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
@@ -227,13 +227,8 @@ class Mesh {
     }
 
     for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
-    	if (it->removeSpike()){
-    		bool anyBorderSpikeRemoved=it->isBorderCase();
-        		cout << ' ' << it->getCell()->Index() << '\n';
-
-            if (anyBorderSpikeRemoved) {
-            	RepairBoundaryPolygon();
-           	}
+    	if (it->removeSpike() && it->isBorderCase()){
+            RepairBoundaryPolygon();
         }
     }
 

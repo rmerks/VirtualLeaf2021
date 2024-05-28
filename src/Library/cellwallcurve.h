@@ -44,11 +44,11 @@ class CellWallCurve {
 	friend class CellBase;
 
 	bool borderCase;
-	double enery_before;
-	double enery_after;
+	double hamitonion;
 
 
 	CellBase * cell;
+	CellBase * other_cell;
 
 	NodeBase * from=NULL;
 	NodeBase * over=NULL;
@@ -66,7 +66,7 @@ public:
 		reset();
 	}
 	bool isBorderCase() {return borderCase;};
-	void setEneries(double before,double after) {enery_before=before;enery_after=after;};
+	void setHamitonion(double hamitonion) {this->hamitonion=hamitonion;};
 	void set(CellWallCurve * other);
 	void check_overlap(CellWallCurve & other);
 	void involved_nodes(NodeBase* n1,NodeBase* n2,NodeBase* n3,NodeBase* n4,NodeBase* n5,NodeBase* n6) {
@@ -82,6 +82,7 @@ public:
 	void reset() ;
 	int Index() ;
 	void setCell(CellBase * aCell) ;
+	void setOtherCell(CellBase * aCell) ;
 	CellBase * getCell() {return cell;};
 	void setTo(NodeBase * node) ;
 	NodeBase* getFrom()  ;

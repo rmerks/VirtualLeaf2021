@@ -138,6 +138,14 @@ class CellBase :  public QObject, public Vector
     source = false;
   }
 
+  list<CellWallCurve*> intendedRemodelings;
+  void resetCellWallCurve() {
+	  intendedRemodelings.clear();
+  }
+  void addCellWallCurve(CellWallCurve* curve) {
+	  intendedRemodelings.push_back(curve);
+  }
+
   inline bool Source(void) { return source; }
   enum boundary_type {None, Noflux, SourceSink, SAM};
   static const char * boundary_type_names[4];

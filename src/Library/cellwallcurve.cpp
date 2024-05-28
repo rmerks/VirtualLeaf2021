@@ -7,6 +7,7 @@
 
 void CellWallCurve::set(CellWallCurve *other) {
 	cell = other->cell;
+	other_cell = other->other_cell;
 	from = other->from;
 	over = other->over;
 	to = other->to;
@@ -17,7 +18,7 @@ bool CellWallCurve::check_overlap(NodeBase* other){
 	return
 		from ==other||
 		over==other||
-		to  ==other||
+		to==other||
 		n1==other||
 		n2==other||
 		n3==other||
@@ -26,8 +27,6 @@ bool CellWallCurve::check_overlap(NodeBase* other){
 		n6==other;
 }
 void CellWallCurve::check_overlap(CellWallCurve & other){
-	double otherSaving = other.enery_before-other.enery_after;
-	double mySaving = enery_before-enery_after;
 	bool overlap =
 		check_overlap(from)||
 		check_overlap(over)||
@@ -40,7 +39,7 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 		check_overlap(n6);
 
 	if (overlap) {
-		if (mySaving>otherSaving || (cell!=NULL && cell->Index()==-1)) {
+		if (other.hamitonion>this->hamitonion || (cell!=NULL && cell->Index()==-1)) {
 			other.reset();
 		} else {
 			reset();
@@ -94,12 +93,12 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 
 	void CellWallCurve::reset() {
 		cell=NULL;
+		other_cell=NULL;
 		from=NULL;
 		over=NULL;
 		to=NULL;
 		borderCase=false;
-		enery_after=0.;
-		enery_before=0.;
+		hamitonion=0.;
 		n1=NULL;
 		n2=NULL;
 		n3=NULL;
@@ -114,6 +113,16 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 
 	void CellWallCurve::setCell(CellBase * aCell) {
 		cell = aCell;
+		if (cell != NULL) {
+			cell->addCellWallCurve(this);
+		}
+	}
+
+	void CellWallCurve::setOtherCell(CellBase * aCell) {
+		other_cell = aCell;
+		if (other_cell != NULL) {
+			other_cell->addCellWallCurve(this);
+		}
 	}
 
 	void CellWallCurve::setTo(NodeBase * node) {
@@ -178,7 +187,9 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 		CellBase * c2 = cell;
 		CellBase * c3 = cellBehindShorterWall();
 		if (c1==NULL ||c3 == NULL) {
+#ifdef QDEBUG
 			cout << "can't find cells behind walls cell=" << cell->Index() << " node=" << over->Index() << "\n";
+#endif
 			return false;
 		}
 		//if the cell was selected for division then first divide
@@ -193,22 +204,29 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 		NodeBase * c = over;
 		if (c1->Index() == -1 ||c2->Index() == -1 ||c3->Index() == -1) {
 			borderCase = true;
+#ifdef QDEBUG
 			cout << "border case\n";
+#endif
 		}
 		if (c->countNeighbors() ==  2) {
 			// TODO delete node, spike into the cell itself
+#ifdef QDEBUG
 			cout << " inner spike ";
 			cout << " c2=" << c2->Index() ;
+#endif
 			c2->removeNode(c);
 			c2->correctNeighbors();
 			return true;
 		}
+#ifdef QDEBUG
 		if (a==b) {
 			cout << " merged node ";
 		}
+#endif
 		//we go over the c2 walls, here is the spike
 		if (c1 == NULL||c3 == NULL|| c1==c3) {
 			// unknow case
+#ifdef QDEBUG
 			cout<< " not handled spike "<< (c1==c3?"eq ":"");
 			if (c1!= NULL)
 				cout << " c1=" << c1->Index() ;
@@ -219,13 +237,16 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 				cout << " c3=" << c3->Index() ;
 			else
 				cout << " c3=NULL";
+#endif
 			return false;
 		}
 
+#ifdef QDEBUG
  		if (c2->Index()==-1) {
 			cout<< " boundary node spike ";
 			cout << " c2=" << c2->Index() ;
 		}
+#endif
 		WallBase * wallc1c2 = findWallBetweenEndingAt(c1, c2, c);
 		WallBase * wallc2c3 = findWallBetweenEndingAt(c2,c3,c);
 		//for the extending wall we need a existing wall between c1 and c3 that ends at c.
@@ -239,16 +260,20 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 				wallc1ToC = otherWallEndingAt(c1, c, wallc1c2);
 				wallc3ToC = otherWallEndingAt(c3, c, wallc2c3);
 				if (wallc1ToC == NULL|| wallc3ToC==NULL) {
+#ifdef QDEBUG
 					cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
 					cout << " not handled case\n";
+#endif
 					return false;
 				}
 			}
 
 			// we extend the existing wall from c to b.
+#ifdef QDEBUG
 			cout << " spike removed\n";
 			cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
 			cout << " c1=" << c1->Index() << " c2=" << c2->Index()<< " c3=" << c3->Index()<<"\n";
+#endif
 
 			c2->removeNode(c);
 			// add b node to c1 after a or c depending who comes first
@@ -260,7 +285,9 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 				b->SetBoundary();
 			}
 			if (wallc1c3 != NULL) {
+#ifdef QDEBUG
 				cout << " wallc1c3=" << n1index(wallc1c3) << "->" << n2index(wallc1c3) << " wallc1c2=" << n1index(wallc1c2) << "->" << n2index(wallc1c2) << " wallc2c3=" << n1index(wallc2c3) << "->" << n2index(wallc2c3)<<"\n";
+#endif
 				wallc1c3->replaceNode(c,b);
 			} else {
 				wallc1c3 = c1->newWall(c,b,c3);
@@ -279,6 +306,7 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 			return true;
 		} else {
 			// a new wall is nessesary
+#ifdef QDEBUG
 			cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
 			if (wallc1c3!= NULL) {
 				cout << " wallc1c3=" << n1index(wallc1c3) << "->" << n2index(wallc1c3)<<"\n";
@@ -296,6 +324,7 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 				cout << " wallc2c3=NULL\n";
 			}
 			cout << " new wall nessesary ";
+#endif
 			return false;
 		}
 	}

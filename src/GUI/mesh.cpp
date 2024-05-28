@@ -713,8 +713,8 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 				getStiffness(c2, o2)*wl1
 				) / length_before;
 
-		 double s_base = getBaseLength(c2, w1, w2);
-		 double r_base = getBaseLength(c, w1, w2) + getBaseLength(c2, w2, w3);
+		double s_base = getBaseLength(c2, w1, w2);
+		double r_base = getBaseLength(c, w1, w2) + getBaseLength(c2, w2, w3);
 
         double length_dh = (
     		elastic_modulus * stiffness * c->GetWallStiffness() *
@@ -734,15 +734,17 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 			cout << "";
 		}
         double dh = dh_bending + length_dh;
-        if (RANDOM()< min(exp((-dh_bending)/par.T),exp((-length_dh)/par.T)))		{
+        double hamitonion = min(exp((-dh_bending)/par.T),exp((-length_dh)/par.T));
+        if (RANDOM()< hamitonion)		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
+			curve.setOtherCell(c2);
 			curve.shift(w1);
 			curve.shift(w2);
 			curve.shift(w3);
 			curve.involved_nodes(w0,w4,o0,o1,o2,o3);
-			curve.setEneries(energy_before,energy_after);
+			curve.setHamitonion(hamitonion);
 
 			for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
 				it->check_overlap(curve);
@@ -754,9 +756,6 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 				cout << "  angle=" << angle << " radius=" << r2<<"\n";
 				cout << "  energy_before=" << energy_before<<"  energy_after="<<energy_after<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
 			}
-		}else if ( (s_bef+r_bef) > (s_aft+r_aft)){
-			cout << "?" << dh << "?";
-
 		}
 	}
 }
@@ -776,13 +775,7 @@ void extractData(WallElement *we,double & base_length,double &stiffness) {
 }
 
 void Mesh::SlideCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
-	// baseLength and length for future inclusion
-	//	double baseLength=0;
-	//	double length=0;
-	//	c->LoopWallElements([this,&baseLength,&length](auto wallElementInfo){
-	//		baseLength += wallElementInfo->getBaseLength();
-	//		length += wallElementInfo->getLength();
-	//	});
+
 if (c->nodes.size()<5) {
 	return;
 }
@@ -797,7 +790,7 @@ if (c->nodes.size()<5) {
 	Node * o2=w2;
 	Node * o3=w3;
 	while (i!=c->nodes.end()) {
-		SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+		SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
 		w0=w1;
 		w1=w2;
 		w2=w3;
@@ -805,30 +798,31 @@ if (c->nodes.size()<5) {
 		w4=*(++i);
 	}
 	w4=o0;
-	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o1;
-	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o2;
-	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o3;
-	SlideWallElement(curves,c,w0,w1,w2,w3,w4/*,baseLength,length*/) ;
+	SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
 }
 
 double Mesh::SlideWallElements(list<CellWallCurve> & curves) {
 	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
 		Cell *c = *ii;
+		c->resetCellWallCurve();
 		SlideCellWallElements(curves,c);
 	}
 	SlideCellWallElements(curves,boundary_polygon);

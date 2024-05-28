@@ -251,56 +251,50 @@ INIT {
 
 TIMESTEP {
 
-  static int i=0;
-  static int t=0;
-  //static int ncells;
+	static int i=0;
+	static int t=0;
 
-  if (!batch) {
-    UserMessage(QString("Time: %1").arg(mesh.getTimeHours().c_str()));
-  }
+	if (!batch) {
+	  UserMessage(QString("Time: %1").arg(mesh.getTimeHours().c_str()));
+	}
 
-  //ncells=mesh.NCells();
+	double dh;
 
+	if(DynamicCellsP()) {
 
-  double dh;
+		mesh.CompatibilityLevel(par.compatibility_level);
+		mesh.ElasticModulus(par.elastic_modulus);
+		mesh.PotentialSlideAngle(par.potential_slide_angle);
+		mesh.WallRelaxation();
 
-  if(DynamicCellsP()) {
+		dh = mesh.DisplaceNodes();
 
-	mesh.CompatibilityLevel(par.compatibility_level);
-	mesh.ElasticModulus(par.elastic_modulus);
-	mesh.PotentialSlideAngle(par.potential_slide_angle);
-    mesh.WallRelaxation();
+		// Only allow for node insertion, cell division and cell growth
+		// if the system has equillibrized
+		// i.e. cell wall tension equillibrization is much faster
+		// than biological processes, including division, cell wall yielding
+		// and cell expansion
+		mesh.InsertNodes(); // (this amounts to cell wall yielding)
 
+		if ( (-dh) < par.energy_threshold) {
+			list<CellWallCurve> curves;
+			if (mesh.activateWallSliding()) {
+				mesh.SlideWallElements(curves);
+			}
+			mesh.IncreaseCellCapacityIfNecessary();
+			mesh.DoCellHouseKeeping(curves);
 
-    dh = mesh.DisplaceNodes();
-
-    // Only allow for node insertion, cell division and cell growth
-    // if the system has equillibrized
-    // i.e. cell wall tension equillibrization is much faster
-    // than biological processes, including division, cell wall yielding
-    // and cell expansion
-    mesh.InsertNodes(); // (this amounts to cell wall yielding)
-
-    if ( (-dh) < par.energy_threshold) {
-		list<CellWallCurve> curves;
-    	if (mesh.activateWallSliding()) {
-    		mesh.SlideWallElements(curves);
-    	}
-      mesh.IncreaseCellCapacityIfNecessary();
-      mesh.DoCellHouseKeeping(curves);
-      //mesh.LoopCurrentCells(mem_fn(&plugin->CellHouseKeeping)); // this includes cell division
-
-      // Reaction diffusion	
-      mesh.ReactDiffuse(par.rd_dt);
-      t++;
-      Plot(par.resize_stride);
-    }
-  } else {
-    mesh.ReactDiffuse(par.rd_dt);
-    Plot(par.resize_stride);
-  }
-  i++;
-  return mesh.getTime();
+			// Reaction diffusion
+			mesh.ReactDiffuse(par.rd_dt);
+			t++;
+    		Plot(par.resize_stride);
+		}
+	} else {
+		mesh.ReactDiffuse(par.rd_dt);
+		Plot(par.resize_stride);
+	}
+	i++;
+	return mesh.getTime();
 }
 
 
