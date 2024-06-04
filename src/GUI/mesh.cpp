@@ -562,7 +562,7 @@ double b_cocient(const Vector& AC, const Vector& AB,const Vector& ACperp, const 
 //http://dx.doi.org/10.1016/j.cis.2014.01.018
 // radius of circle with center on line B-C and connecting at norm of the lines (A-B ode A-C)
 // and sharing one point with the other line. This we define the kissing circle
-double ccRadius(const Vector& B, const Vector& A, const Vector& C) {
+double osculating_circle_radius(const Vector& B, const Vector& A, const Vector& C) {
 	Vector AC = (C-A).Normalised();
 	Vector AB = (B-A).Normalised();
 
@@ -653,7 +653,7 @@ double getStiffness(CellBase* c,NodeBase* n1) {
 	}
 }
 
-void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
 
 	Node * o0;
 	Node * o1;
@@ -674,11 +674,11 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 //
 // angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
 // angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
-		double r1 = ccRadius(*w0,*w1,*w2);
-		double r2 = ccRadius(*w1,*w2,*w3);
-		double r3 = ccRadius(*w2,*w3,*w4);
-		double r4 = ccRadius(*w0,*w1,*w3);
-		double r5 = ccRadius(*w1,*w3,*w4);
+		double r1 = osculating_circle_radius(*w0,*w1,*w2);
+		double r2 = osculating_circle_radius(*w1,*w2,*w3);
+		double r3 = osculating_circle_radius(*w2,*w3,*w4);
+		double r4 = osculating_circle_radius(*w0,*w1,*w3);
+		double r5 = osculating_circle_radius(*w1,*w3,*w4);
 //		if (c->Index()==-1 && r2 < r4) {
 //			// special case, narrow hole to allow merging we disable the sub condition
 //		}
@@ -686,14 +686,14 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 				1./(r1)+
 				1./(r2)+
 				1./(r3)+
-				1./((ccRadius(*o0,*o1,*o2)))+
-				1./((ccRadius(*o1,*o2,*o3)));
+				1./((osculating_circle_radius(*o0,*o1,*o2)))+
+				1./((osculating_circle_radius(*o1,*o2,*o3)));
 		double energy_after =
 				1./(r4)+
-				1./((ccRadius(*o1,*w3,*o2)))+
+				1./((osculating_circle_radius(*o1,*w3,*o2)))+
 				1./(r5)+
-				1./((ccRadius(*o0,*o1,*w3)))+
-				1./((ccRadius(*w3,*o2,*o3)));
+				1./((osculating_circle_radius(*o0,*o1,*w3)))+
+				1./((osculating_circle_radius(*w3,*o2,*o3)));
 
 		// the length contraint just needs to be calculated for the wall elements that change length
 		double wl1=((*w1)-(*w2)).Norm();
@@ -716,7 +716,7 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 		double s_base = getBaseLength(c2, w1, w2);
 		double r_base = getBaseLength(c, w1, w2) + getBaseLength(c2, w2, w3);
 
-        double length_dh = (
+		double length_dh = (
     		elastic_modulus * stiffness * c->GetWallStiffness() *
 			(
 			(s_base) *(
@@ -734,8 +734,11 @@ void Mesh::SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,No
 			cout << "";
 		}
         double dh = dh_bending + length_dh;
-        double hamitonion = min(exp((-dh_bending)/par.T),exp((-length_dh)/par.T));
-        if (RANDOM()< hamitonion)		{
+        double random = RANDOM();
+        double hamitonion1 = exp((-dh_bending)/par.T);
+        double hamitonion2 = exp((-length_dh)/par.T);
+        double hamitonion = std::isnan(hamitonion1)?hamitonion2:(std::isnan(hamitonion2)?hamitonion1:min(hamitonion1,hamitonion2));
+        if (random< hamitonion)		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
@@ -774,7 +777,7 @@ void extractData(WallElement *we,double & base_length,double &stiffness) {
 	}
 }
 
-void Mesh::SlideCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
+void Mesh::RemodelCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
 
 if (c->nodes.size()<5) {
 	return;
@@ -790,7 +793,7 @@ if (c->nodes.size()<5) {
 	Node * o2=w2;
 	Node * o3=w3;
 	while (i!=c->nodes.end()) {
-		SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
+		RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
 		w0=w1;
 		w1=w2;
 		w2=w3;
@@ -798,34 +801,34 @@ if (c->nodes.size()<5) {
 		w4=*(++i);
 	}
 	w4=o0;
-	SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o1;
-	SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o2;
-	SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o3;
-	SlideWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
 }
 
-double Mesh::SlideWallElements(list<CellWallCurve> & curves) {
+double Mesh::RemodelWallElements(list<CellWallCurve> & curves) {
 	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
 		Cell *c = *ii;
 		c->resetCellWallCurve();
-		SlideCellWallElements(curves,c);
+		RemodelCellWallElements(curves,c);
 	}
-	SlideCellWallElements(curves,boundary_polygon);
+	RemodelCellWallElements(curves,boundary_polygon);
 	return 0.0;
 }
 
@@ -1146,15 +1149,20 @@ double Mesh::DisplaceNodes(void) {
 
 	// bending energy also holds for outer boundary
 	// first implementation. Can probably be done more efficiently
-	// calculate circumcenter radius (gives local curvature)
+	// calculate osculating circle radius (gives local curvature)
 	// the ideal bending state is flat... (K=0)
 	if (abs(par.bend_lambda) > 0.01)	  {
 	  // strong bending energy to resist "cleaving" by division planes
-	  double r1, r2, xc, yc;
-	  CircumCircle(i_min_1.x, i_min_1.y, old_p.x, old_p.y, i_plus_1.x, i_plus_1.y,
-		       &xc,&yc,&r1);
-	  CircumCircle(i_min_1.x, i_min_1.y, new_p.x, new_p.y, i_plus_1.x, i_plus_1.y,
-		       &xc,&yc, &r2);
+	  double r1, r2;
+
+	  Vector before_a(i_min_1.x,i_min_1.y,0);
+	  Vector before_b(old_p.x, old_p.y,0);
+	  Vector before_c(i_plus_1.x, i_plus_1.y,0);
+	  r1 = osculating_circle_radius(before_a,before_b,before_c);
+	  Vector after_a(i_min_1.x, i_min_1.y,0);
+	  Vector after_b(new_p.x, new_p.y,0);
+	  Vector after_c(i_plus_1.x, i_plus_1.y,0);
+	  r2 = osculating_circle_radius(after_a,after_b,after_c);
 
 	  if (r1<0 || r2<0) {
 	    MyWarning::warning("r1 = %f, r2 = %f",r1,r2);
@@ -1394,55 +1402,6 @@ void Mesh::InsertNode(Edge &e) {
   }
 
   new_node->splittWallElementsBetween(e.first, e.second);
-}
-
-
-/*
-  Calculate circumcircle of triangle (x1,y1), (x2,y2), (x3,y3)
-  The circumcircle centre is returned in (xc,yc) and the radius in r
-  NOTE: A point on the edge is inside the circumcircle
-*/
-void Mesh::CircumCircle(double x1,double y1,double x2,double y2,double x3,double y3,
-			double *xc,double *yc,double *r)
-{
-  double m1,m2,mx1,mx2,my1,my2;
-  double dx,dy,rsqr;
-
-  /* Check for coincident points */
-  /*if (abs(y1-y2) < TINY && abs(y2-y3) < TINY)
-    return(false);*/
-
-  if (abs(y2-y1) < TINY) {
-    m2 = - (x3-x2) / (y3-y2);
-    mx2 = (x2 + x3) / 2.0;
-    my2 = (y2 + y3) / 2.0;
-    *xc = (x2 + x1) / 2.0;
-    *yc = m2 * (*xc - mx2) + my2;
-  } else if (abs(y3-y2) < TINY) {
-    m1 = - (x2-x1) / (y2-y1);
-    mx1 = (x1 + x2) / 2.0;
-    my1 = (y1 + y2) / 2.0;
-    *xc = (x3 + x2) / 2.0;
-    *yc = m1 * (*xc - mx1) + my1;
-  } else {
-    m1 = - (x2-x1) / (y2-y1);
-    m2 = - (x3-x2) / (y3-y2);
-    mx1 = (x1 + x2) / 2.0;
-    mx2 = (x2 + x3) / 2.0;
-    my1 = (y1 + y2) / 2.0;
-    my2 = (y2 + y3) / 2.0;
-    *xc = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2);
-    *yc = m1 * (*xc - mx1) + my1;
-  }
-
-  dx = x2 - *xc;
-  dy = y2 - *yc;
-  rsqr = dx*dx + dy*dy;
-  *r = sqrt(rsqr);
-
-  return;
-  // Suggested
-  // return((drsqr <= rsqr + EPSILON) ? TRUE : FALSE);
 }
 
 //

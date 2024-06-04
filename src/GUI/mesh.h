@@ -257,14 +257,14 @@ class Mesh {
     f(cells[i]);
   }
 
-  double SlideWallElements(list<CellWallCurve> & curves);
+  double RemodelWallElements(list<CellWallCurve> & curves);
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
   void PotentialSlideAngle(double potential_slide_angle) {this->potential_slide_angle=potential_slide_angle;}
   void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
   bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
-  bool activateWallSliding() {return (this->compatibility_level & WALL_SLIDING) != 0;}
+  bool activateWallRemodeling() {return (this->compatibility_level & WALL_SLIDING) != 0;}
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);
   int NEqs(void) {     int nwalls = walls.size();
@@ -454,8 +454,8 @@ class Mesh {
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);
   CellBase * getOtherCell(CellBase* c,Node* node1,Node * node2);
-  void SlideWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
-  void SlideCellWallElements(list<CellWallCurve> & curves,CellBase *c);
+  void RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
+  void RemodelCellWallElements(list<CellWallCurve> & curves,CellBase *c);
   bool findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
   inline Node *AddNode(Node *n) {
     nodes.push_back(n);
@@ -474,8 +474,6 @@ class Mesh {
     return c;
   }
 
-  void CircumCircle(double x1,double y1,double x2,double y2,double x3,double y3,
-		    double *xc,double *yc,double *r);
   void calculateWallStiffness(CellBase *c,Node* node, double *w_p1,double *w_p2, double *bl_minus_1, double *bl_plus_1);
 
   void updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node);

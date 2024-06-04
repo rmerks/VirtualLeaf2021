@@ -38,8 +38,8 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 		check_overlap(n5)||
 		check_overlap(n6);
 
-	if (overlap) {
-		if (other.hamitonion>this->hamitonion || (cell!=NULL && cell->Index()==-1)) {
+	if (overlap && this->cell != NULL && other.cell != NULL) {
+		if (other.hamitonion<this->hamitonion || (cell!=NULL && cell->Index()==-1)) {
 			other.reset();
 		} else {
 			reset();
@@ -92,7 +92,7 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 
 
 	void CellWallCurve::reset() {
-		cell=NULL;
+ 		cell=NULL;
 		other_cell=NULL;
 		from=NULL;
 		over=NULL;

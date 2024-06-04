@@ -278,8 +278,8 @@ TIMESTEP {
 
 		if ( (-dh) < par.energy_threshold) {
 			list<CellWallCurve> curves;
-			if (mesh.activateWallSliding()) {
-				mesh.SlideWallElements(curves);
+			if (mesh.activateWallRemodeling()) {
+				mesh.RemodelWallElements(curves);
 			}
 			mesh.IncreaseCellCapacityIfNecessary();
 			mesh.DoCellHouseKeeping(curves);
@@ -352,7 +352,7 @@ void vlMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
 Parameter par;
 
-int main(int argc,char **argv) {
+ int main(int argc,char **argv) {
 
   try {
     int c;

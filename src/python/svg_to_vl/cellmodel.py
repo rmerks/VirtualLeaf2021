@@ -3,14 +3,7 @@ from math import hypot
 import xml.etree.ElementTree as ET
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import orient
-from mpi4py.futures.aplus import catch
-from matplotlib.projections import geo
-from pip._vendor.pygments.formatters import other
 from sympy.logic.boolalg import false, true
-from fontTools.varLib.models import allNone
-from vtkmodules.numpy_interface.algorithms import area
-from sympy.polys.polytools import nroots
-from pip._vendor.typing_extensions import Self
 
 class ColorSpec:
     
@@ -591,5 +584,5 @@ class Cell:
         minx, miny, maxx, maxy = polygon.minimum_rotated_rectangle.bounds
         width = maxx - minx
         height = maxy - miny
-        diagonal = hypot(width, height)*1.2
+        diagonal = 0 #hypot(width, height)*1.2
         return (polygon.area, diagonal, reverse)
