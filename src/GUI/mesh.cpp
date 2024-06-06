@@ -667,6 +667,8 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 
 	CellBase* c2 = getOtherCell(c,w1,w2);
 	if (c2 != NULL && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
+
+
 //now check how profitable the move of wall element w1-w2 to w1-w3
 //this changes also cell c2 where wall element o1->o2 will be replaced
 //by wall elements o1->w3 and w3->o2 all other surrounding cells will remain
@@ -728,14 +730,14 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 					-DSQR(r_bef/r_base - 1)
             )));
 
-		double dh_bending = -(energy_after-energy_before*1.5+12.);
+		double dh_bending = energy_after-energy_before*1.5+12.;
 
 		if (debugNode == w2->Index()||debugNode == w2->Index()) {
 			cout << "";
 		}
         double dh = dh_bending + length_dh;
         double random = RANDOM();
-        double hamitonion1 = exp((-dh_bending)/par.T);
+        double hamitonion1 = std::nan("1");//exp((-dh_bending)/par.T);
         double hamitonion2 = exp((-length_dh)/par.T);
         double hamitonion = std::isnan(hamitonion1)?hamitonion2:(std::isnan(hamitonion2)?hamitonion1:min(hamitonion1,hamitonion2));
         if (random< hamitonion)		{
@@ -747,11 +749,8 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 			curve.shift(w2);
 			curve.shift(w3);
 			curve.involved_nodes(w0,w4,o0,o1,o2,o3);
-			curve.setHamitonion(hamitonion);
+			curve.setHamitonion(hamitonion2);
 
-			for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
-				it->check_overlap(curve);
-			}
 			curves.push_back(curve);
 			if (debugNode>-1){
 				cout << "#" << dh << "#";

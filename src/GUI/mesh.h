@@ -225,10 +225,15 @@ class Mesh {
     		i ++) {
     	plugin->CellHouseKeeping(*i);
     }
-
+    curves.sort([](CellWallCurve lhs, CellWallCurve rhs) {return lhs.getHamitonion() > rhs.getHamitonion();});
     for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
-    	if (it->removeSpike() && it->isBorderCase()){
-            RepairBoundaryPolygon();
+    	if (it->removeSpike()) {
+    		if(it->isBorderCase()){
+    			RepairBoundaryPolygon();
+    		}
+    	    for (std::list<CellWallCurve>::iterator it2 = curves.begin(); it2 != curves.end(); ++it2){
+    	    	it2->check_overlap(*it);
+    	    }
         }
     }
 
