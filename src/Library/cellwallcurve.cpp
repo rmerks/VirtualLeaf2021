@@ -28,15 +28,15 @@ bool CellWallCurve::check_overlap(NodeBase* other){
 }
 void CellWallCurve::check_overlap(CellWallCurve & other){
 	bool overlap =
-		check_overlap(from)||
-		check_overlap(over)||
-		check_overlap(to)||
-		check_overlap(n1)||
-		check_overlap(n2)||
-		check_overlap(n3)||
-		check_overlap(n4)||
-		check_overlap(n5)||
-		check_overlap(n6);
+		check_overlap(other.from)||
+		check_overlap(other.over)||
+		check_overlap(other.to)||
+		check_overlap(other.n1)||
+		check_overlap(other.n2)||
+		check_overlap(other.n3)||
+		check_overlap(other.n4)||
+		check_overlap(other.n5)||
+		check_overlap(other.n6);
 
 	if (overlap && this->cell != NULL && other.cell != NULL) {
 		if (other.hamitonion<this->hamitonion || (cell!=NULL && cell->Index()==-1)) {

@@ -54,7 +54,6 @@ public:
     double getLength() {return this->length;};
 
     void updateBaseLength();
-    void relax();
     bool plasticStretch();
 
     void updateFrom(WallElementInfo* original,double ratio);
