@@ -56,9 +56,9 @@ class VeinGrowthPlugin : public QObject, SimPluginInterface {
   // to be executed for coloring a cell
   virtual void SetCellColor(CellBase *c, QColor *color);	
   // return number of chemicals
-  virtual int NChem(void) { return 4; }
+  virtual int NChem(void) { return 2; }
 
-  virtual QString DefaultLeafML(void) { return QString("fixed_procambium.xml"); }
+  virtual QString DefaultLeafML(void) { return QString("fixed_procambium_2.xml"); }
  
  private:
   double complex_PijAj(CellBase *here, CellBase *nb, Wall *w);

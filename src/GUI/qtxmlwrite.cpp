@@ -187,6 +187,24 @@ void Cell::XMLAddCore(QDomDocument &doc, QDomElement &xmlcell) const {
          xmlcell.setAttribute("cell_type",standardlocale.toString(cell_type));
   }
 
+  {
+         if (is_growth_direction) {
+            xmlcell.setAttribute("growth_direction_x",standardlocale.toString(growth_direction->x));
+         } else {
+            xmlcell.setAttribute("growth_direction_x",standardlocale.toString(0));
+         }
+
+  }
+
+  {
+         if (is_growth_direction) {
+            xmlcell.setAttribute("growth_direction_y",standardlocale.toString(growth_direction->y));
+         } else {
+            xmlcell.setAttribute("growth_direction_y",standardlocale.toString(0));
+         }
+
+  }
+
   for (list<Node *>::const_iterator i=nodes.begin();i!=nodes.end();i++) {
     {
      //ostringstream text;

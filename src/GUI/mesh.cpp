@@ -2379,7 +2379,12 @@ void Mesh::setValues(double x, double *y) {
   const int stride = 100;
   for (vector<Cell *>::iterator c=cells.begin(); c!=cells.end(); c++) {
     for (int ch=0;ch<nchems;ch++) {
-      (*c)->SetChemical(ch, y[i+ch]);
+      if (std::isnan(y[i+ch])) {
+        (*c)->SetChemical(ch, 0);
+        cout << "chemical is nan" << ch << i << endl;
+      } else {
+        (*c)->SetChemical(ch, y[i+ch]);
+      }
     }
     if ( !(emit_count%stride)) {
       (*c)->EmitValues(x);
@@ -2422,7 +2427,12 @@ double *Mesh::getValues(int *neqs) {
   int i=0;
   for (vector<Cell *>::iterator c=cells.begin(); c!=cells.end(); c++) {
     for (int ch=0;ch<nchems;ch++) {
-      values[i+ch]=(*c)->Chemical(ch);
+      if (!std::isnan((*c)->Chemical(ch))) {
+        values[i+ch]=(*c)->Chemical(ch);
+      } else {
+        values[i+ch]=0;
+      }
+      //values[i+ch]=(*c)->Chemical(ch);
     }
     i+=nchems;
   }

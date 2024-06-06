@@ -157,10 +157,18 @@ class WallBase {
   }
   // checked version. Use during debugging stage.
   inline double getTransporter(CellBase *c, int ch) const
-  { 
-    return c1 == c ? transporters1[ch] : ( c2 == c ? transporters2[ch] : throw "WallBase::getTransporter called with wrong cell") ; } 
+  {
+    if (std::isnan(transporters1[ch]) || std::isnan(transporters2[ch])) {
+      cout << "transporter 1 or 2 is nan" << ch << endl;
+      return 0;
+    }
+    return c1 == c ? transporters1[ch] : ( c2 == c ? transporters2[ch] : throw "WallBase::getTransporter called with wrong cell") ; }
 
-  inline void setTransporter(CellBase *c, int ch, double val) { 
+  inline void setTransporter(CellBase *c, int ch, double val) {
+    if (std::isnan(val)) {
+      cout << "Tranporter is nan" << ch << val << endl;
+      val = 0;
+    }
     if ( c1 == c ) {
       transporters1[ch]=val;
     } else 

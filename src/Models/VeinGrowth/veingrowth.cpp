@@ -33,10 +33,20 @@
 
 static const std::string _module_id("$Id$");
 
+/*class blabla {
+    Vector growth_direction;
+    bool is_growth_direction;
+};*/
+
 
 // To be executed after cell division
 void VeinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase *daughter2)
 {
+    // After division, the growth direction of the parent cell (if it exists) is inherited by the daugther cells
+    if (daughter2->CellType() == 1 && daughter2->isGrowthDirection()) {
+        Vector growth_direction = daughter2->GetGrowthDirection();
+        daughter1->SetGrowthDirection(growth_direction.x, growth_direction.y);
+    }
 
     // Auxin distributes between parent and daughter according to area
     double area1 = daughter1->Area(), area2 = daughter2->Area();
@@ -44,8 +54,6 @@ void VeinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, Ce
 
     daughter1->SetChemical(0,daughter1->Chemical(0)*(area1/tot_area));
     daughter2->SetChemical(0,daughter2->Chemical(0)*(area2/tot_area));
-    //daughter1->SetChemical(0, 1);
-    //daughter2->SetChemical(0, 1);
 
     // After division, the growth direction of the parent cell (if it exists) is inherited by the daugther cells
     // The growth direction is saved in the chemicals: Chemical[2]= x-direction, Chemical[3] = y-direction
@@ -64,7 +72,7 @@ void VeinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, Ce
 
     if (daughter2->CellType() == 2) {
         daughter2->SetChemical(1, par->initval[1]);
-    } /*else if (daughter2->CellType() == 1 || daughter1->CellType() == 3) {
+    }/* else if (daughter2->CellType() == 1 || daughter1->CellType() == 3) {
         daughter1->SetChemical(1, par->initval[1] / 4);
     }*/
 
@@ -89,40 +97,47 @@ void VeinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
 void VeinGrowthPlugin::CellHouseKeeping(CellBase *c)
 {
     if (c->Boundary()==CellBase::None) {
-        if (c->CellType() == 3 && c->Chemical(0) > 1.9) {
+        //if (c->div)
+        if (c->Chemical(0) > 1.9 && c->CellType() != 1) {
              c->SetCellType(1);
+
             // inherit growth direction
             double x_value = 0;
             double y_value = 0;
             c->LoopNeighbors([&x_value, &y_value](auto neighbor){
                 if (neighbor->CellType() == 1) {
-                    if (!(std::isnan(neighbor->Chemical(2)))) {
-                        x_value += neighbor->Chemical(2);
+                    if (neighbor->isGrowthDirection()) {
+                        Vector neighbor_growth_direction = neighbor->GetGrowthDirection();
+                        x_value += neighbor_growth_direction.x;
+                        y_value += neighbor_growth_direction.y;
+                    }
+
+                    /*if (!(std::isnan(neighbor->Chemical(2)))) {
+                        x_value += neighbor_growth_direction.x;
                     }
 
                     if (!(std::isnan(neighbor->Chemical(3)))) {
-                        y_value += neighbor->Chemical(3);
-                    }
+                        y_value += neighbor_growth_direction.y;
+                    }*/
                 }
             });
 
             // reduce values -> capacity?
-            c->SetChemical(2, x_value);
-            c->SetChemical(3, y_value);
+            c->SetGrowthDirection(x_value, y_value);
+            /*c->SetChemical(2, x_value / ((x_value + y_value) / 2));
+            c->SetChemical(3, y_value/* / ((x_value + y_value) / 2));*/
         }
 
         if (c->CellType() == 1) {
             // set growth direction if available, if not then compute it
             Vector growth_direction = Vector(0 ,1 ,0);
             if (c->CountNeighbors() > 1 ) {
-                if (std::isnan(c->Chemical(2)) && std::isnan(c->Chemical(3))) {
+                //if (std::isnan(c->Chemical(2)) && std::isnan(c->Chemical(3))) {
+                //if (c->Chemical(2) == 0 && c->Chemical(3) == 0) {
+                if (!c->isGrowthDirection()) {
                     double highest_auxin = 0;
                     CellBase *target_cell = NULL;
                     c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
-                        if (neighbor->CellType() == 2) {
-                            //neighbor->SetChemical(1, 2 * neighbor->Chemical(1));
-                        }
-                        //cout << neighbor->Chemical(0) << endl;
                         if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
                             highest_auxin = neighbor->Chemical(0);
                             target_cell = neighbor;
@@ -131,8 +146,9 @@ void VeinGrowthPlugin::CellHouseKeeping(CellBase *c)
                     if (target_cell != NULL) {
                         growth_direction = c->Centroid() - target_cell->Centroid();
                         //growth_direction = Vector(target_cell->x - c->x, target_cell->y - c->y, 0);
-                        c->SetChemical(2, growth_direction.x);
-                        c->SetChemical(3, growth_direction.y);
+                        c->SetGrowthDirection(growth_direction.x, growth_direction.y);
+                        //c->SetChemical(2, growth_direction.x);
+                        //c->SetChemical(3, growth_direction.y);
                     } else {
                         growth_direction = Vector(0, 1, 0);
                         cout << "Error when evaluation neighbours in household!" << endl;
@@ -141,8 +157,7 @@ void VeinGrowthPlugin::CellHouseKeeping(CellBase *c)
                     //cout << c->NChem() << endl;
                     //growth_direction = new Vector(0, 1, 0);
                 } else {
-                    //growth_direction = Vector(0, 1, 0);
-                    growth_direction = Vector(c->Chemical(2), c->Chemical(3), 0);
+                    growth_direction = c->GetGrowthDirection();
                 }
             }/* else {
             growth_direction = Vector(0 ,1 ,0);
@@ -358,6 +373,10 @@ void VeinGrowthPlugin::CellDynamics(CellBase *c, double *dchem)
     // Note: Pi and Pij measured in numbers of molecules, not concentrations
     double dPidt = 0.;
 
+    if (std::isnan(c->SumTransporters( 1 ))) {
+        double sum_Pij = c->SumTransporters( 1 );
+    }
+
     double sum_Pij = c->SumTransporters( 1 );
 
     // exocytosis regulated:
@@ -367,12 +386,16 @@ void VeinGrowthPlugin::CellDynamics(CellBase *c, double *dchem)
     // production of PIN depends on auxin concentration
     dPidt +=  (c->AtBoundaryP()?par->pin_prod_in_epidermis:par->pin_prod) * c->Chemical(0) - c->Chemical(1) * par->pin_breakdown;
 
+    if (std::isnan(dPidt)) {
+        cout << "Break" << endl;
+        dPidt = 0.1;
+    }
+
     // no PIN production in SAM
     if (c->Boundary() == CellBase::SAM) {
         dchem[1]=0.;
         dchem[0]= - par->sam_auxin_breakdown * c->Chemical(0);
     } else {
-
         dchem[1] = dPidt;
 
         // source of auxin

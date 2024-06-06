@@ -469,6 +469,16 @@ class CellBase :  public QObject, public Vector
     }
   }
 
+  Vector GetGrowthDirection() { return *growth_direction; }
+
+  void SetGrowthDirection(double x, double y) {
+    growth_direction = new Vector(x, y, 0);
+    is_growth_direction = true;
+  }
+
+  bool isGrowthDirection() {return is_growth_direction; }
+
+
   inline double TargetLength() const { return target_length; } 
 
   static inline CellsStaticDatamembers *GetStaticDataMemberPointer(void) { return static_data_members; }
@@ -551,6 +561,9 @@ class CellBase :  public QObject, public Vector
   bool marked;
   int div_counter;
 
+  //QObject *plugin_info;
+  Vector *growth_direction;
+  bool is_growth_direction;
 };
 
 ostream &operator<<(ostream &os, const CellBase &v);
