@@ -40,6 +40,16 @@ class VeinGrowthPlugin : public QObject, SimPluginInterface {
 	
   // Executed after the cellular mechanics steps have equillibrized
   virtual void CellHouseKeeping (CellBase *c);
+
+  // Execute to differentiate cell with high auxin to procambium cell
+  virtual void DifferentiateCell(CellBase *c);
+
+  // Calculate growth direction if no growth direction is given
+  virtual Vector GrowthDirectionDetermination(CellBase *c);
+
+  // Manipulate wall element stiffness according to growth direction
+  virtual void WallStiffnessManipulation(CellBase *c, Vector growth_direction);
+
   // Differential equations describing transport of chemicals from cell to cell
   virtual void CelltoCellTransport(Wall *w, double *dchem_c1, double *dchem_c2);
     

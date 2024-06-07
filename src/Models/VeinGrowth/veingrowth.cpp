@@ -33,20 +33,30 @@
 
 static const std::string _module_id("$Id$");
 
-/*class blabla {
+class GrowthDirectionInfo {
     Vector growth_direction;
     bool is_growth_direction;
-};*/
 
+public:
+    Vector getGrowthDirection() const {
+        return growth_direction;
+    }
+
+    void setGrowthDirection(Vector v) {
+        is_growth_direction = true;
+        growth_direction = v;
+    }
+
+    bool isGrowthDirection() {
+        return is_growth_direction;
+    }
+};
 
 // To be executed after cell division
 void VeinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase *daughter2)
 {
-    // After division, the growth direction of the parent cell (if it exists) is inherited by the daugther cells
-    if (daughter2->CellType() == 1 && daughter2->isGrowthDirection()) {
-        Vector growth_direction = daughter2->GetGrowthDirection();
-        daughter1->SetGrowthDirection(growth_direction.x, growth_direction.y);
-    }
+    // After division, the growth direction info of the parent cell is inherited by the daugther cell
+    daughter1->SetPluginInfo(daughter2->GetPluginInfo());
 
     // Auxin distributes between parent and daughter according to area
     double area1 = daughter1->Area(), area2 = daughter2->Area();
@@ -97,124 +107,94 @@ void VeinGrowthPlugin::SetCellColor(CellBase *c, QColor *color)
 void VeinGrowthPlugin::CellHouseKeeping(CellBase *c)
 {
     if (c->Boundary()==CellBase::None) {
-        //if (c->div)
+
+        if (c->GetPluginInfo() == nullptr && c->CellType() == 1) {
+            c->SetPluginInfo(new GrowthDirectionInfo());
+        }
+
         if (c->Chemical(0) > 1.9 && c->CellType() != 1) {
-             c->SetCellType(1);
-
-            // inherit growth direction
-            double x_value = 0;
-            double y_value = 0;
-            c->LoopNeighbors([&x_value, &y_value](auto neighbor){
-                if (neighbor->CellType() == 1) {
-                    if (neighbor->isGrowthDirection()) {
-                        Vector neighbor_growth_direction = neighbor->GetGrowthDirection();
-                        x_value += neighbor_growth_direction.x;
-                        y_value += neighbor_growth_direction.y;
-                    }
-
-                    /*if (!(std::isnan(neighbor->Chemical(2)))) {
-                        x_value += neighbor_growth_direction.x;
-                    }
-
-                    if (!(std::isnan(neighbor->Chemical(3)))) {
-                        y_value += neighbor_growth_direction.y;
-                    }*/
-                }
-            });
-
-            // reduce values -> capacity?
-            c->SetGrowthDirection(x_value, y_value);
-            /*c->SetChemical(2, x_value / ((x_value + y_value) / 2));
-            c->SetChemical(3, y_value/* / ((x_value + y_value) / 2));*/
+            DifferentiateCell(c);
         }
 
         if (c->CellType() == 1) {
-            // set growth direction if available, if not then compute it
-            Vector growth_direction = Vector(0 ,1 ,0);
-            if (c->CountNeighbors() > 1 ) {
-                //if (std::isnan(c->Chemical(2)) && std::isnan(c->Chemical(3))) {
-                //if (c->Chemical(2) == 0 && c->Chemical(3) == 0) {
-                if (!c->isGrowthDirection()) {
-                    double highest_auxin = 0;
-                    CellBase *target_cell = NULL;
-                    c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
-                        if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
-                            highest_auxin = neighbor->Chemical(0);
-                            target_cell = neighbor;
-                        }
-                    });
-                    if (target_cell != NULL) {
-                        growth_direction = c->Centroid() - target_cell->Centroid();
-                        //growth_direction = Vector(target_cell->x - c->x, target_cell->y - c->y, 0);
-                        c->SetGrowthDirection(growth_direction.x, growth_direction.y);
-                        //c->SetChemical(2, growth_direction.x);
-                        //c->SetChemical(3, growth_direction.y);
-                    } else {
-                        growth_direction = Vector(0, 1, 0);
-                        cout << "Error when evaluation neighbours in household!" << endl;
-                    }
+            Vector growth_direction = GrowthDirectionDetermination(c);
 
-                    //cout << c->NChem() << endl;
-                    //growth_direction = new Vector(0, 1, 0);
-                } else {
-                    growth_direction = c->GetGrowthDirection();
-                }
-            }/* else {
-            growth_direction = Vector(0 ,1 ,0);
-        }*/
-
-            // wall stiffness manipulation
-            c->LoopWallElements([&growth_direction](auto wallElementInfo){
-                if(wallElementInfo->hasWallElement()){
-                    //Vector* y = new Vector(0, 1, 0);
-                    Vector* we_direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, wallElementInfo->getTo()->y - wallElementInfo->getFrom()->y, 0);
-                    double we_angle = (we_direction->Angle(growth_direction))*180/3.1415926536;
-                    /*if (direction->x == 0) {
-                    angle = 90;
-                } else {
-                    angle = atan(direction->y/direction->x)*180/3.1415926536;
-                }*/
-                    if (we_angle <= 30 || we_angle >= 150) {
-                        WallElement* we = wallElementInfo->getWallElement();
-                        we->setStiffness(4);
-                    } /*else if (we_angle >= 75 || we_angle <=105){
-                    WallElement* we = wallElementInfo->getWallElement();
-                    we->setStiffness(1);
-                }*/
-                }
-            });
+            WallStiffnessManipulation(c, growth_direction);
         }
-
-        /*        c->LoopWallElements([](auto wallElementInfo){
-            if(wallElementInfo->hasWallElement()){
-                Vector direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, )
-                if (std::fabs(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x) < 5) {
-                    WallElement* we = wallElementInfo->getWallElement();
-                    we->setStiffness(4);
-                } else {
-                    WallElement* we = wallElementInfo->getWallElement();
-                    we->setStiffness(1);
-                }
-            }
-        });*/
-
 
         if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ) {
-            //c->SetChemical(0, 0);
             c->Divide();
-            //Vector* v = new Vector(1,0,0);
-            //c->DivideOverAxis(*v);
         }
-
-        //WallElementInfo info;
-        //info.getFrom()->x;
-        //info.getTo()->x;
-
-        //cout << we->getBaseLength() << endl;
 
         // expand according to auxin concentration
         c->EnlargeTargetArea(par->auxin_dependent_growth?(c->Chemical(0)/(1.+c->Chemical(0)))*par->cell_expansion_rate:par->cell_expansion_rate);
     }
+}
+
+void VeinGrowthPlugin::DifferentiateCell(CellBase *c) {
+
+    c->SetCellType(1);
+    c->SetPluginInfo(new GrowthDirectionInfo());
+    GrowthDirectionInfo *gd_info = static_cast<GrowthDirectionInfo*>(c->GetPluginInfo());
+
+    // resulting growth direction
+    double x_value = 0;
+    double y_value = 0;
+    c->LoopNeighbors([&x_value, &y_value](auto neighbor){
+        if (neighbor->CellType() == 1) {
+            GrowthDirectionInfo *neighbor_gd_info = static_cast<GrowthDirectionInfo*>(neighbor->GetPluginInfo());
+            if (neighbor_gd_info->isGrowthDirection()) {
+                Vector neighbor_growth_direction = neighbor_gd_info->getGrowthDirection();
+                x_value += neighbor_growth_direction.x;
+                y_value += neighbor_growth_direction.y;
+            }
+        }
+    });
+
+    gd_info->setGrowthDirection(Vector(x_value, y_value, 0));
+}
+
+Vector VeinGrowthPlugin::GrowthDirectionDetermination(CellBase *c) {
+
+    // set growth direction if available, if not then compute it
+    GrowthDirectionInfo *gd_info = static_cast<GrowthDirectionInfo*>(c->GetPluginInfo());
+    Vector growth_direction = Vector(0, 1, 0);
+    if (gd_info->isGrowthDirection()) {
+        growth_direction = gd_info->getGrowthDirection();
+    } else {
+        if (c->CountNeighbors() > 1) {
+            double highest_auxin = 0;
+            CellBase *target_cell = NULL;
+            c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
+                if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
+                    highest_auxin = neighbor->Chemical(0);
+                    target_cell = neighbor;
+                }
+            });
+            if (target_cell != NULL) {
+                growth_direction = c->Centroid() - target_cell->Centroid();
+                gd_info->setGrowthDirection(Vector(growth_direction.x, growth_direction.y, 0));
+            } else {
+                cout << "Error when evaluation neighbours in household!" << endl;
+            }
+        }
+    }
+
+    return growth_direction;
+}
+
+void VeinGrowthPlugin::WallStiffnessManipulation(CellBase *c, Vector growth_direction) {
+
+    // wall stiffness manipulation
+    c->LoopWallElements([&growth_direction](auto wallElementInfo){
+        if(wallElementInfo->hasWallElement()){
+            Vector* we_direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, wallElementInfo->getTo()->y - wallElementInfo->getFrom()->y, 0);
+            double we_angle = (we_direction->Angle(growth_direction))*180/3.1415926536;
+            if (we_angle <= 30 || we_angle >= 150) {
+                wallElementInfo->getWallElement()->setStiffness(4);
+            }
+        }
+    });
 }
 
 void VeinGrowthPlugin::CelltoCellTransport(Wall *w, double *dchem_c1, double *dchem_c2)
