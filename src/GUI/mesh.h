@@ -225,7 +225,7 @@ class Mesh {
     		i ++) {
     	plugin->CellHouseKeeping(*i);
     }
-    curves.sort([](CellWallCurve lhs, CellWallCurve rhs) {return lhs.getHamitonion() > rhs.getHamitonion();});
+    curves.sort([](CellWallCurve lhs, CellWallCurve rhs) {return lhs.getHamiltonian() > rhs.getHamiltonian();});
     for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
     	if (it->removeSpike()) {
     		if(it->isBorderCase()){

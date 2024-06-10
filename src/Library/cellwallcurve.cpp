@@ -94,7 +94,7 @@ void CellWallCurve::check_overlap(CellWallCurve & other){
 		over=NULL;
 		to=NULL;
 		borderCase=false;
-		hamitonion=0.;
+        hamiltonian=0.;
 		n1=NULL;
 		n2=NULL;
 		n3=NULL;

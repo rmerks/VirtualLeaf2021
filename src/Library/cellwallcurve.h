@@ -44,7 +44,7 @@ class CellWallCurve {
 	friend class CellBase;
 
 	bool borderCase;
-	double hamitonion;
+    double hamiltonian;
 
 
 	CellBase * cell;
@@ -66,8 +66,8 @@ public:
 		reset();
 	}
 	bool isBorderCase() {return borderCase;};
-	void setHamitonion(double hamitonion) {this->hamitonion=hamitonion;};
-	double getHamitonion() {return this->hamitonion;};
+    void setHamiltonian(double hamiltonian) {this->hamiltonian=hamiltonian;};
+    double getHamiltonian() {return this->hamiltonian;};
 	void set(CellWallCurve * other);
 	void check_overlap(CellWallCurve & other);
 	void involved_nodes(NodeBase* n1,NodeBase* n2,NodeBase* n3,NodeBase* n4,NodeBase* n5,NodeBase* n6) {
