@@ -55,7 +55,7 @@ public:
 	// return number of chemicals
 	virtual int NChem(void);
     // default XML file to be loaded on startup
-    virtual QString DefaultLeafML(void) { return QString("tissue_layout_infect.xml"); }
+    virtual QString DefaultLeafML(void) { return QString("pathogen_infection.xml"); }
 };
 
 

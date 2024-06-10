@@ -735,12 +735,12 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 		if (debugNode == w2->Index()||debugNode == w2->Index()) {
 			cout << "";
 		}
-        double dh = dh_bending + length_dh;
+        double dh = length_dh; // to be added later: dh_bending
         double random = RANDOM();
         double hamiltonian1 = std::nan("1");//exp((-dh_bending)/par.T);
         double hamiltonian2 = exp((-length_dh)/par.T);
         double hamiltonian = std::isnan(hamiltonian1)?hamiltonian2:(std::isnan(hamiltonian2)?hamiltonian1:min(hamiltonian1,hamiltonian2));
-        if (random< hamiltonian)		{
+        if (dh < 0 || RANDOM()<exp((-dh)/par.T))		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
