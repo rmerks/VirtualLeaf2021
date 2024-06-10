@@ -737,10 +737,10 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 		}
         double dh = dh_bending + length_dh;
         double random = RANDOM();
-        double hamitonion1 = std::nan("1");//exp((-dh_bending)/par.T);
-        double hamitonion2 = exp((-length_dh)/par.T);
-        double hamitonion = std::isnan(hamitonion1)?hamitonion2:(std::isnan(hamitonion2)?hamitonion1:min(hamitonion1,hamitonion2));
-        if (random< hamitonion)		{
+        double hamiltonian1 = std::nan("1");//exp((-dh_bending)/par.T);
+        double hamiltonian2 = exp((-length_dh)/par.T);
+        double hamiltonian = std::isnan(hamiltonian1)?hamiltonian2:(std::isnan(hamiltonian2)?hamiltonian1:min(hamiltonian1,hamiltonian2));
+        if (random< hamiltonian)		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
@@ -749,7 +749,7 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 			curve.shift(w2);
 			curve.shift(w3);
 			curve.involved_nodes(w0,w4,o0,o1,o2,o3);
-			curve.setHamitonion(hamitonion2);
+            curve.setHamiltonian(hamiltonian2);
 
 			curves.push_back(curve);
 			if (debugNode>-1){
