@@ -28,12 +28,13 @@
 #include "wallbase.h"
 #include "cellbase.h"
 #include "veingrowth.h"
+#include "plugincellextension.h"
 
 #include "far_mem_5.h"
 
 static const std::string _module_id("$Id$");
 
-class GrowthDirectionInfo {
+class GrowthDirectionInfo : public PluginCellExtension {
     Vector growth_direction;
     bool is_growth_direction;
 
@@ -50,7 +51,20 @@ public:
     bool isGrowthDirection() {
         return is_growth_direction;
     }
+
+    QString getAttributeName() const override {
+        return QString::fromStdString("growth direction");
+    }
+
+    QString getAttributeValue() const override {
+        if (is_growth_direction) {
+            return QString::fromStdString(to_string(growth_direction.x) + "," + to_string(growth_direction.y));
+        } else {
+            return QString::fromStdString("-");
+        }
+    }
 };
+
 
 // To be executed after cell division
 void VeinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase *daughter2)
@@ -108,7 +122,7 @@ void VeinGrowthPlugin::CellHouseKeeping(CellBase *c)
 {
     if (c->Boundary()==CellBase::None) {
 
-        if (c->GetPluginInfo() == nullptr && c->CellType() == 1) {
+        if (c->GetPluginInfo() == nullptr) {
             c->SetPluginInfo(new GrowthDirectionInfo());
         }
 
@@ -134,7 +148,6 @@ void VeinGrowthPlugin::CellHouseKeeping(CellBase *c)
 void VeinGrowthPlugin::DifferentiateCell(CellBase *c) {
 
     c->SetCellType(1);
-    c->SetPluginInfo(new GrowthDirectionInfo());
     GrowthDirectionInfo *gd_info = static_cast<GrowthDirectionInfo*>(c->GetPluginInfo());
 
     // resulting growth direction

@@ -57,6 +57,7 @@ HEADERS = \
  output.h \
  parameter.h \
  parse.h \
+    plugincellextension.h \
  random.h \
  simplugin.h \
  UniqueMessage.h \
@@ -76,6 +77,7 @@ SOURCES = \
  output.cpp \
  parameter.cpp \
  parse.cpp \
+ plugincellextension.cpp \
  random.cpp \
  simplugin.cpp \
  UniqueMessage.cpp \

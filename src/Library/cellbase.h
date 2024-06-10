@@ -40,6 +40,7 @@
 #include "warning.h"
 #include "assert.h"
 #include "wallelementinfo.h"
+#include "plugincellextension.h"
 
 
 //#include "wallelementinfo.h"
@@ -468,6 +469,9 @@ class CellBase :  public QObject, public Vector
       NChem() = new_nchem;
     }
   }
+
+  // Functions regarding plugin_info
+  //CellBase() : plugin_info(nullptr) {}
 
   void SetPluginInfo(void *info) {
     plugin_info = info;
