@@ -673,30 +673,29 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 //this changes also cell c2 where wall element o1->o2 will be replaced
 //by wall elements o1->w3 and w3->o2 all other surrounding cells will remain
 //unchanged.
-//
-// angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
-// angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
-		double r1 = osculating_circle_radius(*w0,*w1,*w2);
-		double r2 = osculating_circle_radius(*w1,*w2,*w3);
-		double r3 = osculating_circle_radius(*w2,*w3,*w4);
-		double r4 = osculating_circle_radius(*w0,*w1,*w3);
-		double r5 = osculating_circle_radius(*w1,*w3,*w4);
-//		if (c->Index()==-1 && r2 < r4) {
-//			// special case, narrow hole to allow merging we disable the sub condition
-//		}
-		double energy_before =
-				1./(r1)+
-				1./(r2)+
-				1./(r3)+
-				1./((osculating_circle_radius(*o0,*o1,*o2)))+
-				1./((osculating_circle_radius(*o1,*o2,*o3)));
-		double energy_after =
-				1./(r4)+
-				1./((osculating_circle_radius(*o1,*w3,*o2)))+
-				1./(r5)+
-				1./((osculating_circle_radius(*o0,*o1,*w3)))+
-				1./((osculating_circle_radius(*w3,*o2,*o3)));
-
+		double bending_dh = 0.;
+		if (abs(par.bend_lambda) > 0.01)	  {
+	// angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
+	// angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
+			double r1 = osculating_circle_radius(*w0,*w1,*w2);
+			double r2 = osculating_circle_radius(*w1,*w2,*w3);
+			double r3 = osculating_circle_radius(*w2,*w3,*w4);
+			double r4 = osculating_circle_radius(*w0,*w1,*w3);
+			double r5 = osculating_circle_radius(*w1,*w3,*w4);
+			double energy_before =
+					1./(r1)+
+					1./(r2)+
+					1./(r3)+
+					1./((osculating_circle_radius(*o0,*o1,*o2)))+
+					1./((osculating_circle_radius(*o1,*o2,*o3)));
+			double energy_after =
+					1./(r4)+
+					1./((osculating_circle_radius(*o1,*w3,*o2)))+
+					1./(r5)+
+					1./((osculating_circle_radius(*o0,*o1,*w3)))+
+					1./((osculating_circle_radius(*w3,*o2,*o3)));
+			bending_dh = par.bend_lambda*(energy_after-energy_before*1.5+12.);
+		}
 		// the length contraint just needs to be calculated for the wall elements that change length
 		double wl1=((*w1)-(*w2)).Norm();
 		double wl2=((*w3)-(*w2)).Norm();
@@ -730,17 +729,9 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 					-DSQR(r_bef/r_base - 1)
             )));
 
-		double dh_bending = energy_after-energy_before*1.5+12.;
-
-		if (debugNode == w2->Index()||debugNode == w2->Index()) {
-			cout << "";
-		}
-        double dh = length_dh; // to be added later: dh_bending
-        double random = RANDOM();
-        double hamiltonian1 = std::nan("1");//exp((-dh_bending)/par.T);
-        double hamiltonian2 = exp((-length_dh)/par.T);
-        double hamiltonian = std::isnan(hamiltonian1)?hamiltonian2:(std::isnan(hamiltonian2)?hamiltonian1:min(hamiltonian1,hamiltonian2));
-        if (dh < 0 || RANDOM()<exp((-dh)/par.T))		{
+        double dh = length_dh + bending_dh;
+        double hamiltonian;
+        if (dh < 0 || RANDOM() < (hamiltonian=exp((-dh)/par.T)))		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
@@ -749,15 +740,12 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 			curve.shift(w2);
 			curve.shift(w3);
 			curve.involved_nodes(w0,w4,o0,o1,o2,o3);
-            curve.setHamiltonian(hamiltonian2);
+            curve.setHamiltonian(hamiltonian);
 
 			curves.push_back(curve);
-			if (debugNode>-1){
-				cout << "#" << dh << "#";
-				cout << "move-1  " << w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<<(energy_after-energy_before)<<"\n";
-				cout << "  angle=" << angle << " radius=" << r2<<"\n";
-				cout << "  energy_before=" << energy_before<<"  energy_after="<<energy_after<<"   wall="<<w1->Index()<<"-"<<w2->Index()<<"\n";
-			}
+		}
+		if (debugNode>-1){
+			cout << "move  " << w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<< length_dh <<"\n";
 		}
 	}
 }
@@ -777,11 +765,11 @@ void extractData(WallElement *we,double & base_length,double &stiffness) {
 }
 
 void Mesh::RemodelCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
-
-if (c->nodes.size()<5) {
-	return;
-}
-	list <Node *>::iterator i=c->nodes.begin();
+	//The algorithm needs at least 5 nodes along the wall
+	if (c->nodes.size()<5) {
+		return;
+	}
+	list <Node *>::iterator i = c->nodes.begin();
 	Node * w0=*i;
 	Node * w1=*(++i);
 	Node * w2=*(++i);
@@ -1070,9 +1058,6 @@ double Mesh::DisplaceNodes(void) {
 	  new_l1=(new_p-i_min_1).Norm();
 	  new_l2=(new_p-i_plus_1).Norm();
 
-
-
-
 	  static int count=0;
 	  // Insertion of nodes (cell wall yielding)
 	  if (!node.fixed) {
@@ -1157,17 +1142,17 @@ double Mesh::DisplaceNodes(void) {
 	  Vector before_a(i_min_1.x,i_min_1.y,0);
 	  Vector before_b(old_p.x, old_p.y,0);
 	  Vector before_c(i_plus_1.x, i_plus_1.y,0);
-	  r1 = osculating_circle_radius(before_a,before_b,before_c);
+	  r1 = osculating_circle_radius(before_a, before_b, before_c);
+
 	  Vector after_a(i_min_1.x, i_min_1.y,0);
 	  Vector after_b(new_p.x, new_p.y,0);
 	  Vector after_c(i_plus_1.x, i_plus_1.y,0);
-	  r2 = osculating_circle_radius(after_a,after_b,after_c);
+	  r2 = osculating_circle_radius(after_a, after_b, after_c);
 
 	  if (r1<0 || r2<0) {
 	    MyWarning::warning("r1 = %f, r2 = %f",r1,r2);
 	  }
 	  bending_dh += DSQR(1/r2 - 1/r1);
-
 	}
       }
       dh = 	area_dh + cell_length_dh +

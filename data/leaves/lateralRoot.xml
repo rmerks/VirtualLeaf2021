@@ -1,5 +1,5 @@
 <!DOCTYPE leaf>
-<leaf date="Fri May 17 00:28:16 2024" name="/home/ritchie/Desktop/blob_escape.xml" simtime="4720">
+<leaf date="Fri May 17 00:28:16 2024" name="lateralRoot.xml" simtime="4720">
   <parameter>
     <par val="white" name="arrowcolor"/>
     <par val="10" name="arrowsize"/>
@@ -14,7 +14,7 @@
     <par val="cell." name="export_fn_prefix"/>
     <par val="100" name="storage_stride"/>
     <par val="500" name="xml_storage_stride"/>
-    <par val="tutorial1_data" name="datadir"/>
+    <par val="lateral_root" name="datadir"/>
     <par val="1" name="T"/>
     <par val="100" name="lambda_length"/>
     <par val="4" name="yielding_threshold"/>

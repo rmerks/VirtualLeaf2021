@@ -68,7 +68,6 @@ public:
 	bool isBorderCase() {return borderCase;};
     void setHamiltonian(double hamiltonian) {this->hamiltonian=hamiltonian;};
     double getHamiltonian() {return this->hamiltonian;};
-	void set(CellWallCurve * other);
 	void check_overlap(CellWallCurve & other);
 	void involved_nodes(NodeBase* n1,NodeBase* n2,NodeBase* n3,NodeBase* n4,NodeBase* n5,NodeBase* n6) {
 		this->n1=n1;
@@ -79,13 +78,11 @@ public:
 		this->n6=n6;
 	}
 	void shift(NodeBase * node) ;
-	bool checkBudEnd(NodeBase * node) ;
 	void reset() ;
 	int Index() ;
 	void setCell(CellBase * aCell) ;
 	void setOtherCell(CellBase * aCell) ;
 	CellBase * getCell() {return cell;};
-	void setTo(NodeBase * node) ;
 	NodeBase* getFrom()  ;
 	NodeBase* getOver() ;
 	NodeBase* getTo() ;
@@ -102,13 +99,5 @@ public:
 	bool removeSpike() ;
 	bool isWallBetweenEndingAt(WallBase * wall, CellBase* cell1, CellBase* cell2, NodeBase * node);
 };
-
-inline bool cmpCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
-	return b.Index() - a.Index();
-}
-
-inline bool eqCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
-	return b.Index() == a.Index();
-}
 
 #endif

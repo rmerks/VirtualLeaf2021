@@ -38,9 +38,6 @@ QString LateralRoot::ModelID(void) {
   return QString( "Lateral Root Growth" );
 }
 
-
-
-
 // return the number of chemicals your model uses
 int LateralRoot::NChem(void) { return 1; }
 
@@ -48,33 +45,14 @@ int LateralRoot::NChem(void) { return 1; }
 void LateralRoot::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase *daughter2) {
   // rules to be executed after cell division go here
   // (e.g., cell differentiation rules)
-//	int count1 = 0;
-//	daughter1->LoopNeighbors([&count1](auto neighbor){
-//            if (neighbor->CellType() != 3) {
-//                count1++;
-//            }
-//    });
-//	int count2 = 0;
-//	daughter2->LoopNeighbors([&count2](auto neighbor){
-//            if (neighbor->CellType() != 3) {
-//                count2++;
-//            }
-//    });
 	if (daughter1->CellType()==3) {
-		double condition = daughter1->Centroid().x < daughter2->Centroid().x;
-//		Vector horizontal(1,0,0);
-//		double size = daughter1->Length(&horizontal, NULL);
-//		if (abs(daughter1->Centroid().x - daughter2->Centroid().x) <(size/5)){
-//			condition=count2>count1;
-//		}
-		if (  condition ) {
-
-		daughter1->SetChemical(0, 0.49);
-		daughter2->SetChemical(0, 1.);
-	}else {
-		daughter2->SetChemical(0, 0.49);
-		daughter1->SetChemical(0, 1.);
-	}
+		if (daughter1->Centroid().x < daughter2->Centroid().x) {
+			daughter1->SetChemical(0, 0.49);
+			daughter2->SetChemical(0, 1.);
+		}else {
+			daughter2->SetChemical(0, 0.49);
+			daughter1->SetChemical(0, 1.);
+		}
 	}
 }
 
@@ -86,24 +64,19 @@ void LateralRoot::SetCellColor(CellBase *c, QColor *color) {
 	else {
 		color->setNamedColor("blue");
 	}
-
 }
 
 void LateralRoot::CellHouseKeeping(CellBase *c) {
   // add cell behavioral rules here
 	if (c->CellType()==3) {
-		if (c->Chemical(0)>0.5||c->Chemical(0)<0.001){
+		if (c->Chemical(0)>0.5 || c->Chemical(0) < 0.001){
 			c->EnlargeTargetArea(par->cell_expansion_rate);
 			if (c->Area() > par->rel_cell_div_threshold * c->BaseArea()) {
 				c->Divide();
 			}
 		}
-//		if (c->Chemical(0)>0.4){
-//			c->SetChemical(0,c->Chemical(0)-0.01);
-//			c->EnlargeTargetArea(par->cell_expansion_rate);
-//		}
 	}
-	}
+}
 
 void LateralRoot::CelltoCellTransport(Wall *w, double *dchem_c1, double *dchem_c2) {
   // add biochemical transport rules here
