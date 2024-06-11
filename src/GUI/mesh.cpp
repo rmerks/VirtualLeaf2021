@@ -725,7 +725,7 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 					 DSQR(s_aft/s_base - 1)
 					-DSQR(s_bef/s_base - 1)
 			) -
-			(s_base)*(
+			(r_base)*(
 					 DSQR(r_aft/r_base - 1)
 					-DSQR(r_bef/r_base - 1)
             )));
