@@ -730,8 +730,8 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
             )));
 
         double dh = length_dh + bending_dh;
-        double hamiltonian;
-        if (dh < 0 || RANDOM() < (hamiltonian=exp((-dh)/par.T)))		{
+        double threshold;
+        if (dh < 0 || RANDOM() < (threshold=exp((-dh)/par.T)))		{
 
 			CellWallCurve curve;
 			curve.setCell(c);
@@ -740,7 +740,7 @@ void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,
 			curve.shift(w2);
 			curve.shift(w3);
 			curve.involved_nodes(w0,w4,o0,o1,o2,o3);
-            curve.setHamiltonian(hamiltonian);
+            curve.setThreshold(threshold);
 
 			curves.push_back(curve);
 		}

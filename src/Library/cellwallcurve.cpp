@@ -86,7 +86,7 @@ void CellWallCurve::reset() {
 	over=NULL;
 	to=NULL;
 	borderCase=false;
-	hamiltonian=0.;
+	threshold=0.;
 	n1=NULL;
 	n2=NULL;
 	n3=NULL;
