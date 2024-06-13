@@ -83,8 +83,16 @@ void Infection::SetCellColor(CellBase *c, QColor *color) {
 void Infection::CellHouseKeeping(CellBase *c) {
     // add cell behavioral rules here
     if(c->CellType()==2){
-        c->EnlargeTargetArea(1);
+        c->EnlargeTargetArea(2);
     }
+
+    // initial cell length setup
+    double base_element_length = 25;
+    c->LoopWallElements([base_element_length](auto wallElementInfo){
+        if(std::isnan(wallElementInfo->getWallElement()->getBaseLength())){
+        wallElementInfo->getWallElement()->setBaseLength(base_element_length);
+        }
+    });
 
 
     //cell wall weakening happens here
@@ -105,7 +113,7 @@ void Infection::CellHouseKeeping(CellBase *c) {
         });
     }
 
-    // if chemical level is too low, reject wall remodelling
+
 
 }
 
