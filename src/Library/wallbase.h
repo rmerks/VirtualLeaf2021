@@ -130,8 +130,8 @@ class WallBase {
   inline void setTransporters2(int ch, double val) { transporters2[ch]=val; }
   inline void setNewTransporters1(int ch, double val) { new_transporters1[ch]=val; }
   inline void setNewTransporters2(int ch, double val) { new_transporters2[ch]=val; }
-  inline double Transporters1(int ch) { return transporters1[ch]; }
-  inline double Transporters2(int ch) { return transporters2[ch]; }
+  inline double Transporters1(int ch) { if (std::isnan(transporters1[ch])) {return 0;} else {return transporters1[ch];} }
+  inline double Transporters2(int ch) { if (std::isnan(transporters2[ch])) {return 0;} else {return transporters2[ch];} }
   void calculateDirectWallStiffNess(Node* nb, double* stiffness, int* count_p);
   void replaceNode(NodeBase* oldN, NodeBase* newN);
   //! Return true if the WallBase adheres to the SAM (shoot apical meristem)
