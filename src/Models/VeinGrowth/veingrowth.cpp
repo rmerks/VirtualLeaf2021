@@ -176,24 +176,34 @@ Vector VeinGrowthPlugin::GrowthDirectionDetermination(CellBase *c) {
         growth_direction = gd_info->getGrowthDirection();
     } else {
         if (c->CountNeighbors() > 1) {
-            double highest_auxin = 0;
             CellBase *target_cell = NULL;
-            c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
-                if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
-                    highest_auxin = neighbor->Chemical(0);
-                    target_cell = neighbor;
-                }
-            });
+            GetTargetCell(c, target_cell);
+
             if (target_cell != NULL) {
                 growth_direction = c->Centroid() - target_cell->Centroid();
                 gd_info->setGrowthDirection(Vector(growth_direction.x, growth_direction.y, 0));
-            } else {
-                cout << "Error when evaluation neighbours in household!" << endl;
             }
         }
     }
 
     return growth_direction;
+}
+
+void VeinGrowthPlugin::GetTargetCell(CellBase *c, CellBase *target_cell) {
+
+    // determine target cell for growth direction
+    double highest_auxin = 0;
+
+    c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
+        if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
+            highest_auxin = neighbor->Chemical(0);
+            target_cell = neighbor;
+        }
+    });
+
+    if (target_cell == NULL) {
+        cout << "Error when evaluation target cell in household!" << endl;
+    }
 }
 
 void VeinGrowthPlugin::WallStiffnessManipulation(CellBase *c, Vector growth_direction) {
