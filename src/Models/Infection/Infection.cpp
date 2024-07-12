@@ -102,6 +102,7 @@ void Infection::CellHouseKeeping(CellBase *c) {
     }
     double stiffness_inf = 2.5;
     if(patho_chem_level>0.1 && c->CellType()!=2){
+        c->SetCellVeto(false);
         stiffness_inf = 2.5 - (patho_chem_level);
     c->LoopWallElements([stiffness_inf](auto wallElementInfo){
         wallElementInfo->getWallElement()->setStiffness(stiffness_inf);
@@ -111,6 +112,7 @@ void Infection::CellHouseKeeping(CellBase *c) {
         c->LoopWallElements([stiffness_inf](auto wallElementInfo){
         wallElementInfo->getWallElement()->setStiffness(stiffness_inf);
         });
+        c->SetCellVeto(true);
     }
 
 
