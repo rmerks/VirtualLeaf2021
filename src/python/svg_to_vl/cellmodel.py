@@ -222,6 +222,8 @@ class Mesh:
             self.cellWalls.append(firstCellWall)
         for wall in self.cellWalls:
             wall.addToCells()
+        for cell in self.cells:
+            cell.addCloseWallGap()
         self.numberAll()
         
 class Node:
@@ -293,14 +295,22 @@ class CellWall:
         self.cell2 = cell2
         self.startNode = startNode
         self.walls=list()
-        sharedWalls = [value for value in self.cell1.walls if value in self.cell2.walls]
-        currentNode=startNode
-        self.endNode = findEndOfCellWall(currentNode,sharedWalls,self.walls)
-        if len(sharedWalls) > 0:
-            # now check if the startNode can be pushed back
+        if cell2 is None:
+            sharedWalls = [value for value in self.cell1.walls if len(value.cells) == 1]      
+            currentNode=startNode
+            self.endNode = findEndOfCellWall(currentNode,sharedWalls,self.walls)
             otherEnd = findEndOfCellWall(currentNode,sharedWalls,self.walls) 
             if otherEnd != currentNode:
                 self.startNode = otherEnd
+        else:
+            sharedWalls = [value for value in self.cell1.walls if value in self.cell2.walls]
+            currentNode=startNode
+            self.endNode = findEndOfCellWall(currentNode,sharedWalls,self.walls)
+            if len(sharedWalls) > 0:
+                # now check if the startNode can be pushed back
+                otherEnd = findEndOfCellWall(currentNode,sharedWalls,self.walls) 
+                if otherEnd != currentNode:
+                    self.startNode = otherEnd
                 
     def addToCells(self):
         self.cell1.addCellWall(self)
@@ -315,8 +325,8 @@ class CellWall:
     def toXml(self,wallNodes):
         wallNode = ET.SubElement(wallNodes, "wall" \
                                  , length=str(self.length()) \
-                                 , c1=str(self.cell1.getNr()) \
-                                 , c2=str(self.cell2.getNr()) \
+                                 , c1=str(self.getCell1Nr()) \
+                                 , c2=str(self.getCell2Nr()) \
                                  , index=str(self.nr) \
                                  , n1=str(self.startNode.getNr()) \
                                  , n2=str(self.endNode.getNr()) \
@@ -326,6 +336,15 @@ class CellWall:
         ET.SubElement(wallNode, "transporters1")
         ET.SubElement(wallNode, "transporters2")        
         
+
+
+    def getCell1Nr(self):
+        return self.cell1.nr
+
+    def getCell2Nr(self):
+        if self.cell2 is None:
+            return -1; # border
+        return self.cell2.nr
 
     def getNr(self):
         return self.nr
@@ -471,6 +490,55 @@ class Cell:
              wall.addCell(self)
              self.lastNode = None
 
+    def findEndOfWall(self, startNode):
+            nodes = list()
+            previousNode = None
+            lastNode = startNode
+            while not (lastNode is None):
+                previousNode = lastNode;
+                lastNode = None
+                for anyCellWall in self.cellWalls:
+                    if not (anyCellWall.endNode in nodes or anyCellWall.startNode in nodes):
+                        if anyCellWall.endNode == previousNode:
+                            lastNode = anyCellWall.startNode
+                            nodes.append(previousNode)
+                            break
+                        if anyCellWall.startNode == previousNode:
+                            lastNode = anyCellWall.endNode
+                            nodes.append(previousNode)
+                            break
+            return previousNode
+
+                     
+    def isClosed(self,startNode,endNode):
+            closed = false
+            for anyCellWall in self.cellWalls:
+                if anyCellWall.endNode == endNode and anyCellWall.startNode == startNode:
+                    return true
+                if anyCellWall.startNode == endNode and anyCellWall.endNode == startNode:
+                    return true
+            return false
+        
+        
+    def addCloseWallGap(self):
+            firstWall = self.cellWalls[0]
+            previousNodepreviousCellWall = None
+            startNode = firstWall.startNode
+            endNode = self.findEndOfWall(startNode)
+            closed = self.isClosed(endNode,startNode)
+            if not closed:
+                startNode = self.findEndOfWall(firstWall.endNode)
+                closed = self.isClosed(startNode,endNode)
+                if closed:
+                    return false
+            else:
+                return false
+            # the cell is not closed we need to create a closing wall
+            cellWall = CellWall(self,None,startNode)
+            self.cellWalls.append(cellWall)
+            self.mesh.cellWalls.append(cellWall)
+            
+
     def appendWall(self,wall):
         if wall not in self.walls:
             self.walls.append(wall)
@@ -484,7 +552,7 @@ class Cell:
         wall.addCell(self)
         self.firstNode = wall.getNode(1)
         self.lastNode = wall.getNode(2)
-        self.retryDefineInnerCell()    
+        self.retryDefineInnerCell()  
             
     def retryDefineInnerCell(self):
         if self.lastNode == None:
