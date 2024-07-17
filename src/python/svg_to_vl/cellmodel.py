@@ -195,8 +195,15 @@ class Mesh:
                                  , offsety="0" \
                                  , base_area="0" \
                                  )
+        total_area = 0
         for cell in self.cells:
-            cell.toXml(docCells)
+            geo = cell.toXml(docCells)
+            total_area = total_area + geo[0]
+        
+        average_area = total_area / len(self.cells)
+        
+        docCells.set("base_area", str(average_area))
+        
         self.boundary_polygon.toBoundaryBolygon(docCells)
         docWalls = ET.SubElement(docLeaf, "walls", n = str(len(self.walls)))
 #        for wall in self.walls:
@@ -494,7 +501,9 @@ class Cell:
             nodes = list()
             previousNode = None
             lastNode = startNode
+            count = 0
             while not (lastNode is None):
+                count = count + 1
                 previousNode = lastNode;
                 lastNode = None
                 for anyCellWall in self.cellWalls:
@@ -507,11 +516,13 @@ class Cell:
                             lastNode = anyCellWall.endNode
                             nodes.append(previousNode)
                             break
-            return previousNode
+            return [previousNode, count]
 
                      
-    def isClosed(self,startNode,endNode):
+    def isClosed(self,startNode,endNode,count):
             closed = false
+            if count < len(self.cellWalls):
+                return false
             for anyCellWall in self.cellWalls:
                 if anyCellWall.endNode == endNode and anyCellWall.startNode == startNode:
                     return true
@@ -524,11 +535,11 @@ class Cell:
             firstWall = self.cellWalls[0]
             previousNodepreviousCellWall = None
             startNode = firstWall.startNode
-            endNode = self.findEndOfWall(startNode)
-            closed = self.isClosed(endNode,startNode)
+            [endNode,count1] = self.findEndOfWall(startNode)
+            closed = self.isClosed(endNode,startNode,count1)
             if not closed:
-                startNode = self.findEndOfWall(firstWall.endNode)
-                closed = self.isClosed(startNode,endNode)
+                [startNode,count2] = self.findEndOfWall(firstWall.endNode)
+                closed = self.isClosed(startNode,endNode,count1+count2)
                 if closed:
                     return false
             else:
@@ -588,7 +599,7 @@ class Cell:
             if (colorSpec.isType(self.type)):
                 cellType = colorSpec
 
-        self.toXmlI("cell",cellNodes,border,cellType,self.nr,self.type == "#000000")
+        return self.toXmlI("cell",cellNodes,border,cellType,self.nr,self.type == "#000000")
 
     def toXmlI(self,nodeName,cellNodes,border,cellType,nr,fixed):  
         geo = self.getGeometry()   
@@ -628,6 +639,7 @@ class Cell:
             chemEt = ET.SubElement(cellNode, "chem" , n=str(len(cellType.chems)))
             for chem in cellType.chems:
                 ET.SubElement(chemEt, "val" , v=str(chem))
+        return geo
  
     def toBoundaryBolygon(self,cellNodes):
         self.toXmlI("boundary_polygon",cellNodes,0,self.mesh.colorSpecs[0],-1,False)
