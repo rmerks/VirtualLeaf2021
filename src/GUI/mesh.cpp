@@ -2130,6 +2130,11 @@ double *Mesh::getValues(int *neqs) {
     }
     i+=nchems;
   }
+  for (int j=0;j<i;j++) {
+  	if (std::isnan(values[j]) ){
+	  	values[j]=0.;
+  	}
+  }
   return values;
 }
 

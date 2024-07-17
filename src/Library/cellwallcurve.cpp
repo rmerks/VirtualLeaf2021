@@ -49,7 +49,7 @@ WallBase* CellWallCurve::findWallBetweenEndingAt(CellBase *&c1, CellBase *&c2, N
 }
 
 WallBase* CellWallCurve::otherWallEndingAt(CellBase *c3, NodeBase *&c, WallBase *&wallc2c3) {
-	WallBase *wallc3ToC;
+	WallBase *wallc3ToC = NULL;
 	WallBase **pwallc3ToC = &wallc3ToC;
 	c3->LoopWalls([this, c, wallc2c3, pwallc3ToC](auto wall) {
 		NodeBase * n1= (NodeBase *)wall->N1();
@@ -230,17 +230,17 @@ bool CellWallCurve::removeSpike() {
 	//for the extending wall we need a existing wall between c1 and c3 that ends at c.
 	WallBase * wallc1c3 = findWallBetweenEndingAt(c1,c3,c);
 
-	if (wallc1c2 != NULL&&wallc2c3 != NULL) {
+	if (wallc1c2 != NULL && wallc2c3 != NULL) {
 		WallBase * wallc1ToC = NULL;
 		WallBase * wallc3ToC = NULL;
 		if (wallc1c3 == NULL) {
 			// more than 3 cells in point c, now c1 and c3 are separated by other cells.
 			wallc1ToC = otherWallEndingAt(c1, c, wallc1c2);
 			wallc3ToC = otherWallEndingAt(c3, c, wallc2c3);
-			if (wallc1ToC == NULL|| wallc3ToC==NULL) {
+			if (wallc1ToC == NULL || wallc3ToC == NULL) {
 #ifdef QDEBUG
-					cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
-					cout << " not handled case\n";
+				cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
+				cout << " not handled case\n";
 #endif
 				return false;
 			}
