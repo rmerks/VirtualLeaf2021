@@ -218,23 +218,35 @@ class Mesh {
     }
   }
 
-  void DoCellHouseKeeping(list<CellWallCurve>& curves) {
+  void DoCellHouseKeeping(vector<CellWallCurve>& curves) {
     vector<Cell *> current_cells = cells;
     for (vector<Cell *>::iterator i = current_cells.begin();
     		i != current_cells.end();
     		i ++) {
     	plugin->CellHouseKeeping(*i);
     }
-    curves.sort([](CellWallCurve lhs, CellWallCurve rhs) {return lhs.getThreshold() > rhs.getThreshold();});
-    for (std::list<CellWallCurve>::iterator it = curves.begin(); it != curves.end(); ++it){
-    	if (it->removeSpike()) {
-    		if(it->isBorderCase()){
-    			RepairBoundaryPolygon();
-    		}
-    	    for (std::list<CellWallCurve>::iterator it2 = curves.begin(); it2 != curves.end(); ++it2){
-    	    	it2->check_overlap(*it);
+    sort(curves.begin(), curves.end(), [](CellWallCurve lhs, CellWallCurve rhs) {return lhs.getThreshold() > rhs.getThreshold();});
+    CellWallCurve * array = &(curves[0]);
+    double count = curves.size();
+    for (int index = 0;index < (count*3); index++) {
+    	double rand= RANDOM();
+    	// quadratic random is used to prioritize high energy cases over low energy cases
+    	int arrayIndex = round((count-1.)*rand*rand);
+    	CellWallCurve * element= &(array[arrayIndex]);
+    	if (element->removeSpike()) {
+    	    if(element->isBorderCase()){
+    	    	RepairBoundaryPolygon();
     	    }
-        }
+    	    bool anyActive = false;
+    	    for (std::vector<CellWallCurve>::iterator it2 = curves.begin(); it2 != curves.end(); ++it2){
+    	    	it2->check_overlap(*element);
+    	    	anyActive = anyActive || !(it2->isDeacivated());
+    		}
+    	    element->reset();
+    	    if (!anyActive) {
+    	    	break;
+    	    }
+    	}
     }
 
     for (vector<Cell *>::iterator i = current_cells.begin();
@@ -262,7 +274,7 @@ class Mesh {
     f(cells[i]);
   }
 
-  double RemodelWallElements(list<CellWallCurve> & curves);
+  double RemodelWallElements(vector<CellWallCurve> & curves);
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
@@ -459,8 +471,8 @@ class Mesh {
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);
   CellBase * getOtherCell(CellBase* c,Node* node1,Node * node2);
-  void RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
-  void RemodelCellWallElements(list<CellWallCurve> & curves,CellBase *c);
+  void RemodelWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
+  void RemodelCellWallElements(vector<CellWallCurve> & curves,CellBase *c);
   bool findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
   inline Node *AddNode(Node *n) {
     nodes.push_back(n);

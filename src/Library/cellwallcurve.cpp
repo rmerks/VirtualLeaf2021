@@ -150,6 +150,10 @@ CellBase* CellWallCurve::cellBehindWallToNode(NodeBase * spikeEnd) {
 	return this->cell->getOtherWallElementSide(spikeEnd,over);
 }
 
+bool CellWallCurve::isDeacivated() {
+	return cell == NULL || from == NULL || over == NULL || to == NULL;
+}
+
 /**
  * Now we collapse the spike by letting the longer wall end at the end of the shorter wall.
  * Assume a sharp spike in a wall from node a to c (a-c) to b (c-b). were a-c is the longer
@@ -157,7 +161,7 @@ CellBase* CellWallCurve::cellBehindWallToNode(NodeBase * spikeEnd) {
  * by replacing a-c and with a new wall a-b.
  */
 bool CellWallCurve::removeSpike() {
-	if (cell==NULL||from==NULL||over==NULL||to==NULL) {
+	if (isDeacivated()) {
 		//incomplete ignore call
 		return false;
 	}

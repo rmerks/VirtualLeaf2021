@@ -653,7 +653,7 @@ double getStiffness(CellBase* c,NodeBase* n1) {
 	}
 }
 
-void Mesh::RemodelWallElement(list<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+void Mesh::RemodelWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
 
 	Node * o0;
 	Node * o1;
@@ -764,7 +764,7 @@ void extractData(WallElement *we,double & base_length,double &stiffness) {
 	}
 }
 
-void Mesh::RemodelCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
+void Mesh::RemodelCellWallElements(vector<CellWallCurve> & curves,CellBase *c) {
 	//The algorithm needs at least 5 nodes along the wall
 	if (c->nodes.size()<5) {
 		return;
@@ -809,7 +809,7 @@ void Mesh::RemodelCellWallElements(list<CellWallCurve> & curves,CellBase *c) {
 	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
 }
 
-double Mesh::RemodelWallElements(list<CellWallCurve> & curves) {
+double Mesh::RemodelWallElements(vector<CellWallCurve> & curves) {
 	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
 		Cell *c = *ii;
 		c->resetCellWallCurve();

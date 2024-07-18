@@ -277,7 +277,7 @@ TIMESTEP {
 		mesh.InsertNodes(); // (this amounts to cell wall yielding)
 
 		if ( (-dh) < par.energy_threshold) {
-			list<CellWallCurve> curves;
+			vector<CellWallCurve> curves;
 			if (mesh.activateWallRemodeling()) {
 				mesh.RemodelWallElements(curves);
 			}

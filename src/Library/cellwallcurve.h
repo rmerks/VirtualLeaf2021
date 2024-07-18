@@ -61,10 +61,12 @@ class CellWallCurve {
 
 	WallBase* otherWallEndingAt(CellBase *c3, NodeBase *&c, WallBase *&wallc2c3);
 	bool check_overlap(NodeBase* other);
+
 public:
 	CellWallCurve() {
 		reset();
 	}
+	bool isDeacivated();
 	bool isBorderCase() {return borderCase;};
     void setThreshold(double threshold) {this->threshold=threshold;};
     double getThreshold() {return this->threshold;};
