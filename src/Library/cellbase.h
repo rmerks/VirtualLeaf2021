@@ -216,6 +216,10 @@ class CellBase :  public QObject, public Vector
 
   inline double GetWallStiffness(void) const {return wall_stiffness;}
 
+  inline bool SetCellVeto(bool veto){return veto_remodelling = veto;}
+
+  inline bool GetCellVeto(void) const {return veto_remodelling;}
+
   inline void Divide(void) { flag_for_divide = true; }
 
   inline void DivideOverAxis(const Vector &v)
@@ -530,7 +534,7 @@ class CellBase :  public QObject, public Vector
   double target_length;
   double lambda_celllength;
   double wall_stiffness; // Lebovka et al
-
+  bool veto_remodelling; // testing cellular veto
   bool fixed;
   bool pin_fixed;
   bool at_boundary; 
