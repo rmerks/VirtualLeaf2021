@@ -666,7 +666,7 @@ void Mesh::RemodelWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w
 	}
 
 	CellBase* c2 = getOtherCell(c,w1,w2);
-    if (c2 != NULL && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3) && c->veto_remodelling!= true && c2->veto_remodelling!=true){
+    if (c2 != NULL && !(c2->GetCellVeto()) && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
 
 
 //now check how profitable the move of wall element w1-w2 to w1-w3
@@ -813,7 +813,9 @@ double Mesh::RemodelWallElements(vector<CellWallCurve> & curves) {
 	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
 		Cell *c = *ii;
 		c->resetCellWallCurve();
-		RemodelCellWallElements(curves,c);
+		if (!(c->GetCellVeto())) {
+			RemodelCellWallElements(curves,c);
+		}
 	}
 	RemodelCellWallElements(curves,boundary_polygon);
 	return 0.0;
