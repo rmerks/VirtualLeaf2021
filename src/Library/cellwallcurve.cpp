@@ -241,7 +241,7 @@ bool CellWallCurve::removeSpike() {
 			// more than 3 cells in point c, now c1 and c3 are separated by other cells.
 			wallc1ToC = otherWallEndingAt(c1, c, wallc1c2);
 			wallc3ToC = otherWallEndingAt(c3, c, wallc2c3);
-			if (wallc1ToC == NULL && !(c1->BoundaryPolP()) || wallc3ToC == NULL && !(c3->BoundaryPolP())) {
+			if ((wallc1ToC == NULL && !(c1->BoundaryPolP())) || (wallc3ToC == NULL && !(c3->BoundaryPolP()))) {
 #ifdef QDEBUG
 				cout << " a=" << a->Index() << " b=" << b->Index()<< " c=" << c->Index()<<"\n";
 				cout << " not handled case\n";
