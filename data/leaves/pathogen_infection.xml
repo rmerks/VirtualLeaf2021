@@ -17,7 +17,7 @@
     <par name="datadir" val="infection_growth"/>
     <par name="T" val="10"/>
     <par name="lambda_length" val="100"/>
-    <par name="yielding_threshold" val="10"/>
+    <par name="yielding_threshold" val="15"/>
     <par name="lambda_celllength" val="0"/>
     <par name="target_length" val="2000"/>
     <par name="cell_expansion_rate" val="1"/>
