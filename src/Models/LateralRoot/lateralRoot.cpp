@@ -59,7 +59,11 @@ void LateralRoot::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBas
 void LateralRoot::SetCellColor(CellBase *c, QColor *color) { 
   // add cell coloring rules here
 	 if (c->CellType()==3){
-		color->setNamedColor("green");
+		 if (c->Chemical(0)>0.5 || c->Chemical(0) < 0.001){
+				color->setNamedColor("red");
+		 } else {
+				color->setNamedColor("green");
+		 }
 	}
 	else {
 		color->setNamedColor("blue");
