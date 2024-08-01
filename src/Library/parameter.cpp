@@ -141,8 +141,9 @@ Parameter::Parameter() {
   k2van3 = 0.3;
   dt = 0.1;
   rd_dt = 1.0;
+  elastic_modulus = 50.;
   potential_slide_angle = M_PI/18.;
-  compatibility_level = 255;
+  compatibility_level = 0xFFFF;
   movie = false;
   nit = 100000;
   maxt = 1000.;
@@ -312,9 +313,10 @@ void Parameter::Read(const char *filename) {
   dt = fgetpar(fp, "dt", 0.1, true);
   rd_dt = fgetpar(fp, "rd_dt", 1.0, true);
   potential_slide_angle = fgetpar(fp, "potential_slide_angle", M_PI/18., true);
+  elastic_modulus = fgetpar(fp, "elastic_modulus", 50., true);
   movie = bgetpar(fp, "movie", false, true);
   nit = igetpar(fp, "nit", 100000, true);
-  compatibility_level = igetpar(fp, "compatibility_level", 255, true);
+  compatibility_level = igetpar(fp, "compatibility_level", 0xFFFF, true);
   maxt = fgetpar(fp, "maxt", 1000., true);
   rseed = igetpar(fp, "rseed", -1, true);
   constituous_expansion_limit = igetpar(fp, "constituous_expansion_limit", 16, true);
@@ -448,6 +450,7 @@ void Parameter::Write(ostream &os) const {
   os << " dt = " << dt << endl;
   os << " rd_dt = " << rd_dt << endl;
   os << " potential_slide_angle = " << potential_slide_angle << endl;
+  os << " elastic_modulus = " << elastic_modulus << endl;
   os << " movie = " << sbool(movie) << endl;
   os << " nit = " << nit << endl;
   os << " compatibility_level = " << compatibility_level << endl;
@@ -1263,6 +1266,14 @@ text << sbool(copy_wall);
   xmlparameter.appendChild(xmlpar);
   ostringstream text;
     text << potential_slide_angle;
+  xmlpar.setAttribute("val",text.str().c_str());
+}
+{
+  QDomElement xmlpar = doc.createElement("par");
+  xmlpar.setAttribute("name","elastic_modulus" );
+  xmlparameter.appendChild(xmlpar);
+  ostringstream text;
+    text << elastic_modulus;
   xmlpar.setAttribute("val",text.str().c_str());
 }
 {

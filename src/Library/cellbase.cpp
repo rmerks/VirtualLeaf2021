@@ -86,15 +86,14 @@ CellBase::CellBase(QObject *parent) :
   at_boundary=false;
   fixed = false;
   pin_fixed = false;
-  stiffness = 0;
   wall_stiffness = 1;
+  veto_remodelling = false;
   marked = false;
   dead = false;
   div_counter=0;
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
-  curvedWallElementToHandle= new CellWallCurve(0);
 }
 
 
@@ -128,15 +127,14 @@ CellBase::CellBase(double x,double y,double z) : QObject(), Vector(x,y,z)
   fixed = false;
   at_boundary=false;
   pin_fixed = false;
-  stiffness = 0;
   wall_stiffness = 1;
+  veto_remodelling = false;
   marked=false;
   dead  = false;
   div_counter = 0;
   cell_type = 0;
   flag_for_divide = false;
   division_axis = 0;
-  curvedWallElementToHandle= new CellWallCurve(0.);
 }
 
 CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
@@ -170,15 +168,14 @@ CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
   cellvec = src.cellvec;
   at_boundary=src.at_boundary;
   pin_fixed = src.pin_fixed;
-  stiffness = src.stiffness;
   wall_stiffness = src.wall_stiffness;
+  veto_remodelling = src.veto_remodelling;
   marked = src.marked;
   dead = src.dead;
   cell_type = src.cell_type;
   div_counter = src.div_counter;
   flag_for_divide = src.flag_for_divide;
   division_axis = src.division_axis;
-  curvedWallElementToHandle = new CellWallCurve(0.);
 }
 
 
@@ -212,8 +209,8 @@ CellBase CellBase::operator=(const CellBase &src)
   cellvec = src.cellvec;
   at_boundary=src.at_boundary;
   pin_fixed = src.pin_fixed;
-  stiffness = src.stiffness;
   wall_stiffness = src.wall_stiffness;
+  veto_remodelling = src.veto_remodelling;
   marked = src.marked;
   dead = src.dead;
   cell_type = src.cell_type;
@@ -542,11 +539,16 @@ void CellBase::ConstructNeighborList(void)
 
        wit!=walls.end();
        wit++) {
-
+		CellBase * newNeighbor=NULL;
     if ((*wit)->C1() != this) {
-      neighbors.push_back((*wit)->C1());
+    	newNeighbor=(*wit)->C1();
     } else {
-      neighbors.push_back((*wit)->C2());
+    	newNeighbor=(*wit)->C2();
+    }
+    if (newNeighbor != NULL) {
+    	neighbors.push_back(newNeighbor);
+    } else {
+    	cout << "neighbor of " << index << " is NULL " << endl;
     }
 
   }
@@ -694,7 +696,6 @@ void CellBase::InsertWall( WallBase *w ){
 	//implemented in sub class
 }
 
-void CellBase::attachToCell(CellWallCurve * curve) {curvedWallElementToHandle->set(curve);};
 void CellBase::correctNeighbors() {}
 
 /* finis*/

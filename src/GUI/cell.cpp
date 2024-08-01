@@ -774,7 +774,7 @@ void Cell::DivideWalls(ItList new_node_locations, const Vector from, const Vecto
 	neighbor_cell = c->cell;
 	if (c->cell == NULL) {
 		cout << "error";
-	}
+	} else
 	if (!c->cell->BoundaryPolP()) {
 
 	  // find correct position in the cells node list
@@ -1264,10 +1264,6 @@ void Cell::splittWallElementsBetween(Node* node, Cell* daughter) {
 	oldInfoB1ToA2_B2A1.setWallElement(&weB1A2_B2A1);
 	WallElement weA2B1_A1B2= *(oldInfoA2ToB1_A1B2.getWallElement());
 	oldInfoA2ToB1_A1B2.setWallElement(&weA2B1_A1B2);
-
-	double length = oldInfoA2ToB1_A1B2.getLength();
-	double baseLengthOutside = oldInfoA2ToB1_A1B2.getBaseLength();
-	double baseLengthInside = oldInfoB1ToA2_B2A1.getBaseLength();
 
 	double patrialLengthBefore =  ((*before1) - (*node)).Norm();
 	double patrialLengthAfter =  ((*after2) - (*node)).Norm();

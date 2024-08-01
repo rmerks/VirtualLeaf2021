@@ -533,6 +533,294 @@ void Mesh::updateAreasOfCells(list<DeltaIntgrl> * delta_intgrl_list,Node * node)
 	}
 }
 
+CellBase * Mesh::getOtherCell(CellBase* c,Node* node1,Node * node2) {
+    for (list<Neighbor>::iterator nb1=node1->owners.begin(); nb1!=node1->owners.end(); nb1++) {
+    	if (nb1->getCell() != c) {
+    		for (list<Neighbor>::iterator nb2=node2->owners.begin(); nb2!=node2->owners.end(); nb2++) {
+        		if (nb1->getCell() == nb2->getCell()){
+        			return nb1->getCell();
+        		}
+        	}
+    	}
+    }
+    return NULL;
+}
+
+int debugNode = -1;
+
+double cross(const Vector & v1, const Vector & v2)
+{
+    return (v1.x*v2.y) - (v1.y*v2.x);
+}
+
+
+double b_cocient(const Vector& AC, const Vector& AB,const Vector& ACperp, const Vector& ABperp) {
+	double b=((AC.x-AB.x)/ABperp.x + ((AB.y-AC.y)/ACperp.y)*(ACperp.x/ABperp.x))*((ACperp.y*ABperp.x)/(ACperp.y*ABperp.x-ABperp.y*ACperp.x));
+	return b;
+}
+
+//http://dx.doi.org/10.1016/j.cis.2014.01.018
+// radius of circle with center on line B-C and connecting at norm of the lines (A-B ode A-C)
+// and sharing one point with the other line. This we define the kissing circle
+double osculating_circle_radius(const Vector& B, const Vector& A, const Vector& C) {
+	Vector AC = (C-A).Normalised();
+	Vector AB = (B-A).Normalised();
+
+	Vector ACpoint = A+AC;
+	Vector ABpoint = A+AB;
+	Vector ACperp = AC.Perp2D();
+	Vector ABperp = AB.Perp2D();
+//	double b_new = b_cocient(ACpoint,ABpoint,ACperp,ABperp);
+	double a_new = b_cocient(ABpoint,ACpoint,ABperp,ACperp);
+
+	Vector AM1=ACpoint+ACperp*a_new;
+//	Vector AM2=ABpoint+ABperp*b_new;
+
+	double r1 = (ACpoint-AM1).Norm();
+//	double r2 = (ABpoint-AM1).Norm();
+// commented lines as check if r1==r2
+	return r1;
+
+}
+
+bool Mesh::findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3) {
+	list <Node *>::iterator i=c->nodes.begin();
+	* w0=*i;
+	* w1=*(++i);
+	* w2=*(++i);
+	* w3=*(++i);
+	Node * o0=*w0;
+	Node * o1=*w1;
+	Node * o2=*w2;
+	while (i!=c->nodes.end()) {
+		if ((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+			return true;
+		}
+	    *w0=*w1;
+	    *w1=*w2;
+	    *w2=*w3;
+	    *w3=*(++i);
+	}
+	*w3=o0;
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
+	*w0=*w1;
+	*w1=*w2;
+	*w2=*w3;
+	*w3=o1;
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
+	*w0=*w1;
+	*w1=*w2;
+	*w2=*w3;
+	*w3=o2;
+	if((*w1==z1 && *w2==z2)||(*w2==z1 && *w1==z2)) {
+		return true;
+	}
+	*w0=NULL;
+	*w1=NULL;
+	*w2=NULL;
+	*w3=NULL;
+	return false;
+}
+double lambda_for_shift=0.1;
+
+double getBaseLength(CellBase* c,NodeBase* n1, NodeBase * n2) {
+	WallElement* wallElement = n1->getWallElement(c);
+	if (wallElement == NULL) {
+		return ((*n1)-(*n2)).Norm()/1.2;
+	}else {
+		double base_length = wallElement->getBaseLength();
+		if (std::isnan(base_length)) {
+			return ((*n1)-(*n2)).Norm()/1.2;
+		}
+		return base_length;
+	}
+}
+
+double getStiffness(CellBase* c,NodeBase* n1) {
+	WallElement* wallElement = n1->getWallElement(c);
+	if (wallElement == NULL) {
+		return c->GetWallStiffness();
+	}else {
+		double stiffness = wallElement->getStiffness();
+		if (std::isnan(stiffness)) {
+			return c->GetWallStiffness();
+		}
+		return stiffness;
+	}
+}
+
+void Mesh::RemodelWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+
+	Node * o0;
+	Node * o1;
+	Node * o2;
+	Node * o3;
+	double angle = (*w1-*w2).SignedAngle((*w3-*w2));
+	if ((angle>0&&c->BoundaryPolP())||(angle<0&&!c->BoundaryPolP())) {
+		//we would bend inward and intersect cells
+		return;
+	}
+
+	CellBase* c2 = getOtherCell(c,w1,w2);
+    if (c2 != NULL && !(c2->GetCellVeto()) && findOtherSide(c2,w2,w1,&o0,&o1,&o2,&o3)){
+
+
+//now check how profitable the move of wall element w1-w2 to w1-w3
+//this changes also cell c2 where wall element o1->o2 will be replaced
+//by wall elements o1->w3 and w3->o2 all other surrounding cells will remain
+//unchanged.
+		double bending_dh = 0.;
+		if (abs(par.bend_lambda) > 0.01)	  {
+	// angles that are before w0-w1-w2/w1-w2-w3/w2-w3-w4 and o0-o1-o2/o1-o2-o3
+	// angles after move w0-w1-w3/w1-w3-w4 and o0-o1-w3/o1-w3-o2/w3-o2-o3
+			double r1 = osculating_circle_radius(*w0,*w1,*w2);
+			double r2 = osculating_circle_radius(*w1,*w2,*w3);
+			double r3 = osculating_circle_radius(*w2,*w3,*w4);
+			double r4 = osculating_circle_radius(*w0,*w1,*w3);
+			double r5 = osculating_circle_radius(*w1,*w3,*w4);
+			double energy_before =
+					1./(r1)+
+					1./(r2)+
+					1./(r3)+
+					1./((osculating_circle_radius(*o0,*o1,*o2)))+
+					1./((osculating_circle_radius(*o1,*o2,*o3)));
+			double energy_after =
+					1./(r4)+
+					1./((osculating_circle_radius(*o1,*w3,*o2)))+
+					1./(r5)+
+					1./((osculating_circle_radius(*o0,*o1,*w3)))+
+					1./((osculating_circle_radius(*w3,*o2,*o3)));
+			bending_dh = par.bend_lambda*(energy_after-energy_before*1.5+12.);
+		}
+		// the length contraint just needs to be calculated for the wall elements that change length
+		double wl1=((*w1)-(*w2)).Norm();
+		double wl2=((*w3)-(*w2)).Norm();
+		double wl3=((*w1)-(*w3)).Norm();
+		double s_bef = wl1;
+		double s_aft = wl3+wl2;
+
+		double r_bef = wl1+wl2;
+		double r_aft = wl3;
+
+		double length_before = wl1+wl2+wl1;
+
+		double stiffness = (
+				getStiffness(c, w1)*wl1+
+				getStiffness(c, w2)*wl2+
+				getStiffness(c2, o2)*wl1
+				) / length_before;
+
+		double s_base = getBaseLength(c2, w1, w2);
+		double r_base = getBaseLength(c, w1, w2) + getBaseLength(c2, w2, w3);
+
+		double length_dh = (
+    		elastic_modulus * stiffness * c->GetWallStiffness() *
+			(
+			(s_base) *(
+					 DSQR(s_aft/s_base - 1)
+					-DSQR(s_bef/s_base - 1)
+			) -
+			(r_base)*(
+					 DSQR(r_aft/r_base - 1)
+					-DSQR(r_bef/r_base - 1)
+            )));
+
+        double dh = length_dh + bending_dh;
+        double threshold;
+        if (dh < 0 || RANDOM() < (threshold=exp((-dh)/par.T)))		{
+
+			CellWallCurve curve;
+			curve.setCell(c);
+			curve.setOtherCell(c2);
+			curve.shift(w1);
+			curve.shift(w2);
+			curve.shift(w3);
+			curve.involved_nodes(w0,w4,o0,o1,o2,o3);
+            curve.setThreshold(threshold);
+
+			curves.push_back(curve);
+		}
+		if (debugNode>-1){
+			cout << "move  " << w1->Index()<<"-"<<w2->Index()<<" to "<<w1->Index()<<"-"<<w3->Index()<<" en:"<< length_dh <<"\n";
+		}
+	}
+}
+
+void extractData(WallElement *we,double & base_length,double &stiffness) {
+	if (we != NULL) {
+		base_length += we->getBaseLength();
+		if (std::isnan(we->getStiffness()) ) {
+			stiffness+=we->getCell()->GetWallStiffness();
+		} else {
+			stiffness+=we->getStiffness();
+		}
+	}else {
+		base_length=std::nan("1");
+		stiffness=std::nan("1");
+	}
+}
+
+void Mesh::RemodelCellWallElements(vector<CellWallCurve> & curves,CellBase *c) {
+	//The algorithm needs at least 5 nodes along the wall
+	if (c->nodes.size()<5) {
+		return;
+	}
+	list <Node *>::iterator i = c->nodes.begin();
+	Node * w0=*i;
+	Node * w1=*(++i);
+	Node * w2=*(++i);
+	Node * w3=*(++i);
+	Node * w4=*(++i);
+	Node * o0=w0;
+	Node * o1=w1;
+	Node * o2=w2;
+	Node * o3=w3;
+	while (i!=c->nodes.end()) {
+		RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+		w0=w1;
+		w1=w2;
+		w2=w3;
+		w3=w4;
+		w4=*(++i);
+	}
+	w4=o0;
+	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o1;
+	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o2;
+	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	w0=w1;
+	w1=w2;
+	w2=w3;
+	w3=w4;
+	w4=o3;
+	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+}
+
+double Mesh::RemodelWallElements(vector<CellWallCurve> & curves) {
+	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
+		Cell *c = *ii;
+		c->resetCellWallCurve();
+		if (!(c->GetCellVeto())) {
+			RemodelCellWallElements(curves,c);
+		}
+	}
+	RemodelCellWallElements(curves,boundary_polygon);
+	return 0.0;
+}
+
 double Mesh::DisplaceNodes(void) {
 
   MyUrand r(shuffled_nodes.size());
@@ -592,7 +880,6 @@ double Mesh::DisplaceNodes(void) {
 
       double old_l1=0.,old_l2=0.,new_l1=0.,new_l2=0.;
 
-      double sum_stiff=0.;
       double dh=0.;
 
       for (list<Neighbor>::const_iterator cit=node.owners.begin(); cit!=node.owners.end(); cit++) {
@@ -610,8 +897,6 @@ double Mesh::DisplaceNodes(void) {
 	  goto next_node;
 	}
 
-	// summing stiffnesses of cells. Move has to overcome this minimum required energy.
-	sum_stiff += c.stiffness;
 	// area - (area after displacement): see notes for derivation
 	
 	Vector i_min_1 = *(cit->nb1);
@@ -775,9 +1060,6 @@ double Mesh::DisplaceNodes(void) {
 	  new_l1=(new_p-i_min_1).Norm();
 	  new_l2=(new_p-i_plus_1).Norm();
 
-
-
-
 	  static int count=0;
 	  // Insertion of nodes (cell wall yielding)
 	  if (!node.fixed) {
@@ -817,7 +1099,7 @@ double Mesh::DisplaceNodes(void) {
 
 
     // Cell specific wall stiffness
-    double cell_w = cit->cell->GetWallStiffness();
+    double cell_w = c.GetWallStiffness();
     w1 = w1*cell_w;
     w2 = w2*cell_w;
 
@@ -835,7 +1117,6 @@ double Mesh::DisplaceNodes(void) {
         w2 = cell_w * (w_w2);
         //check if wall elements are defined and pick the appropriate length_dh
 
-            double elastic_modulus = 50;
             length_dh +=
         		elastic_modulus * w1 *
         		bl_minus_1 *(DSQR(new_l1/bl_minus_1 - 1)-DSQR(old_l1/bl_minus_1 - 1)) +
@@ -854,21 +1135,26 @@ double Mesh::DisplaceNodes(void) {
 
 	// bending energy also holds for outer boundary
 	// first implementation. Can probably be done more efficiently
-	// calculate circumcenter radius (gives local curvature)
+	// calculate osculating circle radius (gives local curvature)
 	// the ideal bending state is flat... (K=0)
-		  {
+	if (abs(par.bend_lambda) > 0.01)	  {
 	  // strong bending energy to resist "cleaving" by division planes
-	  double r1, r2, xc, yc;
-	  CircumCircle(i_min_1.x, i_min_1.y, old_p.x, old_p.y, i_plus_1.x, i_plus_1.y,
-		       &xc,&yc,&r1);
-	  CircumCircle(i_min_1.x, i_min_1.y, new_p.x, new_p.y, i_plus_1.x, i_plus_1.y,
-		       &xc,&yc, &r2);
+	  double r1, r2;
+
+	  Vector before_a(i_min_1.x,i_min_1.y,0);
+	  Vector before_b(old_p.x, old_p.y,0);
+	  Vector before_c(i_plus_1.x, i_plus_1.y,0);
+	  r1 = osculating_circle_radius(before_a, before_b, before_c);
+
+	  Vector after_a(i_min_1.x, i_min_1.y,0);
+	  Vector after_b(new_p.x, new_p.y,0);
+	  Vector after_c(i_plus_1.x, i_plus_1.y,0);
+	  r2 = osculating_circle_radius(after_a, after_b, after_c);
 
 	  if (r1<0 || r2<0) {
 	    MyWarning::warning("r1 = %f, r2 = %f",r1,r2);
 	  }
 	  bending_dh += DSQR(1/r2 - 1/r1);
-
 	}
       }
       dh = 	area_dh + cell_length_dh +
@@ -876,7 +1162,7 @@ double Mesh::DisplaceNodes(void) {
 
          //(length_constraint_after - length_constraint_before);
 
-	  if (dh<-sum_stiff || RANDOM()<exp((-dh-sum_stiff)/par.T)) {
+      if (dh < 0 || RANDOM()<exp((-dh)/par.T)) {
 		updateAreasOfCells(&delta_intgrl_list, &node) ;
 
 		node.x = new_p.x;
@@ -892,61 +1178,6 @@ double Mesh::DisplaceNodes(void) {
 
   return sum_dh;
 }
-
-
-
-
-void Mesh::WallCollapse(double potential_slide_angle) {
-	CellWallCurve curve(potential_slide_angle);
-	bool anyCurveFlattend=false;
-	Node * first=NULL;
-	Node * second=NULL;
-	curve.reset();
-	curve.setCell(boundary_polygon);
-	for (Node * node : boundary_polygon->nodes) {
-		curve.shift(node);
-		if (first==NULL) {
-			first=node;
-		}else if (second==NULL) {
-			second=node;
-		}
-		curve.checkAngle();
-	}
-	curve.shift(first);
-	curve.checkAngle();
-	curve.shift(second);
-	curve.checkAngle();
-	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
-		Cell &cell(**i);
-		curve.reset();
-		curve.setCell(&cell);
-		list <Node *>::iterator j=cell.nodes.begin();
-		curve.shift(*j);
-		curve.shift(*(++j));
-		curve.shift(*(++j));
-		while (j!=cell.nodes.end()) {
-			bool toSharp = curve.checkAngle();
-			Node *nextNode = *(++j);
-			if (!toSharp && j!=cell.nodes.end()){
-				curve.checkBudEnd(nextNode);
-			}
-			curve.shift(nextNode);
-		}
-		j=cell.nodes.begin();
-		Node *nextNode =*j;
-		curve.setTo(nextNode);
-		nextNode = *(++j);
-		if (!curve.checkAngle()){
-			curve.checkBudEnd(nextNode);
-		}
-		curve.shift(nextNode);
-		nextNode = *(++j);
-		if (!curve.checkAngle()){
-			curve.checkBudEnd(nextNode);
-		}
-	}
-}
-
 
 void Mesh::WallRelaxation(void) {
 	// as we relax every wall element independently no re-scuffling is necessary.
@@ -1157,55 +1388,6 @@ void Mesh::InsertNode(Edge &e) {
   }
 
   new_node->splittWallElementsBetween(e.first, e.second);
-}
-
-
-/*
-  Calculate circumcircle of triangle (x1,y1), (x2,y2), (x3,y3)
-  The circumcircle centre is returned in (xc,yc) and the radius in r
-  NOTE: A point on the edge is inside the circumcircle
-*/
-void Mesh::CircumCircle(double x1,double y1,double x2,double y2,double x3,double y3,
-			double *xc,double *yc,double *r)
-{
-  double m1,m2,mx1,mx2,my1,my2;
-  double dx,dy,rsqr;
-
-  /* Check for coincident points */
-  /*if (abs(y1-y2) < TINY && abs(y2-y3) < TINY)
-    return(false);*/
-
-  if (abs(y2-y1) < TINY) {
-    m2 = - (x3-x2) / (y3-y2);
-    mx2 = (x2 + x3) / 2.0;
-    my2 = (y2 + y3) / 2.0;
-    *xc = (x2 + x1) / 2.0;
-    *yc = m2 * (*xc - mx2) + my2;
-  } else if (abs(y3-y2) < TINY) {
-    m1 = - (x2-x1) / (y2-y1);
-    mx1 = (x1 + x2) / 2.0;
-    my1 = (y1 + y2) / 2.0;
-    *xc = (x3 + x2) / 2.0;
-    *yc = m1 * (*xc - mx1) + my1;
-  } else {
-    m1 = - (x2-x1) / (y2-y1);
-    m2 = - (x3-x2) / (y3-y2);
-    mx1 = (x1 + x2) / 2.0;
-    mx2 = (x2 + x3) / 2.0;
-    my1 = (y1 + y2) / 2.0;
-    my2 = (y2 + y3) / 2.0;
-    *xc = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2);
-    *yc = m1 * (*xc - mx1) + my1;
-  }
-
-  dx = x2 - *xc;
-  dy = y2 - *yc;
-  rsqr = dx*dx + dy*dy;
-  *r = sqrt(rsqr);
-
-  return;
-  // Suggested
-  // return((drsqr <= rsqr + EPSILON) ? TRUE : FALSE);
 }
 
 //
@@ -1467,7 +1649,8 @@ void Mesh::RepairBoundaryPolygon(void) {
   // other than the one passed to it, the original node is the first
   // boundary node.
   for (Node* node : nodes) {
-    if ((findNextBoundaryNode(node))->index != node->index){
+		Node *nextNode = findNextBoundaryNode(node);
+		if (nextNode && (nextNode)->index != node->index) {
       next_boundary_node = node;
       break;
     }
@@ -1484,6 +1667,7 @@ void Mesh::RepairBoundaryPolygon(void) {
     next_boundary_node = findNextBoundaryNode(boundary_node);
     if (next_boundary_node == NULL) {
     	cout << "boundary null\n";
+    	break;
     }
   } while ( !next_boundary_node->Marked() );
 
@@ -1947,6 +2131,11 @@ double *Mesh::getValues(int *neqs) {
       values[i+ch]=(*w)->Transporters2(ch);
     }
     i+=nchems;
+  }
+  for (int j=0;j<i;j++) {
+  	if (std::isnan(values[j]) ){
+	  	values[j]=0.;
+  	}
   }
   return values;
 }

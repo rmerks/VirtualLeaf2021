@@ -72,5 +72,4 @@ void WallElementInfo::updateFrom(WallElementInfo* original,double ratio) {
 
 double WallElementInfo::getBaseLength() {return this->getWallElement()->getBaseLength();};
 void WallElementInfo::updateBaseLength() {this->getWallElement()->setBaseLength(this->length/1.2);};
-void WallElementInfo::relax() {this->getWallElement()->setBaseLength(this->length);};
 bool WallElementInfo::plasticStretch() {return this->length > 1.2*this->getWallElement()->getBaseLength();};

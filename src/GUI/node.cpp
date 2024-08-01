@@ -245,7 +245,7 @@ int Node::countNeighbors(void) {
 
 
 void Node::splitWallElements(WallElementInfo *base,double ratioOfBase) {
-	WallElement * newWallElement = this->insertWallElement(base->getCell());
+	this->insertWallElement(base->getCell());
 	WallElementInfo sub;
 	base->getCell()->fillWallElementInfo(&sub, this, (Node*)base->getTo());
 	base->divide(&sub,(1.-ratioOfBase));

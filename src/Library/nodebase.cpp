@@ -45,3 +45,9 @@ WallElement* NodeBase::insertWallElement(CellBase* cell) {
 int NodeBase::countNeighbors(void){
 	return 0;
 }
+
+NodeBase::~NodeBase() {
+	  for (vector<WallElement*>::iterator i=wallElements.begin(); i!=wallElements.end(); i++) {
+		  delete *i;
+	  }
+}

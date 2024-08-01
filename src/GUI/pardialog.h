@@ -118,6 +118,7 @@ class ParameterDialog : public QDialog {
   QLineEdit *movie_edit;
   QLineEdit *nit_edit;
   QLineEdit *compatibility_level_edit;
+  QLineEdit *elastic_modulus_edit;
   QLineEdit *maxt_edit;
   QLineEdit *rseed_edit;
   QLineEdit *constituous_expansion_limit_edit;

@@ -1,3 +1,11 @@
 /bin/
 /build-VirtualLeaf-Desktop-Debug/
 /.project
+**/*.o
+**/Makefile
+**/.project
+**/.cproject
+**/.pydevproject
+**/moc_*
+**/.settings/
+**/__pycache__/

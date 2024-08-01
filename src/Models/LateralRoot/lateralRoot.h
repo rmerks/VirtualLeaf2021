@@ -27,10 +27,10 @@
 #include "simplugin.h"
 
 
-class Infection : public QObject, SimPluginInterface {
+class LateralRoot : public QObject, SimPluginInterface {
 	Q_OBJECT
 	Q_INTERFACES(SimPluginInterface);
-        Q_PLUGIN_METADATA(IID "org.virtualleaf.Infection")
+     Q_PLUGIN_METADATA(IID "org.virtualleaf.LateralRoot")
 
 public:
 	virtual QString ModelID(void);
@@ -54,8 +54,7 @@ public:
 	virtual void SetCellColor(CellBase *c, QColor *color);	
 	// return number of chemicals
 	virtual int NChem(void);
-    // default XML file to be loaded on startup
-    virtual QString DefaultLeafML(void) { return QString("pathogen_infection.xml"); }
+	virtual QString DefaultLeafML(void) { return QString("lateralRoot.xml"); }
 };
 
 

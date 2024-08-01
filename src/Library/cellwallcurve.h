@@ -44,35 +44,47 @@ class CellWallCurve {
 	friend class CellBase;
 
 	bool borderCase;
-	double potential_slide_angle;
+    double threshold;
+
 
 	CellBase * cell;
+	CellBase * other_cell;
 
 	NodeBase * from=NULL;
 	NodeBase * over=NULL;
 	NodeBase * to=NULL;
 
+	NodeBase* n1;NodeBase* n2;NodeBase* n3;NodeBase* n4;NodeBase* n5;NodeBase* n6;
+
 
 	WallBase* findWallBetweenEndingAt(CellBase *&c1, CellBase *&c2, NodeBase *&c);
 
 	WallBase* otherWallEndingAt(CellBase *c3, NodeBase *&c, WallBase *&wallc2c3);
-	void attachToCell();
+	bool check_overlap(NodeBase* other);
 
 public:
-	CellWallCurve(double potential_slide_angle) {
-		this->potential_slide_angle = potential_slide_angle;
+	CellWallCurve() {
 		reset();
 	}
+	bool isDeacivated();
 	bool isBorderCase() {return borderCase;};
-	void set(CellWallCurve * other);
+    void setThreshold(double threshold) {this->threshold=threshold;};
+    double getThreshold() {return this->threshold;};
+	void check_overlap(CellWallCurve & other);
+	void involved_nodes(NodeBase* n1,NodeBase* n2,NodeBase* n3,NodeBase* n4,NodeBase* n5,NodeBase* n6) {
+		this->n1=n1;
+		this->n2=n2;
+		this->n3=n3;
+		this->n4=n4;
+		this->n5=n5;
+		this->n6=n6;
+	}
 	void shift(NodeBase * node) ;
-	bool checkBudEnd(NodeBase * node) ;
-	bool checkAngle() ;
-	bool checkAngleInternal() ;
 	void reset() ;
 	int Index() ;
 	void setCell(CellBase * aCell) ;
-	void setTo(NodeBase * node) ;
+	void setOtherCell(CellBase * aCell) ;
+	CellBase * getCell() {return cell;};
 	NodeBase* getFrom()  ;
 	NodeBase* getOver() ;
 	NodeBase* getTo() ;
@@ -89,13 +101,5 @@ public:
 	bool removeSpike() ;
 	bool isWallBetweenEndingAt(WallBase * wall, CellBase* cell1, CellBase* cell2, NodeBase * node);
 };
-
-inline bool cmpCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
-	return b.Index() - a.Index();
-}
-
-inline bool eqCellWallCurve( CellWallCurve &a,  CellWallCurve &b) {
-	return b.Index() == a.Index();
-}
 
 #endif

@@ -82,7 +82,12 @@ void RungeKutta::rkqs(double *y, double *dydx, int n, double *x, double htry, do
   }
   else *hnext=5.0*h; //No more than a factor of 5 increase.
   *x += (*hdid=h);
-  for (i=0;i<n;i++) y[i]=ytemp[i];
+  for (i=0;i<n;i++) {
+	  y[i]=ytemp[i];
+	  if (std::isnan(y[i])) {
+		  y[i]=0.;
+	  }
+  }
   delete[] ytemp;
   delete[] yerr;
 }

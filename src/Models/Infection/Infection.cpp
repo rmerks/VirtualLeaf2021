@@ -47,41 +47,87 @@ void Infection::OnDivide(ParentInfo *parent_info, CellBase *daughter1, CellBase 
 
 void Infection::SetCellColor(CellBase *c, QColor *color) {
 	// add cell coloring rules here
-    double col_inf = c->Chemical(0) / (0.8);
+    // Color code for cell types:
+    //xylem
+    if(c->CellType()==0){
+        color->setRgbF(0,1,0,1);
+    }
+    // procambium
+    if(c->CellType()==1){
+        color->setRgbF(0,0,1,1);
+    }
+
+
+    double col_inf = c->Chemical(0) / (0.2);
+    double col_inf2 = c->Chemical(0) / (0.4);
     if (col_inf > 1.0) {
     	col_inf = 1.0;
     }
-    color->setRgbF(1-col_inf, 1, 1);
+    if (col_inf2 > 0.4) {
+        col_inf2 = 0.4;
+    }
+    color->setRgbF(0 + col_inf - col_inf2, 1 - col_inf2, 0);
+
     //color->setHsv(static_cast<int>((1.0-redness)*60.), 222, 222);
+
+
+     // pathogenic fungi, which is always red
+     if(c->CellType()==2){
+         color->setRgbF(1,0,0,1);
+     }
+
+
+
 }
 
 void Infection::CellHouseKeeping(CellBase *c) {
-	// add cell behavioral rules here
-    if(c->Index() == 18 && c->Chemical(0) <= 1){
-        c->SetChemical(0, 10);
+    // add cell behavioral rules here
+    if(c->CellType()==2){
+        c->EnlargeTargetArea(2);
     }
+
+    // initial cell length setup
+    double base_element_length = 25;
+    c->LoopWallElements([base_element_length](auto wallElementInfo){
+        if(std::isnan(wallElementInfo->getWallElement()->getBaseLength())){
+        wallElementInfo->getWallElement()->setBaseLength(base_element_length);
+        }
+    });
+
 
     //cell wall weakening happens here
-    double path_level = c->Chemical(0) / (0.8);
-    if (path_level > 1.0) {
-    	path_level = 1.0;
+    double patho_chem_level = c->Chemical(0) / (0.5);
+    if (patho_chem_level > 1.2) {
+        patho_chem_level = 1.2;
     }
-    double stiffness_inf = 0.8 + (1.2 - path_level);
-
+    double stiffness_inf = 2.5;
+    if(patho_chem_level>0.1 && c->CellType()!=2){
+        c->SetCellVeto(false);
+        stiffness_inf = 2.5 - (patho_chem_level);
     c->LoopWallElements([stiffness_inf](auto wallElementInfo){
-    	wallElementInfo->getWallElement()->setStiffness(stiffness_inf);
+        wallElementInfo->getWallElement()->setStiffness(stiffness_inf);
     });
+    }
+    else{
+        c->LoopWallElements([stiffness_inf](auto wallElementInfo){
+        wallElementInfo->getWallElement()->setStiffness(stiffness_inf);
+        });
+        c->SetCellVeto(true);
+    }
+
+
+
 }
 
 void getLengthAndStiffness(Wall *w,double *plength,double *pstiffness) {
     w->C1()->LoopWallElementsOfWall(w, [plength,pstiffness](auto wallElementInfo){
     	double thisLength = wallElementInfo->getLength();
     	(*plength)=(*plength)+ thisLength;
-    	(*pstiffness)=(*pstiffness)+ wallElementInfo->getWallElement()->getStiffness()*thisLength;
+        (*pstiffness)=(*pstiffness)+ (wallElementInfo->getWallElement()->getStiffness())*thisLength;
     });
     w->C2()->LoopWallElementsOfWall(w, [plength,pstiffness](auto wallElementInfo){
     	double thisLength = wallElementInfo->getLength();
-    	(*pstiffness)=(*pstiffness)+ wallElementInfo->getWallElement()->getStiffness()*thisLength;
+        (*pstiffness)=(*pstiffness)+ (wallElementInfo->getWallElement()->getStiffness())*thisLength;
     });
     (*pstiffness)=(*pstiffness)/(2.0*(*plength));
 }
@@ -92,18 +138,20 @@ void Infection::CelltoCellTransport(Wall *w, double *dchem_c1, double *dchem_c2)
     double corr1 = w->C2()->Area() / sum;
     double corr2 = w->C1()->Area() / sum;
 
-    double length = 0.0;
-    double stiffness = 0.0;
+    double length = 1.0;
+    double stiffness = 1.0;
     getLengthAndStiffness(w,&length,&stiffness);
-    double wlength = w->Length();
-
-    double diffusionCoef = 0.00001/stiffness;
-
-    if(!w->C1()->BoundaryPolP() && !w->C2()->BoundaryPolP()){
-    	double phi = length * diffusionCoef * ( w->C2()->Chemical(0) - w->C1()->Chemical(0) );
-    	dchem_c1[0] += corr1 * phi;
-    	dchem_c2[0] -= corr2 * phi;
+    double diffusionCoef;
+    if(stiffness>0.001){
+        diffusionCoef = 0.00001/stiffness;
     }
+    else{diffusionCoef=0.00001;}
+
+    double phi = length * diffusionCoef * ( w->C2()->Chemical(0) - w->C1()->Chemical(0) );
+
+    dchem_c1[0] += corr1 * phi;
+    dchem_c2[0] -= corr2 * phi;
+
 }
 
 void Infection::WallDynamics(Wall *w, double *dw1, double *dw2) {
@@ -112,7 +160,16 @@ void Infection::WallDynamics(Wall *w, double *dw1, double *dw2) {
 
 void Infection::CellDynamics(CellBase *c, double *dchem) {
 	// add biochemical networks for intracellular reactions here
-    dchem[0] = 0.01 * c->Chemical(0) - 0.001 * c->Chemical(0);
+    if(c->CellType()==2){
+        dchem[0] = 0.1;
+    }
+    // the fungi is assumed to have a constant chemical level
+    else{
+    // for all other cells, the chemical is degraded:
+        dchem[0] = -0.001 * c->Chemical(0);
+    }
+
+
 }
 
 

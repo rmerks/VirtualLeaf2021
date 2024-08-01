@@ -97,6 +97,7 @@ class CellBase :  public QObject, public Vector
   friend class WallElement;
   friend class WallElementInfo;
   friend class SimPluginInterface;
+  friend class CellWallCurve;
 
  public:
   CellBase(QObject *parent=0);
@@ -135,6 +136,14 @@ class CellBase :  public QObject, public Vector
   void FixNodes(void);
   void UnsetSource(void) {
     source = false;
+  }
+
+  list<CellWallCurve*> intendedRemodelings;
+  void resetCellWallCurve() {
+	  intendedRemodelings.clear();
+  }
+  void addCellWallCurve(CellWallCurve* curve) {
+	  intendedRemodelings.push_back(curve);
   }
 
   inline bool Source(void) { return source; }
@@ -199,10 +208,6 @@ class CellBase :  public QObject, public Vector
 
   inline double TargetArea(void) { return target_area; }
 
-  inline void SetStiffness(double stiff) { stiffness = stiff; }
-
-  inline double Stiffness(void) { return stiffness; }
-
   inline double EnlargeTargetArea(double da) { return target_area+=da; }
 
   inline double Area(void) const { return area; }
@@ -210,6 +215,10 @@ class CellBase :  public QObject, public Vector
   inline double SetWallStiffness(double value_stiffness) {return wall_stiffness = value_stiffness;}
 
   inline double GetWallStiffness(void) const {return wall_stiffness;}
+
+  inline bool SetCellVeto(bool veto){return veto_remodelling = veto;}
+
+  inline bool GetCellVeto(void) const {return veto_remodelling;}
 
   inline void Divide(void) { flag_for_divide = true; }
 
@@ -297,6 +306,12 @@ class CellBase :  public QObject, public Vector
 
   template<class Op> void LoopWalls(Op f) {
     for (list <Wall *>::iterator i=walls.begin();i!=walls.end();i++) {
+      f(*i);
+    }
+  }
+
+  template<class Op> void LoopNeighbors(Op f) {
+    for (list <CellBase *>::iterator i=neighbors.begin();i!=neighbors.end();i++) {
       f(*i);
     }
   }
@@ -519,9 +534,7 @@ class CellBase :  public QObject, public Vector
   double target_length;
   double lambda_celllength;
   double wall_stiffness; // Lebovka et al
-
-  double stiffness; // stiffness like in Hogeweg (2000)
-
+  bool veto_remodelling; // testing cellular veto
   bool fixed;
   bool pin_fixed;
   bool at_boundary; 
@@ -550,7 +563,6 @@ class CellBase :  public QObject, public Vector
 
   bool marked;
   int div_counter;
-  CellWallCurve * curvedWallElementToHandle;
 
 };
 
