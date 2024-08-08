@@ -189,7 +189,7 @@ Vector VeinGrowthPlugin::GrowthDirectionDetermination(CellBase *c) {
     return growth_direction;
 }
 
-void VeinGrowthPlugin::GetTargetCell(CellBase *c, CellBase *target_cell) {
+void VeinGrowthPlugin::GetTargetCell(CellBase *c, CellBase *&target_cell) {
 
     // determine target cell for growth direction
     double highest_auxin = 0;

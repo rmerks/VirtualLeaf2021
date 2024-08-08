@@ -48,7 +48,7 @@ class VeinGrowthPlugin : public QObject, SimPluginInterface {
   virtual Vector GrowthDirectionDetermination(CellBase *c);
 
   // Determine target cell for growth direction
-  virtual void GetTargetCell(CellBase *c, CellBase *target_cell);
+  virtual void GetTargetCell(CellBase *c, CellBase *&target_cell);
 
   // Manipulate wall element stiffness according to growth direction
   virtual void WallStiffnessManipulation(CellBase *c, Vector growth_direction);
