@@ -41,6 +41,9 @@ class VeinGrowthPlugin : public QObject, SimPluginInterface {
   // Executed after the cellular mechanics steps have equillibrized
   virtual void CellHouseKeeping (CellBase *c);
 
+  // Execute to divide procambium cell according to procambium cell division rules
+  //virtual void ProbabilityDivide(CellBase *c, Vector growth_direction);
+
   // Execute to differentiate cell with high auxin to procambium cell
   virtual void DifferentiateCell(CellBase *c);
 
@@ -72,9 +75,12 @@ class VeinGrowthPlugin : public QObject, SimPluginInterface {
   virtual int NChem(void) { return 2; }
 
   virtual QString DefaultLeafML(void) { return QString("fixed_procambium_2.xml"); }
+  //virtual QString DefaultLeafML(void) { return QString("area_proof.xml"); }
  
  private:
   double complex_PijAj(CellBase *here, CellBase *nb, Wall *w);
+
+  void ProbabilityDivide(CellBase *c, Vector growth_direction);
 };
 
 #endif

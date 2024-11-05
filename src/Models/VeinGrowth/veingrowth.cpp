@@ -22,6 +22,7 @@
 #include <QObject>
 #include <QtGui>
 #include <vector>
+#include <cmath>
 
 #include "parameter.h"
 
@@ -79,26 +80,18 @@ void VeinGrowthPlugin::OnDivide(ParentInfo *parent_info, CellBase *daughter1, Ce
     daughter1->SetChemical(0,daughter1->Chemical(0)*(area1/tot_area));
     daughter2->SetChemical(0,daughter2->Chemical(0)*(area2/tot_area));
 
-    // After division, the growth direction of the parent cell (if it exists) is inherited by the daugther cells
-    // The growth direction is saved in the chemicals: Chemical[2]= x-direction, Chemical[3] = y-direction
-
-    // After divisions, parent and daughter cells get a standard stock of PINs.
-    //daughter1->SetChemical(1, par->initval[1]);
-    //cout << daughter1->Chemical(1) << endl;
-    //daughter2->SetChemical(1, par->initval[1]);
-
-    // Only cell types 2 get standard stock of PINs
+    // After divisions, parent and daughter cells with cell type 2 get a standard stock of PINs
     if (daughter1->CellType() == 2) {
         daughter1->SetChemical(1, par->initval[1]);
-    } /*else if (daughter1->CellType() == 1 || daughter1->CellType() == 3) {
+    } else if (daughter1->CellType() == 1 || daughter1->CellType() == 3) {
         daughter1->SetChemical(1, par->initval[1] / 4);
-    }*/
+    }
 
     if (daughter2->CellType() == 2) {
         daughter2->SetChemical(1, par->initval[1]);
-    }/* else if (daughter2->CellType() == 1 || daughter1->CellType() == 3) {
+    } else if (daughter2->CellType() == 1 || daughter1->CellType() == 3) {
         daughter1->SetChemical(1, par->initval[1] / 4);
-    }*/
+    }
 
 
     // Reset transporter values of parent and daughter
@@ -134,14 +127,37 @@ void VeinGrowthPlugin::CellHouseKeeping(CellBase *c)
             Vector growth_direction = GrowthDirectionDetermination(c);
 
             WallStiffnessManipulation(c, growth_direction);
-        }
 
-        if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ) {
-            c->Divide();
+            if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ) {
+                ProbabilityDivide(c, growth_direction);
+            }
+        } else {
+            if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ) {
+                c->Divide();
+            }
         }
 
         // expand according to auxin concentration
         c->EnlargeTargetArea(par->auxin_dependent_growth?(c->Chemical(0)/(1.+c->Chemical(0)))*par->cell_expansion_rate:par->cell_expansion_rate);
+    }
+}
+
+void VeinGrowthPlugin::ProbabilityDivide(CellBase *c, Vector growth_direction) {
+    // Create random device to seed the random number generator and initialize with Mersenne Twister pseudo-random number generator
+    std::random_device rand_device;
+    std::mt19937 generator(rand_device());
+
+    // Uniform distribution between 1 and 100
+    std::uniform_int_distribution<> distribution(1, 100);
+
+    // Random number between 1 and 100
+    int random_number = distribution(generator);
+
+    if (random_number > 10) {
+        Vector orth_growth_direction = Vector(growth_direction.y, -growth_direction.x, 0);
+        c->DivideOverAxis(orth_growth_direction);
+    } else {
+        c->DivideOverAxis(growth_direction);
     }
 }
 
@@ -195,7 +211,7 @@ void VeinGrowthPlugin::GetTargetCell(CellBase *c, CellBase *&target_cell) {
     double highest_auxin = 0;
 
     c->LoopNeighbors([&highest_auxin, &target_cell](auto neighbor){
-        if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {
+        if (highest_auxin < neighbor->Chemical(0) && neighbor->CellType() != 1) {   
             highest_auxin = neighbor->Chemical(0);
             target_cell = neighbor;
         }
@@ -212,7 +228,7 @@ void VeinGrowthPlugin::WallStiffnessManipulation(CellBase *c, Vector growth_dire
     c->LoopWallElements([&growth_direction](auto wallElementInfo){
         if(wallElementInfo->hasWallElement()){
             Vector* we_direction = new Vector(wallElementInfo->getTo()->x - wallElementInfo->getFrom()->x, wallElementInfo->getTo()->y - wallElementInfo->getFrom()->y, 0);
-            double we_angle = (we_direction->Angle(growth_direction))*180/3.1415926536;
+            double we_angle = (we_direction->Angle(growth_direction))*180/M_PI;
             if (we_angle <= 30 || we_angle >= 150) {
                 wallElementInfo->getWallElement()->setStiffness(4);
             }
