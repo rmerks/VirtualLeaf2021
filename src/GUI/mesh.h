@@ -265,8 +265,6 @@ class Mesh {
 
   double SlideWallElements(list<CellWallCurve> & curves);
   double DisplaceNodes(void);
-  double CalculateDeltaA(Vector &new_p, Vector &old_p, Vector &i_min_1, Vector &i_plus_1);
-  double getNormA(Vector &p);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
   void PotentialSlideAngle(double potential_slide_angle) {this->potential_slide_angle=potential_slide_angle;}
