@@ -3,14 +3,7 @@ from math import hypot
 import xml.etree.ElementTree as ET
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import orient
-#from mpi4py.futures.aplus import catch
-from matplotlib.projections import geo
-from pip._vendor.pygments.formatters import other
 from sympy.logic.boolalg import false, true
-#from fontTools.varLib.models import allNone
-from vtkmodules.numpy_interface.algorithms import area
-from sympy.polys.polytools import nroots
-from pip._vendor.typing_extensions import Self
 
 class ColorSpec:
     
@@ -43,7 +36,7 @@ class Mesh:
         self.cellNr=0
         self.mul=0.75
         self.pixelScale=5.
-        self.setColormap("ffffff,1,1.9,0.481961:0000f8,2,0.7,0.481961:009000,3,1.2,0.481961:ff0000,3,2.251808,0.481961")
+        self.setColormap("ffffff,1,2.251808,0.481961:0000f8,2,2.251808,0.481961:009000,3,2.251808,0.481961:ff0000,3,2.251808,0.481961")
         
     def setColormap(self,colormap):
         self.colorSpecs = list()
@@ -202,8 +195,15 @@ class Mesh:
                                  , offsety="0" \
                                  , base_area="0" \
                                  )
+        total_area = 0
         for cell in self.cells:
-            cell.toXml(docCells)
+            geo = cell.toXml(docCells)
+            total_area = total_area + geo[0]
+        
+        average_area = total_area / len(self.cells)
+        
+        docCells.set("base_area", str(average_area))
+        
         self.boundary_polygon.toBoundaryBolygon(docCells)
         docWalls = ET.SubElement(docLeaf, "walls", n = str(len(self.walls)))
 #        for wall in self.walls:
@@ -229,6 +229,8 @@ class Mesh:
             self.cellWalls.append(firstCellWall)
         for wall in self.cellWalls:
             wall.addToCells()
+        for cell in self.cells:
+            cell.addCloseWallGap()
         self.numberAll()
         
 class Node:
@@ -300,14 +302,22 @@ class CellWall:
         self.cell2 = cell2
         self.startNode = startNode
         self.walls=list()
-        sharedWalls = [value for value in self.cell1.walls if value in self.cell2.walls]
-        currentNode=startNode
-        self.endNode = findEndOfCellWall(currentNode,sharedWalls,self.walls)
-        if len(sharedWalls) > 0:
-            # now check if the startNode can be pushed back
+        if cell2 is None:
+            sharedWalls = [value for value in self.cell1.walls if len(value.cells) == 1]      
+            currentNode=startNode
+            self.endNode = findEndOfCellWall(currentNode,sharedWalls,self.walls)
             otherEnd = findEndOfCellWall(currentNode,sharedWalls,self.walls) 
             if otherEnd != currentNode:
                 self.startNode = otherEnd
+        else:
+            sharedWalls = [value for value in self.cell1.walls if value in self.cell2.walls]
+            currentNode=startNode
+            self.endNode = findEndOfCellWall(currentNode,sharedWalls,self.walls)
+            if len(sharedWalls) > 0:
+                # now check if the startNode can be pushed back
+                otherEnd = findEndOfCellWall(currentNode,sharedWalls,self.walls) 
+                if otherEnd != currentNode:
+                    self.startNode = otherEnd
                 
     def addToCells(self):
         self.cell1.addCellWall(self)
@@ -322,8 +332,8 @@ class CellWall:
     def toXml(self,wallNodes):
         wallNode = ET.SubElement(wallNodes, "wall" \
                                  , length=str(self.length()) \
-                                 , c1=str(self.cell1.getNr()) \
-                                 , c2=str(self.cell2.getNr()) \
+                                 , c1=str(self.getCell1Nr()) \
+                                 , c2=str(self.getCell2Nr()) \
                                  , index=str(self.nr) \
                                  , n1=str(self.startNode.getNr()) \
                                  , n2=str(self.endNode.getNr()) \
@@ -333,6 +343,15 @@ class CellWall:
         ET.SubElement(wallNode, "transporters1")
         ET.SubElement(wallNode, "transporters2")        
         
+
+
+    def getCell1Nr(self):
+        return self.cell1.nr
+
+    def getCell2Nr(self):
+        if self.cell2 is None:
+            return -1; # border
+        return self.cell2.nr
 
     def getNr(self):
         return self.nr
@@ -478,6 +497,59 @@ class Cell:
              wall.addCell(self)
              self.lastNode = None
 
+    def findEndOfWall(self, startNode):
+            nodes = list()
+            previousNode = None
+            lastNode = startNode
+            count = 0
+            while not (lastNode is None):
+                count = count + 1
+                previousNode = lastNode;
+                lastNode = None
+                for anyCellWall in self.cellWalls:
+                    if not (anyCellWall.endNode in nodes or anyCellWall.startNode in nodes):
+                        if anyCellWall.endNode == previousNode:
+                            lastNode = anyCellWall.startNode
+                            nodes.append(previousNode)
+                            break
+                        if anyCellWall.startNode == previousNode:
+                            lastNode = anyCellWall.endNode
+                            nodes.append(previousNode)
+                            break
+            return [previousNode, count]
+
+                     
+    def isClosed(self,startNode,endNode,count):
+            closed = false
+            if count < len(self.cellWalls):
+                return false
+            for anyCellWall in self.cellWalls:
+                if anyCellWall.endNode == endNode and anyCellWall.startNode == startNode:
+                    return true
+                if anyCellWall.startNode == endNode and anyCellWall.endNode == startNode:
+                    return true
+            return false
+        
+        
+    def addCloseWallGap(self):
+            firstWall = self.cellWalls[0]
+            previousNodepreviousCellWall = None
+            startNode = firstWall.startNode
+            [endNode,count1] = self.findEndOfWall(startNode)
+            closed = self.isClosed(endNode,startNode,count1)
+            if not closed:
+                [startNode,count2] = self.findEndOfWall(firstWall.endNode)
+                closed = self.isClosed(startNode,endNode,count1+count2)
+                if closed:
+                    return false
+            else:
+                return false
+            # the cell is not closed we need to create a closing wall
+            cellWall = CellWall(self,None,startNode)
+            self.cellWalls.append(cellWall)
+            self.mesh.cellWalls.append(cellWall)
+            
+
     def appendWall(self,wall):
         if wall not in self.walls:
             self.walls.append(wall)
@@ -491,7 +563,7 @@ class Cell:
         wall.addCell(self)
         self.firstNode = wall.getNode(1)
         self.lastNode = wall.getNode(2)
-        self.retryDefineInnerCell()    
+        self.retryDefineInnerCell()  
             
     def retryDefineInnerCell(self):
         if self.lastNode == None:
@@ -527,7 +599,7 @@ class Cell:
             if (colorSpec.isType(self.type)):
                 cellType = colorSpec
 
-        self.toXmlI("cell",cellNodes,border,cellType,self.nr,self.type == "#000000")
+        return self.toXmlI("cell",cellNodes,border,cellType,self.nr,self.type == "#000000")
 
     def toXmlI(self,nodeName,cellNodes,border,cellType,nr,fixed):  
         geo = self.getGeometry()   
@@ -567,6 +639,7 @@ class Cell:
             chemEt = ET.SubElement(cellNode, "chem" , n=str(len(cellType.chems)))
             for chem in cellType.chems:
                 ET.SubElement(chemEt, "val" , v=str(chem))
+        return geo
  
     def toBoundaryBolygon(self,cellNodes):
         self.toXmlI("boundary_polygon",cellNodes,0,self.mesh.colorSpecs[0],-1,False)
@@ -591,5 +664,5 @@ class Cell:
         minx, miny, maxx, maxy = polygon.minimum_rotated_rectangle.bounds
         width = maxx - minx
         height = maxy - miny
-        diagonal = hypot(width, height)*1.2
+        diagonal = 0 #hypot(width, height)*1.2
         return (polygon.area, diagonal, reverse)
