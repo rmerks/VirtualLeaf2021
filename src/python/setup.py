@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="svg-to-vl",
-    version="2.0.1",
+    version="2.0.2",
     author="Richard van Nieuwenhoven, Ruth Großeholz, Roeland R.M.H. Merks",
     author_email="richard.nieuwenhoven@tuwien.ac.at, ruth.grosseholz@maastrichtuniversity.nl, merksrmh@math.leidenuniv.nl",
     description="converting cells drawn in svg files to VirtualLeaf xml start files. The svg file should be specified without extension, the resulting xml file will be stored next to the svg file.",
@@ -15,7 +15,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.1',
