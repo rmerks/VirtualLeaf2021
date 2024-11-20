@@ -149,7 +149,7 @@ jobs:
       # Checkout the repository
       #
       - name: Checkout repository and submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       
@@ -166,7 +166,7 @@ jobs:
       # Install Qt
       #
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v4
           
       #
       # Install NSIS
@@ -178,11 +178,11 @@ jobs:
              scoop install nsis
  
       #
-      # Compile application
+      # Compile application  CONFIG+=release
       #
       - name: Compile
         run: |
-             qmake ${{env.QMAKE_PROJECT}} CONFIG+=release
+             qmake ${{env.QMAKE_PROJECT}}
              nmake
              
       #
