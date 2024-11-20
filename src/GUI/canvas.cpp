@@ -1114,10 +1114,17 @@ void Main::about()
 
     QMessageBox msgbox;
     msgbox.setText(QString(
-                       "<h3>VirtualLeaf V1.0.3</h3>\
+                       "<h3>VirtualLeaf V2.0.0</h3>\
                        <p>\
                        An Open Source framework for cell-based modeling of plant\
                        tissue growth and development.\
+                       </p>\
+                       <p>(c) 2022-2024,\
+    				    Ruth Großeholz, Richard W. van Nieuwenhoven,\
+                       Bruno Hay Mele, Roeland M.H. Merks\
+                       Maastricht University, TU Wien,\
+                       University of Naples and Leiden University \
+                       <a href=\"https://doi.org/10.1101/2024.08.01.605200\">DOI:10.1101/2024.08.01.605200</a>\
                        </p>\
                        <p>(c) 2014-2019,\
                        Roeland Merks <i>et al.</i></a>\
@@ -1149,6 +1156,10 @@ void Main::about()
                    <a href=\"http://www.plantphysiol.org/cgi/reprint/155/2/656.pdf\">\
             VirtualLeaf: an Open Source framework for cell-based modeling of plant tissue growth and development</a>,<br>\
                    Plant Physiology 2011: 155:656-666.</p> \
+                   <p>Enhanced Cell Wall Mechanics in VirtualLeaf Enable Realistic Simulations of Plant Tissue Dynamics \
+                       In Xxxxxxxxxxxxxxxx.\
+                       <a href=\"http://doi.org/10.1101/2024.08.01.605200\">doi:10.1101/2024.08.01.605200</a> \
+                   </p>\
                    <p>To learn how to use VirtualLeaf for your projects, see the tutorial at\
                    Merks, R. M. H., & Guravage, M. A. (2012). Building Simulation Models of Developing Plant Organs Using VirtualLeaf. \
                    In I. De Smet (Ed.), Methods in Molecular Biology (Vol. 959, pp. 333–352). Totowa, NJ: Humana Press.\
