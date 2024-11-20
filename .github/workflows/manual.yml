@@ -168,7 +168,21 @@ jobs:
       #
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
-          
+        
+      - name: Verify MSVC environment
+        run: |
+          cl
+          echo %PATH%
+
+      - name: Check QMake path
+        run: where qmake
+      
+      - name: Compile
+        run: |
+          cd src
+          qmake ${{env.QMAKE_PROJECT}}
+          nmake /k /l
+     
       #
       # Install NSIS
       #  
@@ -185,6 +199,8 @@ jobs:
         run: |
              cd src
              qmake ${{env.QMAKE_PROJECT}}
+             nmake /l > build.log 2>&1
+             cat build.log          
              nmake /l
              
       #
