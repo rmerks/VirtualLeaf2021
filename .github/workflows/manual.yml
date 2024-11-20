@@ -15,7 +15,7 @@ env:
   VERSION: "2.0.0"
   EXECUTABLE: "VirtualLeaf"
   APPLICATION: "VirtualLeaf"
-  QMAKE_PROJECT: "src/VirtualLeaf.pro"
+  QMAKE_PROJECT: "VirtualLeaf.pro"
   QML_DIR_NIX: "assets/qml"
   QML_DIR_WIN: "assets\\qml"
 
@@ -58,6 +58,7 @@ jobs:
       #
       - name: Compile
         run: |
+             cd src
              qmake ${{env.QMAKE_PROJECT}} CONFIG+=release PREFIX=/usr
              make -j8
              
