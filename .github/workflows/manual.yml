@@ -182,7 +182,6 @@ jobs:
       # Compile application  CONFIG+=release
       #
       - name: Compile
-        uses: ilammy/msvc-dev-cmd@v1
         run: |
              cd src
              qmake ${{env.QMAKE_PROJECT}}
