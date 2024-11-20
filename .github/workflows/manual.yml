@@ -183,6 +183,7 @@ jobs:
       - name: Compile
         run: |
              qmake ${{env.QMAKE_PROJECT}}
+             cd src
              nmake
              
       #
