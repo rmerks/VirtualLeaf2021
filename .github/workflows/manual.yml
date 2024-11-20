@@ -185,7 +185,7 @@ jobs:
         run: |
              cd src
              qmake ${{env.QMAKE_PROJECT}}
-             nmake
+             nmake /l
              
       #
       # Copy Qt DLLs, compiler runtime & application icon
