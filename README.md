@@ -17,11 +17,25 @@ Currently VirtualLeaf requires you to manually compile it yourself (don't worry,
 ### Dependencies
 
 VirtualLeaf requires the open source QT library, which requires an account (register [here](https://login.qt.io/login)).  
-Download the [QT online installer](https://www.qt.io/download-qt-installer-oss) for your operating system. Now either follow the installation wizard or install QT via the command line:
+Download the [QT online installer](https://www.qt.io/download-qt-installer-oss) for your operating system. On linux you may require additional packages. Run the following command:
+```console
+sudo apt install libxcb-icccm4 libxkbcommon-x11-0 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0
+```
+Now either follow the installation wizard or install QT via the command line:
 ```console
 ./PATH_TO_ONLINE_INSTALLER install qt6.8.0-essentials-dev  
 ```
-Log in with your QT credentials and follow the installation prompts. Note the installation directory. After successfully installing QT you need to locate `qmake` and `ming32-make`. They should be located at `YOUR_QT_DIRECTORY/QT_VERSION/mingw_64/bin/` and/or `YOUR_QT_DIRECTORY/Tools/mingwSOMEVERSION/bin`. Add the directories in which you located both files to your PATH (for Windows see [here](https://www.youtube.com/watch?v=9umV9jD6n80) and for Linux see [here](https://www.youtube.com/watch?v=jIunQSnzs1Y)) and re-launch your command line.  
+Log in with your QT credentials, accept a bunch of licenses, and follow the installation prompts. Remember the installation directory (default on Windows is C:\QT, on Linux ~/QT). You may get some installation errors, it's usually fine to ignore them.
+#### Windows:
+After successfully installing QT (may take a while) you need to locate the files `qmake` and `ming32-make`. They should be located at `YOUR_QT_DIRECTORY/QT_VERSION/mingw_64/bin/` and/or `YOUR_QT_DIRECTORY/Tools/mingwSOMEVERSION/bin`. Add the directories in which you located both files to your PATH (see [here](https://www.youtube.com/watch?v=9umV9jD6n80))  and re-launch your command line.
+#### Linux:
+First you may need to install `make` and `g++` (might come preinstalled):
+```console
+sudo apt install make
+sudo apt install g++
+```
+After successfully installing QT (may take a while) you need to locate the file `qmake`. It should be located at `YOUR_QT_DIRECTORY/QT_VERSION/gcc_64/bin/`. Add the directory in which you located the file to your PATH (see [here](https://www.youtube.com/watch?v=jIunQSnzs1Y)) and re-launch your command line.  
+  
 Now you should be all set for the installation!   
 
 
@@ -42,11 +56,23 @@ You should now have the following folder structure:
         ├─
 ```
 Change directory to the `src` folder and invoke
+#### Windows:
 ```console
 qmake
 mingw32-make -f Makefile
 ```
-This may take some time. After everything's finished you can find the VirtualLeaf executable in the `bin` folder.
+This may take some time.
+#### Linux:
+```console
+qmake
+make -f Makefile
+```
+This may take some time. If the installation fails you may be missing the OpenGL library. Install via:
+```console
+sudo apt install freeglut3-dev
+```
+  
+After everything's finished you can find the VirtualLeaf executable in the `bin` folder.
 
 ### Executing program
 
