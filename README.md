@@ -9,6 +9,8 @@ On the most basic level cell shape is defined through a balance of **turgor pres
 VirtualLeaf also comes with capabilities to perform **compartmentalized ODE-based simulations** that can affect the physical characterstics of the cell.  
 This makes VirtualLeaf a powerful tool in understanding how plants grow. Try it out! 
 
+    
+![Alt text](/img/RootEmergence.jpg?raw=true "Optional Title")
 ## Getting Started
 
 ### Dependencies
