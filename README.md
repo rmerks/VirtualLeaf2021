@@ -4,10 +4,10 @@ VirtualLeaf is a cell-based computer modeling framework for simulating plant tis
 
 ## What is it?
 
-**VirtualLeaf** is a cell-based tissue simulation software written in C++. Simulations proceed in dicreet steps where the system energy is minimized using a Monte-carlo approach. This approach generates realistic cell shapes and emergent tissue dynamics, enabling users to model a variety of developmental proccesses in plants.  
-On the most basic level cell shape is defined through a balance of **turgor pressure**, causing expansion, and **cell wall tension**, causing restriction. By considering cell walls as springs that resist the internal pressure a mathematical description of the energy can be obtained. This expression, called the Hamiltonian, can also be extended to include other restrictions that a user may desire (e.g. cell shape).  
-VirtualLeaf also comes with capabilities to perform **compartmentalized ODE-based simulations** that can affect the physical characterstics of the cell.  
-This makes VirtualLeaf a powerful tool in understanding how plants grow. Try it out! 
+**VirtualLeaf** is a cell-based tissue simulation software written in C++. It simulates tissue dynamics through dicreet steps, minimizing the system energy using a Monte-carlo approach. This method generates realistic cell shapes and emergent tissue behaviors, allowing users to model a wide range of developmental proccesses in plants.  
+At its core, cell shape is defined through a balance between **turgor pressure**, which drives expansion, and **cell wall tension**, which restricts it. By modeling cell walls as springs that resist the internal pressure, a mathematical description for the systems energy, known as the Hamiltonian, can be obtained. This expression can also be extended to include additional constraints, that the user defines (e.g. cell shape).  
+VirtualLeaf also supports **compartmentalized ODE-based simulations**, enabling interactions between biochemical processes and physical properties of cells.  
+These features make VirtualLeaf a powerful tool for exploring and understanding how plants grow and develop. Give it a try! 
 
     
 ![Alt text](/img/RootEmergence.jpg?raw=true "Optional Title")
