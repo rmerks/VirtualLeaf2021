@@ -2,9 +2,12 @@
 
 VirtualLeaf is a cell-based computer modeling framework for simulating plant tissue morphogenesis.
 
-## Description
+## What is it?
 
-An in-depth paragraph about your project and overview of use.
+**VirtualLeaf** is a cell-based tissue simulation software written in C++. Simulations proceed in dicreet steps where the system energy is minimized using a Monte-carlo approach. This approach generates realistic cell shapes and emergent tissue dynamics, enabling users to model a variety of developmental proccesses in plants.  
+On the most basic level cell shape is defined through a balance of **turgor pressure**, causing expansion, and **cell wall tension**, causing restriction. By considering cell walls as springs that resist the internal pressure a mathematical description of the energy can be obtained. This expression, called the Hamiltonian, can also be extended to include other restrictions that a user may desire (e.g. cell shape).  
+VirtualLeaf also comes with capabilities to perform **compartmentalized ODE-based simulations** that can affect the physical characterstics of the cell.  
+This makes VirtualLeaf a powerful tool in understanding how plants grow. Try it out! 
 
 ## Getting Started
 
