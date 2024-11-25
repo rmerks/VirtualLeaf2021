@@ -1,6 +1,6 @@
 # VirtualLeaf
 
-VirtualLeaf is a cell-based computer modeling framework for plant tissue morphogenesis.
+VirtualLeaf is a cell-based computer modeling framework for simulating plant tissue morphogenesis.
 
 ## Description
 
