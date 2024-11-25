@@ -130,7 +130,7 @@ class Cell : public CellBase
   list<Wall *>::iterator RemoveWall( Wall *w );
   void AddWall( Wall *w );
 
-  void Draw(QGraphicsScene *c, QString tooltip = "");
+  void Draw(QGraphicsScene *c, bool showStiffness, QString tooltip = "");
 
   // Draw a text in the cell's center
   void DrawText(QGraphicsScene *c, const QString &text) const;

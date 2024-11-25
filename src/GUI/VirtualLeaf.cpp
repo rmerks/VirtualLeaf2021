@@ -127,12 +127,13 @@ public:
 		info_string += QString("\nArea is %1\n Circumference is %2\n Boundary type is %3").arg(c->Area()).arg(c->WallCircumference()).arg(c->BoundaryStr());
 		
 	  info_string += "\nNodes: " + c->printednodelist();
-	  c->Draw(&canvas, info_string);
+	  c->Draw(&canvas, m.ShowStiffness(), info_string);
 	} else {
-	  c->Draw(&canvas);
+	  c->Draw(&canvas, m.ShowStiffness());
 	}
-    c->DrawMiddleLamella(&canvas);
-
+      if (m.ShowMiddleLamella()){
+         c->DrawMiddleLamella(&canvas);
+      }
       }
       if (m.ShowCentersP()){
 	c->DrawCenter(&canvas);

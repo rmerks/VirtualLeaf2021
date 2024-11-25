@@ -75,7 +75,28 @@ QDomElement MainBase::XMLSettingsTree(void) {
       xmloption.setAttribute("val",bool_name(showcentersp));
    // xmlNewProp(xmloption, BAD_CAST "val", BAD_CAST text.str().c_str());
   }
+  {
+    //xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
+      QDomElement xmloption =  doc.createElement("setting");
+      xmlsettings.appendChild(xmloption);
+   // xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_cell_centers");
+      xmloption.setAttribute("name","show_middle_lamella");
 
+   // ostringstream text;
+    //text << bool_name(showcentersp);
+      xmloption.setAttribute("val",bool_name(showmiddlelamella));
+  }
+  {
+    //xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
+      QDomElement xmloption =  doc.createElement("setting");
+      xmlsettings.appendChild(xmloption);
+   // xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_cell_centers");
+      xmloption.setAttribute("name","show_stiffness");
+
+   // ostringstream text;
+    //text << bool_name(showcentersp);
+      xmloption.setAttribute("val",bool_name(showstiffness));
+  }
 /*  {
     xmlNode *xmloption = xmlNewChild(xmlsettings, NULL, BAD_CAST "setting", NULL);
     xmlNewProp(xmloption, BAD_CAST "name", BAD_CAST "show_nodes");
@@ -394,6 +415,12 @@ void MainBase::XMLReadSettings(QDomElement &settings)
       }
       if (name=="hide_cells") {
     hidecellsp = strtobool(  val.toStdString().c_str() );
+      }
+      if (name=="show_stiffness") {
+    showstiffness = strtobool(  val.toStdString().c_str() );
+      }
+      if (name=="show_middle_lamella") {
+    showmiddlelamella = strtobool(  val.toStdString().c_str() );
       }
 
     }
