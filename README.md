@@ -12,14 +12,22 @@ These features make VirtualLeaf a powerful tool for exploring and understanding 
     
 ![Alt text](/img/RootEmergence.jpg?raw=true "Optional Title")
 ## Getting Started
+Currently VirtualLeaf requires you to manually compile it yourself (don't worry, we'll walk you through the process). We plan on distributing a pre-compiled version in the future.
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+Currently VirtualLeaf requires the open source QT library, which requires an account (register [here](https://login.qt.io/login)).  
+Download the [QT online installer](https://www.qt.io/download-qt-installer-oss) for your operating system. Now either follow the installation wizard or install QT via the command line:
+```console
+./PATH_TO_ONLINE_INSTALLER install qt6.8.0-essentials-dev  
+```
+Log in with your QT credentials and follow the installation prompts. Note the installation directory. After successfully installing QT you need to locate `qmake` and `ming32-make`. They should be located at `QT_DIRECTORY/QT_VERSION/mingw_64/bin/` and/or `QT_DIRECTORY/Tools/mingwSOMEVERSION/bin`. Add the directories in which you located both files to your PATH (for Windows see [here](https://www.youtube.com/watch?v=9umV9jD6n80) and for Linux see [here](https://www.youtube.com/watch?v=jIunQSnzs1Y)) and re-launch your command line.  
+Now you should be all set for the installation!   
+
 
 ### Installing
 
+Download the latest VirtualLeaf version either from GitHub, clone the repository, or simply click [here](https://github.com/rmerks/VirtualLeaf2021/archive/refs/tags/v2.0.0.zip) for the version 2.0.0 release. 
 * How/where to download your program
 * Any modifications needed to be made to files/folders
 
