@@ -27,9 +27,26 @@ Now you should be all set for the installation!
 
 ### Installing
 
-Download the latest VirtualLeaf version either from GitHub, clone the repository, or simply click [here](https://github.com/rmerks/VirtualLeaf2021/archive/refs/tags/v2.0.0.zip) for the version 2.0.0 release. 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+Download the latest VirtualLeaf version either from GitHub, clone the repository, or simply click [here](https://github.com/rmerks/VirtualLeaf2021/archive/refs/tags/v2.0.0.zip) for the version 2.0.0 release. If you downloaded a zip file unzip it into a folder of your choice.  
+You should now have the following folder structure:
+```console
+└───VirtualLeaf2021-main
+    ├───.github
+    │   └─
+    ├───data
+    │   └─
+    ├───doc
+    ├───lib
+    │   ├─
+    └───src
+        ├─
+```
+Change directory to the `src` folder and invoke
+```console
+qmake
+mingw32-make -f Makefile
+```
+This may take some time. After everything's finished you can find the VirtualLeaf executable in the `bin` folder.
 
 ### Executing program
 
