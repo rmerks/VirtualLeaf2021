@@ -272,6 +272,9 @@ class Main : public QMainWindow, public MainBase {
   QAction *cell_strain_act; // view->Show cell strain
   QAction *only_boundary_act; // view ->Show only leaf boundary
   QAction *cell_walls_act; // view -> Show transporters
+  QAction *walls_middle_act; // view -> Show middle lamella
+  QAction *walls_stiff_act; // view -> Show wall stiffness
+
   //QAction *apoplasts_act; // view -> Show apoplasts
   QAction *tooltips_act; // help -> Show Cell Info
   QAction *hide_cells_act; // view->Hide Cells
