@@ -21,7 +21,7 @@ Download the [QT online installer](https://www.qt.io/download-qt-installer-oss) 
 ```console
 ./PATH_TO_ONLINE_INSTALLER install qt6.8.0-essentials-dev  
 ```
-Log in with your QT credentials and follow the installation prompts. Note the installation directory. After successfully installing QT you need to locate `qmake` and `ming32-make`. They should be located at `QT_DIRECTORY/QT_VERSION/mingw_64/bin/` and/or `QT_DIRECTORY/Tools/mingwSOMEVERSION/bin`. Add the directories in which you located both files to your PATH (for Windows see [here](https://www.youtube.com/watch?v=9umV9jD6n80) and for Linux see [here](https://www.youtube.com/watch?v=jIunQSnzs1Y)) and re-launch your command line.  
+Log in with your QT credentials and follow the installation prompts. Note the installation directory. After successfully installing QT you need to locate `qmake` and `ming32-make`. They should be located at `YOUR_QT_DIRECTORY/QT_VERSION/mingw_64/bin/` and/or `YOUR_QT_DIRECTORY/Tools/mingwSOMEVERSION/bin`. Add the directories in which you located both files to your PATH (for Windows see [here](https://www.youtube.com/watch?v=9umV9jD6n80) and for Linux see [here](https://www.youtube.com/watch?v=jIunQSnzs1Y)) and re-launch your command line.  
 Now you should be all set for the installation!   
 
 
