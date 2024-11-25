@@ -16,7 +16,7 @@ Currently VirtualLeaf requires you to manually compile it yourself (don't worry,
 
 ### Dependencies
 
-Currently VirtualLeaf requires the open source QT library, which requires an account (register [here](https://login.qt.io/login)).  
+VirtualLeaf requires the open source QT library, which requires an account (register [here](https://login.qt.io/login)).  
 Download the [QT online installer](https://www.qt.io/download-qt-installer-oss) for your operating system. Now either follow the installation wizard or install QT via the command line:
 ```console
 ./PATH_TO_ONLINE_INSTALLER install qt6.8.0-essentials-dev  
