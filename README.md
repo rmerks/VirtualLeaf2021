@@ -55,7 +55,7 @@ Michael Guravage <M.A.Guravage@cwi.nl>
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the GPL-2.0 License - see the [license file](./COPYING) for details
 
 ## Acknowledgments
 
