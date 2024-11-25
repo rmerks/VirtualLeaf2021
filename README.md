@@ -59,7 +59,7 @@ This project is licensed under the GPL-2.0 License - see the [license file](./CO
 
 ## Citation
 
-If you use VirtualLaef in a scientific publication please cite one of the following:  
+If you use VirtualLeaf in a scientific publication please cite one of the following:  
 -  [Enhanced Cell Wall Mechanics in VirtualLeaf Enable Realistic Simulations of Plant Tissue Dynamics](https://doi.org/10.1101/2024.08.01.605200)
 -  [VirtualLeaf: An Open-Source Framework for Cell-Based Modeling of Plant Tissue Growth and Development](https://doi.org/10.1104/pp.110.167619)
 -  [Building Simulation Models of Developing Plant Organs Using VirtualLeaf](https://doi.org/10.1007/978-1-62703-221-6_23)
