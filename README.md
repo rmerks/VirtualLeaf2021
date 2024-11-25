@@ -40,10 +40,10 @@ command to run if program contains helper info
 
 ## Authors
 
-Roeland Merks <Roeland.Merks@sysbio.nl>
-Richard van Nieuwenhoven <nieuwenhoven@iap.tuwien.ac.at>
-Ruth Großeholz <ruth.grosseholz@maastrichtuniversity.nl>
-Michael Guravage <M.A.Guravage@cwi.nl>
+Roeland Merks <Roeland.Merks@sysbio.nl>  
+Richard van Nieuwenhoven <nieuwenhoven@iap.tuwien.ac.at>  
+Ruth Großeholz <ruth.grosseholz@maastrichtuniversity.nl>  
+Michael Guravage <M.A.Guravage@cwi.nl>  
 
 ## Version History
 
