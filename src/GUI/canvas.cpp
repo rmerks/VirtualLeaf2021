@@ -560,6 +560,13 @@ Main::Main(QGraphicsScene& c, Mesh &m, QWidget* parent, const char* name, Qt::Wi
     cell_walls_act->setCheckable(true);
     cell_walls_act->setChecked(false);
     
+    walls_middle_act = view->addAction("Show middle lamella", this, SLOT(toggleShowWalls()));
+    walls_middle_act->setCheckable(true);
+    walls_middle_act->setChecked(true);
+
+    walls_stiff_act = view->addAction("Show stiffness", this, SLOT(toggleShowWalls()));
+    walls_stiff_act->setCheckable(true);
+    walls_stiff_act->setChecked(true);
     
     // apoplasts_act = view->addAction("Show apoplasts", this, SLOT(toggleShowApoplasts()));
     // view->setItemChecked(apoplasts_act, false);
@@ -1587,6 +1594,8 @@ void Main::XMLReadSettings(QDomElement &settings)
     hide_cells_act->setChecked(hidecellsp);
     dyn_cells_act->setChecked(dynamicscellsp);
     cell_walls_act->setChecked(showwallsp);
+    walls_middle_act->setChecked(showmiddlelamella);
+    walls_stiff_act->setChecked(showstiffness);
     // apoplasts_act->setChecked(showapoplastsp);
     
     editor->setTransform(viewport);
@@ -1603,6 +1612,9 @@ QDomElement Main::XMLSettingsTree()
     showcellsaxesp = cell_axes_act->isChecked(  );
     showcellstrainp = cell_strain_act->isChecked(  );
     movieframesp = movie_frames_act->isChecked();
+    showmiddlelamella = walls_middle_act->isChecked();
+	showstiffness =  walls_stiff_act->isChecked();
+
     //exportdatap = export_data_act->isChecked();
     //ignorep = ignore_boundary_act->isChecked();
     showboundaryonlyp =  only_boundary_act->isChecked();

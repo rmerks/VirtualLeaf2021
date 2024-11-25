@@ -45,7 +45,8 @@ class MainBase  {
  MainBase(QGraphicsScene &c, Mesh &m) : mesh(m), canvas(c) {
 
     // Standard options for batch version
-    showcentersp =  false;
+	showmiddlelamella =  true;
+	showstiffness =  true;
     showmeshp =  false;
     showbordercellp =  false;
     shownodenumbersp =  false;
@@ -74,6 +75,8 @@ class MainBase  {
   virtual double TimeStep();
   virtual void Init(const char *leaffile=0);
 
+  virtual bool ShowMiddleLamella(void) {return showmiddlelamella;}
+  virtual bool ShowStiffness(void) {return showstiffness;}
   virtual bool ShowCentersP(void) {return showcentersp;}
   virtual bool ShowMeshP(void) {return showmeshp; }
   virtual bool ShowBorderCellsP(void) {return showbordercellp; }
@@ -135,6 +138,8 @@ class MainBase  {
 
   
  protected:
+  bool showmiddlelamella;
+  bool showstiffness;
   bool showcentersp;
   bool showmeshp;
   bool showbordercellp;

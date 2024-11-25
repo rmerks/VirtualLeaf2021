@@ -1922,7 +1922,7 @@ void Cell::Flux(double *flux, double *D)
 
 #include "canvas.h"
 
-void Cell::Draw(QGraphicsScene *c, QString tooltip)
+void Cell::Draw(QGraphicsScene *c, bool showStiffness, QString tooltip)
 {
 
   // Draw the cell on a QCanvas object
@@ -1940,7 +1940,7 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
   int* pcc=&cc;
   QPolygonF pa(nodes.size());
   QPolygonF *ppa =&pa;
-  LoopWallElements([p,pcc,ppa,c](auto wallElementInfo){
+  LoopWallElements([p,pcc,ppa,c,showStiffness](auto wallElementInfo){
   	wallElementInfo->getWallElement();
   	Vector start =  *wallElementInfo->getFrom();
   	Vector end =  *wallElementInfo->getTo();
@@ -1962,7 +1962,11 @@ void Cell::Draw(QGraphicsScene *c, QString tooltip)
 
 
     QGraphicsLineItem *line = new QGraphicsLineItem((qreal)(from.x), (qreal)(from.y ),(qreal)(to.x), (qreal)(to.y ),p);
-    line->setPen(QPen( QColor(par.cell_outline_color),stiffness,Qt::SolidLine,Qt::RoundCap, Qt::BevelJoin));
+    if (showStiffness) {
+        line->setPen(QPen( QColor(par.cell_outline_color),stiffness,Qt::SolidLine,Qt::RoundCap, Qt::BevelJoin));
+    }else {
+        line->setPen(par.outlinewidth>=0?QPen( QColor(par.cell_outline_color),par.outlinewidth):QPen(Qt::NoPen));
+    }
     line->setZValue(2);
      c->addItem(line);
     line->show();
