@@ -10,84 +10,149 @@ VirtualLeaf also supports **compartmentalized ODE-based simulations**, enabling 
 These features make VirtualLeaf a powerful tool for exploring and understanding how plants grow and develop. Give it a try! 
 
     
-![Alt text](/img/RootEmergence.jpg?raw=true "Optional Title")
+![Example image showing how VirtualLeaf simulations look like](/img/RootEmergence.jpg?raw=true "VirtualLeaf demonstration")
 ## Getting Started
-Currently VirtualLeaf requires you to manually compile it yourself (don't worry, we'll walk you through the process). We plan on distributing a pre-compiled version in the future.
+Currently VirtualLeaf requires you to manually compile it yourself (don't worry, we'll guide you through it). We plan on distributing a pre-compiled version in the future.
 
 ### Dependencies
 
-VirtualLeaf requires the open source QT library, which requires an account (register [here](https://login.qt.io/login)).  
-Download the [QT online installer](https://www.qt.io/download-qt-installer-oss) for your operating system. On linux you may require additional packages. Run the following command:
+VirtualLeaf requires the open source QT library, which requires a free QT account.
+1. Register for a QT account [here](https://login.qt.io/login).
+2. Download the [appropriate QT online installer](https://www.qt.io/download-qt-installer-oss) for your operating system.
+
+#### Linux-specific setup
+Before proceeding with the QT installation you may require additional packages. Run:
 ```console
 sudo apt install libxcb-icccm4 libxkbcommon-x11-0 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0
 ```
-Now either follow the installation wizard or install QT via the command line:
+
+#### Installing QT
+Now either follow the installation wizard or install QT via the command line (replace `PATH_TO_ONLINE_INSTALLER` with the actual path`:
 ```console
 ./PATH_TO_ONLINE_INSTALLER install qt6.8.0-essentials-dev  
 ```
-Log in with your QT credentials, accept a bunch of licenses, and follow the installation prompts. Remember the installation directory (default on Windows is C:\QT, on Linux ~/QT). You may get some installation errors, it's usually fine to ignore them.
+-  Log in with your QT credentials
+-  accept a bunch of licenses and follow the installation prompts
+-  Remember the installation directory (default on Windows is C:\QT, on Linux ~/QT)
+-  It's normal to get some installation errors; it's usually fine to ignore them.
+
+### Post-Installation Steps
 #### Windows:
-After successfully installing QT (may take a while) you need to locate the files `qmake` and `ming32-make`. They should be located at `YOUR_QT_DIRECTORY/QT_VERSION/mingw_64/bin/` and/or `YOUR_QT_DIRECTORY/Tools/mingwSOMEVERSION/bin`. Add the directories in which you located both files to your PATH (see [here](https://www.youtube.com/watch?v=9umV9jD6n80))  and re-launch your command line.
+1.  Locate the folders that contain the `qmake` and `ming32-make` executables
+    -  Look in `YOUR_QT_DIRECTORY/QT_VERSION/mingw_64/bin/`
+    -  Alternatively, check `YOUR_QT_DIRECTORY/Tools/mingwSOMEVERSION/bin`
+2.  Add the directories your PATH environment (see [here](https://www.youtube.com/watch?v=9umV9jD6n80))
+3.  Re-launch your command line to apply the changes
+4.  Verify that everything is correctly installed by running:
+    ```console
+    qmake --version
+    mingw32-make --version
+    ```
+Now you should be all set for the installation!   
+
 #### Linux:
-First you may need to install `make` and `g++` (might come preinstalled):
-```console
-sudo apt install make
-sudo apt install g++
-```
-After successfully installing QT (may take a while) you need to locate the file `qmake`. It should be located at `YOUR_QT_DIRECTORY/QT_VERSION/gcc_64/bin/`. Add the directory in which you located the file to your PATH (see [here](https://www.youtube.com/watch?v=jIunQSnzs1Y)) and re-launch your command line.  
-  
+1.  Verify `make` and `g++` are installed:
+    ```console
+    g++ --version
+    make --version
+    ```
+    If missing install `make` and `g++` via:
+    ```console
+    sudo apt install make g++
+    ```
+2.  Locate the directory with the `qmake` executable. Should be located in `YOUR_QT_DIRECTORY/QT_VERSION/gcc_64/bin/`.
+3.  Add the directory to your PATH (see [here](https://www.youtube.com/watch?v=jIunQSnzs1Y))
+4.  To apply changes re-launch your command line or run
+    ```console
+    source ~/.bashrc
+    ```
+5.  Verify that everything is correctly installed by running:
+    ```console
+    g++ --version
+    make --version
+    qmake --version
+    ```
+
 Now you should be all set for the installation!   
 
 
 ### Installing
 
-Download the latest VirtualLeaf version either from GitHub, clone the repository, or simply click [here](https://github.com/rmerks/VirtualLeaf2021/archive/refs/tags/v2.0.0.zip) for the version 2.0.0 release. If you downloaded a zip file unzip it into a folder of your choice.  
-You should now have the following folder structure:
+1.  Download the latest VirtualLeaf version:
+    -  Clone the repository, or download the zip file [here](https://github.com/rmerks/VirtualLeaf2021/archive/refs/tags/v2.0.0.zip) for the version 2.0.0 release.
+    -  If you downloaded the zip file, extract it into a folder of your choice.
+2.  Navigate to the VirtualLeaf folder. The folder structure should look like this:  
+    ```console
+    └───VirtualLeaf2021-main
+        ├───.github (contains GitHub workflows)
+        │   └─
+        ├───data (contains files for example models)
+        │   └─
+        ├───doc (contains documentation)
+        ├───lib (contains required 3rd party packages)
+        │   ├─
+        └───src (contains the actual source code)
+            ├─
+    ```
+3.  Navigate to the `src` folder and build VirtualLeaf:
+    #### Windows
+    Run:
+    ```console
+    qmake
+    mingw32-make -f Makefile
+    ```
+
+    #### Linux
+    Run:
+    ```console
+    qmake
+    make -f Makefile
+    ```
+    If the installation fails you may be missing the OpenGL library. Install via:
+    ```console
+    sudo apt install freeglut3-dev
+    ```
+
+### Final Steps
+After the build process is complete, you can find the VirtualLeaf executable in the `bin` folder:
 ```console
 └───VirtualLeaf2021-main
-    ├───.github
+    ├───.github (contains GitHub workflows)
     │   └─
-    ├───data
+    ├───data (contains files for example models)
     │   └─
-    ├───doc
-    ├───lib
+    ├── bin
+    │   ├─ VirtualLeaf
+    ├───doc (contains documentation)
+    ├───lib (contains required 3rd party packages)
     │   ├─
-    └───src
+    └───src (contains the actual source code)
         ├─
+    
 ```
-Change directory to the `src` folder and invoke
-#### Windows:
-```console
-qmake
-mingw32-make -f Makefile
-```
-This may take some time.
-#### Linux:
-```console
-qmake
-make -f Makefile
-```
-This may take some time. If the installation fails you may be missing the OpenGL library. Install via:
-```console
-sudo apt install freeglut3-dev
-```
-  
-After everything's finished you can find the VirtualLeaf executable in the `bin` folder.
-
+You can now run VirtualLeaf!
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+Executing the VirtualLeaf executeable should bring up the GUI. Accept the license agreement and a base model should already be preloaded. 
 
-## Help
+<img src="/img/VirtualLeafOpen.png" alt="Displayed when opened." width="600">
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+
+You can start and stop simulations by pressing spacebar. You can also select one of the different preinstalled models by opening the menu at the top:
+
+<img src="/img/VirtualLeafMenu.png" alt="Menu bar" width="600">
+
+In this example we select the `Lateral Root Growth` model, which should now automatically be loaded:
+
+<img src="/img/VirtualLeafLateralRoot1.png" alt="Lateral root model t=0" width="600">
+
+
+Starting the simulation and letting it run for a bit generates something that should look similar to this:
+
+<img src="/img/VirtualLeafLateralRoot2.png" alt="Lateral root model t=sometime" width="600">
+ 
+
+Yay!
 
 ## Authors
 
