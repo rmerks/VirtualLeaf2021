@@ -161,14 +161,6 @@ Richard van Nieuwenhoven <nieuwenhoven@iap.tuwien.ac.at>
 Ruth Großeholz <ruth.grosseholz@maastrichtuniversity.nl>  
 Michael Guravage <M.A.Guravage@cwi.nl>  
 
-## Version History
-
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
-
 ## License
 
 This project is licensed under the GPL-2.0 License - see the [license file](./COPYING) for details
