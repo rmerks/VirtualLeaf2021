@@ -33,7 +33,7 @@ Now either follow the installation wizard or install QT via the command line (re
 ```
 -  Log in with your QT credentials
 -  accept a bunch of licenses and follow the installation prompts
--  Remember the installation directory (default on Windows is C:\QT, on Linux ~/QT)
+-  Remember the installation directory (default on Windows is `C:\QT`, on Linux `~/QT`)
 -  It's normal to get some installation errors; it's usually fine to ignore them.
 
 ### Post-Installation Steps
