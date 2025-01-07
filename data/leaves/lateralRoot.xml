@@ -74,7 +74,7 @@
       
     
       
-      <par val="tutorial1_data" name="datadir"/>
+      <par val="lateral_root" name="datadir"/>
       
       
     
