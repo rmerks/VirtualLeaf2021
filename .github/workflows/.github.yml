@@ -13,12 +13,10 @@ jobs:
       - run: lsb_release -a
       - run: sudo apt-get -qq -y install build-essential git cmake make-guile g++ qtbase5-dev qtbase5-dev-tools qtcreator
       - run: cd ${{ github.workspace }}/src;qmake VirtualLeaf.pro;make -f Makefile
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
            name: VirtualLeaf
-           path: ${{ github.workspace }}/bin/**/*
-      - uses: actions/upload-artifact@v3
-        with:
-           name: VirtualLeaf-lib
-           path: ${{ github.workspace }}/lib/**/*
+           path: |
+             ${{ github.workspace }}/bin/**/*
+             ${{ github.workspace }}/data/**/*
            
