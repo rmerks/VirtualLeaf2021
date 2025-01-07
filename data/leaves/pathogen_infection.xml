@@ -2269,5 +2269,6 @@
     <setting name="show_only_leaf_boundary" val="false"/>
     <setting name="cell_growth" val="false"/>
     <setting name="hide_cells" val="false"/>
+     <viewport m11="1.5" m12="0" m21="0" m22="1.5" dx="0" dy="0"/>
   </settings>
 </leaf>

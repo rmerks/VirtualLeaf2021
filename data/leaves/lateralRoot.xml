@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<leaf date="Fri May 17 00:28:16 2024" name="/home/ritchie/Desktop/blob_escape.xml" simtime="4720">
+<leaf date="Fri May 17 00:28:16 2024" name="lateral_root.xml" simtime="0">
    
    
   
@@ -5437,7 +5437,7 @@
       
       <setting val="false" name="hide_cells"/>
       
-      
+      <viewport m11="2.5" m12="0" m21="0" m22="2.5" dx="0" dy="0"/>
   
    
    </settings>
