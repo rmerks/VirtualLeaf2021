@@ -61,7 +61,7 @@ class CellWallCurve {
 
 	WallBase* otherWallEndingAt(CellBase *c3, NodeBase *&c, WallBase *&wallc2c3);
 	bool check_overlap(NodeBase* other);
-
+	void updateBaseLength(CellBase * cell);
 public:
 	CellWallCurve() {
 		reset();
