@@ -191,6 +191,11 @@ void ModelCatalogue::InstallModel(SimPluginInterface *plugin) {
 	     pluginDir.cdUp();
 	     leafDirFound = pluginDir.cd("data/leaves");
       }
+      // last resort go one up and try there
+      if (!leafDirFound) {
+	     pluginDir.cdUp();
+	     leafDirFound = pluginDir.cd("data/leaves");
+      }
       if (!leafDirFound) {
 	    MyWarning::warning("Directory 'data/leaves' not found! Cannot load LeafML file '%s'. Reverting to standard initial condition now...",plugin->DefaultLeafML().toStdString().c_str());
 	    mainwin->Init(0);
