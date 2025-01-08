@@ -1,4 +1,5 @@
 name: VirtualLeaf compile, clean, and package for macOS
+run-name: ${{ github.actor }} is testing on macOS 🚀
 
 on:
   push:
