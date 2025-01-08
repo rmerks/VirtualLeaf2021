@@ -154,6 +154,17 @@ bool CellWallCurve::isDeacivated() {
 	return cell == NULL || from == NULL || over == NULL || to == NULL;
 }
 
+
+void CellWallCurve::updateBaseLength(CellBase * cell) {
+	cell->LoopWallElements([this](auto wallElementInfo){
+		Vector * weif = wallElementInfo->getFrom();
+		Vector * weit = wallElementInfo->getTo();
+		if (weif == to ||weif == over||weit == to ||weit == over ) {
+			wallElementInfo->updateBaseLength();
+		}
+	});
+}
+
 /**
  * Now we collapse the spike by letting the longer wall end at the end of the shorter wall.
  * Assume a sharp spike in a wall from node a to c (a-c) to b (c-b). were a-c is the longer
@@ -285,6 +296,9 @@ bool CellWallCurve::removeSpike() {
 		c1->correctNeighbors();
 		c2->correctNeighbors();
 		c3->correctNeighbors();
+		this->updateBaseLength(c1);
+		this->updateBaseLength(c2);
+		this->updateBaseLength(c3);
 		return true;
 	} else {
 		// a new wall is nessesary
