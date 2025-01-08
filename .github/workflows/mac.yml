@@ -1,4 +1,4 @@
-name: VirtualLeaf compile clean and package for windows
+name: VirtualLeaf compile, clean, and package for macOS
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: macos-latest
 
     steps:
     - name: Checkout code
@@ -18,10 +18,8 @@ jobs:
       uses: jurplel/install-qt-action@v3
       with:
         version: '5.15.2' # Specify the required Qt version
-        host: 'windows'
+        host: 'mac'
         target: 'desktop'
-        arch: 'win64_mingw81' 
-        setup-develop-environment: true
 
     - name: Configure Project with qmake
       run: |
@@ -31,7 +29,7 @@ jobs:
     - name: Build Project
       run: |
         cd src
-        mingw32-make # Use 'mingw32-make' if you are using MinGW instead of MSVC
+        make
 
     - name: Package Project
       uses: actions/upload-artifact@v4
