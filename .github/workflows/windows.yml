@@ -1,0 +1,43 @@
+name: Build and Zip Qt5 Application (Windows)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '5.15.2' # Specify the required Qt version
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw81' 
+        setup-develop-environment: true
+
+    - name: Configure Project with qmake
+      run: |
+        cd src
+        qmake VirtualLeaf.pro
+
+    - name: Build Project
+      run: |
+        cd src
+        mingw32-make # Use 'mingw32-make' if you are using MinGW instead of MSVC
+
+    - name: Package Project
+      uses: actions/upload-artifact@v4
+      with:
+        name: VirtualLeaf
+        path: |
+          ${{ github.workspace }}/bin/**/*
+          ${{ github.workspace }}/data/**/*
+
