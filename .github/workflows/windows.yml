@@ -1,4 +1,4 @@
-name: Build and Zip Qt5 Application (Windows)
+name: VirtualLeaf compile clean and package for windows
 
 on:
   push:
