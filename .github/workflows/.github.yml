@@ -14,12 +14,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install
-        run: |
-        sudo ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
-        sudo apt-get -qq update
-        sudo apt-get -qq -y install lsb-release 
-        lsb_release -a
-        sudo apt-get -qq -y install build-essential git cmake make-guile g++ qtbase5-dev qtbase5-dev-tools qtcreator
+        run: sudo ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+      - run: sudo apt-get -qq update
+      - run: sudo apt-get -qq -y install lsb-release 
+      - run: lsb_release -a
+      - run: sudo apt-get -qq -y install build-essential git cmake make-guile g++ qtbase5-dev qtbase5-dev-tools qtcreator
 
       - name: Build
         run: cd ${{ github.workspace }}/src;qmake VirtualLeaf.pro;make -f Makefile
