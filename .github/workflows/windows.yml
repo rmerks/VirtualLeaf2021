@@ -1,4 +1,5 @@
 name: VirtualLeaf compile clean and package for windows
+run-name: ${{ github.actor }} is testing on windows 🚀
 
 on:
   push:
