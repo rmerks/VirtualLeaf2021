@@ -42,11 +42,13 @@ jobs:
           ${{ github.workspace }}/bin/**/*
           ${{ github.workspace }}/data/**/*
 
-    - name: Download Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: VirtualLeaf-macos-x64
-        path: .
+  release:
+    runs-on: macos-latest
+    needs: build
+    steps:
+    - uses: actions/download-artifact@v4
+    - name: Display structure of downloaded files
+      run: ls -R ${{ github.workspace }}
 
     - name: '📦 Package MacOS x64'
       if: github.event_name == 'release' && github.event.action == 'created'
