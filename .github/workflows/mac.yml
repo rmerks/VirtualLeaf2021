@@ -24,7 +24,7 @@ jobs:
     - name: Configure Project with qmake
       run: |
         cd src
-        qmake VirtualLeaf.pro
+        qmake CONFIG+=c++14 VirtualLeaf.pro
 
     - name: Build Project
       run: |
