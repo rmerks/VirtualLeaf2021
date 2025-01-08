@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<leaf date="Fri May 17 00:28:16 2024" name="/home/ritchie/Desktop/blob_escape.xml" simtime="4720">
+<leaf date="Fri May 17 00:28:16 2024" name="lateral_root.xml" simtime="0">
    
    
   
@@ -74,7 +74,7 @@
       
     
       
-      <par val="tutorial1_data" name="datadir"/>
+      <par val="lateral_root" name="datadir"/>
       
       
     
@@ -809,7 +809,7 @@
    
   
    
-   <nodes n="405">
+   <nodes n="405" target_length="1">
       <node nr="0" x="96.096766" y="326.56478" sam="false" boundary="true" fixed="false"/>
       <node nr="1" x="109.961768" y="324.0113" sam="false" boundary="false" fixed="false"/>
       <node nr="2" x="125.392134" y="333.21578" sam="false" boundary="false" fixed="false"/>
@@ -3067,9 +3067,8 @@
          <wall w="360"/>
          <wall w="361"/>
          <wall w="362"/>
-         <chem n="2">
+         <chem n="1">
             <val v="2.251808"/>
-            <val v="0.481961"/>
          </chem>
       </cell>
       <cell boundary="0" cell_type="0" target_area="525.0830915923991" lambda_celllength="0" at_boundary="false" dead="false" target_length="0" stiffness="1" index="132" source="false" pin_fixed="false" area="525.0830915923991" fixed="false" div_counter="0">
@@ -5438,7 +5437,7 @@
       
       <setting val="false" name="hide_cells"/>
       
-      
+      <viewport m11="2.5" m12="0" m21="0" m22="2.5" dx="0" dy="0"/>
   
    
    </settings>
