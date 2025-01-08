@@ -9,3 +9,5 @@
 **/moc_*
 **/.settings/
 **/__pycache__/
+**/*.pro.user
+

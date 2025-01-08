@@ -185,25 +185,30 @@ void ModelCatalogue::InstallModel(SimPluginInterface *plugin) {
       }
      
 #endif
+      bool leafDirFound = pluginDir.cd("data/leaves");
       // for all OS-es. Move from "bin" directory to root application folder.
-      if (pluginDir.dirName() == "bin") {
-	pluginDir.cdUp();
+      if (!leafDirFound && pluginDir.dirName() == "bin") {
+	     pluginDir.cdUp();
+	     leafDirFound = pluginDir.cd("data/leaves");
       }
-      cerr << "pluginDir: " << pluginDir.dirName().toStdString().c_str() << endl;
-      if (!pluginDir.cd("data/leaves")) {
-	MyWarning::warning("Directory 'data/leaves' not found! Cannot load LeafML file '%s'. Reverting to standard initial condition now...",plugin->DefaultLeafML().toStdString().c_str());
-	mainwin->Init(0);
+      // last resort go one up and try there
+      if (!leafDirFound) {
+	     pluginDir.cdUp();
+	     leafDirFound = pluginDir.cd("data/leaves");
+      }
+      if (!leafDirFound) {
+	    MyWarning::warning("Directory 'data/leaves' not found! Cannot load LeafML file '%s'. Reverting to standard initial condition now...",plugin->DefaultLeafML().toStdString().c_str());
+	    mainwin->Init(0);
       } else {
-      
-	if (!pluginDir.exists(plugin->DefaultLeafML())) {
-	  MyWarning::error("LeafML file '%s' not found - hint: is file in data/leaves folder? Reverting to standard initial condition now...",plugin->DefaultLeafML().toStdString().c_str());
-	  mainwin->Init(0); 
-	} else {
-	  // Initialize simulation using default LeafML file referenced in plugin.
-	  //mainwin->Init(0);
-	  cerr << "Default LeafML: " << plugin->DefaultLeafML().toStdString().c_str() << endl;
-	  mainwin->Init(pluginDir.absoluteFilePath(plugin->DefaultLeafML()).toStdString().c_str());
-	}
+	    if (!pluginDir.exists(plugin->DefaultLeafML())) {
+	      MyWarning::error("LeafML file '%s' not found - hint: is file in data/leaves folder? Reverting to standard initial condition now...",plugin->DefaultLeafML().toStdString().c_str());
+	      mainwin->Init(0);
+	    } else {
+	     // Initialize simulation using default LeafML file referenced in plugin.
+	     //mainwin->Init(0);
+	     cerr << "Default LeafML: " << plugin->DefaultLeafML().toStdString().c_str() << endl;
+	     mainwin->Init(pluginDir.absoluteFilePath(plugin->DefaultLeafML()).toStdString().c_str());
+	   }
       }
     }
   }
