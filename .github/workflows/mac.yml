@@ -48,6 +48,8 @@ jobs:
     steps:
     - name: Install
       run: sudo apt-get install zip gzip
+    - name: Checkout code
+      uses: actions/checkout@v3
     - uses: actions/download-artifact@v4
     - name: Display structure of downloaded files
       run: ls -R ${{ github.workspace }}
@@ -55,7 +57,7 @@ jobs:
     - name: '📦 Package MacOS x64'
       if: github.event_name == 'release' && github.event.action == 'created'
       run: |
-        zip -r VirtualLeaf-linux-x64.zip VirtualLeaf-linux-x64 
+        zip -r VirtualLeaf-linux-x64.zip VirtualLeaf-linux-x64/* 
         gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-x64.zip        
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
