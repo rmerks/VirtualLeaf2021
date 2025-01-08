@@ -14,10 +14,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       
-    - name: Install Visual Studio Build Tools
-      run: |
-        choco install visualstudio2019buildtools --package-parameters "--includeRecommended --includeOptional"
-        choco install visualstudio2019-workload-vctools
+#    - name: Install Visual Studio Build Tools
+#      run: |
+#        choco install visualstudio2019buildtools --package-parameters "--includeRecommended --includeOptional"
+#        choco install visualstudio2019-workload-vctools
 
 
     - name: Set up Qt
@@ -26,8 +26,12 @@ jobs:
         version: '5.15.2' # Specify the required Qt version
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_msvc2019_64' # Adjust based on your target architecture
+ #       arch: 'win64_msvc2019_64' # Adjust based on your target architecture
+        arch: 'win64_mingw81' 
         setup-develop-environment: true
+        
+        
+        
 
     - name: Configure Project with qmake
       run: |
@@ -37,7 +41,8 @@ jobs:
     - name: Build Project
       run: |
         cd src
-        nmake # Use 'mingw32-make' if you are using MinGW instead of MSVC
+        mingw32-make # Use 'mingw32-make' if you are using MinGW instead of MSVC
+#        nmake # Use 'mingw32-make' if you are using MinGW instead of MSVC
 
 #    - name: Package Application
 #      run: |
