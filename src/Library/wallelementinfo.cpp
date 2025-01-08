@@ -13,6 +13,10 @@ WallElementInfo* newWallElementInfo(){
 	return new WallElementInfo();
 }
 
+void deleteWallElementInfo( WallElementInfo* info){
+	delete info;
+}
+
 WallElementInfo::WallElementInfo() {
 	// TODO Auto-generated constructor stub
 

@@ -10,6 +10,7 @@
 
 class WallElementInfo;
 WallElementInfo* newWallElementInfo();
+WallElementInfo* deleteWallElementInfo();
 
 #include "wallelement.h"
 #include "wallbase.h"
