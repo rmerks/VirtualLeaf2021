@@ -35,11 +35,12 @@ jobs:
           
       - uses: actions/download-artifact@v4
       - name: Display structure of downloaded files
-        run: ls -R ${{ github.workspace }}
+        run: ls -R ${{ github.workspace }};cd ${{ github.workspace }}
         
       - name: '📦 Package linux x64'
         if: github.event_name == 'release' && github.event.action == 'created'
         run: |
+          mv VirtualLeaf-linux-x64 VirtualLeaf-linux-x64.zip
           gh release upload ${{github.event.release.tag_name}} VirtualLeaf-linux-x64.zip        
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
