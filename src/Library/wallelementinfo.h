@@ -8,6 +8,8 @@
 #ifndef WALLELEMENTINFO_H_
 #define WALLELEMENTINFO_H_
 
+class WallElementInfo;
+
 #include "wallelement.h"
 #include "wallbase.h"
 #include "vector.h"

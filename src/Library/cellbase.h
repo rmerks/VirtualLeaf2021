@@ -51,7 +51,6 @@ class Mesh;
 class Node;
 class CellBase;
 class NodeSet;
-class WallElementInfo;
 class WallElement;
 class NodeBase;
 class CellWallCurve;
