@@ -8,11 +8,16 @@
 #ifndef WALLELEMENTINFO_H_
 #define WALLELEMENTINFO_H_
 
+class WallElementInfo;
+WallElementInfo* newWallElementInfo();
+void deleteWallElementInfo(WallElementInfo*);
+
 #include "wallelement.h"
 #include "wallbase.h"
 #include "vector.h"
 
 class WallElement;
+
 
 class WallElementInfo {
 	  WallElement* wallElement=NULL;
