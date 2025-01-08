@@ -33,6 +33,12 @@ jobs:
              ${{ github.workspace }}/bin/**/*
              ${{ github.workspace }}/data/**/*
 
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: VirtualLeaf-linux-x64
+          path: .
+        
       - name: '📦 Package linux x64'
         if: github.event_name == 'release' && github.event.action == 'created'
         run: |

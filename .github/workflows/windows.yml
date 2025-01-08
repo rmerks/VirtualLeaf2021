@@ -43,6 +43,12 @@ jobs:
         path: |
           ${{ github.workspace }}/bin/**/*
           ${{ github.workspace }}/data/**/*
+          
+    - name: Download Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: VirtualLeaf-windows-x64
+        path: .
  
     - name: '📦 Package windows x64'
       if: github.event_name == 'release' && github.event.action == 'created'
