@@ -517,7 +517,7 @@ CellBase* CellBase::getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over)
 }
 
 void CellBase::insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode) {
-  std::_List_iterator<Node*> indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
+	std::list<Node*>::iterator indexOfC = std::find_if(this->nodes.begin(), this->nodes.end(), [position1,position2](auto node){
       return node->Index()==position1->Index()||node->Index()==position2->Index();
   });
   if (indexOfC == this->nodes.begin() && (this->nodes.back()==position1||this->nodes.back()==position2)) {
