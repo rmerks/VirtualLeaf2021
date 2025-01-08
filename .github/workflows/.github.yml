@@ -5,6 +5,8 @@ on:
     branches:
       - main
   pull_request:
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -26,8 +28,17 @@ jobs:
       - name: Package
         uses: actions/upload-artifact@v4
         with:
-           name: VirtualLeaf
+           name: VirtualLeaf-linux-x64
            path: |
              ${{ github.workspace }}/bin/**/*
              ${{ github.workspace }}/data/**/*
-           
+
+      - name: '📦 Package linux x64'
+        if: github.event_name == 'release' && github.event.action == 'created'
+        run: |
+          gh release upload ${{github.event.release.tag_name}} VirtualLeaf-linux-x64.zip        
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        shell: bash
+
+
