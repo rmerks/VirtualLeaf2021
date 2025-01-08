@@ -6,6 +6,8 @@ on:
     branches:
       - main
   pull_request:
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -37,8 +39,31 @@ jobs:
     - name: Package Project
       uses: actions/upload-artifact@v4
       with:
-        name: VirtualLeaf
+        name: VirtualLeaf-windows-x64
         path: |
           ${{ github.workspace }}/bin/**/*
           ${{ github.workspace }}/data/**/*
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Install
+      run: sudo apt-get install zip gzip
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - uses: actions/download-artifact@v4
+    - name: Display structure of downloaded files
+      run: ls -R ${{ github.workspace }}
+ 
+    - name: '📦 Package windows x64'
+      if: github.event_name == 'release' && github.event.action == 'created'
+      run: |
+        zip -r VirtualLeaf-windows-x64.zip VirtualLeaf-windows-x64
+        gh release upload ${{github.event.release.tag_name}} VirtualLeaf-windows-x64.zip        
+      env:
+        GITHUB_TOKEN: ${{ github.TOKEN }}
+      shell: bash
+
 
