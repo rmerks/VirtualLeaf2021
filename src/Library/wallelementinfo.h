@@ -9,12 +9,14 @@
 #define WALLELEMENTINFO_H_
 
 class WallElementInfo;
+WallElementInfo* newWallElementInfo();
 
 #include "wallelement.h"
 #include "wallbase.h"
 #include "vector.h"
 
 class WallElement;
+
 
 class WallElementInfo {
 	  WallElement* wallElement=NULL;

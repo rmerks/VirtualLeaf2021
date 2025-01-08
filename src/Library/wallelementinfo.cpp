@@ -9,6 +9,10 @@
 #include "node.h"
 #include "Neighbor.h"
 
+WallElementInfo* newWallElementInfo(){
+	return new WallElementInfo();
+}
+
 WallElementInfo::WallElementInfo() {
 	// TODO Auto-generated constructor stub
 

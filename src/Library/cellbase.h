@@ -256,22 +256,24 @@ class CellBase :  public QObject, public Vector
 
 
   template<class Op> void LoopWallElements(Op f) {
-			WallElementInfo info;
+			WallElementInfo * info = newWallElementInfo();
 			list <Node *>::iterator i=nodes.begin();
 			Node * first=*i;
 			Node * from=first;
 			Node * to=*(++i);
 			while (i!=nodes.end()) {
-				fillWallElementInfo(&info,from,to);
-		        f(&info);
-				if (stopWallElementInfo(&info)) {
+				fillWallElementInfo(info,from,to);
+		        f(info);
+				if (stopWallElementInfo(info)) {
+					delete info;
 		        	return;
 		        }
 		        from=to;
 		        to=*(++i);
 			}
-			fillWallElementInfo(&info,from,first);
-			f(&info);
+			fillWallElementInfo(info,from,first);
+			f(info);
+			delete info;
   }
 
   template<class Op> void LoopWallElementsOfWall(Wall* wall, Op f) {
