@@ -13,6 +13,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      
+    - name: Install Visual Studio Build Tools
+      run: |
+        choco install visualstudio2019buildtools --package-parameters "--includeRecommended --includeOptional"
+        choco install visualstudio2019-workload-vctools
+
 
     - name: Set up Qt
       uses: jurplel/install-qt-action@v3
