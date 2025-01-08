@@ -33,10 +33,11 @@ jobs:
         cd src
         mingw32-make # Use 'mingw32-make' if you are using MinGW instead of MSVC
 
-      - uses: actions/upload-artifact@v4
-        with:
-           name: VirtualLeaf
-           path: |
-             ${{ github.workspace }}/bin/**/*
-             ${{ github.workspace }}/data/**/*
+    - name: Package Project
+      uses: actions/upload-artifact@v4
+      with:
+        name: VirtualLeaf
+        path: |
+          ${{ github.workspace }}/bin/**/*
+          ${{ github.workspace }}/data/**/*
 
