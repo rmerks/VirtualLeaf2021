@@ -80,7 +80,7 @@ class ParameterDialog : public QDialog {
   QLineEdit *morphogen_div_threshold_edit;
   QLineEdit *morphogen_expansion_threshold_edit;
   QLineEdit *copy_wall_edit;
-  QLineEdit *potential_slide_angle_edit;
+  QLineEdit *elastic_limit_edit;
   QLineEdit *source_edit;
   QLineEdit *D_edit;
   QLineEdit *initval_edit;

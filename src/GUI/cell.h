@@ -150,6 +150,8 @@ class Cell : public CellBase
   virtual WallBase* newWall(NodeBase* from,NodeBase* to,CellBase * other);
   virtual void InsertWall( WallBase *w );
   virtual CellBase* getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over);
+  virtual double elastic_limit();
+
  signals:
   void ChemMonValue(double t, double *x);
 

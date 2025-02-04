@@ -114,7 +114,7 @@
   double dt;
   double rd_dt;
   double elastic_modulus;
-  double potential_slide_angle;
+  double elastic_limit;
   int compatibility_level;
   bool movie;
   int nit;

@@ -243,6 +243,7 @@ class CellBase :  public QObject, public Vector
   virtual void insertNodeAfterFirst(NodeBase * position1,NodeBase * position2, NodeBase * newNode);
   virtual void InsertWall( WallBase *w );
   virtual CellBase* getOtherWallElementSide(NodeBase * spikeEnd,NodeBase * over);
+  virtual double elastic_limit();
 
   QList<WallBase *> getWalls(void) {
     QList<WallBase *> wall_list;

@@ -265,7 +265,7 @@ TIMESTEP {
 
 		mesh.CompatibilityLevel(par.compatibility_level);
 		mesh.ElasticModulus(par.elastic_modulus);
-		mesh.PotentialSlideAngle(par.potential_slide_angle);
+		mesh.setElasticLimit(par.elastic_limit);
 		mesh.WallRelaxation();
 
 		dh = mesh.DisplaceNodes();

@@ -1180,15 +1180,16 @@ double Mesh::DisplaceNodes(void) {
 }
 
 void Mesh::WallRelaxation(void) {
+
 	// as we relax every wall element independently no re-scuffling is necessary.
 	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
 		Cell &cell(**i);
 
 		// check lengths of wall elements and apply plastic deformation
-		cell.LoopWallElements([](auto wallElementInfo){
+		cell.LoopWallElements([this](auto wallElementInfo){
 			if(wallElementInfo->hasWallElement()){
-				if(wallElementInfo->plasticStretch()){
-					wallElementInfo->updateBaseLength();
+				if(wallElementInfo->plasticStretch(this->elastic_limit)){
+					wallElementInfo->updateBaseLength(this->elastic_limit);
                 } else if(std::isnan(wallElementInfo->getBaseLength())){
                     wallElementInfo->getWallElement()->setBaseLength(wallElementInfo->getLength()/1.2);
                 }

@@ -698,4 +698,7 @@ void CellBase::InsertWall( WallBase *w ){
 
 void CellBase::correctNeighbors() {}
 
+double CellBase::elastic_limit() {
+	return std::nan("1");
+}
 /* finis*/
