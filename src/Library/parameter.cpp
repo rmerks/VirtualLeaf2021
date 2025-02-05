@@ -142,7 +142,7 @@ Parameter::Parameter() {
   dt = 0.1;
   rd_dt = 1.0;
   elastic_modulus = 50.;
-  elastic_limit = 1.2;
+  elastic_limit = DEFAULT_ELASTIC_LIMIT;
   compatibility_level = 0xFFFF;
   movie = false;
   nit = 100000;
@@ -312,7 +312,7 @@ void Parameter::Read(const char *filename) {
   k2van3 = fgetpar(fp, "k2van3", 0.3, true);
   dt = fgetpar(fp, "dt", 0.1, true);
   rd_dt = fgetpar(fp, "rd_dt", 1.0, true);
-  elastic_limit = fgetpar(fp, "elastic_limit", 1.2, true);
+  elastic_limit = fgetpar(fp, "elastic_limit", DEFAULT_ELASTIC_LIMIT, true);
   elastic_modulus = fgetpar(fp, "elastic_modulus", 50., true);
   movie = bgetpar(fp, "movie", false, true);
   nit = igetpar(fp, "nit", 100000, true);

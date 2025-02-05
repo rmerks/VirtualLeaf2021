@@ -29,6 +29,8 @@
 #include "vector.h"
 #include <vector>
 
+#define DEFAULT_ELASTIC_LIMIT 1.15
+
 //#include <libxml/parser.h>
 //#include <libxml/tree.h>
 #include <QtXml>
