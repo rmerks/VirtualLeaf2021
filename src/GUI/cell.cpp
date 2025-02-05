@@ -1268,37 +1268,37 @@ void Cell::splittWallElementsBetween(Node* node, Cell* daughter) {
 	double patrialLengthBefore =  ((*before1) - (*node)).Norm();
 	double patrialLengthAfter =  ((*after2) - (*node)).Norm();
 	double ratio = patrialLengthBefore / (patrialLengthBefore+patrialLengthAfter);
-
+	double elastic_limit = this->m->elastic_limit;
 	WallElementInfo element;
 	if (!reverse) {
 		this->fillWallElementInfo(&element, before1, node);
-		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio, elastic_limit);
 		this->fillWallElementInfo(&element, node, after1);
-		element.updateBaseLength();
+		element.updateBaseLength(elastic_limit);
 		daughter->fillWallElementInfo(&element, before2, node);
-		element.updateBaseLength();
+		element.updateBaseLength(elastic_limit);
 		daughter->fillWallElementInfo(&element, node, after2);
-		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio, elastic_limit);
 		if (!other->BoundaryPolP()) {
 			other->fillWallElementInfo(&element, after2, node);
-			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio, elastic_limit);
 			other->fillWallElementInfo(&element, node, before2);
-			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio, elastic_limit);
 		}
 	} else {
 		this->fillWallElementInfo(&element, before1, node);
-		element.updateBaseLength();
+		element.updateBaseLength(elastic_limit);
 		this->fillWallElementInfo(&element, node, after1);
-		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, ratio, elastic_limit);
 		daughter->fillWallElementInfo(&element, before2, node);
-		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio);
+		element.updateFrom(&oldInfoB1ToA2_B2A1, 1.-ratio, elastic_limit);
 		daughter->fillWallElementInfo(&element, node, after2);
-		element.updateBaseLength();
+		element.updateBaseLength(elastic_limit);
 		if (!other->BoundaryPolP()) {
 			other->fillWallElementInfo(&element, after1, node);
-			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, ratio, elastic_limit);
 			other->fillWallElementInfo(&element, node, before2);
-			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio);
+			element.updateFrom(&oldInfoA2ToB1_A1B2, 1.-ratio, elastic_limit);
 		}
 	}
 }
@@ -2301,6 +2301,10 @@ void Cell::correctNeighbors() {
   n2->correctNeighbors(this->Index(), n1, n3);
   ConstructNeighborList();
   RecalcArea();
+}
+
+double Cell::elastic_limit() {
+	return this->m->elastic_limit;
 }
 
 /* finis */

@@ -65,7 +65,7 @@ double WallElementInfo::calcLength() const{
     return length;
 }
 
-void WallElementInfo::updateFrom(WallElementInfo* original,double ratio) {
+void WallElementInfo::updateFrom(WallElementInfo* original,double ratio,double elastic_limit) {
 	double stiffness = original->stiffness();
     double base_length = original->stiffness();
     if (!isnan(stiffness)) {
@@ -74,10 +74,14 @@ void WallElementInfo::updateFrom(WallElementInfo* original,double ratio) {
     if (!isnan(base_length)) {
     	this->getWallElement()->setBaseLength(base_length*ratio);
     } else {
-    	updateBaseLength();
+    	updateBaseLength(elastic_limit);
     }
 }
 
 double WallElementInfo::getBaseLength() {return this->getWallElement()->getBaseLength();};
-void WallElementInfo::updateBaseLength() {this->getWallElement()->setBaseLength(this->length/1.2);};
-bool WallElementInfo::plasticStretch() {return this->length > 1.2*this->getWallElement()->getBaseLength();};
+void WallElementInfo::updateBaseLength(double elastic_limit) {
+	this->getWallElement()->setBaseLength(this->length/elastic_limit);
+};
+bool WallElementInfo::plasticStretch(double elastic_limit) {
+	return this->length > elastic_limit * this->getWallElement()->getBaseLength();
+};

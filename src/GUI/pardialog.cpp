@@ -68,7 +68,7 @@ ParameterDialog::ParameterDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
   morphogen_div_threshold_edit = new QLineEdit( QString("%1").arg(par.morphogen_div_threshold), this );
   morphogen_expansion_threshold_edit = new QLineEdit( QString("%1").arg(par.morphogen_expansion_threshold), this );
   copy_wall_edit = new QLineEdit( QString("%1").arg(sbool(par.copy_wall)), this );
-  potential_slide_angle_edit = new QLineEdit( QString("%1").arg(par.potential_slide_angle), this );
+  elastic_limit_edit = new QLineEdit( QString("%1").arg(par.elastic_limit), this );
   source_edit = new QLineEdit( QString("%1").arg(par.source), this );
   QString D_string("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14,%15");
   D_string = D_string.arg(par.D[0]).arg(par.D[1]).arg(par.D[2]).arg(par.D[3]).arg(par.D[4]).arg(par.D[5]).arg(par.D[6]).arg(par.D[7]).arg(par.D[8]).arg(par.D[9]).arg(par.D[10]).arg(par.D[11]).arg(par.D[12]).arg(par.D[13]).arg(par.D[14]);
@@ -231,8 +231,8 @@ QGridLayout *grid = new QGridLayout( this);
   grid->addWidget( new QLabel( "copy_wall", this ),19, 2 );
   grid->addWidget( copy_wall_edit, 19, 3 );
 
-  grid->addWidget( new QLabel( "slide_angle", this ),20, 2 );
-  grid->addWidget( potential_slide_angle_edit, 20, 3 );
+  grid->addWidget( new QLabel( "elastic_limit", this ),20, 2 );
+  grid->addWidget( elastic_limit_edit, 20, 3 );
 
   grid->addWidget( new QLabel( " <b>Auxin transport and PIN1 dynamics</b>", this), 21, 2, 1, 2 );
   grid->addWidget( new QLabel( "source", this ),22, 2 );
@@ -428,7 +428,7 @@ delete collapse_node_threshold_edit;
 delete morphogen_div_threshold_edit;
 delete morphogen_expansion_threshold_edit;
 delete copy_wall_edit;
-delete potential_slide_angle_edit;
+delete elastic_limit_edit;
 delete source_edit;
 delete D_edit;
 delete initval_edit;
@@ -532,6 +532,9 @@ QString tmpval;
     if (QMessageBox::question(this, "Syntax error", tr("Value %1 of parameter %2 is not recognized as Boolean.\nDo you mean TRUE or FALSE?").arg(tmpval).arg("auxin_dependent_growth"),"True","False", QString(), 0, 1)==0) par.auxin_dependent_growth=true;
       else par.auxin_dependent_growth=false;
   }
+  par.elastic_modulus=elastic_modulus_edit->text().toDouble();
+  par.elastic_limit=elastic_limit_edit->text().toDouble();
+
   par.ode_accuracy = ode_accuracy_edit->text().toDouble();
   par.mc_stepsize = mc_stepsize_edit->text().toDouble();
   par.mc_cell_stepsize = mc_cell_stepsize_edit->text().toDouble();

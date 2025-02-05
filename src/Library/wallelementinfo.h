@@ -58,10 +58,10 @@ public:
     double setLength() {return this->length=calcLength();};
     double getLength() {return this->length;};
 
-    void updateBaseLength();
-    bool plasticStretch();
+    void updateBaseLength(double elastic_limit);
+    bool plasticStretch(double elastic_limit);
 
-    void updateFrom(WallElementInfo* original,double ratio);
+    void updateFrom(WallElementInfo* original,double ratio, double elastic_limit);
 
 };
 

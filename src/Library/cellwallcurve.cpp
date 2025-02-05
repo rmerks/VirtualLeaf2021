@@ -156,11 +156,12 @@ bool CellWallCurve::isDeacivated() {
 
 
 void CellWallCurve::updateBaseLength(CellBase * cell) {
-	cell->LoopWallElements([this](auto wallElementInfo){
+	double elastic_limit = cell->elastic_limit();
+	cell->LoopWallElements([this,&elastic_limit](auto wallElementInfo){
 		Vector * weif = wallElementInfo->getFrom();
 		Vector * weit = wallElementInfo->getTo();
 		if (weif == to ||weif == over||weit == to ||weit == over ) {
-			wallElementInfo->updateBaseLength();
+			wallElementInfo->updateBaseLength(elastic_limit);
 		}
 	});
 }

@@ -627,14 +627,14 @@ bool Mesh::findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,
 }
 double lambda_for_shift=0.1;
 
-double getBaseLength(CellBase* c,NodeBase* n1, NodeBase * n2) {
+double getBaseLength(CellBase* c,NodeBase* n1, NodeBase * n2,double elastic_limit) {
 	WallElement* wallElement = n1->getWallElement(c);
 	if (wallElement == NULL) {
-		return ((*n1)-(*n2)).Norm()/1.2;
+		return ((*n1)-(*n2)).Norm()/elastic_limit;
 	}else {
 		double base_length = wallElement->getBaseLength();
 		if (std::isnan(base_length)) {
-			return ((*n1)-(*n2)).Norm()/1.2;
+			return ((*n1)-(*n2)).Norm()/elastic_limit;
 		}
 		return base_length;
 	}
@@ -714,8 +714,8 @@ void Mesh::RemodelWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w
 				getStiffness(c2, o2)*wl1
 				) / length_before;
 
-		double s_base = getBaseLength(c2, w1, w2);
-		double r_base = getBaseLength(c, w1, w2) + getBaseLength(c2, w2, w3);
+		double s_base = getBaseLength(c2, w1, w2,this->elastic_limit);
+		double r_base = getBaseLength(c, w1, w2,this->elastic_limit) + getBaseLength(c2, w2, w3,this->elastic_limit);
 
 		double length_dh = (
     		elastic_modulus * stiffness * c->GetWallStiffness() *
@@ -1180,17 +1180,18 @@ double Mesh::DisplaceNodes(void) {
 }
 
 void Mesh::WallRelaxation(void) {
+
 	// as we relax every wall element independently no re-scuffling is necessary.
 	for (vector<Cell *>::const_iterator i=cells.begin(); i!=cells.end(); i++) {
 		Cell &cell(**i);
 
 		// check lengths of wall elements and apply plastic deformation
-		cell.LoopWallElements([](auto wallElementInfo){
+		cell.LoopWallElements([this](auto wallElementInfo){
 			if(wallElementInfo->hasWallElement()){
-				if(wallElementInfo->plasticStretch()){
-					wallElementInfo->updateBaseLength();
+				if(wallElementInfo->plasticStretch(this->elastic_limit)){
+					wallElementInfo->updateBaseLength(this->elastic_limit);
                 } else if(std::isnan(wallElementInfo->getBaseLength())){
-                    wallElementInfo->getWallElement()->setBaseLength(wallElementInfo->getLength()/1.2);
+                    wallElementInfo->getWallElement()->setBaseLength(wallElementInfo->getLength()/this->elastic_limit);
                 }
 			}
 		});

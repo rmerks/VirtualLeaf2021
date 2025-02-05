@@ -118,6 +118,7 @@ class Mesh {
   Cell &LeafPrimordium2(int n);
   Cell *RectangularCell(const Vector ll, const Vector ur, double rotation = 0);
   void CellFiles(const Vector ll, const Vector ur);
+  double plasticLimit();
 
   inline Cell &getCell(int i) {
     if ((unsigned)i<cells.size())
@@ -278,7 +279,7 @@ class Mesh {
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
-  void PotentialSlideAngle(double potential_slide_angle) {this->potential_slide_angle=potential_slide_angle;}
+  void setElasticLimit(double elastic_limit) {this->elastic_limit=elastic_limit;}
   void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
   bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
   bool activateWallRemodeling() {return (this->compatibility_level & WALL_SLIDING) != 0;}
@@ -454,7 +455,7 @@ class Mesh {
   list<Wall *> walls; // we need to erase elements from this container frequently, hence a list.
   int compatibility_level;
   double elastic_modulus;
-  double potential_slide_angle;
+  double elastic_limit;
  public:
   vector<NodeSet *> node_sets;
  private:
