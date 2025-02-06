@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <leaf name="/data/mac4/storage/merks/merks/TuringDemo/VirtualLeaf-v1.0.1-src/grid.xml" date="Tue Sep 11 20:20:19 2012" simtime="0">
   <parameter>
+    <par val="0" name="compatibility_level"/>
     <par name="arrowcolor" val="blue"/>
     <par name="arrowsize" val="100"/>
     <par name="textcolor" val="orange"/>
@@ -101477,6 +101478,8 @@
   </walls>
   <nodesets n="0"/>
   <settings>
+    <setting val="false" name="show_stiffness"/>
+    <setting val="false" name="show_middle_lamella"/>
     <setting name="show_cell_centers" val="false"/>
     <setting name="show_nodes" val="false"/>
     <setting name="show_node_numbers" val="false"/>
