@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <leaf name="/Users/roel/Documents.xml" date="Fri Mar  1 10:36:13 2019" simtime="0">
   <parameter>
+    <par val="0" name="compatibility_level"/>
     <par name="arrowcolor" val="white"/>
     <par name="arrowsize" val="10"/>
     <par name="textcolor" val="red"/>
@@ -5253,6 +5254,8 @@
   </walls>
   <nodesets n="0"/>
   <settings>
+    <setting val="false" name="show_stiffness"/>
+    <setting val="false" name="show_middle_lamella"/>
     <setting name="show_cell_centers" val="false"/>
     <setting name="show_nodes" val="false"/>
     <setting name="show_node_numbers" val="false"/>

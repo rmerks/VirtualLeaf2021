@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <leaf name="C:/Users/jakob/VirtualLeaf/data/leaves/hex_turing.xml" date="Fri Mar 15 11:24:12 2019" simtime="700">
   <parameter>
+    <par val="0" name="compatibility_level"/>
     <par name="arrowcolor" val="blue"/>
     <par name="arrowsize" val="100"/>
     <par name="textcolor" val="orange"/>
@@ -5948,6 +5949,8 @@
   </walls>
   <nodesets n="0"/>
   <settings>
+    <setting val="false" name="show_stiffness"/>
+    <setting val="false" name="show_middle_lamella"/>
     <setting name="show_cell_centers" val="false"/>
     <setting name="show_nodes" val="false"/>
     <setting name="show_node_numbers" val="false"/>
