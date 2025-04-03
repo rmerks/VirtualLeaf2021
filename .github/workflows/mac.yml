@@ -1,5 +1,5 @@
-name: VirtualLeaf compile, clean, and package for macOS
-run-name: ${{ github.actor }} is testing on macOS 🚀
+name: VirtualLeaf compile, clean, and package for macOS (arm)
+run-name: ${{ github.actor }} is testing on macOS (arm) 🚀
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
     - name: Configure Project with qmake
       run: |
         cd src
-        qmake CONFIG+=c++14 VirtualLeaf.pro
+        qmake CONFIG+=c++14 VirtualLeaf.pro -early QMAKE_DEFAULT_LIBDIRS=$(xcrun -show-sdk-path)/usr/lib
 
     - name: Build Project
       run: |
