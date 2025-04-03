@@ -37,7 +37,7 @@ jobs:
     - name: Package Project
       uses: actions/upload-artifact@v4
       with:
-        name: VirtualLeaf-macos-x64
+        name: VirtualLeaf-macos-arm
         path: |
           ${{ github.workspace }}/bin/**/*
           ${{ github.workspace }}/data/**/*
@@ -54,10 +54,10 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R ${{ github.workspace }}
 
-    - name: '📦 Package MacOS x64'
+    - name: '📦 Package MacOS arm'
       if: github.event_name == 'release' && github.event.action == 'created'
       run: |
-        zip -r VirtualLeaf-macos-x64.zip VirtualLeaf-macos-x64
+        zip -r VirtualLeaf-macos-arm.zip VirtualLeaf-macos-arm
         gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-arm.zip        
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
