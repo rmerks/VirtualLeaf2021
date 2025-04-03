@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-13
 
     steps:
     - name: Checkout code
@@ -58,7 +58,7 @@ jobs:
       if: github.event_name == 'release' && github.event.action == 'created'
       run: |
         zip -r VirtualLeaf-macos-x64.zip VirtualLeaf-macos-x64
-        gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-arm.zip        
+        gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-x64.zip        
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
       shell: bash
