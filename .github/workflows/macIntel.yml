@@ -34,6 +34,12 @@ jobs:
         cd src
         make
 
+    - name: Deploy Qt Frameworks
+      run: |
+        cd ${{ github.workspace }}/bin
+        macdeployqt VirtualLeaf.app
+        otool -L VirtualLeaf.app/Contents/MacOS/VirtualLeaf
+
     - name: Package Project
       uses: actions/upload-artifact@v4
       with:
