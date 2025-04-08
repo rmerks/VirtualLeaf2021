@@ -36,7 +36,7 @@ jobs:
 
     - name: Deploy Qt Frameworks
       run: |
-        cd src/bin
+        cd ${{ github.workspace }}/bin
         macdeployqt VirtualLeaf.app
         otool -L VirtualLeaf.app/Contents/MacOS/VirtualLeaf
     
