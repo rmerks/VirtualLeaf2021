@@ -59,7 +59,7 @@ void ModelCatalogue::LoadPlugins() {
   pluginDir.setNameFilters(plugin_filters);
 
   if (!pluginDir.cd("models")) {
-    MyWarning::error("Directory 'models' not found! from: "+ pluginDir.absolutePath());
+    MyWarning::error("Directory 'models' not found! from: %S", pluginDir.absolutePath().toStdString().c_str());
   }
 
 
