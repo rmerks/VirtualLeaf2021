@@ -37,7 +37,8 @@ jobs:
     - name: include data and models
       run:  |
         cd ${{ github.workspace }}/bin
-        mv ../data .
+        mv ../data VirtualLeaf.app/Contents/data
+        mv models VirtualLeaf.app/Contents/models
 
     - name: Deploy Qt Frameworks
       run: |
@@ -48,11 +49,7 @@ jobs:
     - name: Zip with ditto (preserve macOS metadata)
       run: |
         cd ${{ github.workspace }}/bin
-        mkdir -p ziproot
-        mv VirtualLeaf.app ziproot/
-        mv data ziproot/
-        mv models ziproot/
-        ditto -c -k --sequesterRsrc ziproot ../VirtualLeaf-macos-arm.zip
+        ditto -c -k --sequesterRsrc --keepParent VirtualLeaf.app ../VirtualLeaf-macos-arm.zip
     
     - name: Upload zipped artifact
       uses: actions/upload-artifact@v4

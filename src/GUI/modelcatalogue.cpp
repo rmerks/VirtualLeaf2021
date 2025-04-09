@@ -51,8 +51,6 @@ void ModelCatalogue::LoadPlugins() {
 #elif defined(Q_OS_MAC) 
   if (pluginDir.dirName() =="MacOS"){ 
     pluginDir.cdUp(); 
-    pluginDir.cdUp(); 
-    pluginDir.cdUp(); 
   } 
   plugin_filters << "*.dylib";
 #endif 
@@ -94,8 +92,6 @@ void ModelCatalogue::LoadPlugin(const char *model) {
 #elif defined(Q_OS_MAC) 
   if (pluginDir.dirName() =="MacOS"){ 
     pluginDir.cdUp(); 
-    pluginDir.cdUp(); 
-    pluginDir.cdUp(); 
   } 
   //plugin_filters << "*.dylib";
 #endif
@@ -103,7 +99,7 @@ void ModelCatalogue::LoadPlugin(const char *model) {
   pluginDir.setNameFilters(plugin_filters);
 
   if (!pluginDir.cd("models")) {
-    MyWarning::error("Directory 'models' not found!");
+	    MyWarning::error("Directory 'models' not found! from: %S", pluginDir.absolutePath().toStdString().c_str());
   }
 
   QStringList modelnames=pluginDir.entryList(QDir::Files);
@@ -179,8 +175,6 @@ void ModelCatalogue::InstallModel(SimPluginInterface *plugin) {
       //plugin_filters << "*.dll";
 #elif defined(Q_OS_MAC) 
       if (pluginDir.dirName() =="MacOS"){ 
-	pluginDir.cdUp(); 
-	pluginDir.cdUp(); 
 	pluginDir.cdUp(); 
       }
      

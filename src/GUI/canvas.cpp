@@ -1041,8 +1041,6 @@ QDir Main::GetLeafDir(void) {
 #elif defined(Q_OS_MAC) 
     if (LeafDir.dirName() =="MacOS"){
         LeafDir.cdUp();
-        LeafDir.cdUp();
-        LeafDir.cdUp();
     }
 
 #endif
