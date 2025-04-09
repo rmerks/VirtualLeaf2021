@@ -50,7 +50,7 @@ jobs:
     - name: '📦 Package linux x64'
       if: github.event_name == 'release' && github.event.action == 'created'
       run: |
-        zip -r VirtualLeaf-linux-x64.zip VirtualLeaf-linux-x64
+        zip -r --symlinks VirtualLeaf-linux-x64.zip VirtualLeaf-linux-x64
         gh release upload ${{github.event.release.tag_name}} VirtualLeaf-linux-x64.zip        
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
