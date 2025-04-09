@@ -39,14 +39,17 @@ jobs:
         cd ${{ github.workspace }}/bin
         macdeployqt VirtualLeaf.app
         otool -L VirtualLeaf.app/Contents/MacOS/VirtualLeaf
+        
+    - name: Zip with ditto (preserve macOS metadata)
+      run: |
+        cd ${{ github.workspace }}/bin
+        ditto -c -k --sequesterRsrc --keepParent VirtualLeaf.app ../VirtualLeaf-macos-x64.zip
 
-    - name: Package Project
+    - name: Upload zipped artifact
       uses: actions/upload-artifact@v4
       with:
         name: VirtualLeaf-macos-x64
-        path: |
-          ${{ github.workspace }}/bin/**/*
-          ${{ github.workspace }}/data/**/*
+        path: ${{ github.workspace }}/VirtualLeaf-macos-x64.zip
 
   release:
     runs-on: ubuntu-latest
@@ -57,14 +60,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
     - uses: actions/download-artifact@v4
+      with:
+        name: VirtualLeaf-macos-x64
+        path: ./
     - name: Display structure of downloaded files
       run: ls -R ${{ github.workspace }}
 
     - name: '📦 Package MacOS x64'
       if: github.event_name == 'release' && github.event.action == 'created'
       run: |
-        zip -r VirtualLeaf-macos-x64.zip VirtualLeaf-macos-x64
-        gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-x64.zip        
+        gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-x64.zip    
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
       shell: bash
