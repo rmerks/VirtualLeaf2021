@@ -34,19 +34,28 @@ jobs:
         cd src
         make
 
+    - name: include data and models
+      run:  |
+        cd ${{ github.workspace }}/bin
+        mv ../data VirtualLeaf.app/Contents/data
+        mv models VirtualLeaf.app/Contents/models
+
     - name: Deploy Qt Frameworks
       run: |
         cd ${{ github.workspace }}/bin
         macdeployqt VirtualLeaf.app
         otool -L VirtualLeaf.app/Contents/MacOS/VirtualLeaf
+        
+    - name: Zip with ditto (preserve macOS metadata)
+      run: |
+        cd ${{ github.workspace }}/bin
+        ditto -c -k --sequesterRsrc --keepParent VirtualLeaf.app ../VirtualLeaf-macos-arm.zip
     
-    - name: Package Project
+    - name: Upload zipped artifact
       uses: actions/upload-artifact@v4
       with:
         name: VirtualLeaf-macos-arm
-        path: |
-          ${{ github.workspace }}/bin/**/*
-          ${{ github.workspace }}/data/**/*
+        path: ${{ github.workspace }}/VirtualLeaf-macos-arm.zip
 
   release:
     runs-on: ubuntu-latest
@@ -63,7 +72,6 @@ jobs:
     - name: '📦 Package MacOS arm'
       if: github.event_name == 'release' && github.event.action == 'created'
       run: |
-        zip -r VirtualLeaf-macos-arm.zip VirtualLeaf-macos-arm
         gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-arm.zip        
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
