@@ -66,6 +66,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
     - uses: actions/download-artifact@v4
+      with:
+        name: VirtualLeaf-macos-x64
+        path: ./
     - name: Display structure of downloaded files
       run: ls -R ${{ github.workspace }}
 
