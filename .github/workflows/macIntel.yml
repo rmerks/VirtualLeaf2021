@@ -37,6 +37,12 @@ jobs:
         cd src
         make
 
+    - name: include data and models
+      run:  |
+        cd ${{ github.workspace }}/bin
+        mv ../data VirtualLeaf.app/Contents/data
+        mv models VirtualLeaf.app/Contents/models
+
     - name: Deploy Qt Frameworks
       run: |
         cd ${{ github.workspace }}/bin
