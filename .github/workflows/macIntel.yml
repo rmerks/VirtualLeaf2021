@@ -14,6 +14,10 @@ jobs:
     runs-on: macos-13
 
     steps:
+    - name: Prepare Python environment
+      run: |
+    	python3 -m pip install --upgrade pip wheel setuptools
+    	
     - name: Checkout code
       uses: actions/checkout@v3
 
