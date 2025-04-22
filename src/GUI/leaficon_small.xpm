@@ -1,5 +1,5 @@
 /* XPM */
-static char * leaf_xpm[] = {
+const char *leaficon_small[] = {
 "55 55 855 2",
 "  	c None",
 ". 	c #306A37",
