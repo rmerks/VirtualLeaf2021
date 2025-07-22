@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="svg-to-vl",
-    version="2.0.2",
+    version="2.1.0",
     author="Richard van Nieuwenhoven, Ruth Großeholz, Roeland R.M.H. Merks",
     author_email="richard.nieuwenhoven@tuwien.ac.at, ruth.grosseholz@maastrichtuniversity.nl, merksrmh@math.leidenuniv.nl",
     description="converting cells drawn in svg files to VirtualLeaf xml start files. The svg file should be specified without extension, the resulting xml file will be stored next to the svg file.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/rmerks/VirtualLeaf2021/tree/v2.0.0/src/python",
+    url="https://github.com/rmerks/VirtualLeaf2021/tree/v2.1.0/src/python",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
