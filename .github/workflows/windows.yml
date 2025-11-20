@@ -24,7 +24,13 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_mingw81' 
-        setup-develop-environment: true
+        install-deps: true
+        setup-python: true
+        add-tools-to-path: true
+        set-env: true
+        aqtversion: ==3.1.*
+        py7zrversion: ==0.20.*
+        cache: false
 
     - name: Configure Project with qmake
       run: |
