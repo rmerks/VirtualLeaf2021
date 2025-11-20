@@ -22,8 +22,7 @@ jobs:
         python-version: '3.11'   
 
     - name: Upgrade pip
-      run: python3 -m pip install --upgrade pip
-
+      run: python3 -m pip install --upgrade pip --break-system-packages
     - name: Set up Qt
       uses: jurplel/install-qt-action@v3
       with:
