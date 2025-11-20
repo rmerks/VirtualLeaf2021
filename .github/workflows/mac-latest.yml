@@ -1,5 +1,5 @@
-name: VirtualLeaf compile, clean, and package for macOS (arm)
-run-name: ${{ github.actor }} is testing on macOS (arm) 🚀
+name: VirtualLeaf compile, clean, and package for macOS (arm) latest
+run-name: ${{ github.actor }} is testing on macOS (arm) latest 🚀
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
 
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.11'   # 🔥 fixes PEP 668 without venv
+        python-version: '3.11'   
 
     - name: Upgrade pip
       run: python3 -m pip install --upgrade pip
