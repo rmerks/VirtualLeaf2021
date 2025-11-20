@@ -17,12 +17,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup Python & venv (prevent PEP 668 errors)
-      run: |
-        python3 -m venv venv
-        source venv/bin/activate
-        python3 -m pip install --upgrade pip
-        
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'   # 🔥 fixes PEP 668 without venv
+
+    - name: Upgrade pip
+      run: python3 -m pip install --upgrade pip
+
     - name: Set up Qt
       uses: jurplel/install-qt-action@v3
       with:
