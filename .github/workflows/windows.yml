@@ -32,6 +32,8 @@ jobs:
         py7zrversion: ==0.20.*
         cache: false
 
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
 
     - name: Configure Project with qmake
       run: |
