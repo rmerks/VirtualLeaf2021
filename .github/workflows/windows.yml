@@ -32,14 +32,21 @@ jobs:
         py7zrversion: ==0.20.*
         cache: false
 
-    - name: Add MinGW to PATH (explicit)
+    - name: Add MinGW to PATH
       shell: pwsh
       run: |
-        $mingw = "$env:Qt5_Dir\..\..\Tools\mingw81_64\bin"
-        $mingw = Resolve-Path $mingw
-        echo "Using MinGW at $mingw"
-        echo $mingw | Out-File -FilePath $env:GITHUB_PATH -Append
+        Write-Host "Qt5_Dir    = $env:Qt5_Dir"
+        Write-Host "QtToolsDir = $env:QtToolsDir"
 
+        $mingwBin = Join-Path $env:QtToolsDir "mingw81_64\bin"
+
+        if (!(Test-Path $mingwBin)) {
+          Write-Error "MinGW not found at $mingwBin"
+        }
+
+        echo $mingwBin | Out-File -FilePath $env:GITHUB_PATH -Append
+
+        Write-Host "Verifying MinGW:"
         g++ --version
         mingw32-make --version
 
