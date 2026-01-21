@@ -34,8 +34,18 @@ DESTDIR = $${BINDIR}/models
 TARGET = turing
 HEADERS = ../../Library/simplugin.h $${TARGET}.h  
 QMAKE_CXXFLAGS += -fexceptions -I..
-QMAKE_CXXFLAGS += -Wno-write-strings
-QMAKE_CXXFLAGS += -Wno-unused-parameter
+win32-g++|unix|macx {
+    QMAKE_CXXFLAGS += -Wall -Wextra
+    QMAKE_CXXFLAGS += -Wno-unused-parameter
+    QMAKE_CXXFLAGS += -Wno-write-strings
+}
+
+# MSVC
+win32-msvc {
+    QMAKE_CXXFLAGS += /W3
+    QMAKE_CXXFLAGS += /wd4100   # unused parameter
+    QMAKE_CXXFLAGS += /wd4133   # string literal to char*
+}
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
 

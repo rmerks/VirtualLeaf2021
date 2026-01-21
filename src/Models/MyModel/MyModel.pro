@@ -30,8 +30,19 @@ INCLUDEPATH += ../../../include
 DEFINES = QTGRAPHICS
 DESTDIR = $${BINDIR}/models
 TARGET = MyModel
-QMAKE_CXXFLAGS += -Wno-write-strings
-QMAKE_CXXFLAGS += -Wno-unused-parameter
+# GCC / MinGW / Clang
+win32-g++|unix|macx {
+    QMAKE_CXXFLAGS += -Wall -Wextra
+    QMAKE_CXXFLAGS += -Wno-unused-parameter
+    QMAKE_CXXFLAGS += -Wno-write-strings
+}
+
+# MSVC
+win32-msvc {
+    QMAKE_CXXFLAGS += /W3
+    QMAKE_CXXFLAGS += /wd4100   # unused parameter
+    QMAKE_CXXFLAGS += /wd4133   # string literal to char*
+}
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
 
