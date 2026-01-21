@@ -33,6 +33,14 @@ jobs:
         py7zrversion: ==0.20.*
         cache: false
 
+    - name: Install MinGW (MSYS2)
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-make
+
     - name: Add MinGW to PATH (robust)
       shell: pwsh
       run: |
