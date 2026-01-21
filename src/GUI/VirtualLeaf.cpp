@@ -23,8 +23,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstring>
-#include <functional> 
-#include <getopt.h>
+#include <functional>
 #include <cerrno>
 #include "mesh.h"
 #include "parameter.h"
@@ -42,8 +41,6 @@
 #include <QMouseEvent>
 #include <QSettings>
 #include <QScreen>
-
-#include <unistd.h>
 //#include <q3textstream.h>
 
 #ifdef HAVE_QWT
@@ -56,6 +53,8 @@
 #include <QPluginLoader>
 #include <QDir>
 #include "modelcatalogue.h"
+#include <QCommandLineParser>
+#include <QCoreApplication>
 
 static const std::string _module_id("$Id$");
 
@@ -215,7 +214,7 @@ void MainBase::Plot(int resize_stride)
 INIT {
 
   //mesh.SetSimPlugin(plugin);
-  if (leaffile) {
+  if (!leafFile.isEmpty()) {
     /* if (useGUI) {
       
       xmlNode *settings;
@@ -231,7 +230,7 @@ INIT {
       
       // xmlNode *settings;
       QDomElement settings;
-       mesh.XMLRead(leaffile, settings);
+       mesh.XMLRead(leafFile.toLocal8Bit().constData(), settings);
        
        main_window->XMLReadSettings(settings);
      //  xmlFree(settings);
@@ -354,82 +353,64 @@ void vlMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 Parameter par;
 
  int main(int argc,char **argv) {
+  QString leafFile;
+  QString modelFile;
 
   try {
-    int c;
-    char *leaffile=0;
-    char *modelfile=0;
-
-    while (1) {
-
-      //int this_option_optind = optind ? optind : 1;
-      int option_index = 0;
-      static struct option long_options[] = {
-	{"batch", no_argument, NULL, 'b'},
-	{"leaffile", required_argument, NULL, 'l'},
-	{"model", required_argument, NULL, 'm'} 
-      };
-
-      // short option 'p' creates trouble for non-commandline usage on MacOSX. Option -p changed to -P (capital)
-      static const char *short_options = "blm";
-      c = getopt_long (argc, argv, "bl:m:",
-		       long_options, &option_index);
-      if (c == -1)
-	break;
+    QApplication app(argc,argv);
+    QCoreApplication::setOrganizationName("LeidenUniversity");
+    QCoreApplication::setOrganizationDomain("leidenuniv.com");
+    QCoreApplication::setApplicationName("VirtualLeaf");
 
 
-      if (c==0) {
-	printf ("option %s", long_options[option_index].name);
-	if (optarg)
-	  printf (" with arg %s", optarg);
-	printf ("\n");
 
-	c = short_options[option_index];
-      }
+    // Qt-native command line parsing
+    QCommandLineParser parser;
+    parser.setApplicationDescription("VirtualLeaf");
+    parser.addHelpOption();
+    parser.addVersionOption();
 
-      switch (c) {
-      case 'b':
-	cerr << "Running in batch mode\n";
-	batch=true;
-	break;
+    // -b / --batch
+    QCommandLineOption batchOption(
+        QStringList() << "b" << "batch",
+        "Run in batch mode");
+    parser.addOption(batchOption);
 
-      case 'l':
-	leaffile=strdup(optarg);
-	if (!leaffile) {
-	  throw("Out of memory");
-	}
-	printf("Reading leaf state file '%s'\n", leaffile);
-	break;
+    // -l <file> / --leaf <file>
+    QCommandLineOption leafOption(
+        QStringList() << "l" << "leaf",
+        "Leaf state file",
+        "file");
+    parser.addOption(leafOption);
 
-      case 'm':
-	modelfile=strdup(optarg);
-	if (!modelfile) {
-	  throw("Out of memory");
-	}
-	break;
+    // -m <file> / --model <file>
+    QCommandLineOption modelOption(
+        QStringList() << "m" << "model",
+        "Model file",
+        "file");
+    parser.addOption(modelOption);
 
-      case '?':
-	break;
+    // Parse arguments
+    parser.process(QCoreApplication::arguments());
 
-      default:
-	printf ("?? getopt returned character code 0%o ??\n", c);
-      }
+    // Apply options (equivalent to your switch(c))
+    if (parser.isSet(batchOption)) {
+        cerr << "Running in batch mode\n";
+        batch = true;
     }
 
+    if (parser.isSet(leafOption)) {
+        leafFile = parser.value(leafOption);
+        printf("Reading leaf state file '%s'\n",
+               leafFile.toLocal8Bit().constData());
+    }
 
-    if (optind < argc) {
-      printf ("non-option ARGV-elements: ");
-      while (optind < argc)
-	printf ("%s ", argv[optind++]);
-      printf ("\n");
+    if (parser.isSet(modelOption)) {
+        modelFile = parser.value(modelOption);
     }
 
     useGUI = !batch;
     qInstallMessageHandler(vlMessageOutput); // custom message handler
-      QApplication app(argc,argv);
-      QCoreApplication::setOrganizationName("LeidenUniversity");
-      QCoreApplication::setOrganizationDomain("leidenuniv.com");
-      QCoreApplication::setApplicationName("VirtualLeaf");
        //QApplication app(argc,argv,useGUI);
       if (!useGUI) { cerr << "Managed to start up QCoreApplication.\n"; }
 
@@ -478,16 +459,16 @@ Parameter par;
     //    main_window->Init(leaffile);
 
     // Install model or read catalogue of models
-    ModelCatalogue model_catalogue(&mesh, main_window,modelfile);
+    ModelCatalogue model_catalogue(&mesh, main_window, modelFile.isEmpty() ? nullptr : modelFile.toLocal8Bit().constData());
 
 
     if (useGUI)
       model_catalogue.PopulateModelMenu();
     model_catalogue.InstallFirstModel();
     
-    if (leaffile) {
-      cerr << "Reinitializing for " << leaffile << endl;
-      main_window->Init(leaffile);
+    if (!leafFile.isEmpty()) {
+      cerr << "Reinitializing for " << leafFile.toLocal8Bit().constData() << endl;
+      main_window->Init(leafFile);
     }
     
 

@@ -73,7 +73,7 @@ class MainBase  {
   virtual ~MainBase() {};
 
   virtual double TimeStep();
-  virtual void Init(const char *leaffile=0);
+  virtual void Init(QString leaffile="");
 
   virtual bool ShowMiddleLamella(void) {return showmiddlelamella;}
   virtual bool ShowStiffness(void) {return showstiffness;}
@@ -169,7 +169,7 @@ class MainBase  {
 
 //#include <qapplication.h>
 #define TIMESTEP double MainBase::TimeStep(void)
-#define INIT void MainBase::Init(const char *leaffile)
+#define INIT void MainBase::Init(QString leafFile)
 
 #endif
 
