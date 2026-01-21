@@ -36,25 +36,26 @@ jobs:
       shell: pwsh
       run: |
         Write-Host "Qt5_Dir: $env:Qt5_Dir"
-        # Qt5_Dir is like D:\a\VirtualLeaf2021\Qt\5.15.2\mingw81_64
-        # We need to add D:\a\VirtualLeaf2021\Qt\Tools\mingw81_64\bin -> go up two levels then Tools
-        $mingwBin = Join-Path -Path (Resolve-Path -Path "$env:Qt5_Dir\..\..") -ChildPath "Tools\mingw81_64\bin"
+        # Qt5_Dir looks like: D:\a\VirtualLeaf2021\Qt\5.15.2\mingw81_64
+        # We need: D:\a\VirtualLeaf2021\Qt\Tools\mingw81_64\bin -> go up two levels then Tools
+        $qt5 = $env:Qt5_Dir
+        $root = Resolve-Path -Path "$qt5\..\.." -ErrorAction SilentlyContinue
+        if ($root) {
+          $mingwBin = Join-Path -Path $root -ChildPath "Tools\mingw81_64\bin"
+        } else {
+          $mingwBin = "D:\a\VirtualLeaf2021\Qt\Tools\mingw81_64\bin"
+        }
         Write-Host "Computed MinGW bin path: $mingwBin"
         if (Test-Path $mingwBin) {
-          "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $mingwBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         } else {
-          Write-Host "WARNING: computed MinGW path does not exist: $mingwBin"
-          Write-Host "Listing Qt root (one and two levels up):"
-          Get-ChildItem -Force "$env:Qt5_Dir\.." | ForEach-Object { Write-Host $_.FullName }
-          Get-ChildItem -Force "$env:Qt5_Dir\..\.." | ForEach-Object { Write-Host $_.FullName }
-          # Add fallback known locations
+          Write-Host "WARNING: $mingwBin not found — adding fallbacks"
           "D:\a\VirtualLeaf2021\Qt\Tools\mingw81_64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           "C:\Qt\Tools\mingw81_64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         }
         Write-Host "GITHUB_PATH contents:"
-        Get-Content $env:GITHUB_PATH | ForEach-Object { Write-Host $_ }	
-	
-	
+        Get-Content $env:GITHUB_PATH | ForEach-Object { Write-Host $_ }
+
     - name: Configure Project with qmake
       run: |
         cd src
