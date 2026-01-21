@@ -31,7 +31,7 @@ jobs:
         aqtversion: ==3.1.*
         py7zrversion: ==0.20.*
         cache: false
-	
+
     - name: Ensure MinGW is in PATH
       shell: pwsh
       run: |
