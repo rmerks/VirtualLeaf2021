@@ -19,8 +19,9 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG += release
-CONFIG += debug
+!contains(CONFIG, debug|release) {
+    CONFIG += debug
+}
 CONFIG += qt
 #CONFIG -= app_bundle
 CONFIG+=sdk_no_version_check

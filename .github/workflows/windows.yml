@@ -39,7 +39,7 @@ jobs:
       shell: cmd
       run: |
         cd src
-        qmake VirtualLeaf.pro 
+        qmake VirtualLeaf.pro CONFIG+=release
 
     - name: Build Project
       shell: cmd

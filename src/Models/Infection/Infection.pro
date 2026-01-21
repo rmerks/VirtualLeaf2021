@@ -17,8 +17,9 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG += release
-CONFIG += debug
+!contains(CONFIG, debug|release) {
+    CONFIG += debug
+}
 CONFIG += plugin
 
 BINDIR = ../../../bin
