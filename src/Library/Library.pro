@@ -107,8 +107,14 @@ SOURCES = \
 unix {
  QMAKE_CXXFLAGS += -fPIC 
  QMAKE_LFLAGS += -fPIC
- LIBS +=-lm
 }
+unix | win32-g++ | macx {
+    LIBS += -lm
+}
+win32-msvc {
+    # Do NOT link -lm (math is in the CRT)
+}
+
 
 win32-g++|unix|macx {
     QMAKE_CXXFLAGS += -Wall -Wextra

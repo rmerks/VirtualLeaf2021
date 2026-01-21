@@ -65,7 +65,6 @@ win32 {
  GRAPHICS = qt 
  RC_FILE = VirtualLeaf.rc
  QMAKE_CXXFLAGS += -static-libgcc -static-libstdc++
- LIBS +=  -lm #-lwsock32
 }
 
 
@@ -79,7 +78,13 @@ unix {
 # #QMAKE_LIBDIR += $$QWTDIR/lib
 QMAKE_CXXFLAGS += -fPIC 
 # QMAKE_LFLAGS += -fPIC
- LIBS +=  -lm
+}
+
+unix | win32-g++ | macx {
+    LIBS += -lm
+}
+win32-msvc {
+    # Do NOT link -lm (math is in the CRT)
 }
 
 # Input
