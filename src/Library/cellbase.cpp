@@ -87,7 +87,7 @@ CellBase::CellBase(QObject *parent) :
   fixed = false;
   pin_fixed = false;
   wall_stiffness = 1;
-  veto_remodelling = false;
+  veto_reconfigurationling = false;
   marked = false;
   dead = false;
   div_counter=0;
@@ -128,7 +128,7 @@ CellBase::CellBase(double x,double y,double z) : QObject(), Vector(x,y,z)
   at_boundary=false;
   pin_fixed = false;
   wall_stiffness = 1;
-  veto_remodelling = false;
+  veto_reconfigurationling = false;
   marked=false;
   dead  = false;
   div_counter = 0;
@@ -169,7 +169,7 @@ CellBase::CellBase(const CellBase &src) :  QObject(), Vector(src)
   at_boundary=src.at_boundary;
   pin_fixed = src.pin_fixed;
   wall_stiffness = src.wall_stiffness;
-  veto_remodelling = src.veto_remodelling;
+  veto_reconfigurationling = src.veto_reconfigurationling;
   marked = src.marked;
   dead = src.dead;
   cell_type = src.cell_type;
@@ -210,7 +210,7 @@ CellBase CellBase::operator=(const CellBase &src)
   at_boundary=src.at_boundary;
   pin_fixed = src.pin_fixed;
   wall_stiffness = src.wall_stiffness;
-  veto_remodelling = src.veto_remodelling;
+  veto_reconfigurationling = src.veto_reconfigurationling;
   marked = src.marked;
   dead = src.dead;
   cell_type = src.cell_type;

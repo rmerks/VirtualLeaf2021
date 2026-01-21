@@ -275,14 +275,14 @@ class Mesh {
     f(cells[i]);
   }
 
-  double RemodelWallElements(vector<CellWallCurve> & curves);
+  double ReconfigurationWallElements(vector<CellWallCurve> & curves);
   double DisplaceNodes(void);
   void WallRelaxation(void);
   void ElasticModulus(double elastic_modulus) {this->elastic_modulus=elastic_modulus;}
   void setElasticLimit(double elastic_limit) {this->elastic_limit=elastic_limit;}
   void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
   bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
-  bool activateWallRemodeling() {return (this->compatibility_level & WALL_SLIDING) != 0;}
+  bool activateWallReconfigurationing() {return (this->compatibility_level & WALL_SLIDING) != 0;}
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);
   int NEqs(void) {     int nwalls = walls.size();
@@ -472,8 +472,8 @@ class Mesh {
   void AddNodeToCellAtIndex(Cell *c, Node *n, Node *nb1 , Node *nb2, list<Node *>::iterator ins_pos);
   void InsertNode(Edge &e);
   CellBase * getOtherCell(CellBase* c,Node* node1,Node * node2);
-  void RemodelWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
-  void RemodelCellWallElements(vector<CellWallCurve> & curves,CellBase *c);
+  void ReconfigurationWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) ;
+  void ReconfigurationCellWallElements(vector<CellWallCurve> & curves,CellBase *c);
   bool findOtherSide(CellBase * c,Node * z1,Node * z2,Node ** w0,Node ** w1,Node ** w2,Node ** w3);
   inline Node *AddNode(Node *n) {
     nodes.push_back(n);

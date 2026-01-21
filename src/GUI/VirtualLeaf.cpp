@@ -279,8 +279,8 @@ TIMESTEP {
 
 		if ( (-dh) < par.energy_threshold) {
 			vector<CellWallCurve> curves;
-			if (mesh.activateWallRemodeling()) {
-				mesh.RemodelWallElements(curves);
+			if (mesh.activateWallReconfigurationing()) {
+				mesh.ReconfigurationWallElements(curves);
 			}
 			mesh.IncreaseCellCapacityIfNecessary();
 			mesh.DoCellHouseKeeping(curves);
