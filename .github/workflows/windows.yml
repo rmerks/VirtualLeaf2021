@@ -32,6 +32,11 @@ jobs:
         py7zrversion: ==0.20.*
         cache: false
 
+    - name: Ensure MinGW is in PATH
+      run: |
+        echo "C:\Qt\Tools\mingw810_64\bin" >> $GITHUB_PATH
+        echo "D:\a\VirtualLeaf2021\Qt\Tools\mingw810_64\bin" >> $GITHUB_PATH
+
     - name: Configure Project with qmake
       run: |
         cd src
