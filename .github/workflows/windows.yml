@@ -32,34 +32,21 @@ jobs:
         py7zrversion: ==0.20.*
         cache: false
 
-    - name: Ensure MinGW is in PATH
+    - name: Add MinGW to PATH (explicit)
       shell: pwsh
       run: |
-        Write-Host "Qt5_Dir: $env:Qt5_Dir"
-        # Qt5_Dir looks like: D:\a\VirtualLeaf2021\Qt\5.15.2\mingw81_64
-        # We need: D:\a\VirtualLeaf2021\Qt\Tools\mingw81_64\bin -> go up two levels then Tools
-        $qt5 = $env:Qt5_Dir
-        $root = Resolve-Path -Path "$qt5\..\.." -ErrorAction SilentlyContinue
-        if ($root) {
-          $mingwBin = Join-Path -Path $root -ChildPath "Tools\mingw81_64\bin"
-        } else {
-          $mingwBin = "D:\a\VirtualLeaf2021\Qt\Tools\mingw81_64\bin"
-        }
-        Write-Host "Computed MinGW bin path: $mingwBin"
-        if (Test-Path $mingwBin) {
-          $mingwBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        } else {
-          Write-Host "WARNING: $mingwBin not found — adding fallbacks"
-          "D:\a\VirtualLeaf2021\Qt\Tools\mingw81_64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          "C:\Qt\Tools\mingw81_64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        }
-        Write-Host "GITHUB_PATH contents:"
-        Get-Content $env:GITHUB_PATH | ForEach-Object { Write-Host $_ }
+        $mingw = "$env:Qt5_Dir\..\..\Tools\mingw81_64\bin"
+        $mingw = Resolve-Path $mingw
+        echo "Using MinGW at $mingw"
+        echo $mingw | Out-File -FilePath $env:GITHUB_PATH -Append
+
+        g++ --version
+        mingw32-make --version
 
     - name: Configure Project with qmake
       run: |
         cd src
-        qmake VirtualLeaf.pro
+        qmake VirtualLeaf.pro -spec win32-g++
 
     - name: Build Project
       run: |
