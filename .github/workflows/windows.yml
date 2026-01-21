@@ -23,7 +23,7 @@ jobs:
         version: '5.15.2' # Specify the required Qt version
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_mingw81' 
+        arch: 'win64_msvc2019_64' 
         install-deps: true
         setup-python: true
         add-tools-to-path: true
@@ -32,25 +32,11 @@ jobs:
         py7zrversion: ==0.20.*
         cache: false
 
-    - name: Install MinGW (MSYS2)
-      uses: msys2/setup-msys2@v2
-      with:
-        update: true
-        install: >-
-          mingw-w64-x86_64-gcc
-          mingw-w64-x86_64-make
-
-    - name: Add MinGW to PATH (robust)
-      shell: pwsh
-      run: |
-        echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
-        g++ --version
-        mingw32-make --version
 
     - name: Configure Project with qmake
       run: |
         cd src
-        qmake VirtualLeaf.pro -spec win32-g++
+        qmake VirtualLeaf.pro 
 
     - name: Build Project
       run: |
