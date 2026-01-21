@@ -34,10 +34,14 @@ jobs:
 
     - name: Ensure MinGW is in PATH
       run: |
-        echo "${{env.Qt5_Dir}}/../Tools/mingw810_64/bin" >> $GITHUB_PATH
-        echo "C:\Qt\Tools\mingw810_64\bin" >> $GITHUB_PATH
-        echo "D:\a\VirtualLeaf2021\Qt\Tools\mingw810_64\bin" >> $GITHUB_PATH
-        
+        Write-Host "Adding MinGW to PATH (using Qt5_Dir)"
+        # Add the Tools/mingw81_64 bin where the action installs MinGW
+        echo "$env:Qt5_Dir\..\Tools\mingw81_64\bin" >> $env:GITHUB_PATH
+        # Fallback absolute paths
+        echo "D:\a\VirtualLeaf2021\Qt\Tools\mingw81_64\bin" >> $env:GITHUB_PATH
+        echo "C:\Qt\Tools\mingw81_64\bin" >> $env:GITHUB_PATH
+        Write-Host "GITHUB_PATH now contains:"
+        Get-Content $env:GITHUB_PATH
 
     - name: Configure Project with qmake
       run: |
