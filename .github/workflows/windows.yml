@@ -36,11 +36,13 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: Configure Project with qmake
+      shell: cmd
       run: |
         cd src
         qmake VirtualLeaf.pro 
 
     - name: Build Project
+      shell: cmd
       run: |
         cd src
         mingw32-make # Use 'mingw32-make' if you are using MinGW instead of MSVC
