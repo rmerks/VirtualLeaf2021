@@ -1564,6 +1564,31 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
 
 */
 
+bool segmentsCrossStrictly(const Vector&  a, const Vector& b,
+		const Vector & c, const Vector& d) {
+	double eps = 1e-12 * (
+	    std::max({fabs(a.x), fabs(a.y),
+	              fabs(b.x), fabs(b.y),
+	              fabs(c.x), fabs(c.y),
+	              fabs(d.x), fabs(d.y)}) + 1.0
+	);
+    auto orient = [&](const Vector& p,
+                      const Vector& q,
+                      const Vector& r) {
+        double v = (q.x - p.x) * (r.y - p.y)
+                 - (q.y - p.y) * (r.x - p.x);
+        if (std::abs(v) < eps) return 0;
+        return (v > 0) ? 1 : -1;
+    };
+
+    int o1 = orient(a, b, c);
+    int o2 = orient(a, b, d);
+    int o3 = orient(c, d, a);
+    int o4 = orient(c, d, b);
+
+    return (o1 * o2 < 0) && (o3 * o4 < 0);
+}
+
 bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
 {
     
@@ -1599,7 +1624,6 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
     
     neighbor_of_moving_node[1]=*( *nb );
     
-    
     for (list<Node *>::const_iterator i=nodes.begin(); i!=nodes.end(); i++) {
         for (int j=0;j<2;j++) { // loop over the two neighbors of moving node
             list<Node *>::const_iterator nb=i;
@@ -1612,37 +1636,12 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
                 continue;
             }
             
+
             Vector v3 = *(*i);
             Vector v4 = *(*nb);
             
-            double denominator =
-            (v4.y - v3.y)*(neighbor_of_moving_node[j].x - new_pos.x) - (v4.x - v3.x)*(neighbor_of_moving_node[j].y - new_pos.y);
-            
-           //  double ua =
-           //  ((v4.x - v3.x)*(new_pos.y - v3.y) - (v4.y - v3.y)*(new_pos.x -v3.x))/denominator;
-           //  double ub =
-           //  ((neighbor_of_moving_node[j].x - new_pos.x)*(new_pos.y-v3.y) - (neighbor_of_moving_node[j].y- new_pos.y)*(new_pos.x - v3.x))/denominator;
-
-            double numera = ((v4.x - v3.x)*(new_pos.y - v3.y) - (v4.y - v3.y)*(new_pos.x -v3.x));
-            double numerb = ((neighbor_of_moving_node[j].x - new_pos.x)*(new_pos.y-v3.y) - (neighbor_of_moving_node[j].y- new_pos.y)*(new_pos.x - v3.x));
-            
-            // Are the wall elements coincident?
-            if (fabs(numera) < TINY && fabs(numerb) < TINY && fabs(denominator) < TINY) {
-                return true;
-            }
-            
-            // Are the wall elements parallel?
-            if (fabs(denominator) < TINY) {
-                continue;
-            }
-            double ua = numera / denominator;
-            double ub = numerb / denominator;
-            
-            
-            //if ( ( TINY < ua && ua < 1.-TINY ) && ( TINY < ub && ub < 1.-TINY ) ) {
-            if ( ( 0 < ua && ua < 1. ) && ( 0 < ub && ub < 1.) ) {
-                //cerr << "ua = " << ua << ", ub = " << ub << endl;
-                return true;
+            if (segmentsCrossStrictly(v3,v4,neighbor_of_moving_node[j],new_pos)){
+            	return true;
             }
         }
     }
