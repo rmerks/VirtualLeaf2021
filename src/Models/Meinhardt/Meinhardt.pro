@@ -42,6 +42,19 @@ win32-msvc {
     QMAKE_CXXFLAGS += /wd4100   # unused parameter
     QMAKE_CXXFLAGS += /wd4133   # string literal to char*
 }
+win32-msvc:release {
+
+    # Compiler optimizations
+    QMAKE_CXXFLAGS_RELEASE += /O2        # Max speed
+    QMAKE_CXXFLAGS_RELEASE += /Ob2       # Inline aggressively
+    QMAKE_CXXFLAGS_RELEASE += /Ot        # Favor speed
+    QMAKE_CXXFLAGS_RELEASE += /GL        # Whole program optimization
+
+    # Linker optimizations
+    QMAKE_LFLAGS_RELEASE += /LTCG        # Link-time code generation
+    QMAKE_LFLAGS_RELEASE += /OPT:REF
+    QMAKE_LFLAGS_RELEASE += /OPT:ICF
+}
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
 
