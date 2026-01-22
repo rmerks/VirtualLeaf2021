@@ -1953,12 +1953,15 @@ void Cell::Draw(QGraphicsScene *c, bool showStiffness, QString tooltip)
     if (std::isnan(stiffness)) {
     	stiffness=1.0;
     }
+	Vector startEndOffset;
+    Vector thicknessOffset;
+    if (showStiffness) {
+    	startEndOffset = edgevecNormalised * stiffness * 0.25 * factor;
+        thicknessOffset = (-1) * stiffness * 0.5 * factor * perp;
+    }
 
-	Vector startEndOffset = edgevecNormalised * stiffness * 0.25 * factor;
-    Vector thicknessOffset = (-1) * stiffness * 0.5 * factor * perp;
     Vector from = ( offs + start)  * factor + thicknessOffset + startEndOffset;
     Vector to = ( offs + end)  * factor + thicknessOffset - startEndOffset;
-
 
     QGraphicsLineItem *line = new QGraphicsLineItem((qreal)(from.x), (qreal)(from.y ),(qreal)(to.x), (qreal)(to.y ),p);
     if (showStiffness) {
