@@ -1161,8 +1161,8 @@ void Main::about()
                    <a href=\"http://www.plantphysiol.org/cgi/reprint/155/2/656.pdf\">\
             VirtualLeaf: an Open Source framework for cell-based modeling of plant tissue growth and development</a>,<br>\
                    Plant Physiology 2011: 155:656-666.</p> \
-                   <p>Enhanced Cell Wall Mechanics in VirtualLeaf Enable Realistic Simulations of Plant Tissue Dynamics \
-                       In Xxxxxxxxxxxxxxxx.\
+                   <p>Enhanced cell wall mechanics in VirtualLeaf enable realistic simulations of plant tissue dynamics \
+                       In Quantitative Plant Biology \
                        <a href=\"http://doi.org/10.1101/2024.08.01.605200\">doi:10.1101/2024.08.01.605200</a> \
                    </p>\
                    <p>To learn how to use VirtualLeaf for your projects, see the tutorial at\
