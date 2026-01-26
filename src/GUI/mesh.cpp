@@ -660,8 +660,8 @@ void Mesh::ReconfigurationWallElement(vector<CellWallCurve> & curves,CellBase* c
 	Node * o2;
 	Node * o3;
 	double angle = (*w1-*w2).SignedAngle((*w3-*w2));
-	if ((angle>0&&c->BoundaryPolP())||(angle<0&&!c->BoundaryPolP())) {
-		//we would bend inward and intersect cells
+	if (w1->Fixed() || w2->Fixed() || w3->Fixed() ||(angle>0&&c->BoundaryPolP())||(angle<0&&!c->BoundaryPolP())) {
+		//we would bend inward and intersect cells or move a wall from or to a fixed node
 		return;
 	}
 
