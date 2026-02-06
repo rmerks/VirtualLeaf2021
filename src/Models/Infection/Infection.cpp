@@ -57,7 +57,6 @@ void Infection::SetCellColor(CellBase *c, QColor *color) {
         color->setRgbF(0,0,1,1);
     }
 
-
     double col_inf = c->Chemical(0) / (0.2);
     double col_inf2 = c->Chemical(0) / (0.4);
     if (col_inf > 1.0) {
@@ -66,7 +65,7 @@ void Infection::SetCellColor(CellBase *c, QColor *color) {
     if (col_inf2 > 0.4) {
         col_inf2 = 0.4;
     }
-    color->setRgbF(0 + col_inf - col_inf2, 1 - col_inf2, 0);
+    color->setRgbF(color->red() + col_inf - col_inf2, color -> green() + 1 - col_inf2, color -> blue());
 
     //color->setHsv(static_cast<int>((1.0-redness)*60.), 222, 222);
 
@@ -83,7 +82,10 @@ void Infection::SetCellColor(CellBase *c, QColor *color) {
 void Infection::CellHouseKeeping(CellBase *c) {
     // add cell behavioral rules here
     if(c->CellType()==2){
-        c->EnlargeTargetArea(2);
+        c->EnlargeTargetArea(200);
+        if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ){
+            c->Divide();
+        }
     }
 
     // initial cell length setup
