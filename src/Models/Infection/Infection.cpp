@@ -82,7 +82,7 @@ void Infection::SetCellColor(CellBase *c, QColor *color) {
 void Infection::CellHouseKeeping(CellBase *c) {
     // add cell behavioral rules here
     if(c->CellType()==2){
-        c->EnlargeTargetArea(200);
+        c->EnlargeTargetArea(2);
         if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ){
             c->Divide();
         }
