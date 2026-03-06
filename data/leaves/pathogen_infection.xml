@@ -182,12 +182,12 @@
     <node boundary="false" fixed="false" sam="false" x="6.30541" y="168.981"/>
     <node boundary="false" fixed="false" sam="false" x="2.39841" y="180.51"/>
     <node boundary="false" fixed="false" sam="false" x="-14.067" y="184.119"/>
-    <node boundary="true" fixed="false" sam="false" x="-21.5639" y="173.986"/>
+    <node boundary="true" fixed="true" sam="false" x="-21.5639" y="173.986"/>
     <node boundary="false" fixed="false" sam="false" x="1.61609" y="221.808"/>
     <node boundary="false" fixed="false" sam="false" x="35.4885" y="211.764"/>
     <node boundary="false" fixed="false" sam="false" x="37.7199" y="175.25"/>
     <node boundary="false" fixed="false" sam="false" x="30.9374" y="85.58"/>
-    <node boundary="true" fixed="false" sam="false" x="-19.9689" y="197.72"/>
+    <node boundary="true" fixed="true" sam="false" x="-19.9689" y="197.72"/>
     <node boundary="false" fixed="false" sam="false" x="7.61129" y="236.353"/>
     <node boundary="false" fixed="false" sam="false" x="5.70969" y="262.439"/>
     <node boundary="false" fixed="false" sam="false" x="0.18011" y="264.815"/>
