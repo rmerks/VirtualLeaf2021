@@ -1564,31 +1564,57 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
 
 */
 
-bool segmentsCrossStrictly(const Vector&  a, const Vector& b,
-		const Vector & c, const Vector& d) {
-	double eps = 1e-12 * (
-	    std::max({fabs(a.x), fabs(a.y),
-	              fabs(b.x), fabs(b.y),
-	              fabs(c.x), fabs(c.y),
-	              fabs(d.x), fabs(d.y)}) + 1.0
-	);
-    auto orient = [&](const Vector& p,
-                      const Vector& q,
-                      const Vector& r) {
-        double v = (q.x - p.x) * (r.y - p.y)
-                 - (q.y - p.y) * (r.x - p.x);
-        if (std::abs(v) < eps) return 0;
-        return (v > 0) ? 1 : -1;
-    };
+/**
+ * @brief Checks whether line segments ab and cd intersect strictly.
+ *
+ * Uses orientation check based on cross product to determine if strict intersection is present.
+ * Thresholding is performed to avoid floating point error.
+ *
+ * @param a Start of first line segment.
+ * @param b End of first line segment.
+ * @param c Start of second line segment.
+ * @param d End of second line segment
+ * @return true if segments properly intersect, false otherwise
+ */
+bool segmentsCrossStrictly(const Vector& a, const Vector& b,
+		                       const Vector& c, const Vector& d)
+{
+    const double eps = 1e-12 * (
+        std::max({fabs(a.x), fabs(a.y),
+                  fabs(b.x), fabs(b.y),
+                  fabs(c.x), fabs(c.y),
+                  fabs(d.x), fabs(d.y)}) + 1.0
+    );
+    auto orient = [&](const Vector& p, const Vector& q, const Vector& r)
+      {
+        // z-component of (q-p) x (r-p), maps to {-1, 0, 1}
+        double cross_z = (q.x - p.x) * (r.y - p.y)
+                  - (q.y - p.y) * (r.x - p.x);
+        if (std::abs(cross_z) < eps) {
+          return 0;
+        }
+        return (cross_z > 0) ? 1 : -1;
+      };
 
-    int o1 = orient(a, b, c);
-    int o2 = orient(a, b, d);
-    int o3 = orient(c, d, a);
-    int o4 = orient(c, d, b);
+    int c_vs_ab = orient(a, b, c);
+    int d_vs_ab = orient(a, b, d);
+    int a_vs_cd = orient(c, d, a);
+    int b_vs_cd = orient(c, d, b);
 
-    return (o1 * o2 < 0) && (o3 * o4 < 0);
+    return (c_vs_ab * d_vs_ab < 0) &&
+          (a_vs_cd * b_vs_cd < 0);
 }
 
+
+/**
+ * @brief Checks whether movement of node results in self-intersection
+ *
+ * Iterates over all possible line segments and compares against node at new position and its two neighbors.
+ *
+ * @param moving_node_ind Node that is moving
+ * @param new_pos Proposed new position
+ * @return True if node movement results in intersection, false otherwise
+ */
 bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
 {
     
@@ -1640,7 +1666,7 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
             Vector v3 = *(*i);
             Vector v4 = *(*nb);
             
-            if (segmentsCrossStrictly(v3,v4,neighbor_of_moving_node[j],new_pos)){
+            if (segmentsCrossStrictly(v3, v4, neighbor_of_moving_node[j], new_pos)){
             	return true;
             }
         }
