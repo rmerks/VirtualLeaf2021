@@ -11,11 +11,16 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
-    - name: Prepare Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
       run: |
-        python3 -m pip install --upgrade pip wheel setuptools
+        python -m pip install --upgrade pip wheel setuptools
 
     - name: Checkout code
       uses: actions/checkout@v3
@@ -30,7 +35,7 @@ jobs:
     - name: Configure Project with qmake
       run: |
         cd src
-        qmake CONFIG+=c++14 VirtualLeaf.pro -early QMAKE_DEFAULT_LIBDIRS=$(xcrun -show-sdk-path)/usr/lib
+        qmake CONFIG+=c++14 CONFIG+=release VirtualLeaf.pro -early QMAKE_DEFAULT_LIBDIRS=$(xcrun -show-sdk-path)/usr/lib
 
     - name: Build Project
       run: |

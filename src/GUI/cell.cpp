@@ -1564,6 +1564,57 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
 
 */
 
+/**
+ * @brief Checks whether line segments ab and cd intersect strictly.
+ *
+ * Uses orientation check based on cross product to determine if strict intersection is present.
+ * Thresholding is performed to avoid floating point error.
+ *
+ * @param a Start of first line segment.
+ * @param b End of first line segment.
+ * @param c Start of second line segment.
+ * @param d End of second line segment
+ * @return true if segments properly intersect, false otherwise
+ */
+bool segmentsCrossStrictly(const Vector& a, const Vector& b,
+		                       const Vector& c, const Vector& d)
+{
+    const double eps = 1e-12 * (
+        std::max({fabs(a.x), fabs(a.y),
+                  fabs(b.x), fabs(b.y),
+                  fabs(c.x), fabs(c.y),
+                  fabs(d.x), fabs(d.y)}) + 1.0
+    );
+    auto orient = [&](const Vector& p, const Vector& q, const Vector& r)
+      {
+        // z-component of (q-p) x (r-p), maps to {-1, 0, 1}
+        double cross_z = (q.x - p.x) * (r.y - p.y)
+                  - (q.y - p.y) * (r.x - p.x);
+        if (std::abs(cross_z) < eps) {
+          return 0;
+        }
+        return (cross_z > 0) ? 1 : -1;
+      };
+
+    int c_vs_ab = orient(a, b, c);
+    int d_vs_ab = orient(a, b, d);
+    int a_vs_cd = orient(c, d, a);
+    int b_vs_cd = orient(c, d, b);
+
+    return (c_vs_ab * d_vs_ab < 0) &&
+          (a_vs_cd * b_vs_cd < 0);
+}
+
+
+/**
+ * @brief Checks whether movement of node results in self-intersection
+ *
+ * Iterates over all possible line segments and compares against node at new position and its two neighbors.
+ *
+ * @param moving_node_ind Node that is moving
+ * @param new_pos Proposed new position
+ * @return True if node movement results in intersection, false otherwise
+ */
 bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
 {
     
@@ -1599,7 +1650,6 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
     
     neighbor_of_moving_node[1]=*( *nb );
     
-    
     for (list<Node *>::const_iterator i=nodes.begin(); i!=nodes.end(); i++) {
         for (int j=0;j<2;j++) { // loop over the two neighbors of moving node
             list<Node *>::const_iterator nb=i;
@@ -1612,37 +1662,12 @@ bool Cell::MoveSelfIntersectsP(Node *moving_node_ind, Vector new_pos)
                 continue;
             }
             
+
             Vector v3 = *(*i);
             Vector v4 = *(*nb);
             
-            double denominator =
-            (v4.y - v3.y)*(neighbor_of_moving_node[j].x - new_pos.x) - (v4.x - v3.x)*(neighbor_of_moving_node[j].y - new_pos.y);
-            
-           //  double ua =
-           //  ((v4.x - v3.x)*(new_pos.y - v3.y) - (v4.y - v3.y)*(new_pos.x -v3.x))/denominator;
-           //  double ub =
-           //  ((neighbor_of_moving_node[j].x - new_pos.x)*(new_pos.y-v3.y) - (neighbor_of_moving_node[j].y- new_pos.y)*(new_pos.x - v3.x))/denominator;
-
-            double numera = ((v4.x - v3.x)*(new_pos.y - v3.y) - (v4.y - v3.y)*(new_pos.x -v3.x));
-            double numerb = ((neighbor_of_moving_node[j].x - new_pos.x)*(new_pos.y-v3.y) - (neighbor_of_moving_node[j].y- new_pos.y)*(new_pos.x - v3.x));
-            
-            // Are the wall elements coincident?
-            if (fabs(numera) < TINY && fabs(numerb) < TINY && fabs(denominator) < TINY) {
-                return true;
-            }
-            
-            // Are the wall elements parallel?
-            if (fabs(denominator) < TINY) {
-                continue;
-            }
-            double ua = numera / denominator;
-            double ub = numerb / denominator;
-            
-            
-            //if ( ( TINY < ua && ua < 1.-TINY ) && ( TINY < ub && ub < 1.-TINY ) ) {
-            if ( ( 0 < ua && ua < 1. ) && ( 0 < ub && ub < 1.) ) {
-                //cerr << "ua = " << ua << ", ub = " << ub << endl;
-                return true;
+            if (segmentsCrossStrictly(v3, v4, neighbor_of_moving_node[j], new_pos)){
+            	return true;
             }
         }
     }
@@ -1954,12 +1979,15 @@ void Cell::Draw(QGraphicsScene *c, bool showStiffness, QString tooltip)
     if (std::isnan(stiffness)) {
     	stiffness=1.0;
     }
+	Vector startEndOffset;
+    Vector thicknessOffset;
+    if (showStiffness) {
+    	startEndOffset = edgevecNormalised * stiffness * 0.25 * factor;
+        thicknessOffset = (-1) * stiffness * 0.5 * factor * perp;
+    }
 
-	Vector startEndOffset = edgevecNormalised * stiffness * 0.25 * factor;
-    Vector thicknessOffset = (-1) * stiffness * 0.5 * factor * perp;
     Vector from = ( offs + start)  * factor + thicknessOffset + startEndOffset;
     Vector to = ( offs + end)  * factor + thicknessOffset - startEndOffset;
-
 
     QGraphicsLineItem *line = new QGraphicsLineItem((qreal)(from.x), (qreal)(from.y ),(qreal)(to.x), (qreal)(to.y ),p);
     if (showStiffness) {

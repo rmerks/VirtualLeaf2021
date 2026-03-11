@@ -23,18 +23,29 @@ jobs:
         version: '5.15.2' # Specify the required Qt version
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_mingw81' 
-        setup-develop-environment: true
+        arch: 'win64_msvc2019_64' 
+        install-deps: true
+        setup-python: true
+        add-tools-to-path: true
+        set-env: true
+        aqtversion: ==3.1.*
+        py7zrversion: ==0.20.*
+        cache: false
+
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
 
     - name: Configure Project with qmake
+      shell: cmd
       run: |
         cd src
-        qmake VirtualLeaf.pro
+        qmake VirtualLeaf.pro CONFIG+=release
 
     - name: Build Project
+      shell: cmd
       run: |
         cd src
-        mingw32-make # Use 'mingw32-make' if you are using MinGW instead of MSVC
+        nmake 
 
     - name: Package Project
       uses: actions/upload-artifact@v4

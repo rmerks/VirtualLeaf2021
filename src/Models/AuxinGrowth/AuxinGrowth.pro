@@ -17,8 +17,9 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG += release
-CONFIG += debug
+!contains(CONFIG, debug|release) {
+    CONFIG += debug
+}
 CONFIG += plugin
 
 BINDIR = ../../../bin
@@ -30,8 +31,18 @@ INCLUDEPATH += ../../../include
 DEFINES = QTGRAPHICS
 DESTDIR = $${BINDIR}/models
 TARGET = auxingrowth
-QMAKE_CXXFLAGS += -Wno-write-strings
-QMAKE_CXXFLAGS += -Wno-unused-parameter
+win32-g++|unix|macx {
+    QMAKE_CXXFLAGS += -Wall -Wextra
+    QMAKE_CXXFLAGS += -Wno-unused-parameter
+    QMAKE_CXXFLAGS += -Wno-write-strings
+}
+
+# MSVC
+win32-msvc {
+    QMAKE_CXXFLAGS += /W3
+    QMAKE_CXXFLAGS += /wd4100   # unused parameter
+    QMAKE_CXXFLAGS += /wd4133   # string literal to char*
+}
 QMAKE_CXXFLAGS_DEBUG += -g3
 QMAKE_CXXFLAGS_DEBUG += -DQDEBUG
 
@@ -55,5 +66,17 @@ win32 {
  QMAKE_CXXFLAGS += -I$${LIBXML2DIR}\include -I$${LIBICONVDIR}\include -I$${LIBZDIR}\include
 
 }
+win32-msvc:release {
 
+    # Compiler optimizations
+    QMAKE_CXXFLAGS_RELEASE += /O2        # Max speed
+    QMAKE_CXXFLAGS_RELEASE += /Ob2       # Inline aggressively
+    QMAKE_CXXFLAGS_RELEASE += /Ot        # Favor speed
+    QMAKE_CXXFLAGS_RELEASE += /GL        # Whole program optimization
+
+    # Linker optimizations
+    QMAKE_LFLAGS_RELEASE += /LTCG        # Link-time code generation
+    QMAKE_LFLAGS_RELEASE += /OPT:REF
+    QMAKE_LFLAGS_RELEASE += /OPT:ICF
+}
 # finis

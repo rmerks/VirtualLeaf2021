@@ -653,15 +653,15 @@ double getStiffness(CellBase* c,NodeBase* n1) {
 	}
 }
 
-void Mesh::RemodelWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
+void Mesh::ReconfigurationWallElement(vector<CellWallCurve> & curves,CellBase* c,Node* w0,Node* w1,Node* w2,Node* w3,Node* w4) {
 
 	Node * o0;
 	Node * o1;
 	Node * o2;
 	Node * o3;
 	double angle = (*w1-*w2).SignedAngle((*w3-*w2));
-	if ((angle>0&&c->BoundaryPolP())||(angle<0&&!c->BoundaryPolP())) {
-		//we would bend inward and intersect cells
+	if (w1->Fixed() || w2->Fixed() || w3->Fixed() ||(angle>0&&c->BoundaryPolP())||(angle<0&&!c->BoundaryPolP())) {
+		//we would bend inward and intersect cells or move a wall from or to a fixed node
 		return;
 	}
 
@@ -764,7 +764,7 @@ void extractData(WallElement *we,double & base_length,double &stiffness) {
 	}
 }
 
-void Mesh::RemodelCellWallElements(vector<CellWallCurve> & curves,CellBase *c) {
+void Mesh::ReconfigurationCellWallElements(vector<CellWallCurve> & curves,CellBase *c) {
 	//The algorithm needs at least 5 nodes along the wall
 	if (c->nodes.size()<5) {
 		return;
@@ -780,7 +780,7 @@ void Mesh::RemodelCellWallElements(vector<CellWallCurve> & curves,CellBase *c) {
 	Node * o2=w2;
 	Node * o3=w3;
 	while (i!=c->nodes.end()) {
-		RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+		ReconfigurationWallElement(curves,c,w0,w1,w2,w3,w4) ;
 		w0=w1;
 		w1=w2;
 		w2=w3;
@@ -788,36 +788,36 @@ void Mesh::RemodelCellWallElements(vector<CellWallCurve> & curves,CellBase *c) {
 		w4=*(++i);
 	}
 	w4=o0;
-	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	ReconfigurationWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o1;
-	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	ReconfigurationWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o2;
-	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	ReconfigurationWallElement(curves,c,w0,w1,w2,w3,w4) ;
 	w0=w1;
 	w1=w2;
 	w2=w3;
 	w3=w4;
 	w4=o3;
-	RemodelWallElement(curves,c,w0,w1,w2,w3,w4) ;
+	ReconfigurationWallElement(curves,c,w0,w1,w2,w3,w4) ;
 }
 
-double Mesh::RemodelWallElements(vector<CellWallCurve> & curves) {
+double Mesh::ReconfigurationWallElements(vector<CellWallCurve> & curves) {
 	for (vector<Cell *>::iterator ii=cells.begin(); ii!=cells.end(); ii++) {
 		Cell *c = *ii;
 		c->resetCellWallCurve();
 		if (!(c->GetCellVeto())) {
-			RemodelCellWallElements(curves,c);
+			ReconfigurationCellWallElements(curves,c);
 		}
 	}
-	RemodelCellWallElements(curves,boundary_polygon);
+	ReconfigurationCellWallElements(curves,boundary_polygon);
 	return 0.0;
 }
 

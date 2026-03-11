@@ -19,8 +19,9 @@
 #  Copyright 2010 Roeland Merks.
 #
 
-CONFIG += release
-CONFIG += debug
+!contains(CONFIG, debug|release) {
+    CONFIG += debug
+}
 CONFIG += qt
 #CONFIG -= app_bundle
 CONFIG+=sdk_no_version_check
@@ -65,7 +66,19 @@ win32 {
  GRAPHICS = qt 
  RC_FILE = VirtualLeaf.rc
  QMAKE_CXXFLAGS += -static-libgcc -static-libstdc++
- LIBS +=  -lm #-lwsock32
+}
+win32-msvc:release {
+
+    # Compiler optimizations
+    QMAKE_CXXFLAGS_RELEASE += /O2        # Max speed
+    QMAKE_CXXFLAGS_RELEASE += /Ob2       # Inline aggressively
+    QMAKE_CXXFLAGS_RELEASE += /Ot        # Favor speed
+    QMAKE_CXXFLAGS_RELEASE += /GL        # Whole program optimization
+
+    # Linker optimizations
+    QMAKE_LFLAGS_RELEASE += /LTCG        # Link-time code generation
+    QMAKE_LFLAGS_RELEASE += /OPT:REF
+    QMAKE_LFLAGS_RELEASE += /OPT:ICF
 }
 
 
@@ -79,7 +92,13 @@ unix {
 # #QMAKE_LIBDIR += $$QWTDIR/lib
 QMAKE_CXXFLAGS += -fPIC 
 # QMAKE_LFLAGS += -fPIC
- LIBS +=  -lm
+}
+
+unix | win32-g++ | macx {
+    LIBS += -lm
+}
+win32-msvc {
+    # Do NOT link -lm (math is in the CRT)
 }
 
 # Input
@@ -210,8 +229,18 @@ contains( GRAPHICS, qt ) {
  QMAKE_CXXFLAGS += -DQTGRAPHICS # -fpermissive
 }
 
-QMAKE_CXXFLAGS += -Wall -Wextra
-QMAKE_CXXFLAGS += -Wno-unused-parameter
+win32-g++|unix|macx {
+    QMAKE_CXXFLAGS += -Wall -Wextra
+    QMAKE_CXXFLAGS += -Wno-unused-parameter
+    QMAKE_CXXFLAGS += -Wno-write-strings
+}
+
+# MSVC
+win32-msvc {
+    QMAKE_CXXFLAGS += /W3
+    QMAKE_CXXFLAGS += /wd4100   # unused parameter
+    QMAKE_CXXFLAGS += /wd4133   # string literal to char*
+}
 
 # MACOSX packaging
 macx {

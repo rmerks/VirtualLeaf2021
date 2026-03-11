@@ -137,12 +137,12 @@ class CellBase :  public QObject, public Vector
     source = false;
   }
 
-  list<CellWallCurve*> intendedRemodelings;
+  list<CellWallCurve*> intendedReconfigurationings;
   void resetCellWallCurve() {
-	  intendedRemodelings.clear();
+	  intendedReconfigurationings.clear();
   }
   void addCellWallCurve(CellWallCurve* curve) {
-	  intendedRemodelings.push_back(curve);
+	  intendedReconfigurationings.push_back(curve);
   }
 
   inline bool Source(void) { return source; }
@@ -215,9 +215,9 @@ class CellBase :  public QObject, public Vector
 
   inline double GetWallStiffness(void) const {return wall_stiffness;}
 
-  inline bool SetCellVeto(bool veto){return veto_remodelling = veto;}
+  inline bool SetCellVeto(bool veto){return veto_reconfigurationling = veto;}
 
-  inline bool GetCellVeto(void) const {return veto_remodelling;}
+  inline bool GetCellVeto(void) const {return veto_reconfigurationling;}
 
   inline void Divide(void) { flag_for_divide = true; }
 
@@ -539,7 +539,7 @@ class CellBase :  public QObject, public Vector
   double target_length;
   double lambda_celllength;
   double wall_stiffness; // Lebovka et al
-  bool veto_remodelling; // testing cellular veto
+  bool veto_reconfigurationling; // testing cellular veto
   bool fixed;
   bool pin_fixed;
   bool at_boundary; 
