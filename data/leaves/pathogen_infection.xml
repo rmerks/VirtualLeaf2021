@@ -6,7 +6,7 @@
     <par name="textcolor" val="orange"/>
     <par name="cellnumsize" val="20"/>
     <par name="nodenumsize" val="10"/>
-    <par name="node_mag" val="20"/>
+    <par name="node_mag" val="3"/>
     <par name="outlinewidth" val="0"/>
     <par name="cell_outline_color" val="forestgreen"/>
     <par name="resize_stride" val="10"/>
@@ -299,6 +299,9 @@
     <node boundary="true" fixed="true" sam="false" x="135.249" y="324.445"/>
     <node boundary="true" fixed="true" sam="false" x="156.984" y="325.008"/>
     <node boundary="true" fixed="true" sam="false" x="186.941" y="324.782"/>
+    <node boundary="false" fixed="false" sam="false" x="-17.8155" y="179.0525"/>
+    <node boundary="false" fixed="false" sam="false" x="-17.018" y="188.4195"/>
+
   </nodes>
   <cells base_area="1000" magnfication="1" n="47" nchem="2" offsetx="0" offsety="0">
     <cell area="2214.94" at_boundary="false" boundary="0" cell_type="1" dead="false" div_counter="0" fixed="false" index="0" lambda_celllength="0" pin_fixed="false" source="false" target_area="2214.94" target_length="0">
@@ -358,6 +361,7 @@
       <node base_length="nan" n="17" stiffness="nan"/>
       <node base_length="nan" n="18" stiffness="nan"/>
       <node base_length="nan" n="19" stiffness="nan"/>
+      <node base_length="nan" n="137" stiffness="nan"/>
       <node base_length="nan" n="20" stiffness="nan"/>
       <node base_length="nan" n="16" stiffness="nan"/>
       <node base_length="nan" n="15" stiffness="nan"/>
@@ -365,6 +369,7 @@
       <wall w="10"/>
       <wall w="11"/>
       <wall w="12"/>
+      <wall w="108"/>
       <chem n="2">
         <val v="0"/>
         <val v="0"/>
@@ -393,6 +398,7 @@
     </cell>
     <cell area="1855.58" at_boundary="false" boundary="0" cell_type="1" dead="false" div_counter="0" fixed="false" index="5" lambda_celllength="0" pin_fixed="false" source="false" target_area="1855.58" target_length="0">
       <node base_length="nan" n="25" stiffness="nan"/>
+      <node base_length="nan" n="138" stiffness="nan"/>
       <node base_length="nan" n="19" stiffness="nan"/>
       <node base_length="nan" n="18" stiffness="nan"/>
       <node base_length="nan" n="21" stiffness="nan"/>
@@ -405,6 +411,7 @@
       <wall w="16"/>
       <wall w="17"/>
       <wall w="18"/>
+      <wall w="109"/>
       <chem n="2">
         <val v="0"/>
         <val v="0"/>
@@ -1063,13 +1070,19 @@
     </cell>
     <cell area="559.03" at_boundary="false" boundary="0" cell_type="2" dead="false" div_counter="0" fixed="false" index="42" lambda_celllength="0" pin_fixed="false" source="false" target_area="559.03" target_length="0">
       <node base_length="nan" n="19" stiffness="nan"/>
+      <node base_length="nan" n="138" stiffness="nan"/>
+
       <node base_length="nan" n="25" stiffness="nan"/>
       <node base_length="nan" n="133" stiffness="nan"/>
       <node base_length="nan" n="132" stiffness="nan"/>
       <node base_length="nan" n="131" stiffness="nan"/>
       <node base_length="nan" n="20" stiffness="nan"/>
+      <node base_length="nan" n="137" stiffness="nan"/>
+
       <wall w="12"/>
       <wall w="16"/>
+            <wall w="108"/>
+            <wall w="109"/>
       <chem n="2">
         <val v="0"/>
         <val v="0"/>
@@ -1293,7 +1306,7 @@
         <val v="0"/>
       </transporters2>
     </wall>
-    <wall c1="3" c2="42" index="12" length="12.605" n1="19" n2="20" viz_flux="0" wall_type="normal">
+    <wall c1="3" c2="42" index="12" length="6.3" n1="19" n2="137" viz_flux="0" wall_type="normal">
       <transporters1>
         <val v="0"/>
         <val v="0"/>
@@ -1333,7 +1346,7 @@
         <val v="0"/>
       </transporters2>
     </wall>
-    <wall c1="5" c2="42" index="16" length="14.8264" n1="25" n2="19" viz_flux="0" wall_type="normal">
+    <wall c1="5" c2="42" index="16" length="7.4" n1="138" n2="19" viz_flux="0" wall_type="normal">
       <transporters1>
         <val v="0"/>
         <val v="0"/>
@@ -2253,11 +2266,31 @@
         <val v="0"/>
       </transporters2>
     </wall>
+    <wall c1="42" c2="3" index="108" length="6.3" n1="137" n2="20" viz_flux="0" wall_type="normal">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+      </wall>
+    <wall c1="42" c2="5" index="109" length="7.4" n1="138" n2="25" viz_flux="0" wall_type="normal">
+      <transporters1>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters1>
+      <transporters2>
+        <val v="0"/>
+        <val v="0"/>
+      </transporters2>
+      </wall>
   </walls>
   <nodesets n="0"/>
   <settings>
     <setting name="show_cell_centers" val="false"/>
-    <setting name="show_nodes" val="false"/>
+    <setting name="show_nodes" val="true"/>
     <setting name="show_node_numbers" val="false"/>
     <setting name="show_cell_numbers" val="false"/>
     <setting name="show_borders_cells" val="false"/>
@@ -2267,7 +2300,7 @@
     <setting name="show_walls" val="false"/>
     <setting name="save_movie_frames" val="false"/>
     <setting name="show_only_leaf_boundary" val="false"/>
-    <setting name="cell_growth" val="false"/>
+    <setting name="cell_growth" val="true"/>
     <setting name="hide_cells" val="false"/>
      <viewport m11="1.5" m12="0" m21="0" m22="1.5" dx="0" dy="0"/>
   </settings>
