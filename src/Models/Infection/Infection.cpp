@@ -82,7 +82,7 @@ void Infection::SetCellColor(CellBase *c, QColor *color) {
 void Infection::CellHouseKeeping(CellBase *c) {
     // add cell behavioral rules here
     if(c->CellType()==2){
-        c->EnlargeTargetArea(200);
+        c->EnlargeTargetArea(2);
         if (c->Area() > par->rel_cell_div_threshold * c->BaseArea() ){
             c->Divide();
         }
@@ -102,10 +102,10 @@ void Infection::CellHouseKeeping(CellBase *c) {
     if (patho_chem_level > 1.2) {
         patho_chem_level = 1.2;
     }
-    double stiffness_inf = 2.5;
+    double stiffness_inf = 3;
     if(patho_chem_level>0.1 && c->CellType()!=2){
         c->SetCellVeto(false);
-        stiffness_inf = 2.5 - (patho_chem_level);
+        stiffness_inf = 3 - (patho_chem_level);
     c->LoopWallElements([stiffness_inf](auto wallElementInfo){
         wallElementInfo->getWallElement()->setStiffness(stiffness_inf);
     });
