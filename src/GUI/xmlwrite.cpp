@@ -184,7 +184,10 @@ void Cell::XMLAddCore(xmlNodePtr xmlcell) const {
     {
       ostringstream text;
       xmlNodePtr wall_xml = xmlNewChild(xmlcell, NULL, BAD_CAST "wall", NULL);
-      text << XMLIO::list_index( m->walls.begin(), m->walls.end(), *i );
+      // Use the wall's persistent index (Wall::Index()) rather than its position in the
+      // mesh's wall list, so that the wall references in <cell> match the <walls>
+      // block's wall "index" attribute.
+      text << (*i)->Index();
       xmlNewProp(wall_xml, BAD_CAST "w", BAD_CAST text.str().c_str());
     }
   }
