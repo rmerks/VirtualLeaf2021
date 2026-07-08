@@ -77,7 +77,7 @@ class DeltaIntgrl;
 
 
 #define WALL_STIFFNESS_HAMILTONIAN 1
-#define WALL_SLIDING 3
+#define WALL_RECONFIGURATION 3
 
 
 class Mesh {
@@ -282,7 +282,7 @@ class Mesh {
   void setElasticLimit(double elastic_limit) {this->elastic_limit=elastic_limit;}
   void CompatibilityLevel(int compatibility_level) {this->compatibility_level=compatibility_level;}
   bool activateWallStiffnessHamiltonian() {return (this->compatibility_level & WALL_STIFFNESS_HAMILTONIAN) != 0;}
-  bool activateWallRemodeling() {return (this->compatibility_level & WALL_SLIDING) != 0;}
+  bool activateWallRemodeling() {return (this->compatibility_level & WALL_RECONFIGURATION) != 0;}
 
   void BoundingBox(Vector &LowerLeft, Vector &UpperRight);
   int NEqs(void) {     int nwalls = walls.size();
