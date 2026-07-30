@@ -56,13 +56,13 @@ jobs:
     - name: Zip with ditto (preserve macOS metadata)
       run: |
         cd ${{ github.workspace }}/bin
-        ditto -c -k --sequesterRsrc --keepParent VirtualLeaf.app ../VirtualLeaf-macos-amd64-latest
+        ditto -c -k --sequesterRsrc --keepParent VirtualLeaf.app ../VirtualLeaf-macos-amd64-latest.zip
     
     - name: Upload zipped artifact
       uses: actions/upload-artifact@v4
       with:
         name: VirtualLeaf-macos-amd64-latest
-        path: ${{ github.workspace }}/VirtualLeaf-macos-amd64-latest
+        path: ${{ github.workspace }}/VirtualLeaf-macos-amd64-latest.zip
 
   release:
     runs-on: ubuntu-latest
