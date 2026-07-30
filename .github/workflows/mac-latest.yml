@@ -61,7 +61,7 @@ jobs:
     - name: Upload zipped artifact
       uses: actions/upload-artifact@v4
       with:
-        name: VirtualLeaf-macos-arm-latest
+        name: VirtualLeaf-macos-amd64-latest
         path: ${{ github.workspace }}/VirtualLeaf-macos-amd64-latest
 
   release:
@@ -74,7 +74,7 @@ jobs:
       uses: actions/checkout@v3
     - uses: actions/download-artifact@v4
       with:
-        name: VirtualLeaf-macos-arm-latest
+        name: VirtualLeaf-macos-amd64-latest
         path: ./
     - name: Display structure of downloaded files
       run: ls -R ${{ github.workspace }}
