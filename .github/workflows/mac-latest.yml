@@ -1,5 +1,5 @@
-name: VirtualLeaf compile, clean, and package for macOS (arm) latest
-run-name: ${{ github.actor }} is testing on macOS (arm) latest 🚀
+name: VirtualLeaf compile, clean, and package for macOS (intel) latest
+run-name: ${{ github.actor }} is testing on macOS (intel) latest 🚀
 
 on:
   push:
@@ -82,7 +82,7 @@ jobs:
     - name: '📦 Package MacOS arm'
       if: github.event_name == 'release' && github.event.action == 'created'
       run: |
-        gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-arm-latest.zip        
+        gh release upload ${{github.event.release.tag_name}} VirtualLeaf-macos-arm64-latest.zip        
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
       shell: bash
