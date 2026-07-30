@@ -12,7 +12,9 @@ These features make VirtualLeaf a powerful tool for exploring and understanding 
     
 ![Example image showing how VirtualLeaf simulations look like](/img/RootEmergence.jpg?raw=true "VirtualLeaf demonstration")
 ## Getting Started
-Currently VirtualLeaf requires you to manually compile it yourself (don't worry, we'll guide you through it). We plan on distributing a pre-compiled version in the future.
+As of release v2.2.1, a precompiled binary of VirtualLeaf is available for Linux, Windows and macOS on the [GitHub Releases page](https://github.com/rmerks/VirtualLeaf2021/releases/tag/v2.2.1) - no installation is required beyond extracting the archive. Alternatively, you can manually compile VirtualLeaf yourself from source (e.g. if you want to build for another platform); instructions for this are given below.
+
+VirtualLeaf v2.2 also introduces a `compatibility_level` option: a 16-bit bit-flag control parameter that lets you toggle new v2.2 features (the wall stiffness Hamiltonian, wall reconfiguration) on or off, to preserve backward compatibility with models built in older VirtualLeaf versions. The default value activates all features.
 
 ### Dependencies
 
@@ -79,8 +81,9 @@ Now you should be all set for the installation!
 ### Installing
 
 1.  Download the latest VirtualLeaf version:
-    -  Clone the repository, or download the zip file [here](https://github.com/rmerks/VirtualLeaf2021/archive/refs/tags/v2.0.0.zip) for the version 2.0.0 release.
+    -  Clone the repository, or download the zip file [here](https://github.com/rmerks/VirtualLeaf2021/archive/refs/tags/v2.2.1.zip) for the version 2.2.1 release.
     -  If you downloaded the zip file, extract it into a folder of your choice.
+    -  If you'd rather not compile VirtualLeaf yourself, a ready-to-run precompiled build is also available on the [v2.2.1 release page](https://github.com/rmerks/VirtualLeaf2021/releases/tag/v2.2.1).
 2.  Navigate to the VirtualLeaf folder. The folder structure should look like this:  
     ```console
     └───VirtualLeaf2021-main
@@ -154,12 +157,22 @@ Starting the simulation and letting it run for a bit generates something that sh
 
 Yay!
 
+## svg-to-vl
+
+`svg-to-vl` is a standalone Python command-line tool that converts hand-traced SVG tissue outlines into VirtualLeaf XML simulation templates. Requirements: Python >=3.10, pip, and Inkscape (for tracing the SVG from a microscopy image). Install it with:
+```console
+pip install svg-to-vl
+```
+See [src/python/README.md](src/python/README.md) for full usage instructions.
+
 ## Authors
 
 Roeland Merks <Roeland.Merks@sysbio.nl>  
 Richard van Nieuwenhoven <nieuwenhoven@iap.tuwien.ac.at>  
 Ruth Großeholz <ruth.grosseholz@maastrichtuniversity.nl>  
 Michael Guravage <M.A.Guravage@cwi.nl>  
+Bruno Hay Mele  
+Fabian Ormersbach  
 
 ## License
 
@@ -171,4 +184,6 @@ If you use VirtualLeaf in a scientific publication please cite one of the follow
 -  [Enhanced Cell Wall Mechanics in VirtualLeaf Enable Realistic Simulations of Plant Tissue Dynamics](https://doi.org/10.1101/2024.08.01.605200)
 -  [VirtualLeaf: An Open-Source Framework for Cell-Based Modeling of Plant Tissue Growth and Development](https://doi.org/10.1104/pp.110.167619)
 -  [Building Simulation Models of Developing Plant Organs Using VirtualLeaf](https://doi.org/10.1007/978-1-62703-221-6_23)
+
+<!-- The bioRxiv preprint above is being superseded by a revised, updated manuscript covering VirtualLeaf-2.2. Update the citation entry with the journal DOI once the revision is published. -->
 
